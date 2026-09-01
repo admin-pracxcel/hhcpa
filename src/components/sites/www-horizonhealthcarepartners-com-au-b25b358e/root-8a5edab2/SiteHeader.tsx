@@ -167,7 +167,7 @@ const HEADER_CSS = `
     height: 28px;
   }
   .hhcp-hdr__logo {
-    order: 1;
+    order: 0;
   }
 }
 @media (max-width: 478px) {
@@ -440,11 +440,10 @@ const HEADER_CSS = `
 .hhcp-hdr__phone:hover { color: var(--hhcp-action-dark); }
 
 @media (max-width: 991px) {
-  .hhcp-hdr__burger { display: block; order: 0; }
-  .hhcp-hdr__actions { order: 2; margin-left: 0; }
-  /* The drawer and the sticky mobile CTA bar both carry the number below 991px,
-     so the header copy would be a third instance competing for the same space. */
-  .hhcp-hdr__phone { display: none; }
+  /* Logo left, hamburger right, nothing between them. The CTA moves into the
+     drawer as its last item and the phone is carried by the sticky bar. */
+  .hhcp-hdr__burger { display: block; order: 2; }
+  .hhcp-hdr__actions { display: none; }
 }
 
 /* ---------- Mobile drawer ---------- */
@@ -523,6 +522,15 @@ const HEADER_CSS = `
   font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif !important;
   padding-left: calc(var(--hhcp-space-l) + 12px) !important;
   line-height: 34px !important;
+}
+
+.hhcp-hdr__drawer-cta-row {
+  padding: var(--hhcp-space-m);
+  margin-top: var(--hhcp-space-s);
+}
+.hhcp-hdr__drawer-cta {
+  width: 100%;
+  justify-content: center;
 }
 
 .hhcp-hdr__drawer-sublist a {
@@ -814,6 +822,19 @@ export function SiteHeader() {
                   ) : null}
                 </li>
               ))}
+
+              {/* The CTA lives here rather than in the bar below 991px, so the
+                  header is just logo and hamburger. Last item, after the nav. */}
+              <li className="hhcp-hdr__drawer-cta-row">
+                <a
+                  className={cn("hhcp-btn", "hhcp-hdr__drawer-cta")}
+                  href={CTA.href}
+                  tabIndex={menuOpen ? undefined : -1}
+                  onClick={closeMenu}
+                >
+                  {CTA.label}
+                </a>
+              </li>
             </ul>
           </nav>
         </div>

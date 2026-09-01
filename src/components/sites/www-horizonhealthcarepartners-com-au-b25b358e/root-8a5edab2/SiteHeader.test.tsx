@@ -71,6 +71,18 @@ describe("SiteHeader", () => {
     expect(hrefs).not.toContain("/our-practitioners/");
   });
 
+  it("carries the CTA as the drawer's last item", () => {
+    // Below 991px the bar is logo + hamburger only, so this is the CTA's only
+    // home in the header.
+    const { container } = render(<SiteHeader />);
+    const drawerItems = container.querySelectorAll(".hhcp-hdr__drawer-list > li");
+    const last = drawerItems[drawerItems.length - 1];
+    expect(last).toHaveClass("hhcp-hdr__drawer-cta-row");
+    const cta = last.querySelector("a");
+    expect(cta).toHaveAttribute("href", "/quiz/");
+    expect(cta?.textContent).toBe("Book a consultation");
+  });
+
   it("points the primary CTA at the quiz", () => {
     render(<SiteHeader />);
     expect(
