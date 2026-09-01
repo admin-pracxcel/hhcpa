@@ -163,6 +163,12 @@ const HEADER_CSS = `
   /* Anchors the mega-menu. Anchoring to the Services <li> instead would push
      the panel's right edge past the container at narrow desktop widths. */
   position: relative;
+  /* Absorbs all the slack between the logo and the phone/CTA group, then
+     centres the list inside it — so the nav sits in the middle of the space
+     that is actually left over, not the middle of the bar. */
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 .hhcp-hdr__nav-list > li[data-mega="true"] {
   position: static;
@@ -225,11 +231,17 @@ const HEADER_CSS = `
 .hhcp-hdr__mega {
   position: absolute;
   top: 100%;
-  left: 0;
-  transform: translateY(var(--hhcp-space-xs));
+  /* Centred under the nav, which is itself centred in the leftover space.
+     Left-anchoring it would sit the panel hard against the logo while the
+     "Services" label it belongs to floats in the middle. */
+  left: 50%;
+  transform: translate(-50%, var(--hhcp-space-xs));
   z-index: 998;
   display: flex;
   flex-direction: row;
+  /* Wrapping is the safety net: if the panel is ever squeezed below its
+     content width, columns drop to a second row instead of overflowing. */
+  flex-wrap: wrap;
   gap: var(--hhcp-space-l);
   width: max-content;
   max-width: min(1030px, calc(100vw - var(--hhcp-space-m) * 2));
@@ -281,6 +293,14 @@ const HEADER_CSS = `
   transition: all 0.3s linear;
 }
 .hhcp-hdr__mega-list a:hover { color: var(--hhcp-action-dark); }
+
+/* Between 991 and 1184px the nav's centre sits well left of the viewport's, so
+   a full-width panel centred on it would spill off the left edge. Narrower
+   columns and a tighter gap pull the panel in rather than letting it clip. */
+@media (max-width: 1184px) {
+  .hhcp-hdr__mega { gap: var(--hhcp-space-m); }
+  .hhcp-hdr__mega-col { min-width: 150px; }
+}
 
 /* ---------- Services submenu ---------- */
 .hhcp-hdr__submenu {
