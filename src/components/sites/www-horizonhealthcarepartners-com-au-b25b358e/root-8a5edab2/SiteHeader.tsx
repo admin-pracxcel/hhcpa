@@ -124,6 +124,21 @@ const HEADER_CSS = `
      to the nav or the <li> is what makes it structurally unable to extend past
      the header, at any viewport width. */
   position: relative;
+  transition: border-radius 0.3s linear;
+}
+/*
+ * With the panel seated flush, the pill's rounded bottom corners leave two
+ * small notches of background showing beside the panel's square top corners.
+ * Squaring them while the panel is open makes the join exact.
+ *
+ * Pulling the panel up instead would not work: it is a descendant of the pill,
+ * so it always paints above the pill's background rather than tucking behind
+ * it — it would square these corners anyway, and drag the top hairline up
+ * across the white pill face.
+ */
+.hhcp-hdr__bar-inner[data-mega-open="true"] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 @media (max-width: 991px) {
   .hhcp-hdr__bar-wrapper {
@@ -552,6 +567,11 @@ export function SiteHeader() {
    * tracked by label rather than as a single boolean. `null` means all closed.
    */
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  /* True only for a columns-style item, so the simple About dropdown — which is
+     narrow and does not meet the pill edge-to-edge — leaves the radius alone. */
+  const megaOpen = NAV_ITEMS.some(
+    (item) => item.columns !== undefined && item.label === openMenu,
+  );
   const [openDrawerMenu, setOpenDrawerMenu] = useState<string | null>(null);
 
   const closeMenu = useCallback(() => {
@@ -601,7 +621,7 @@ export function SiteHeader() {
         {/* White pill nav bar */}
         <div className="hhcp-hdr__bar">
           <div className={cn("hhcp-container", "hhcp-hdr__bar-wrapper")}>
-            <div className="hhcp-hdr__bar-inner">
+            <div className="hhcp-hdr__bar-inner" data-mega-open={megaOpen}>
               <button
                 type="button"
                 className="hhcp-hdr__burger"
