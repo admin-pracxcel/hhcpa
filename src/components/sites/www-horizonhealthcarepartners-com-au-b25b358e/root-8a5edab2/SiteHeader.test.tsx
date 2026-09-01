@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+import { publicRoutes } from "@/content/routes";
 import { SiteHeader } from "./SiteHeader";
 
 describe("SiteHeader", () => {
@@ -11,17 +12,54 @@ describe("SiteHeader", () => {
     expect(external).toHaveLength(0);
   });
 
-  it("renders the four service silos", () => {
+  it("keeps four top-level items so the row cannot overflow", () => {
     render(<SiteHeader />);
     const nav = screen.getAllByRole("navigation")[0];
-    for (const label of [
-      "Weight Loss & Peptides",
-      "Men's Health",
-      "Women's Health",
-      "Online Doctor",
+    const topLevel = within(nav).getAllByRole("link").filter((a) =>
+      a.classList.contains("hhcp-hdr__nav-link"),
+    );
+    expect(topLevel.map((a) => a.textContent)).toEqual([
+      "Services",
+      "How It Works",
+      "Pricing",
+      "About",
+    ]);
+  });
+
+  it("reaches all four visible silos and their sub-pages via the mega-menu", () => {
+    // The mega panel ships `visibility: hidden` until hover, so it is absent
+    // from the accessibility tree. Query the DOM directly rather than by role.
+    const { container } = render(<SiteHeader />);
+    const hrefs = Array.from(container.querySelectorAll("a[href]")).map((a) =>
+      a.getAttribute("href"),
+    );
+    for (const href of [
+      "/weight-loss-peptides/",
+      "/mens-health/",
+      "/womens-health/",
+      "/online-doctor/",
+      "/weight-loss-peptides/weight-loss-injections/",
+      "/mens-health/hair-loss-treatment/",
+      "/womens-health/pcos-management/",
+      "/online-doctor/mental-health/",
     ]) {
-      expect(within(nav).getAllByText(label).length).toBeGreaterThan(0);
+      expect(hrefs).toContain(href);
     }
+  });
+
+  it("keeps every sitemap service page reachable from the header", () => {
+    const { container } = render(<SiteHeader />);
+    const hrefs = new Set(
+      Array.from(container.querySelectorAll("a[href]")).map((a) => a.getAttribute("href")),
+    );
+    // 4 visible hubs + 14 sub-pages. Medicinal Cannabis and its hub are gated.
+    const servicePaths = publicRoutes()
+      .map((r) => r.path)
+      .filter((p) =>
+        /^\/(weight-loss-peptides|mens-health|womens-health|online-doctor)\//.test(p),
+      );
+    expect(servicePaths).toHaveLength(18);
+    for (const path of servicePaths) expect(hrefs).toContain(path);
   });
 
   it("omits gated destinations", () => {

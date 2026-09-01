@@ -66,3 +66,49 @@ the left edge of the 1340px container.
 Nothing else moves. `.hhcp-hdr__banner-info` already carries `align-items: center`,
 which is what centres the stacked link horizontally once that row flips to a
 column at ≤478px, so the single change holds at every breakpoint.
+
+## 4. Four service silos live in one Services mega-menu
+
+**Problem:** `HHCPA_Sitemap_and_Navigation.pdf` §3 proposes four separate top-level
+service dropdowns. Built that way, the header overflowed the document and produced
+a horizontal scrollbar.
+
+Roboto Mono is monospace, so the nav width is exact rather than estimated
+(12px advance = 7.2px, plus 0.36px letter-spacing):
+
+| Element | Width |
+|---|---:|
+| Logo | 145 |
+| Nav — 7 items (links 643 + chevrons 100 + gaps 192) | **935** |
+| Phone | 84 |
+| CTA button | 175 |
+| Bar padding + three 67.5px gaps | 250 |
+| **Total** | **1589** |
+| Available (1340 container − 40 padding) | **1300** |
+
+289px over. `WEIGHT LOSS & PEPTIDES` alone is 166px. Tightening the nav gap from
+32px to 18px recovers only ~40px of it, so this was not solvable in CSS.
+
+**Change** — the four silos become columns of a single Services mega-menu:
+
+| | Before | After |
+|---|---:|---:|
+| top-level items | 7 | 4 |
+| nav width | 935 | **378** |
+| header total | 1589 | **1032** |
+
+Top row is now `SERVICES · HOW IT WORKS · PRICING · ABOUT`, with 268px of slack.
+Every page in the sitemap is still one hover and one click away, and this is what
+the original site did — it also had a single Services dropdown.
+
+Two structural details:
+
+- The panel is anchored to `.hhcp-hdr__nav` (`position: relative`) rather than the
+  Services `<li>` (`position: static` via `[data-mega]`). Anchored to the `<li>`,
+  its right edge would spill past the container at 1340px viewport.
+- A gated silo takes its whole column with it, so the sub-pages of a withheld
+  service are unreachable from the menu — not just its hub link. Medicinal
+  Cannabis is the fifth column and appears on compliance sign-off.
+
+`src/content/nav.test.ts` carries a width budget asserting the rendered top row
+stays under the available row, so this regression cannot return silently.

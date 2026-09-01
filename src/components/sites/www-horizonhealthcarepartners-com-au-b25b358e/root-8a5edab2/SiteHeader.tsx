@@ -159,6 +159,14 @@ const HEADER_CSS = `
 }
 
 /* ---------- Desktop nav ---------- */
+.hhcp-hdr__nav {
+  /* Anchors the mega-menu. Anchoring to the Services <li> instead would push
+     the panel's right edge past the container at narrow desktop widths. */
+  position: relative;
+}
+.hhcp-hdr__nav-list > li[data-mega="true"] {
+  position: static;
+}
 .hhcp-hdr__nav-list {
   display: flex;
   flex-direction: row;
@@ -212,6 +220,67 @@ const HEADER_CSS = `
     display: none;
   }
 }
+
+/* ---------- Services mega-menu ---------- */
+.hhcp-hdr__mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: translateY(var(--hhcp-space-xs));
+  z-index: 998;
+  display: flex;
+  flex-direction: row;
+  gap: var(--hhcp-space-l);
+  width: max-content;
+  max-width: min(1030px, calc(100vw - var(--hhcp-space-m) * 2));
+  padding: var(--hhcp-space-m);
+  background-color: var(--hhcp-white);
+  border: 1px solid var(--hhcp-neutral-ultra-light);
+  border-radius: var(--hhcp-radius-s);
+  box-shadow: 4px 4px 12px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s linear;
+}
+.hhcp-hdr__mega[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+.hhcp-hdr__mega-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 170px;
+}
+.hhcp-hdr__mega-title {
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: var(--hhcp-primary);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hhcp-neutral-ultra-light);
+  transition: all 0.3s linear;
+}
+.hhcp-hdr__mega-title:hover { color: var(--hhcp-action-dark); }
+.hhcp-hdr__mega-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hhcp-hdr__mega-list a {
+  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--hhcp-text-s);
+  line-height: 1.4;
+  color: var(--hhcp-base-80);
+  text-decoration: none;
+  transition: all 0.3s linear;
+}
+.hhcp-hdr__mega-list a:hover { color: var(--hhcp-action-dark); }
 
 /* ---------- Services submenu ---------- */
 .hhcp-hdr__submenu {
@@ -373,6 +442,19 @@ const HEADER_CSS = `
 .hhcp-hdr__drawer-toggle[aria-expanded="true"] {
   transform: rotate(180deg);
 }
+/* Mega-menu silo headings in the drawer: same weight as a sublist row, but
+   tinted and tracked so the 19 service pages read as five groups, not one list. */
+.hhcp-hdr__drawer-subheading {
+  color: var(--hhcp-action) !important;
+  letter-spacing: 0.36px;
+}
+.hhcp-hdr__drawer-subitem {
+  text-transform: none !important;
+  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif !important;
+  padding-left: calc(var(--hhcp-space-l) + 12px) !important;
+  line-height: 34px !important;
+}
+
 .hhcp-hdr__drawer-sublist a {
   display: block;
   width: 100%;
@@ -486,9 +568,10 @@ export function SiteHeader() {
               <nav className="hhcp-hdr__nav" aria-label="Primary">
                 <ul className="hhcp-hdr__nav-list">
                   {NAV_ITEMS.map((item) =>
-                    item.children ? (
+                    item.columns || item.children ? (
                       <li
                         key={item.label}
+                        data-mega={item.columns ? "true" : undefined}
                         onMouseEnter={() => setOpenMenu(item.label)}
                         onMouseLeave={() => setOpenMenu(null)}
                         onBlur={handleMenuBlur}
@@ -514,16 +597,40 @@ export function SiteHeader() {
                             <ChevronDownIcon />
                           </button>
                         </div>
-                        <ul
-                          className="hhcp-hdr__submenu"
-                          data-open={openMenu === item.label}
-                        >
-                          {item.children.map((child) => (
-                            <li key={child.label}>
-                              <a href={child.href}>{child.label}</a>
-                            </li>
-                          ))}
-                        </ul>
+                        {item.columns ? (
+                          <div
+                            className="hhcp-hdr__mega"
+                            data-open={openMenu === item.label}
+                          >
+                            {item.columns.map((column) => (
+                              <div key={column.title} className="hhcp-hdr__mega-col">
+                                <a className="hhcp-hdr__mega-title" href={column.href}>
+                                  {column.title}
+                                </a>
+                                {column.links.length > 0 ? (
+                                  <ul className="hhcp-hdr__mega-list">
+                                    {column.links.map((link) => (
+                                      <li key={link.href}>
+                                        <a href={link.href}>{link.label}</a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : null}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <ul
+                            className="hhcp-hdr__submenu"
+                            data-open={openMenu === item.label}
+                          >
+                            {item.children?.map((child) => (
+                              <li key={child.label}>
+                                <a href={child.href}>{child.label}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
                     ) : (
                       <li key={item.label}>
@@ -568,7 +675,7 @@ export function SiteHeader() {
                     >
                       {item.label}
                     </a>
-                    {item.children ? (
+                    {item.children || item.columns ? (
                       <button
                         type="button"
                         className="hhcp-hdr__drawer-toggle"
@@ -587,13 +694,40 @@ export function SiteHeader() {
                       </button>
                     ) : null}
                   </div>
-                  {item.children && openDrawerMenu === item.label ? (
+                  {openDrawerMenu === item.label && item.children ? (
                     <ul className="hhcp-hdr__drawer-sublist">
                       {item.children.map((child) => (
                         <li key={child.label}>
                           <a href={child.href} onClick={closeMenu}>
                             {child.label}
                           </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                  {/* The mega-menu flattens in the drawer: each silo becomes a
+                      heading link followed by its sub-pages. */}
+                  {openDrawerMenu === item.label && item.columns ? (
+                    <ul className="hhcp-hdr__drawer-sublist">
+                      {item.columns.map((column) => (
+                        <li key={column.href}>
+                          <a
+                            className="hhcp-hdr__drawer-subheading"
+                            href={column.href}
+                            onClick={closeMenu}
+                          >
+                            {column.title}
+                          </a>
+                          {column.links.map((link) => (
+                            <a
+                              key={link.href}
+                              className="hhcp-hdr__drawer-subitem"
+                              href={link.href}
+                              onClick={closeMenu}
+                            >
+                              {link.label}
+                            </a>
+                          ))}
                         </li>
                       ))}
                     </ul>
