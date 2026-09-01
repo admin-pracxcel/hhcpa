@@ -56,7 +56,9 @@ const HEADER_CSS = `
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: flex-start;
+  /* Deviation from the target, which left-aligns this strip. See
+     CUSTOMISATIONS.md. */
+  justify-content: center;
   column-gap: var(--hhcp-content-gap);
   padding: 11px 20px;
 }

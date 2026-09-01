@@ -48,3 +48,21 @@ content-driven, exactly as the target has it, so mobile is unaffected.
 
 Ported at explicit request; see `VISUAL_QA.md` → Known gaps. The embed is the real
 clinic's live widget, so the page can take real bookings.
+
+## 3. Announcement bar is centred
+
+**Requested:** the strip above the header should have its text in the centre.
+
+**Target behaviour:** `.banner-7` lays its inner row out with
+`justify-content: flex-start`, so "Take our Pre-Screening Quiz" sits hard against
+the left edge of the 1340px container.
+
+**Change** — `SiteHeader.tsx`, one value:
+
+| | Before (target) | After |
+|---|---|---|
+| `.hhcp-hdr__banner-inner` | `justify-content: flex-start` | `justify-content: center` |
+
+Nothing else moves. `.hhcp-hdr__banner-info` already carries `align-items: center`,
+which is what centres the stacked link horizontally once that row flips to a
+column at ≤478px, so the single change holds at every breakpoint.
