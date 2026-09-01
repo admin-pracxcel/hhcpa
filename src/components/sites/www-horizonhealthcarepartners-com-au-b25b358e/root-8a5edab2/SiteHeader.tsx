@@ -359,11 +359,22 @@ const HEADER_CSS = `
   top: 50%;
   transform: rotate(-45deg);
 }
-/* ---------- Header phone number ---------- */
+/* ---------- Phone number + CTA ---------- */
+.hhcp-hdr__actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--hhcp-space-s);
+  flex: none;
+  /* Holds the pair against the right edge regardless of how much slack the
+     row's space-between has to distribute. */
+  margin-left: auto;
+}
 .hhcp-hdr__phone {
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
+  text-align: right;
   color: var(--hhcp-primary);
   transition: all 0.3s linear;
 }
@@ -371,7 +382,7 @@ const HEADER_CSS = `
 
 @media (max-width: 991px) {
   .hhcp-hdr__burger { display: block; order: 0; }
-  .hhcp-hdr__cta { order: 2; }
+  .hhcp-hdr__actions { order: 2; margin-left: 0; }
   /* The drawer and the sticky mobile CTA bar both carry the number below 991px,
      so the header copy would be a third instance competing for the same space. */
   .hhcp-hdr__phone { display: none; }
@@ -643,14 +654,19 @@ export function SiteHeader() {
                 </ul>
               </nav>
 
-              {/* Sitemap §3: the phone number appears in the header on every page. */}
-              <a className="hhcp-hdr__phone" href={CLINIC.phoneHref}>
-                {CLINIC.phone}
-              </a>
+              {/* Sitemap §3: the phone number appears in the header on every
+                  page. It is grouped with the CTA rather than being a fourth
+                  sibling, so the pair stays flush right instead of the row's
+                  space-between distribution floating the number mid-row. */}
+              <div className="hhcp-hdr__actions">
+                <a className="hhcp-hdr__phone" href={CLINIC.phoneHref}>
+                  {CLINIC.phone}
+                </a>
 
-              <a className={cn("hhcp-btn", "hhcp-hdr__cta")} href={CTA.href}>
-                {CTA.label}
-              </a>
+                <a className={cn("hhcp-btn", "hhcp-hdr__cta")} href={CTA.href}>
+                  {CTA.label}
+                </a>
+              </div>
             </div>
           </div>
         </div>
