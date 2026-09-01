@@ -12,51 +12,26 @@
  * away with the page. No scroll listeners anywhere.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FocusEvent } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "../shared/icons";
+import { visibleNavItems, type NavItem } from "@/content/nav";
+import { CLINIC } from "@/content/clinic";
 
-const SITE = "https://www.horizonhealthcarepartners.com.au";
 const LOGO_SRC =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/logo-colour.svg";
 
-type NavItem = {
-  label: string;
-  href: string;
-  children?: readonly { label: string; href: string }[];
-};
+/**
+ * Navigation comes from the route registry rather than being declared here, so
+ * gated pages cannot appear in the menu while being hidden from the sitemap.
+ * Paths are relative: this site now *is* horizonhealthcarepartners.com.au, and
+ * absolute links back to the WordPress build would send visitors off-site.
+ */
+const NAV_ITEMS: readonly NavItem[] = visibleNavItems();
 
-const SERVICES_SUBMENU = [
-  { label: "General Telehealth", href: "/services/?service=general#hhp-booking-wrapper" },
-  { label: "Mental Health", href: "/services/?service=mental-health#hhp-booking-wrapper" },
-  { label: "Holistic Care", href: "/services/?service=holistic#hhp-booking-wrapper" },
-  { label: "Men’s and Women’s Health", href: "/services?service=menopause#hhp-booking-wrapper" },
-  {
-    label: "Continuity & Preventative Health",
-    href: "/services/?service=covid#hhp-booking-wrapper",
-  },
-  {
-    label: "Health Optimisation",
-    href: "/services/?service=health-optimisation#hhp-booking-wrapper",
-  },
-  {
-    label: "Weight Management",
-    href: "/services/?service=weight-management#hhp-booking-wrapper",
-  },
-] as const;
-
-const NAV_ITEMS: readonly NavItem[] = [
-  { label: "About Us", href: `${SITE}/about-us/` },
-  { label: "Services", href: `${SITE}/services/`, children: SERVICES_SUBMENU },
-  { label: "Pricing", href: `${SITE}/pricing/` },
-  { label: "How It Works", href: `${SITE}/how-it-works/` },
-  { label: "Articles", href: `${SITE}/articles/` },
-  { label: "Patient Portal", href: "https://escript.link/" },
-  { label: "Contact", href: `${SITE}/contact/` },
-] as const;
-
-const CTA = { label: "Book Consultation", href: `${SITE}/quiz/` } as const;
+const CTA = { label: "Book a consultation", href: "/quiz/" } as const;
 
 /* Scoped stylesheet — every value transcribed from the source's computed styles. */
 const HEADER_CSS = `
@@ -313,9 +288,22 @@ const HEADER_CSS = `
   top: 50%;
   transform: rotate(-45deg);
 }
+/* ---------- Header phone number ---------- */
+.hhcp-hdr__phone {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--hhcp-primary);
+  transition: all 0.3s linear;
+}
+.hhcp-hdr__phone:hover { color: var(--hhcp-action-dark); }
+
 @media (max-width: 991px) {
   .hhcp-hdr__burger { display: block; order: 0; }
   .hhcp-hdr__cta { order: 2; }
+  /* The drawer and the sticky mobile CTA bar both carry the number below 991px,
+     so the header copy would be a third instance competing for the same space. */
+  .hhcp-hdr__phone { display: none; }
 }
 
 /* ---------- Mobile drawer ---------- */
@@ -420,31 +408,38 @@ const HEADER_CSS = `
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const [drawerServicesOpen, setDrawerServicesOpen] = useState(false);
-  const servicesItemRef = useRef<HTMLLIElement | null>(null);
+  /**
+   * There are now four service dropdowns plus an About menu, so open-state is
+   * tracked by label rather than as a single boolean. `null` means all closed.
+   */
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [openDrawerMenu, setOpenDrawerMenu] = useState<string | null>(null);
 
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
-    setDrawerServicesOpen(false);
+    setOpenDrawerMenu(null);
   }, []);
 
   useEffect(() => {
-    if (!menuOpen && !servicesOpen) return;
+    if (!menuOpen && openMenu === null) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      setServicesOpen(false);
+      setOpenMenu(null);
       closeMenu();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [menuOpen, servicesOpen, closeMenu]);
+  }, [menuOpen, openMenu, closeMenu]);
 
-  // Close the desktop dropdown when focus leaves the Services list item.
-  const handleServicesBlur = useCallback((event: FocusEvent<HTMLLIElement>) => {
+  /**
+   * Close a desktop dropdown when focus leaves its list item. `currentTarget` is
+   * the <li> the handler is bound to, so this works for every dropdown without
+   * needing a ref per item.
+   */
+  const handleMenuBlur = useCallback((event: FocusEvent<HTMLLIElement>) => {
     const next = event.relatedTarget as Node | null;
-    if (next && servicesItemRef.current?.contains(next)) return;
-    setServicesOpen(false);
+    if (next && event.currentTarget.contains(next)) return;
+    setOpenMenu(null);
   }, []);
 
   return (
@@ -456,7 +451,7 @@ export function SiteHeader() {
         <div className="hhcp-hdr__banner">
           <div className={cn("hhcp-container", "hhcp-hdr__banner-inner")}>
             <div className="hhcp-hdr__banner-info">
-              <a className="hhcp-hdr__banner-link" href={`${SITE}/quiz/`}>
+              <a className="hhcp-hdr__banner-link" href="/quiz/">
                 {"Take our "}
                 <span>Pre-Screening Quiz</span>
               </a>
@@ -481,10 +476,10 @@ export function SiteHeader() {
                 <span />
               </button>
 
-              <a className="hhcp-hdr__logo" href={SITE}>
+              <Link className="hhcp-hdr__logo" href="/">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={LOGO_SRC} alt="HHCPA" />
-              </a>
+              </Link>
 
               <nav className="hhcp-hdr__nav" aria-label="Primary">
                 <ul className="hhcp-hdr__nav-list">
@@ -492,10 +487,9 @@ export function SiteHeader() {
                     item.children ? (
                       <li
                         key={item.label}
-                        ref={servicesItemRef}
-                        onMouseEnter={() => setServicesOpen(true)}
-                        onMouseLeave={() => setServicesOpen(false)}
-                        onBlur={handleServicesBlur}
+                        onMouseEnter={() => setOpenMenu(item.label)}
+                        onMouseLeave={() => setOpenMenu(null)}
+                        onBlur={handleMenuBlur}
                       >
                         <div className="hhcp-hdr__nav-item">
                           <a className="hhcp-hdr__nav-link" href={item.href}>
@@ -504,17 +498,24 @@ export function SiteHeader() {
                           <button
                             type="button"
                             className="hhcp-hdr__nav-toggle"
-                            aria-expanded={servicesOpen}
+                            aria-expanded={openMenu === item.label}
                             aria-label={`${
-                              servicesOpen ? "Hide" : "Show"
+                              openMenu === item.label ? "Hide" : "Show"
                             } ${item.label} submenu`}
-                            onClick={() => setServicesOpen((open) => !open)}
-                            onFocus={() => setServicesOpen(true)}
+                            onClick={() =>
+                              setOpenMenu((open) =>
+                                open === item.label ? null : item.label,
+                              )
+                            }
+                            onFocus={() => setOpenMenu(item.label)}
                           >
                             <ChevronDownIcon />
                           </button>
                         </div>
-                        <ul className="hhcp-hdr__submenu" data-open={servicesOpen}>
+                        <ul
+                          className="hhcp-hdr__submenu"
+                          data-open={openMenu === item.label}
+                        >
                           {item.children.map((child) => (
                             <li key={child.label}>
                               <a href={child.href}>{child.label}</a>
@@ -532,6 +533,11 @@ export function SiteHeader() {
                   )}
                 </ul>
               </nav>
+
+              {/* Sitemap §3: the phone number appears in the header on every page. */}
+              <a className="hhcp-hdr__phone" href={CLINIC.phoneHref}>
+                {CLINIC.phone}
+              </a>
 
               <a className={cn("hhcp-btn", "hhcp-hdr__cta")} href={CTA.href}>
                 {CTA.label}
@@ -564,18 +570,22 @@ export function SiteHeader() {
                       <button
                         type="button"
                         className="hhcp-hdr__drawer-toggle"
-                        aria-expanded={drawerServicesOpen}
+                        aria-expanded={openDrawerMenu === item.label}
                         aria-label={`${
-                          drawerServicesOpen ? "Hide" : "Show"
+                          openDrawerMenu === item.label ? "Hide" : "Show"
                         } ${item.label} submenu`}
                         tabIndex={menuOpen ? undefined : -1}
-                        onClick={() => setDrawerServicesOpen((open) => !open)}
+                        onClick={() =>
+                          setOpenDrawerMenu((open) =>
+                            open === item.label ? null : item.label,
+                          )
+                        }
                       >
                         <ChevronDownIcon />
                       </button>
                     ) : null}
                   </div>
-                  {item.children && drawerServicesOpen ? (
+                  {item.children && openDrawerMenu === item.label ? (
                     <ul className="hhcp-hdr__drawer-sublist">
                       {item.children.map((child) => (
                         <li key={child.label}>

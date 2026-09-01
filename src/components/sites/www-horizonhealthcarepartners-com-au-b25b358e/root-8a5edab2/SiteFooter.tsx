@@ -26,48 +26,27 @@
  * against the Tailwind preflight's `font: inherit` reset.
  */
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
   LinkedInIcon,
   FacebookSquareIcon,
   InstagramIcon,
 } from "../shared/icons";
+import { visibleFooterColumns, FOOTER_BAR_LINKS } from "@/content/footer";
+import { CLINIC } from "@/content/clinic";
 
-const SITE = "https://www.horizonhealthcarepartners.com.au";
 const LOGO_SRC =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/logo-light-tagline.svg";
 
-interface FooterLink {
-  readonly label: string;
-  readonly href: string;
-}
-
-interface MenuColumn {
-  readonly heading: string;
-  readonly links: readonly FooterLink[];
-}
-
-const MENU_COLUMNS: readonly MenuColumn[] = [
-  {
-    heading: "Pages",
-    links: [
-      { label: "About Us", href: `${SITE}/about-us/` },
-      { label: "Pricing", href: `${SITE}/pricing/` },
-      { label: "How It Works", href: `${SITE}/how-it-works/` },
-      { label: "FAQs", href: `${SITE}/faqs/` },
-      { label: "Articles", href: `${SITE}/articles/` },
-    ],
-  },
-  {
-    heading: "SUPPORT LINKS",
-    links: [
-      { label: "Check Eligibility", href: `${SITE}/quiz/` },
-      { label: "Discharge Letter", href: `${SITE}/discharge/` },
-      { label: "Patient Portal", href: "https://escript.link/" },
-      { label: "Contact Us", href: `${SITE}/contact/` },
-    ],
-  },
-] as const;
+/**
+ * Columns come from the route registry via `visibleFooterColumns()`, so a gated
+ * page cannot appear here while being hidden from the sitemap. Column 1 is the
+ * NAP block, rendered from CLINIC; column 5 is the newsletter form. Both carry
+ * no links, so only columns 2 to 4 are mapped.
+ */
+const COLUMNS = visibleFooterColumns();
+const LINK_COLUMNS = COLUMNS.filter((column) => column.links.length > 0);
 
 interface SocialLink {
   readonly label: string;
@@ -93,34 +72,14 @@ const SOCIAL_LINKS: readonly SocialLink[] = [
   },
 ] as const;
 
-interface ContactItem {
-  readonly label: string;
-  readonly value: string;
-  readonly href: string;
-}
-
-const CONTACT_ITEMS: readonly ContactItem[] = [
-  {
-    label: "Email",
-    value: "hello@horizonhealthcarepartners.com.au",
-    href: "mailto:hello@horizonhealthcarepartners.com.au",
-  },
-  {
-    label: "Phone",
-    value: "1300 336 572",
-    href: "tel:1300336572",
-  },
-] as const;
-
-const LEGAL_LINKS: readonly FooterLink[] = [
-  { label: "Privacy Policy", href: `${SITE}/privacy/` },
-  { label: "Terms and Conditions", href: `${SITE}/terms-and-conditions/` },
-] as const;
-
 const CREDIT = "©  2026 by Horizon Health Care Partners. All Rights Reserved.";
 
-const DISCLAIMER =
-  "Disclaimer: Individual results may vary. No treatment outcomes are guaranteed. Prescriptions are provided only where clinically appropriate following a real-time consultation, and all clinical outcomes are at the treating practitioner's discretion. Always seek professional medical advice before commencing any treatment. If this is a medical emergency, call 000 immediately.";
+/**
+ * The footer no longer carries its own disclaimer. `SiteDisclaimer` renders the
+ * canonical text from `(site)/layout.tsx` on every page — the version here was
+ * both a duplicate and less complete, omitting the Lifeline and Beyond Blue
+ * numbers the content specification requires.
+ */
 
 const STYLES = `
 .hhcp-ft {
@@ -188,7 +147,32 @@ const STYLES = `
 .hhcp-ft-middle {
   display: flex;
   flex-direction: row;
-  gap: var(--hhcp-space-l, 45px);
+  /* Five columns now share this row rather than three, so the gap tightens and
+     the columns are allowed to wrap before they crush. */
+  gap: var(--hhcp-space-m, 30px);
+  flex-wrap: wrap;
+}
+
+/* Column 1 — NAP block. */
+.hhcp-ft-nap {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--hhcp-action-light, #baf8d9);
+  list-style: none;
+}
+.hhcp-ft-nap a {
+  color: var(--hhcp-action-light, #baf8d9);
+  transition: all 0.3s linear;
+}
+.hhcp-ft-nap a:hover { color: var(--hhcp-action, #58eda2); }
+
+.hhcp-ft-news-blurb {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--hhcp-action-light, #baf8d9);
 }
 
 .hhcp-ft-menu {
@@ -197,8 +181,9 @@ const STYLES = `
   align-items: flex-start;
   row-gap: var(--hhcp-space-s, 20px);
   max-width: 268px;
+  flex-basis: 180px;
   flex-grow: 1;
-  flex-shrink: 0;
+  flex-shrink: 1;
   width: auto;
   padding: 0;
 }
@@ -440,10 +425,10 @@ export function SiteFooter({ className }: SiteFooterProps) {
       <style>{STYLES}</style>
       <div className="hhcp-ft-container">
         <div className="hhcp-ft-top">
-          <a className="hhcp-ft-logo" href={SITE}>
+          <Link className="hhcp-ft-logo" href="/">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={LOGO_SRC} alt="HHCPA" />
-          </a>
+          </Link>
 
           <div className="hhcp-ft-social">
             {SOCIAL_LINKS.map(({ label, href, Icon }) => (
@@ -457,10 +442,32 @@ export function SiteFooter({ className }: SiteFooterProps) {
         <div className="hhcp-ft-divider" />
 
         <nav className="hhcp-ft-middle">
-          {MENU_COLUMNS.map((column) => (
-            <div key={column.heading} className="hhcp-ft-menu">
+          {/* Column 1 — the NAP block. Sitemap §4. */}
+          <div className="hhcp-ft-menu">
+            <span className="hhcp-ft-menu-heading font-roboto-mono">
+              {CLINIC.name}
+            </span>
+            <ul className="hhcp-ft-nap font-dm-sans">
+              <li>AHPRA-registered telehealth care, Australia-wide.</li>
+              <li>
+                {CLINIC.legalName} · ABN {CLINIC.abn}
+              </li>
+              <li>
+                <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
+              </li>
+              <li>
+                <a href={CLINIC.emailHref}>{CLINIC.email}</a>
+              </li>
+              <li>
+                {CLINIC.serviceArea} · Hours: {CLINIC.hours}
+              </li>
+            </ul>
+          </div>
+
+          {LINK_COLUMNS.map((column) => (
+            <div key={column.title} className="hhcp-ft-menu">
               <span className="hhcp-ft-menu-heading font-roboto-mono">
-                {column.heading}
+                {column.title}
               </span>
               <ul className="hhcp-ft-menu-list">
                 {column.links.map((link) => (
@@ -477,8 +484,11 @@ export function SiteFooter({ className }: SiteFooterProps) {
           <div className="hhcp-ft-news">
             <div className="hhcp-ft-news-inner">
               <span className="hhcp-ft-news-heading font-roboto-mono">
-                Subscribe to our newsletter
+                Newsletter
               </span>
+              <p className="hhcp-ft-news-blurb font-dm-sans">
+                Email sign-up for occasional health guidance.
+              </p>
 
               <form
                 className="hhcp-ft-form"
@@ -502,18 +512,6 @@ export function SiteFooter({ className }: SiteFooterProps) {
               </p>
             </div>
 
-            <ul className="hhcp-ft-contact">
-              {CONTACT_ITEMS.map((item) => (
-                <li key={item.href}>
-                  <span className="hhcp-ft-contact-label font-roboto-mono">
-                    {item.label}
-                  </span>
-                  <a className="hhcp-ft-contact-value font-dm-sans" href={item.href}>
-                    {item.value}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
         </nav>
 
@@ -524,7 +522,7 @@ export function SiteFooter({ className }: SiteFooterProps) {
             <small className="hhcp-ft-credit">{CREDIT}</small>
 
             <ul className="hhcp-ft-legal">
-              {LEGAL_LINKS.map((link) => (
+              {FOOTER_BAR_LINKS.map((link) => (
                 <li key={link.href}>
                   <a className="font-dm-sans" href={link.href}>
                     {link.label}
@@ -533,8 +531,6 @@ export function SiteFooter({ className }: SiteFooterProps) {
               ))}
             </ul>
           </div>
-
-          <p className="hhcp-ft-disclaimer">{DISCLAIMER}</p>
         </div>
       </div>
     </footer>
