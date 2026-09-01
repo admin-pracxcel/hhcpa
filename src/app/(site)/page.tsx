@@ -4,14 +4,16 @@
  * Assembly order and layering follow
  * `docs/research/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/PAGE_TOPOLOGY.md`.
  *
- * Two things about the page-level layout are load-bearing:
- *  - The header is NOT sticky. It is an absolutely-positioned overlay (z-index 1) that scrolls
- *    away with the page, so it must render before <main> and must not be wrapped in anything
- *    that establishes a new stacking or positioning context.
- *  - There is no smooth-scroll library, no scroll-snap, and no scroll-driven animation anywhere
- *    on this page. Scrolling is native. Do not add any.
+ * The header, footer, disclaimer and sticky mobile CTA come from
+ * `(site)/layout.tsx` — this file renders page sections only.
+ *
+ * One thing about this page is load-bearing: there is no smooth-scroll library,
+ * no scroll-snap, and no scroll-driven animation anywhere on it. Scrolling is
+ * native. Do not add any.
+ *
+ * Note this is still the cloned homepage. The content specification replaces it
+ * with a different 12-module map (spec section 3.1); that is Phase 2 work.
  */
-import { SiteHeader } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteHeader";
 import { HeroSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/HeroSection";
 import { FeatureMarquee } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FeatureMarquee";
 import { SupportSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SupportSection";
@@ -24,28 +26,23 @@ import { ApproachSection } from "@/components/sites/www-horizonhealthcarepartner
 import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
 import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
 import { FaqSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FaqSection";
-import { SiteFooter } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteFooter";
 
 export default function Home() {
   return (
     <>
-      <SiteHeader />
-      <main id="brx-content">
-        <HeroSection />
-        <FeatureMarquee />
-        <SupportSection>
-          <BookingWizard />
-        </SupportSection>
-        <PricingSection />
-        <StepsSection />
-        <StorySection />
-        <CareAreasSection />
-        <ApproachSection />
-        <BlogSection />
-        <FinalCtaSection />
-        <FaqSection />
-      </main>
-      <SiteFooter />
+      <HeroSection />
+      <FeatureMarquee />
+      <SupportSection>
+        <BookingWizard />
+      </SupportSection>
+      <PricingSection />
+      <StepsSection />
+      <StorySection />
+      <CareAreasSection />
+      <ApproachSection />
+      <BlogSection />
+      <FinalCtaSection />
+      <FaqSection />
     </>
   );
 }
