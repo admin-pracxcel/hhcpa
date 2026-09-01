@@ -1,0 +1,226 @@
+
+.header--container {position: absolute; top: 0px; right: 0px; left: 0px; width: 100%; z-index: 1}
+.banner-7 {background-color: var(--bricks-color-iaghrs)}
+.banner-7__description {column-gap: var(--content-gap); flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: flex-start; padding-top: 1.1rem; padding-right: var(--space-s); padding-bottom: 1.1rem; padding-left: var(--space-s)}
+@media (max-width: 478px) {.banner-7__description {align-items: flex-start; padding-top: var(--space-s); padding-bottom: var(--space-s)}
+}
+.banner-7__container-info {column-gap: var(--content-gap); row-gap: var(--content-gap); flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: center}
+@media (max-width: 478px) {.banner-7__container-info {flex-direction: column}
+}
+.text-underline-link span { --bg-h: 0.14rem; background: linear-gradient(0deg, var(--primary), var(--primary)) no-repeat right bottom / 0 var(--bg-h); background-size: 100% var(--bg-h); background-position-x: left; background-position-y: 95%; transition: background-size 0.3s; padding-bottom: 0.28rem;}
+ .text-underline-link:hover span{ background-size: 0% var(--bg-h); background-position-x: right; background-position-y: 95%;}
+@media (max-width: 478px) {.text-underline-link {margin-bottom: 1rem}
+}
+@media (max-width: 478px) {.max-width-20 {max-width: 20rem}
+}
+.header-15 {margin-top: var(--space-xs)}
+@media (max-width: 991px) {.header-15__wrapper {padding-right: var(--space-xs); padding-left: var(--space-xs)}
+}
+.header-15__container {flex-direction: row; justify-content: space-between; align-items: center; column-gap: var(--space-xl); flex-wrap: nowrap; padding-top: 1.325rem; padding-right: 2.4rem; padding-bottom: 1.325rem; padding-left: 2.4rem; background-color: var(--white); border-radius: 0.6rem}
+@media (max-width: 991px) {.header-15__container {column-gap: var(--space-m)}
+}
+.header-15__logo .bricks-site-logo {height: 3rem}
+.header-15__logo {height: 3rem}
+.header-15__logo img { border-radius: 0;}
+@media (max-width: 991px) {.header-15__logo {order: 1; height: 2.8rem}
+.header-15__logo .bricks-site-logo {height: 2.8rem}
+}
+@media (max-width: 478px) {.header-15__logo .bricks-site-logo {height: 2.2rem}
+.header-15__logo {height: 2.2rem}
+}
+.header-15__menu .bricks-nav-menu > li {margin-top: auto; margin-bottom: auto; margin-left: 0}
+.header-15__menu .bricks-nav-menu > li > a {font-size: 1.2rem; font-weight: 500; color: var(--primary); letter-spacing: 0.36px; text-transform: uppercase; font-family: "Roboto Mono HHCP"}
+.header-15__menu .bricks-nav-menu > li > .brx-submenu-toggle > * {font-size: 1.2rem; font-weight: 500; color: var(--primary); letter-spacing: 0.36px; text-transform: uppercase; font-family: "Roboto Mono HHCP"}
+.header-15__menu .bricks-nav-menu .brx-submenu-toggle button {margin-left: 8px}
+.header-15__menu .bricks-nav-menu .sub-menu {background-color: var(--white); border: 1px solid var(--neutral-ultra-light); border-radius: var(--radius-xs); box-shadow: 4px 4px 12px 0 var(--neutral-trans-10)}
+.header-15__menu .bricks-nav-menu .sub-menu > li > a {color: var(--neutral); font-size: var(--text-s); font-weight: 600; line-height: 120%}
+.header-15__menu .bricks-nav-menu .sub-menu > li > .brx-submenu-toggle > * {color: var(--neutral); font-size: var(--text-s); font-weight: 600; line-height: 120%}
+.header-15__menu .bricks-nav-menu .sub-menu a {padding-top: var(--space-xs); padding-right: var(--space-s); padding-bottom: var(--space-xs); padding-left: var(--space-s)}
+.header-15__menu .bricks-nav-menu .sub-menu button {padding-top: var(--space-xs); padding-right: var(--space-s); padding-bottom: var(--space-xs); padding-left: var(--space-s)}
+.header-15__menu .bricks-nav-menu {flex-direction: row; gap: 3.2rem}
+.header-15__menu .bricks-nav-menu .sub-menu button > * {transform: rotateZ(-90deg)}
+.header-15__menu .bricks-nav-menu > li:hover > a {color: var(--action-dark)}
+.header-15__menu .bricks-nav-menu > li:hover > .brx-submenu-toggle > * {color: var(--action-dark)}
+.header-15__menu .bricks-nav-menu > li > .sub-menu {transform: translateY(var(--space-xs))}
+.header-15__menu .bricks-nav-menu > li > .brx-megamenu {transform: translateY(var(--space-xs))}
+.header-15__menu .bricks-nav-menu .sub-menu .menu-item:hover {background-color: var(--neutral-ultra-light)}
+@media screen and (min-width: 991px) and (max-width: 1184px) { .register-btn { display: none !important;}
+ .header-15__menu .bricks-nav-menu { gap: 1.8rem;}
+}
+@media (max-width: 991px) {.header-15__menu.show-mobile-menu .bricks-mobile-menu-toggle {color: var(--white) !important}
+.header-15__menu .bricks-mobile-menu .sub-menu > li > a {font-size: var(--text-s); text-transform: uppercase; color: var(--white)}
+.header-15__menu .bricks-mobile-menu .sub-menu > li > .brx-submenu-toggle > * {font-size: var(--text-s); text-transform: uppercase; color: var(--white)}
+.header-15__menu .bricks-mobile-menu .sub-menu > .menu-item > a {padding-right: var(--space-l); padding-left: var(--space-l)}
+.header-15__menu .bricks-mobile-menu .sub-menu > .menu-item > .brx-submenu-toggle > * {padding-right: var(--space-l); padding-left: var(--space-l)}
+.header-15__menu .bricks-mobile-menu > li > a {color: var(--action-light); font-size: var(--text-s); text-transform: uppercase; padding-top: 0; padding-right: var(--space-m); padding-bottom: 0; padding-left: var(--space-m)}
+.header-15__menu .bricks-mobile-menu > li > .brx-submenu-toggle > * {color: var(--action-light); font-size: var(--text-s); text-transform: uppercase; padding-top: 0; padding-right: var(--space-m); padding-bottom: 0; padding-left: var(--space-m)}
+.header-15__menu .bricks-mobile-menu-overlay {background-color: var(--black-trans-40)}
+.header-15__menu {order: 3; margin-left: 0}
+.header-15__menu .bricks-mobile-menu-wrapper:before {background-color: var(--primary)}
+.header-15__menu .bricks-mobile-menu > li > a:hover {color: var(--action)}
+.header-15__menu .bricks-mobile-menu > li > .brx-submenu-toggle > *:hover {color: var(--action)}
+.header-15__menu .bricks-mobile-menu [aria-current="page"] {color: var(--action)}
+.header-15__menu .bricks-mobile-menu [aria-current="page"] + button {color: var(--action)}
+.header-15__menu .bricks-mobile-menu > .current-menu-item > a {color: var(--action)}
+.header-15__menu .bricks-mobile-menu > .current-menu-parent > a {color: var(--action)}
+.header-15__menu .bricks-mobile-menu > .current-menu-item > .brx-submenu-toggle > * {color: var(--action)}
+.header-15__menu .bricks-mobile-menu > .current-menu-parent > .brx-submenu-toggle > * {color: var(--action)}
+.header-15__menu .bricks-mobile-menu > li > a[aria-current="page"] {background-color: var(--action-ultra-dark)}
+.header-15__menu .bricks-mobile-menu > .current-menu-item > .brx-submenu-toggle {background-color: var(--action-ultra-dark)}
+}
+.header-15__btn-container {flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: flex-end; column-gap: 1.6rem; width: auto; margin-left: auto}
+@media (max-width: 991px) {.header-15__btn-container {order: 2}
+}
+@media (max-width: 478px) {.header-15__btn-container {display: none}
+}
+.header-15__btn:hover {background-color: var(--primary-hover)}
+@media (max-width: 991px) {.header-15__btn {margin-left: auto}
+}
+.overflow--hidden {overflow: hidden}
+.hero--section {height: 106rem; background-blend-mode: overlay; background-position: top center; background-repeat: no-repeat; background-image: url("https://video.gumlet.io/6750e4dd948718dd94168ed1/68d380d204980dd75305e47a/thumbnail-1-0.png?v=1758694494307"); background-size: cover}
+@media (max-width: 991px) {.hero--section {height: auto}
+}
+@media (max-width: 478px) {.hero--section::before {width: 100%; height: 100%; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; background-color: var(--neutral-trans-30); content: ""}
+}
+.hero-bg-wrap {position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 0}
+.gumlet--video {height: 100%; width: 100%}
+.section-bg-overlay {position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, var(--black) 100%)}
+.margin--hero-top {margin-top: 39rem}
+@media (max-width: 767px) {.margin--hero-top {margin-top: 29rem}
+}
+@media (max-width: 478px) {.margin--hero-top {margin-top: 24rem}
+}
+.h--full {height: 100%}
+.gap--24 {row-gap: 2.4rem; column-gap: 2.4rem}
+.gap--1-6 {column-gap: 1.6rem; row-gap: 1.6rem}
+.book--consultation-form .fluentform .ff-btn-submit {padding-top: 1.23rem; padding-right: 2rem; padding-bottom: 1.23rem; padding-left: 2rem; background-color: var(--action); border-radius: 3.3rem; font-family: "Roboto Mono HHCP"; font-weight: 500; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.36px}
+.book--consultation-form .fluentform .ff-el-group:not(form > *:last-child) {margin-bottom: 0px}
+.book--consultation-form .fluentform .ff-message-success {color: var(--primary); background-color: var(--white); border: 1px solid var(--white); border-radius: 0.8rem; box-shadow: 0 0 0 0 rgba(0, 0, 0, 0)}
+.book--consultation-form .fluentform form .ff-btn-submit:not(.ff_btn_no_style) {background-color: var(--action)}
+.book--consultation-form {min-width: 40.4rem}
+.book--consultation-form .fluentform .ff-el-group input:not([type=radio]):not([type=checkbox]):not([type=submit]):not([type=button]):not([type=image]):not([type=file]) {font-size: 1.2rem; font-family: "Roboto Mono HHCP"; font-weight: 500; letter-spacing: 0.36px}
+.book--consultation-form .fluentform .ff-el-group textarea {font-size: 1.2rem; font-family: "Roboto Mono HHCP"; font-weight: 500; letter-spacing: 0.36px}
+.book--consultation-form .fluentform .ff-el-group select {font-size: 1.2rem; font-family: "Roboto Mono HHCP"; font-weight: 500; letter-spacing: 0.36px}
+.book--consultation-form{ max-width: 50rem;}
+ .book--consultation-form .ff-t-container:focus-within{ outline: 1px solid var(--action-trans-50) !important;}
+ .book--consultation-form .ff-t-container{ border: none; border-radius: 4rem; padding: 0.2rem 0.2rem 0.2rem 2.5rem; position: relative; background-color: var(--accent) !important; display: flex; align-items: center; justify-content: space-between;}
+ .book--consultation-form .ff-t-container:focus-within{ border-color: var(--action);}
+ .book--consultation-form .ff_submit_btn_wrapper{ display: flex; justify-content: flex-end;}
+ .book--consultation-form .ff-btn-submit{ margin: 0 !important; background-color: var(--action) !important; color: var(--primary) !important; border: none !important; transition: 0.4s !important; min-width: auto !important; line-height: 1.625 !important;}
+ .book--consultation-form .ff-btn-submit:hover, .book--consultation-form .ff-btn-submit:focus{ background-color: var(--action-dark) !important; color: var(--action-light) !important; opacity: 1 !important; transform: translate(0);}
+ .book--consultation-form input.ff-el-form-control{ background: transparent; position: relative; border: none; outline: none; padding: 0;}
+ .book--consultation-form .ff-t-column-1{ display: flex; justify-content: center;}
+ .book--consultation-form .ff-el-input--content .error{ position: absolute; top: 100%; left: 2.4rem;}
+ .book--consultation-form .ff-message-success{ margin-top: 0;}
+ .book--consultation-form .btn--hover { position: relative; overflow: hidden;}
+ .book--consultation-form .btn--hover:before { content: " "; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: -1; width: 100%; height: 100%;}
+ .book--consultation-form .btn--hover::before, .book--consultation-form .btn--hover::after { transition: 0.3s ease-out; border-radius: 0.8rem; transform: translateY(100%);}
+ .book--consultation-form .btn--hover[class*="secondary"]::before, .book--consultation-form .btn--hover[class*="secondary"]::after { background-color: var(--primary-trans-50);}
+ .book--consultation-form .btn--hover:after { content: " "; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: -1; width: 100%; height: 100%;}
+ .book--consultation-form .btn--hover::before, .book--consultation-form .btn--hover::after { transition: 0.3s ease-out; border-radius: 0.8rem; transform: translateY(100%);}
+ .book--consultation-form .btn--hover::after { transition-delay: 0.08s;}
+ .book--consultation-form .btn--hover:hover::before, .book--consultation-form .btn--hover:hover::after, .book--consultation-form .btn--hover:focus::before, .book--consultation-form .btn--hover:focus::after { transform: translateY(0%);}
+ .book--consultation-form .btn--hover[class*="secondary"]::before, .book--consultation-form .btn--hover[class*="secondary"]::after { background-color: var(--primary-trans-50);}
+@media (max-width: 767px) {.book--consultation-form {width: 100%; max-width: 40rem; min-width: auto}
+}
+@media (max-width: 478px) {.book--consultation-form .ff-t-container{ padding: 0.4rem; display: block; border-radius: 2rem;}
+.book--consultation-form .ff-t-container:focus-within{ border-color: var(--action);}
+.book--consultation-form .ff_submit_btn_wrapper{ display: flex; justify-content: flex-end;}
+.book--consultation-form .ff-btn{ width: 100% !important;}
+.book--consultation-form .ff-el-input--content input{ padding: 1.4rem 4.4rem 1.8rem 1.4rem;}
+.book--consultation-form .ff-t-column-1 .ff-el-group{ width: 100% !important;}
+}
+.link--light {color: var(--white) !important}
+.link--light:focus-visible { outline-color: var(--primary-light) !important;}
+.link--action{ --bg-h: 0.2rem; background: linear-gradient(0deg, var(--primary-light), var(--primary-light)) no-repeat right bottom / 0 var(--bg-h); background-size: 0% var(--bg-h); background-position-x: left; background-position-y: 100%; transition: background-size 0.3s;}
+ .link--action:hover{ color: var(--action-light) !important; background-size: 100% var(--bg-h); background-position-x: right; background-position-y: 100%;}
+ .link--action .brxe-icon{ transition: 0.4s;}
+ .link--action:hover .brxe-icon{ transform: translateX(0.4rem);}
+.gap--20 {column-gap: 2rem; row-gap: 2rem}
+.subheading--wrap {display: flex; align-items: center; row-gap: 1.2rem; column-gap: 1.2rem}
+.icon--10 {height: 1.2rem; width: 1.2rem; font-size: 1rem; width: 1rem; height: 1rem}
+.icon--secondary {color: var(--action); fill: var(--action)}
+.subheading {font-weight: 500; font-size: 1.2rem; text-transform: uppercase; font-family: "Roboto Mono HHCP"; letter-spacing: 0.36px}
+.footer-16 {background-color: var(--primary); padding-top: var(--space-l); padding-right: var(--space-m); padding-bottom: var(--space-l); padding-left: var(--space-m)}
+.footer-16__container {row-gap: var(--space-l)}
+.footer-16__container-top {flex-direction: row; column-gap: var(--space-l); row-gap: var(--space-l); align-items: center; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; justify-content: space-between}
+@media (max-width: 767px) {.footer-16__container-top {flex-direction: column}
+}
+.footer-16__logo .bricks-site-logo {height: 4.5rem; width: auto}
+.footer-16__logo {color: var(--white); font-size: var(--text-xl); font-weight: 700; height: 5.4rem}
+.footer-16__social-container {flex-direction: row; column-gap: var(--space-m); align-items: center; display: flex; width: auto}
+.transition {transition: all 0.3s linear}
+.footer-16__icon-alt {color: var(--accent-trans-60); fill: var(--accent-trans-60); font-size: 2rem; transition: all 0.3s linear}
+.footer-16__icon-alt:hover {color: var(--white); fill: var(--white)}
+.footer-16__divider.horizontal .line {width: 100%; border-top-width: 1px; border-top-color: var(--accent-trans-10)}
+.footer-16__divider.vertical .line {border-right-width: 100%; border-right-color: var(--accent-trans-10)}
+.footer-16__divider .line {height: 1px}
+.footer-16__divider .icon {color: var(--accent-trans-10)}
+.footer-16__container-mid {flex-direction: row; row-gap: var(--space-l); column-gap: var(--space-l)}
+@media (max-width: 991px) {.footer-16__container-mid {flex-wrap: wrap}
+}
+@media (max-width: 478px) {.footer-16__container-mid {row-gap: var(--space-xl)}
+}
+.footer-16__menu-section {padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; row-gap: var(--space-s); width: auto; flex-grow: 1; flex-shrink: 0; max-width: var(--width-s); align-items: flex-start}
+@media (max-width: 478px) {.footer-16__menu-section {max-width: 100%}
+}
+.footer-16__menu-heading {color: var(--accent); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.36px; font-family: "Roboto Mono HHCP"; font-weight: 500}
+.footer-16__menu .bricks-nav-menu {flex-direction: column; gap: var(--space-s)}
+.footer-16__menu .bricks-nav-menu > li {margin-left: 0}
+.footer-16__menu .bricks-nav-menu > li > a {color: var(--accent-trans-80)}
+.footer-16__menu .bricks-nav-menu > li > .brx-submenu-toggle > * {color: var(--accent-trans-80)}
+.footer-16__menu .bricks-nav-menu > li:hover > a {color: var(--accent)}
+.footer-16__menu .bricks-nav-menu > li:hover > .brx-submenu-toggle > * {color: var(--accent)}
+.footer-16__form-container {max-width: 100%; width: var(--width-m); flex-shrink: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-left: auto; align-items: flex-start}
+@media (max-width: 991px) {.footer-16__form-container {width: 100%}
+}
+@media (max-width: 767px) {.footer-16__form-container {width: 100%; max-width: 100%}
+}
+.subscribe--heading {font-size: 1.2rem; color: var(--accent); font-family: "Roboto Mono HHCP"; letter-spacing: 0px; font-weight: 500; text-transform: uppercase}
+.get-started--form .fluentform .ff-el-group input:not([type=radio]):not([type=checkbox]):not([type=submit]):not([type=button]):not([type=image]):not([type=file]) {padding-top: 1.3rem; padding-right: 1.3rem; padding-bottom: 1.3rem; padding-left: 1.3rem; border: 1px solid var(--accent-trans-20); border-radius: var(--radius-xxl); background-color: var(--primary); color: var(--accent)}
+.get-started--form .fluentform .ff-el-group textarea {padding-top: 1.3rem; padding-right: 1.3rem; padding-bottom: 1.3rem; padding-left: 1.3rem; border: 1px solid var(--accent-trans-20); border-radius: var(--radius-xxl); background-color: var(--primary); color: var(--accent)}
+.get-started--form .fluentform .ff-el-group select {padding-top: 1.3rem; padding-right: 1.3rem; padding-bottom: 1.3rem; padding-left: 1.3rem; border: 1px solid var(--accent-trans-20); border-radius: var(--radius-xxl); background-color: var(--primary); color: var(--accent)}
+.get-started--form .fluentform .ff-el-group input::-webkit-input-placeholder {color: var(--accent-trans-20)}
+.get-started--form .fluentform .ff-el-group textarea::-webkit-input-placeholder {color: var(--accent-trans-20)}
+.get-started--form .fluentform.ff-default .ff-btn-submit:focus {opacity: 1}
+.get-started--form .fluentform.ff-default .ff-btn-submit:hover {opacity: 1}
+.get-started--form {width: 100%}
+.get-started--form .fluentform .ff-btn-submit {font-weight: 500; font-family: "Roboto Mono HHCP"; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 0.36px; color: var(--primary); border-radius: var(--radius-circle); padding-top: 1.28rem; padding-bottom: 1.28rem; background-color: var(--action)}
+.get-started--form .fluentform form .ff-btn-submit:not(.ff_btn_no_style) {background-color: var(--action)}
+.get-started--form .fluentform .ff-btn-submit:hover {background-color: var(--action-dark); color: var(--action-light)}
+.get-started--form .fluentform form .ff-btn-submit:not(.ff_btn_no_style):hover {background-color: var(--action-dark)}
+.get-started--form .ff-default { width: 100%;}
+ .get-started--form .fluentform .ff-el-group, .get-started--form .frm-fluent-form .ff-t-cell .ff_submit_btn_wrapper_custom button { margin-bottom: 0;}
+ .get-started--form .ff-t-container.ff-column-container.ff_columns_total_2 { align-items: flex-start;}
+@media screen and (max-width:767.98px) { .get-started--form .fluentform .ff-el-group { margin-bottom: 2rem;}
+}
+.terms--text {color: var(--accent-trans-80); font-size: 1rem}
+.footer-16__container-contact {margin-top: 0; margin-bottom: 0; padding-left: 0; flex-direction: row; justify-content: flex-start; align-items: flex-end; column-gap: var(--space-m); row-gap: var(--space-m)}
+@media (max-width: 991px) {.footer-16__container-contact {justify-content: flex-start}
+}
+@media (max-width: 767px) {.footer-16__container-contact {flex-direction: column; align-items: flex-start}
+}
+.footer-16__contact-element {width: fit-content; row-gap: 0px}
+.footer-16__contact-heading {font-size: 1.2rem; font-weight: 500; color: var(--accent-trans-80); font-family: "Roboto Mono HHCP"; letter-spacing: 0.36px; text-transform: uppercase}
+.footer-16__contact-info {color: var(--accent); font-weight: 500}
+.footer-16__contact-info:hover {color: var(--accent-ultra-light)}
+.footer-16__container-bot {flex-direction: column; justify-content: space-between; row-gap: var(--space-l); align-items: center}
+@media (max-width: 767px) {.footer-16__container-bot {flex-direction: column; flex-wrap: nowrap; align-items: flex-start; justify-content: flex-start}
+}
+.footer-16__container-bot-01 {flex-direction: row; justify-content: space-between; row-gap: var(--space-s); align-items: center}
+@media (max-width: 767px) {.footer-16__container-bot-01 {flex-direction: column; flex-wrap: nowrap; align-items: flex-start; justify-content: flex-start}
+}
+.footer-16__credit-name {color: var(--accent-trans-80); font-size: var(--text-s)}
+.footer-16__legal-links .bricks-nav-menu {flex-direction: row; gap: var(--space-xs)}
+.footer-16__legal-links .bricks-nav-menu > li {margin-left: 0}
+.footer-16__legal-links .bricks-nav-menu > li > a {font-size: var(--text-s); color: var(--accent); font-weight: 500}
+.footer-16__legal-links .bricks-nav-menu > li > .brx-submenu-toggle > * {font-size: var(--text-s); color: var(--accent); font-weight: 500}
+.footer-16__legal-links .bricks-nav-menu > li:hover > a {color: var(--accent-ultra-light)}
+.footer-16__legal-links .bricks-nav-menu > li:hover > .brx-submenu-toggle > * {color: var(--accent-ultra-light)}
+@media (max-width: 767px) {.footer-16__legal-links .bricks-nav-menu {gap: var(--space-s)}
+.footer-16__legal-links .bricks-nav-menu > li > a {justify-content: flex-start}
+.footer-16__legal-links .bricks-nav-menu > li > .brx-submenu-toggle {justify-content: flex-start}
+}
+.text--accent-trans-80 {color: var(--accent-trans-80)}
+
+/*# sourceURL=bricks-frontend-inline-inline-css */
