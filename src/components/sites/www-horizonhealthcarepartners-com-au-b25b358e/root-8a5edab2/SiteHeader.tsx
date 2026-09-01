@@ -240,7 +240,6 @@ const HEADER_CSS = `
      the left of the viewport once the nav moved to the middle of the row. */
   left: 0;
   right: 0;
-  transform: translateY(var(--hhcp-space-xs));
   z-index: 998;
   display: flex;
   flex-direction: row;
@@ -250,11 +249,34 @@ const HEADER_CSS = `
   padding: var(--hhcp-space-m);
   background-color: var(--hhcp-white);
   border: 1px solid var(--hhcp-neutral-ultra-light);
-  border-radius: var(--hhcp-radius-s);
-  box-shadow: 4px 4px 12px 0 rgba(0, 0, 0, 0.1);
+  /* The panel seats flush against the pill and both are white, so the top edge
+     needs a stronger hairline than the other three or the two surfaces read as
+     one block. */
+  border-top: 1px solid var(--hhcp-base-10);
+  /* Square at the top so it meets the pill cleanly; rounded below. */
+  border-radius: 0 0 var(--hhcp-radius-s) var(--hhcp-radius-s);
+  box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.08);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s linear;
+}
+
+/*
+ * Hover bridge.
+ *
+ * onMouseLeave is bound to the <li>, which is only as tall as its label — so
+ * the pill's 13.25px bottom padding is dead space between the nav item and the
+ * panel, and crossing it closed the menu before the pointer arrived. This
+ * invisible strip belongs to the panel, which is a DOM descendant of the <li>,
+ * so the pointer never leaves the subtree.
+ */
+.hhcp-hdr__mega::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 20px;
 }
 .hhcp-hdr__mega[data-open="true"] {
   opacity: 1;
