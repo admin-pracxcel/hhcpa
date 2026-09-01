@@ -25,11 +25,14 @@
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { JsonLd } from "@/components/JsonLd";
+import { buildFaqPage } from "@/lib/schema";
 import { ArrowRightIcon, FaqTogglePlusIcon } from "../shared/icons";
 
 const HEADING = "Your Questions Answered";
 
-const CTA_HREF = "https://www.horizonhealthcarepartners.com.au/faqs/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const CTA_HREF = "/faqs/";
 const CTA_LABEL = "Explore All FAQs";
 const CTA_PROMPT = "Still have questions?";
 
@@ -207,22 +210,39 @@ const STYLES = `
 
 interface FaqSectionProps {
   className?: string;
+  /** Defaults to the homepage heading. */
+  heading?: string;
+  /**
+   * Defaults to the homepage's own FAQ set. Service and information pages pass
+   * their own; the accompanying FAQPage JSON-LD is generated from whatever is
+   * passed here, so the markup and the visible answers cannot drift apart.
+   */
+  items?: readonly FaqItem[];
 }
 
-export function FaqSection({ className }: FaqSectionProps) {
+export function FaqSection({
+  className,
+  heading = HEADING,
+  items = ITEMS,
+}: FaqSectionProps) {
   /* Every row ships collapsed on the source page. */
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
     <section className={cn("hhcp-fq-section", className)}>
       <style>{STYLES}</style>
+      <JsonLd
+        data={buildFaqPage(
+          items.map((item) => ({ q: item.question, a: item.answer })),
+        )}
+      />
       <div className="hhcp-fq-container">
         <div className="hhcp-fq-head">
-          <h2 className="hhcp-fq-title font-dm-sans">{HEADING}</h2>
+          <h2 className="hhcp-fq-title font-dm-sans">{heading}</h2>
         </div>
 
         <div className="hhcp-fq-accordion">
-          {ITEMS.map((item) => {
+          {items.map((item) => {
             const open = item.id === openId;
             const panelId = "hhcp-fq-panel-" + item.id;
             const buttonId = "hhcp-fq-question-" + item.id;
