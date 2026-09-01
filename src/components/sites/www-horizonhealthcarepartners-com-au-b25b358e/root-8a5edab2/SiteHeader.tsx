@@ -120,6 +120,10 @@ const HEADER_CSS = `
   padding: 13.25px 24px;
   background-color: var(--hhcp-white);
   border-radius: 6px;
+  /* Containing block for the mega panel. Anchoring the panel here rather than
+     to the nav or the <li> is what makes it structurally unable to extend past
+     the header, at any viewport width. */
+  position: relative;
 }
 @media (max-width: 991px) {
   .hhcp-hdr__bar-wrapper {
@@ -160,9 +164,9 @@ const HEADER_CSS = `
 
 /* ---------- Desktop nav ---------- */
 .hhcp-hdr__nav {
-  /* Anchors the mega-menu. Anchoring to the Services <li> instead would push
-     the panel's right edge past the container at narrow desktop widths. */
-  position: relative;
+  /* Deliberately NOT positioned: the mega panel anchors to .hhcp-hdr__bar-inner,
+     and a positioned nav would become its containing block instead. The
+     [data-mega] rule below does the same job for the <li>. */
   /* Absorbs all the slack between the logo and the phone/CTA group, then
      centres the list inside it — so the nav sits in the middle of the space
      that is actually left over, not the middle of the bar. */
@@ -231,20 +235,18 @@ const HEADER_CSS = `
 .hhcp-hdr__mega {
   position: absolute;
   top: 100%;
-  /* Centred under the nav, which is itself centred in the leftover space.
-     Left-anchoring it would sit the panel hard against the logo while the
-     "Services" label it belongs to floats in the middle. */
-  left: 50%;
-  transform: translate(-50%, var(--hhcp-space-xs));
+  /* Spans the pill exactly. Not max-content and not centred on the nav: both
+     let the panel's own content width decide its edges, which pushed it off
+     the left of the viewport once the nav moved to the middle of the row. */
+  left: 0;
+  right: 0;
+  transform: translateY(var(--hhcp-space-xs));
   z-index: 998;
   display: flex;
   flex-direction: row;
-  /* Wrapping is the safety net: if the panel is ever squeezed below its
-     content width, columns drop to a second row instead of overflowing. */
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--hhcp-space-l);
-  width: max-content;
-  max-width: min(1030px, calc(100vw - var(--hhcp-space-m) * 2));
   padding: var(--hhcp-space-m);
   background-color: var(--hhcp-white);
   border: 1px solid var(--hhcp-neutral-ultra-light);
@@ -262,7 +264,10 @@ const HEADER_CSS = `
   display: flex;
   flex-direction: column;
   gap: 10px;
+  /* Share the pill's width rather than dictating the panel's. */
+  flex: 1 1 170px;
   min-width: 170px;
+  max-width: 260px;
 }
 .hhcp-hdr__mega-title {
   font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
@@ -294,12 +299,9 @@ const HEADER_CSS = `
 }
 .hhcp-hdr__mega-list a:hover { color: var(--hhcp-action-dark); }
 
-/* Between 991 and 1184px the nav's centre sits well left of the viewport's, so
-   a full-width panel centred on it would spill off the left edge. Narrower
-   columns and a tighter gap pull the panel in rather than letting it clip. */
 @media (max-width: 1184px) {
   .hhcp-hdr__mega { gap: var(--hhcp-space-m); }
-  .hhcp-hdr__mega-col { min-width: 150px; }
+  .hhcp-hdr__mega-col { flex-basis: 150px; min-width: 150px; }
 }
 
 /* ---------- Services submenu ---------- */
