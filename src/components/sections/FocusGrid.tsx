@@ -195,6 +195,8 @@ const STYLES = `
 
 interface FocusGridProps {
   className?: string;
+  /** Anchor target, so a CTA higher on the page can jump to the grid. */
+  id?: string;
   eyebrow: string;
   heading: string;
   intro: string;
@@ -203,6 +205,7 @@ interface FocusGridProps {
 
 export function FocusGrid({
   className,
+  id,
   eyebrow,
   heading,
   intro,
@@ -211,7 +214,7 @@ export function FocusGrid({
   const visible = cards.filter((card) => !isGated(card.href));
 
   return (
-    <section className={cn("hhcp-fo-section", className)}>
+    <section className={cn("hhcp-fo-section", className)} id={id}>
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-fo-container">
         <div className="hhcp-fo-heading">

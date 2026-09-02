@@ -8,16 +8,18 @@
  *
  * So everything below was written here, and needs Ranjeeta's approval before
  * publication like any other page (clause 6.2(b)). It is deliberately kept
- * administrative — how to use the booking tool, what happens next — with no
+ * administrative — which services exist, what happens next — with no
  * clinical claim, no symptom, no treatment and no outcome anywhere in it, so
  * that the approval is a short read rather than a clinical review.
  *
- * Two things this page must not do, both from the spec:
+ * The page captures nothing: `/quiz/` is the sole lead-capturing flow (D3),
+ * and every card here is a link to a service page.
  *
- *   - It captures nothing. `/quiz/` is the sole lead-capturing flow (D3); the
- *     wizard routes to a booking and submits no form of its own.
- *   - Reaching the booking widget is not a booking and must not be counted
- *     toward the Clause 1.2 quota (spec §5.2). Nothing here reports an event.
+ * ⚠️ The BookingWizard used to live on this page, per spec decision D8. It was
+ * replaced at request with the homepage's service grid. The wizard now renders
+ * only on the cloned homepage at `/` — and `/home-v2/`, which is slated to
+ * replace `/`, does not include it. Promoting home-v2 without rehoming the
+ * wizard would remove it from the site entirely.
  */
 
 export const SERVICES_META = {
@@ -31,17 +33,13 @@ export const SERVICES_PAGE = {
   hero: {
     eyebrow: "Services",
     heading: "Choose a service and book your consultation",
-    /* Jumps down to the wizard rather than leaving the page. */
+    /* Jumps down to the service grid rather than leaving the page. */
     primary: { label: "Choose a service", href: "#book" },
     secondary: { label: "Check your eligibility", href: "/quiz/" },
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:
-    "Pick the service that matches what you need, answer a few questions about it, and choose a consultation time that suits you. Every consultation is with an AHPRA-registered practitioner, by video or phone, anywhere in Australia. If you are not sure which service fits, start with the free pre-screening quiz instead and we will point you in the right direction.",
-  wizard: {
-    eyebrow: "Book a consultation",
-    heading: "What do you need help with?",
-  },
+    "Pick the service that matches what you need and read what a consultation covers before you book. Every consultation is with an AHPRA-registered practitioner, by video or phone, anywhere in Australia. If you are not sure which service fits, start with the free pre-screening quiz instead and we will point you in the right direction.",
   related: {
     eyebrow: "Before you book",
     heading: "Worth knowing first",
