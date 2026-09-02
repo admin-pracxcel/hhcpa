@@ -86,21 +86,31 @@ const STYLES = `
 interface SupportSectionProps {
   children?: ReactNode;
   className?: string;
+  eyebrow?: string;
+  heading?: string;
+  /** Anchor target, so a CTA elsewhere on the page can jump to the wizard. */
+  id?: string;
 }
 
-export function SupportSection({ children, className }: SupportSectionProps) {
+export function SupportSection({
+  children,
+  className,
+  eyebrow = EYEBROW,
+  heading = HEADING,
+  id,
+}: SupportSectionProps) {
   return (
-    <section className={cn("hhcp-sp-section", className)}>
+    <section className={cn("hhcp-sp-section", className)} id={id}>
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-sp-container">
         <div className="hhcp-sp-head">
           <div className="hhcp-sp-eyebrow">
             <span className="hhcp-sp-dot" />
             <span className="hhcp-sp-eyebrow-label font-roboto-mono">
-              {EYEBROW}
+              {eyebrow}
             </span>
           </div>
-          <h2 className="hhcp-sp-title font-dm-sans">{HEADING}</h2>
+          <h2 className="hhcp-sp-title font-dm-sans">{heading}</h2>
         </div>
       </div>
 

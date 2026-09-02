@@ -1809,7 +1809,11 @@ export function BookingWizard() {
         {phase.kind === "services" ? (
           <div className="hhp-service-selection">
             <div className="hhp-section-header">
-              <h1 className="hhp-section-title">Choose Your Service</h1>
+              {/* h2, not h1: the wizard is a section of a page that already
+                  has one. The clone marked it h1, which gave both / and
+                  /services/ two top-level headings. Styling is unchanged --
+                  .hhp-section-title carries it, and step 2 already uses h2. */}
+              <h2 className="hhp-section-title">Choose Your Service</h2>
               <p className="hhp-section-subtitle">
                 Select a category below to view detailed options and pricing.
               </p>
