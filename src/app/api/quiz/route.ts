@@ -31,6 +31,8 @@
 
 import { createHmac, randomUUID } from "node:crypto";
 
+import { QUIZ_CONSENTS, REQUIRED_CONSENT_IDS } from "@/content/quiz";
+
 const DEFAULT_WEBHOOK_URL = "https://n8n.pracxcel.com.au/webhook/hhcpa-quiz";
 const WEBHOOK_URL = process.env.QUIZ_WEBHOOK_URL ?? DEFAULT_WEBHOOK_URL;
 
@@ -114,12 +116,12 @@ export async function POST(request: Request) {
     consents !== null &&
     (consents as Record<string, unknown>)[id] === true;
 
-  /* Marketing is optional; the other three are not. */
-  if (
-    !consentGiven("terms") ||
-    !consentGiven("privacy") ||
-    !consentGiven("clinicalUnderstanding")
-  ) {
+  /*
+   * The required set is derived from the consent list itself, so adding an
+   * acknowledgement to the form cannot leave this check behind. Marketing is
+   * the only optional one.
+   */
+  if (!REQUIRED_CONSENT_IDS.every(consentGiven)) {
     return Response.json(
       { error: "Please accept the required consents to continue." },
       { status: 400 },
@@ -149,12 +151,21 @@ export async function POST(request: Request) {
     },
 
     service: clean(payload.service),
-    outcome: clean(payload.outcome) || "eligible",
+    /*
+     * The triage level — green, amber or red. Red means do not auto-book: a
+     * human has to make contact. See `triage` in content/quiz.ts.
+     */
+     outcome: clean(payload.outcome) || "green",
 
     consents: Object.fromEntries(
-      ["terms", "privacy", "marketing", "clinicalUnderstanding"].map((id) => [
-        id,
-        { given: consentGiven(id), version: consentVersion, at: consentedAt },
+      QUIZ_CONSENTS.map((consent) => [
+        consent.id,
+        {
+          given: consentGiven(consent.id),
+          required: consent.required,
+          version: consentVersion,
+          at: consentedAt,
+        },
       ]),
     ),
 

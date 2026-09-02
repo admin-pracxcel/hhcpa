@@ -4,7 +4,7 @@
  * The pre-screening quiz.
  *
  * One question per step, driven by the flow data in `content/quiz.ts`. The
- * component knows how to render a step and how to walk the graph; it knows
+ * component knows how to render a step kind and how to walk the graph; it knows
  * nothing about which questions exist, so changing the flow is a content edit.
  *
  * Answers are held in state and only leave the browser at the closing step. A
@@ -12,6 +12,10 @@
  * has given no contact details and nothing is submitted. That is deliberate:
  * there is nobody to contact, and a partial clinical record of someone in
  * crisis is not something to store.
+ *
+ * A red triage is NOT such an exit. Red means a human has to call the patient
+ * back, so it collects details and submits like any other outcome; only the
+ * closing message differs. See `triage` in the content file.
  *
  * Back is real. The step history is a stack, so leaving a branch and choosing
  * differently walks back through the answers actually given rather than
@@ -22,14 +26,20 @@ import { useCallback, useMemo, useState } from "react";
 
 import {
   CONSENT_VERSION,
+  NONE_OF_THESE,
   QUIZ_CONSENTS,
   QUIZ_CONTACT,
   QUIZ_STEPS,
   QUIZ_SUCCESS,
+  TRIAGE_MESSAGES,
+  bmiMessage,
+  calculateBmi,
   findStep,
   nextStepId,
+  summaryRows,
+  triage,
 } from "@/content/quiz";
-import type { QuizStep } from "@/content/quiz";
+import type { QuizStep, TriageLevel } from "@/content/quiz";
 import { findCountry, guessCountry } from "@/content/countries";
 import { getAttribution, getLeadSource } from "@/lib/attribution";
 import { cn } from "@/lib/utils";
@@ -87,7 +97,26 @@ const STYLES = `
   font-weight: 400;
   letter-spacing: -0.32px;
   color: var(--hhcp-primary, #013126);
+  margin-bottom: var(--hhcp-space-s, 20px);
+}
+
+/* "Why are we asking this question?" */
+.hhcp-qz-note {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(1, 49, 38, 0.7);
   margin-bottom: var(--hhcp-space-m, 30px);
+  padding-left: 14px;
+  border-left: 2px solid var(--hhcp-action, #58eda2);
+}
+
+.hhcp-qz-hint {
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: var(--hhcp-base-60, rgba(1, 49, 38, 0.6));
+  margin-bottom: 12px;
 }
 
 .hhcp-qz-options {
@@ -113,7 +142,8 @@ const STYLES = `
   transition: all 0.2s linear;
 }
 
-.hhcp-qz-option:hover {
+.hhcp-qz-option:hover,
+.hhcp-qz-option[data-selected="true"] {
   border-color: var(--hhcp-primary, #013126);
   background: var(--hhcp-accent, #f5fff9);
 }
@@ -126,14 +156,29 @@ const STYLES = `
   flex: none;
 }
 
-.hhcp-qz-option:hover .hhcp-qz-option-mark {
+.hhcp-qz-option-mark[data-shape="box"] {
+  border-radius: 4px;
+}
+
+.hhcp-qz-option:hover .hhcp-qz-option-mark,
+.hhcp-qz-option[data-selected="true"] .hhcp-qz-option-mark {
   border-color: var(--hhcp-action-dark, #0c7340);
   background: var(--hhcp-action, #58eda2);
 }
 
+/* Advisory shown when an answer carries one. Never ends the flow. */
+.hhcp-qz-advisory {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: var(--hhcp-radius-s, 6.667px);
+  background: var(--hhcp-cream, #ede9e3);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--hhcp-primary, #013126);
+}
+
 .hhcp-qz-back {
-  /* Block, so it drops below the BMI step's Continue button rather than
-     sitting alongside it. */
+  /* Block, so it drops below a Continue button rather than sitting alongside. */
   display: block;
   margin-top: var(--hhcp-space-m, 30px);
   background: transparent;
@@ -216,11 +261,31 @@ const STYLES = `
   font-weight: 500;
 }
 
-/* ---------- bmi + contact ---------- */
+/* ---------- inputs ---------- */
 .hhcp-qz-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--hhcp-space-s, 20px);
+}
+
+.hhcp-qz-unit-wrap {
+  position: relative;
+  display: block;
+}
+
+.hhcp-qz-unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--hhcp-base-60, rgba(1, 49, 38, 0.6));
+  pointer-events: none;
+}
+
+.hhcp-qz-followup {
+  margin-top: var(--hhcp-space-s, 20px);
 }
 
 .hhcp-qz-bmi {
@@ -229,7 +294,94 @@ const STYLES = `
   border-radius: var(--hhcp-radius-s, 6.667px);
   background: var(--hhcp-accent, #f5fff9);
   font-size: var(--hhcp-text-m, 16px);
+  line-height: 1.6;
   color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-qz-bmi strong {
+  font-weight: 600;
+}
+
+/* ---------- summary ---------- */
+.hhcp-qz-rows {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--hhcp-space-m, 30px);
+  border-top: 1px solid var(--hhcp-base-20, rgba(1, 49, 38, 0.2));
+}
+
+.hhcp-qz-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hhcp-base-20, rgba(1, 49, 38, 0.2));
+}
+
+.hhcp-qz-row dt {
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: var(--hhcp-base-60, rgba(1, 49, 38, 0.6));
+}
+
+.hhcp-qz-row dd {
+  font-size: var(--hhcp-text-m, 16px);
+  color: var(--hhcp-primary, #013126);
+  text-align: right;
+}
+
+/* ---------- closing step ---------- */
+.hhcp-qz-banner {
+  padding: 18px 20px;
+  border-radius: var(--hhcp-radius-s, 6.667px);
+  background: var(--hhcp-accent, #f5fff9);
+  border-left: 3px solid var(--hhcp-action, #58eda2);
+  margin-bottom: var(--hhcp-space-m, 30px);
+}
+
+.hhcp-qz-banner[data-level="red"] {
+  background: var(--hhcp-cream, #ede9e3);
+  border-left-color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-qz-banner h3 {
+  font-size: var(--hhcp-h4, 20px);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--hhcp-primary, #013126);
+  margin-bottom: 8px;
+}
+
+.hhcp-qz-banner p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(1, 49, 38, 0.8);
+}
+
+.hhcp-qz-important {
+  margin-top: var(--hhcp-space-m, 30px);
+  padding: 18px 20px;
+  border-radius: var(--hhcp-radius-s, 6.667px);
+  border: 1px solid var(--hhcp-base-20, rgba(1, 49, 38, 0.2));
+}
+
+.hhcp-qz-important h3 {
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: var(--hhcp-primary, #013126);
+  margin-bottom: 8px;
+}
+
+.hhcp-qz-important p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(1, 49, 38, 0.8);
 }
 
 .hhcp-qz-consents {
@@ -292,8 +444,8 @@ const STYLES = `
 }
 
 .hhcp-qz-submit[disabled] {
-  opacity: 0.6;
-  cursor: progress;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .hhcp-qz-trap {
@@ -317,6 +469,15 @@ const STYLES = `
   .hhcp-qz-pair {
     grid-template-columns: 1fr;
   }
+
+  .hhcp-qz-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hhcp-qz-row dd {
+    text-align: left;
+  }
 }
 `;
 
@@ -326,18 +487,71 @@ const URGENT = [
   { label: "Emergency", number: "000", href: "tel:000" },
 ];
 
-/** Longest path through the flow, used only to size the progress bar. */
-const LONGEST_PATH = 8;
+/**
+ * Which posted fields are clinical.
+ *
+ * Built from the flow so the two cannot drift: a question marked clinical in
+ * the content file segregates its answer, its follow-up text and its "other"
+ * text without anyone having to remember. Anything not in the map is treated as
+ * clinical, because the cost of guessing wrong runs one way — a marketing field
+ * routed to the clinical destination is untidy; a health answer routed to a
+ * marketing branch is a privacy breach.
+ */
+const CLINICAL_FIELDS: ReadonlyMap<string, boolean> = new Map(
+  QUIZ_STEPS.flatMap((step) => {
+    if (
+      step.kind === "exit" ||
+      step.kind === "contact" ||
+      step.kind === "summary"
+    ) {
+      return [];
+    }
+    const clinical = step.clinical === true;
+    const names: string[] = [];
+    if (step.kind === "choice" || step.kind === "multi") names.push(step.field);
+    if (step.kind === "choice" && step.followUp !== undefined) {
+      names.push(step.followUp.name);
+    }
+    if (step.kind === "multi" && step.other !== undefined) {
+      names.push(step.other.name);
+    }
+    if (step.kind === "input") {
+      names.push(...step.fields.map((field) => field.name));
+    }
+    if (step.kind === "bmi") {
+      names.push("wl_height_cm", "wl_weight_kg", "wl_bmi");
+    }
+    return names.map((name): [string, boolean] => [name, clinical]);
+  }),
+);
 
 /**
- * Renders `text`, turning each named phrase into a link.
+ * How many steps remain on the longest route out of `id`, for the progress bar.
  *
- * The consent labels are one sentence each and name the documents they consent
- * to, so the alternative — splitting each label into typed fragments — would
- * make the wording harder to read against the live form it was migrated from.
- * Matching on the phrase keeps the sentence intact in the content file.
+ * The branches are very different lengths — three questions for mental health,
+ * seventeen for weight loss — so a fixed denominator would show a bar that
+ * lurches when the visitor picks a service. Walking the graph gives each branch
+ * an honest one.
  */
-function withLinks(
+function longestRemaining(
+  id: string,
+  seen: ReadonlySet<string> = new Set<string>(),
+): number {
+  if (seen.has(id)) return 0;
+  const step = findStep(id);
+  if (step === undefined || step.kind === "exit" || step.kind === "contact") {
+    return 0;
+  }
+  const nextSeen = new Set(seen).add(id);
+  const targets =
+    step.kind === "choice" ? Object.values(step.next) : [step.next];
+  return (
+    1 + Math.max(0, ...targets.map((target) => longestRemaining(target, nextSeen)))
+  );
+}
+
+/** Renders `text`, turning each named phrase into a link. */
+function renderWithLinks(
   text: string,
   links: readonly { readonly text: string; readonly href: string }[] = [],
 ) {
@@ -376,9 +590,10 @@ function withLinks(
 
 export function QuizForm({ className }: { className?: string }) {
   const [history, setHistory] = useState<string[]>(["age"]);
+  /** Single-value answers: choices, follow-up text, numbers, dates. */
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
+  /** Multi-select answers, kept as arrays for the checkbox UI. */
+  const [picked, setPicked] = useState<Record<string, string[]>>({});
   const [consents, setConsents] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [problem, setProblem] = useState("");
@@ -386,45 +601,69 @@ export function QuizForm({ className }: { className?: string }) {
   const currentId = history[history.length - 1];
   const step = findStep(currentId);
 
-  const bmi = useMemo(() => {
-    const h = Number(height) / 100;
-    const w = Number(weight);
-    if (!Number.isFinite(h) || !Number.isFinite(w) || h <= 0 || w <= 0) {
-      return null;
+  /* One flat map of every answer given — for triage, the summary and the payload. */
+  const allAnswers = useMemo(() => {
+    const flat: Record<string, string> = { ...answers };
+    for (const [field, values] of Object.entries(picked)) {
+      if (values.length > 0) flat[field] = values.join(", ");
     }
-    return Math.round((w / (h * h)) * 10) / 10;
-  }, [height, weight]);
+    return flat;
+  }, [answers, picked]);
 
-  const advance = useCallback((from: QuizStep, answer: string) => {
+  const bmi = useMemo(
+    () => calculateBmi(answers.wl_height_cm ?? "", answers.wl_weight_kg ?? ""),
+    [answers.wl_height_cm, answers.wl_weight_kg],
+  );
+
+  const outcome = useMemo(() => triage(allAnswers), [allAnswers]);
+
+  const set = useCallback((name: string, value: string) => {
+    setAnswers((current) => ({ ...current, [name]: value }));
+  }, []);
+
+  const go = useCallback((from: QuizStep, answer: string) => {
     const nextId = nextStepId(from, answer);
     if (nextId === "") return;
+    setProblem("");
     setHistory((stack) => [...stack, nextId]);
   }, []);
 
-  const answer = (from: QuizStep, value: string) => {
-    if (from.kind === "choice") {
-      setAnswers((current) => ({ ...current, [from.field]: value }));
-    }
-    advance(from, value);
-  };
-
-  const back = () => {
+  const back = useCallback(() => {
     setProblem("");
     setHistory((stack) => (stack.length > 1 ? stack.slice(0, -1) : stack));
-  };
+  }, []);
+
+  /** "None of these" is exclusive, both ways. */
+  const toggle = useCallback((field: string, option: string) => {
+    setPicked((current) => {
+      const existing = current[field] ?? [];
+      if (option === NONE_OF_THESE) {
+        return {
+          ...current,
+          [field]: existing.includes(NONE_OF_THESE) ? [] : [NONE_OF_THESE],
+        };
+      }
+      const without = existing.filter(
+        (value) => value !== option && value !== NONE_OF_THESE,
+      );
+      return {
+        ...current,
+        [field]: existing.includes(option) ? without : [...without, option],
+      };
+    });
+  }, []);
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (status === "sending") return;
 
-    const form = event.currentTarget;
-    const data = new FormData(form);
+    const data = new FormData(event.currentTarget);
     const value = (name: string) => String(data.get(name) ?? "").trim();
 
-    const missingConsent = QUIZ_CONSENTS.filter(
+    const missing = QUIZ_CONSENTS.filter(
       (consent) => consent.required && consents[consent.id] !== true,
     );
-    if (missingConsent.length > 0) {
+    if (missing.length > 0) {
       setProblem("Please accept the required consents to continue.");
       return;
     }
@@ -432,19 +671,16 @@ export function QuizForm({ className }: { className?: string }) {
     const phoneCountry = findCountry(value("phoneCountry"));
     const visitor = findCountry(guessCountry());
 
-    /* Only the answers marked clinical; the rest stay in the open payload. */
     const clinical: Record<string, string> = {};
     const general: Record<string, string> = {};
-    for (const item of QUIZ_STEPS) {
-      if (item.kind !== "choice") continue;
-      const given = answers[item.field];
-      if (given === undefined) continue;
-      (item.clinical === true ? clinical : general)[item.field] = given;
+    for (const [field, answer] of Object.entries(allAnswers)) {
+      if (answer === "") continue;
+      /* Unknown fields default to clinical. See CLINICAL_FIELDS. */
+      (CLINICAL_FIELDS.get(field) !== false ? clinical : general)[field] =
+        answer;
     }
-    if (bmi !== null) {
-      clinical.wl_height_cm = height;
-      clinical.wl_weight_kg = weight;
-      clinical.wl_bmi = String(bmi);
+    if (outcome.reasons.length > 0) {
+      clinical.triage_reasons = outcome.reasons.join("; ");
     }
 
     setProblem("");
@@ -466,8 +702,8 @@ export function QuizForm({ className }: { className?: string }) {
                 ? ""
                 : `${phoneCountry.dial}${value("phone").replace(/[^\d]/g, "")}`,
           },
-          service: answers.service_selection ?? "",
-          outcome: "eligible",
+          service: allAnswers.service_selection ?? "",
+          outcome: outcome.level,
           consents: Object.fromEntries(
             QUIZ_CONSENTS.map((consent) => [
               consent.id,
@@ -504,15 +740,16 @@ export function QuizForm({ className }: { className?: string }) {
   };
 
   if (status === "done") {
+    const closing = QUIZ_SUCCESS[outcome.level];
     return (
       <section id="quiz" className={cn("hhcp-qz-section", className)}>
         <style>{STYLES}</style>
         <div className="hhcp-container hhcp-qz-container">
           <div className="hhcp-qz-card">
             <h2 className="hhcp-qz-exit-heading font-dm-sans">
-              {QUIZ_SUCCESS.heading}
+              {closing.heading}
             </h2>
-            <p className="hhcp-qz-exit-body font-dm-sans">{QUIZ_SUCCESS.body}</p>
+            <p className="hhcp-qz-exit-body font-dm-sans">{closing.body}</p>
           </div>
         </div>
       </section>
@@ -521,9 +758,9 @@ export function QuizForm({ className }: { className?: string }) {
 
   if (step === undefined) return null;
 
-  const progress = Math.min(
-    100,
-    Math.round((history.length / LONGEST_PATH) * 100),
+  const done = history.length;
+  const progress = Math.round(
+    (done / (done + longestRemaining(currentId))) * 100,
   );
 
   return (
@@ -549,206 +786,26 @@ export function QuizForm({ className }: { className?: string }) {
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="hhcp-qz-step-count">{`Step ${history.length}`}</p>
+              <p className="hhcp-qz-step-count">{`Step ${done}`}</p>
             </>
           )}
 
-          {step.kind === "choice" && (
-            <>
-              <h2 className="hhcp-qz-question font-dm-sans">{step.question}</h2>
-              <div className="hhcp-qz-options">
-                {step.options.map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    className="hhcp-qz-option"
-                    onClick={() => answer(step, option)}
-                  >
-                    <span className="hhcp-qz-option-mark" aria-hidden="true" />
-                    <span>{option}</span>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-
-          {step.kind === "bmi" && (
-            <>
-              <h2 className="hhcp-qz-question font-dm-sans">{step.question}</h2>
-              <div className="hhcp-qz-pair">
-                <div className="hhcp-form-field">
-                  <label className="hhcp-form-label" htmlFor="quiz-height">
-                    Height (cm)
-                  </label>
-                  <input
-                    id="quiz-height"
-                    className="hhcp-form-input"
-                    type="number"
-                    inputMode="numeric"
-                    min={100}
-                    max={250}
-                    value={height}
-                    onChange={(event) => setHeight(event.target.value)}
-                    placeholder="175"
-                  />
-                </div>
-                <div className="hhcp-form-field">
-                  <label className="hhcp-form-label" htmlFor="quiz-weight">
-                    Weight (kg)
-                  </label>
-                  <input
-                    id="quiz-weight"
-                    className="hhcp-form-input"
-                    type="number"
-                    inputMode="numeric"
-                    min={30}
-                    max={400}
-                    value={weight}
-                    onChange={(event) => setWeight(event.target.value)}
-                    placeholder="82"
-                  />
-                </div>
-              </div>
-
-              <p className="hhcp-qz-bmi font-dm-sans">
-                {bmi === null
-                  ? "Enter your height and weight to calculate your BMI."
-                  : `Your BMI is ${bmi}. This is one measure among many and it is not a diagnosis — your practitioner will look at the whole picture.`}
-              </p>
-
-              <button
-                type="button"
-                className="hhcp-btn hhcp-qz-submit"
-                disabled={bmi === null}
-                onClick={() => advance(step, "")}
-              >
-                Continue
-              </button>
-            </>
-          )}
-
-          {step.kind === "exit" && (
-            <>
-              <h2 className="hhcp-qz-exit-heading font-dm-sans">
-                {step.heading}
-              </h2>
-              <p className="hhcp-qz-exit-body font-dm-sans">{step.body}</p>
-              {(step.variant === "crisis" || step.variant === "emergency") && (
-                <div className="hhcp-qz-urgent font-dm-sans">
-                  {URGENT.map((line) => (
-                    <a key={line.label} href={line.href}>
-                      <span>{line.label}</span>
-                      <strong>{line.number}</strong>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-          {step.kind === "contact" && (
-            <form onSubmit={submit}>
-              <h2 className="hhcp-qz-question font-dm-sans">
-                {QUIZ_CONTACT.heading}
-              </h2>
-              <p className="hhcp-qz-exit-body font-dm-sans">
-                {QUIZ_CONTACT.body}
-              </p>
-
-              <div className="hhcp-qz-pair" style={{ marginTop: 24 }}>
-                <div className="hhcp-form-field">
-                  <label className="hhcp-form-label" htmlFor="quiz-first">
-                    First name
-                  </label>
-                  <input
-                    id="quiz-first"
-                    className="hhcp-form-input"
-                    name="firstName"
-                    autoComplete="given-name"
-                    required
-                  />
-                </div>
-                <div className="hhcp-form-field">
-                  <label className="hhcp-form-label" htmlFor="quiz-last">
-                    Last name
-                  </label>
-                  <input
-                    id="quiz-last"
-                    className="hhcp-form-input"
-                    name="lastName"
-                    autoComplete="family-name"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="hhcp-form-field" style={{ marginTop: 20 }}>
-                <label className="hhcp-form-label" htmlFor="quiz-email">
-                  Email
-                </label>
-                <input
-                  id="quiz-email"
-                  className="hhcp-form-input"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                />
-              </div>
-
-              <div style={{ marginTop: 20 }}>
-                <PhoneField name="phone" label="Phone number" required />
-              </div>
-
-              <div className="hhcp-qz-consents">
-                {QUIZ_CONSENTS.map((consent) => (
-                  <label key={consent.id} className="hhcp-qz-consent font-dm-sans">
-                    <input
-                      type="checkbox"
-                      name={consent.field}
-                      checked={consents[consent.id] === true}
-                      onChange={(event) =>
-                        setConsents((current) => ({
-                          ...current,
-                          [consent.id]: event.target.checked,
-                        }))
-                      }
-                      required={consent.required}
-                    />
-                    <span>{withLinks(consent.label, consent.links)}</span>
-                  </label>
-                ))}
-              </div>
-
-              <p className="hhcp-qz-privacy font-dm-sans">
-                {withLinks(QUIZ_CONTACT.privacyNote, QUIZ_CONTACT.privacyLinks)}
-              </p>
-
-              <div className="hhcp-qz-trap" aria-hidden="true">
-                <label htmlFor="quiz-company">Company</label>
-                <input
-                  id="quiz-company"
-                  name="company"
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
-
-              {problem !== "" && (
-                <p className="hhcp-qz-error font-dm-sans" role="alert">
-                  {problem}
-                </p>
-              )}
-
-              <button
-                className="hhcp-btn hhcp-qz-submit"
-                type="submit"
-                disabled={status === "sending"}
-              >
-                {status === "sending" ? "Sending…" : "Get my results"}
-              </button>
-            </form>
-          )}
+          <StepBody
+            step={step}
+            answers={answers}
+            picked={picked}
+            allAnswers={allAnswers}
+            bmi={bmi}
+            outcome={outcome}
+            consents={consents}
+            status={status}
+            problem={problem}
+            set={set}
+            toggle={toggle}
+            go={go}
+            setConsents={setConsents}
+            onSubmit={submit}
+          />
 
           {history.length > 1 && (
             <button type="button" className="hhcp-qz-back" onClick={back}>
@@ -758,5 +815,515 @@ export function QuizForm({ className }: { className?: string }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/* -------------------------------------------------------------------------
+   Step bodies
+   ------------------------------------------------------------------------- */
+
+interface StepBodyProps {
+  step: QuizStep;
+  answers: Record<string, string>;
+  picked: Record<string, string[]>;
+  allAnswers: Record<string, string>;
+  bmi: number | null;
+  outcome: { level: TriageLevel; reasons: readonly string[] };
+  consents: Record<string, boolean>;
+  status: "idle" | "sending" | "done";
+  problem: string;
+  set: (name: string, value: string) => void;
+  toggle: (field: string, option: string) => void;
+  go: (from: QuizStep, answer: string) => void;
+  setConsents: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+}
+
+function StepBody(props: StepBodyProps) {
+  const { step } = props;
+
+  switch (step.kind) {
+    case "choice":
+      return <ChoiceStep {...props} step={step} />;
+    case "multi":
+      return <MultiStep {...props} step={step} />;
+    case "input":
+      return <InputStep {...props} step={step} />;
+    case "bmi":
+      return <BmiStep {...props} step={step} />;
+    case "summary":
+      return <SummaryStep {...props} step={step} />;
+    case "exit":
+      return <ExitStep step={step} />;
+    case "contact":
+      return <ContactStep {...props} />;
+    default: {
+      /* A new step kind must be rendered here — this is a compile error until
+         it is. Do not replace it with a null return. */
+      const exhaustive: never = step;
+      return exhaustive;
+    }
+  }
+}
+
+function QuestionHead({
+  step,
+}: {
+  step: Extract<QuizStep, { kind: "choice" | "multi" | "input" | "bmi" }>;
+}) {
+  return (
+    <>
+      <h2 className="hhcp-qz-question font-dm-sans">{step.question}</h2>
+      {step.note !== undefined && (
+        <p className="hhcp-qz-note font-dm-sans">{step.note}</p>
+      )}
+    </>
+  );
+}
+
+function ChoiceStep({
+  step,
+  answers,
+  set,
+  go,
+}: StepBodyProps & { step: Extract<QuizStep, { kind: "choice" }> }) {
+  const chosen = answers[step.field] ?? "";
+  const followUp = step.followUp;
+  const advisory = step.optionNotes?.[chosen];
+  const needsFollowUp = followUp !== undefined && followUp.when === chosen;
+
+  /* An answer carrying an advisory or a follow-up has something more to show,
+     so it waits for Continue. Every other answer is the click itself. */
+  const waiting = advisory !== undefined || needsFollowUp;
+
+  const choose = (option: string) => {
+    set(step.field, option);
+    const stops =
+      step.optionNotes?.[option] !== undefined ||
+      (followUp !== undefined && followUp.when === option);
+    if (!stops) go(step, option);
+  };
+
+  return (
+    <>
+      <QuestionHead step={step} />
+      <div className="hhcp-qz-options">
+        {step.options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className="hhcp-qz-option"
+            data-selected={option === chosen}
+            onClick={() => choose(option)}
+          >
+            <span className="hhcp-qz-option-mark" aria-hidden="true" />
+            <span>{option}</span>
+          </button>
+        ))}
+      </div>
+
+      {advisory !== undefined && (
+        <p className="hhcp-qz-advisory font-dm-sans">{advisory}</p>
+      )}
+
+      {needsFollowUp && followUp !== undefined && (
+        <div className="hhcp-form-field hhcp-qz-followup">
+          <label className="hhcp-form-label" htmlFor={`quiz-${followUp.name}`}>
+            {followUp.label}
+          </label>
+          <input
+            id={`quiz-${followUp.name}`}
+            className="hhcp-form-input"
+            value={answers[followUp.name] ?? ""}
+            onChange={(event) => set(followUp.name, event.target.value)}
+          />
+        </div>
+      )}
+
+      {waiting && (
+        <button
+          type="button"
+          className="hhcp-btn hhcp-qz-submit"
+          onClick={() => go(step, chosen)}
+        >
+          Continue
+        </button>
+      )}
+    </>
+  );
+}
+
+function MultiStep({
+  step,
+  answers,
+  picked,
+  set,
+  toggle,
+  go,
+}: StepBodyProps & { step: Extract<QuizStep, { kind: "multi" }> }) {
+  const selected = picked[step.field] ?? [];
+  const other = step.other;
+  const otherText = other === undefined ? "" : (answers[other.name] ?? "");
+  const answered = selected.length > 0 || otherText.trim() !== "";
+
+  return (
+    <>
+      <QuestionHead step={step} />
+      <p className="hhcp-qz-hint">Choose all that apply</p>
+
+      <div className="hhcp-qz-options">
+        {step.options.map((option) => {
+          const on = selected.includes(option);
+          const advisory = step.optionNotes?.[option];
+          return (
+            <div key={option}>
+              <button
+                type="button"
+                className="hhcp-qz-option"
+                data-selected={on}
+                aria-pressed={on}
+                onClick={() => toggle(step.field, option)}
+              >
+                <span
+                  className="hhcp-qz-option-mark"
+                  data-shape="box"
+                  aria-hidden="true"
+                />
+                <span>{option}</span>
+              </button>
+              {on && advisory !== undefined && (
+                <p className="hhcp-qz-advisory font-dm-sans">{advisory}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {other !== undefined && (
+        <div className="hhcp-form-field hhcp-qz-followup">
+          <label className="hhcp-form-label" htmlFor={`quiz-${other.name}`}>
+            {other.label}
+          </label>
+          <input
+            id={`quiz-${other.name}`}
+            className="hhcp-form-input"
+            placeholder="Optional"
+            value={otherText}
+            onChange={(event) => set(other.name, event.target.value)}
+          />
+        </div>
+      )}
+
+      <button
+        type="button"
+        className="hhcp-btn hhcp-qz-submit"
+        disabled={!answered}
+        onClick={() => go(step, selected.join(", "))}
+      >
+        Continue
+      </button>
+    </>
+  );
+}
+
+function InputStep({
+  step,
+  answers,
+  set,
+  go,
+}: StepBodyProps & { step: Extract<QuizStep, { kind: "input" }> }) {
+  const complete = step.fields.every(
+    (field) => (answers[field.name] ?? "").trim() !== "",
+  );
+
+  return (
+    <>
+      <QuestionHead step={step} />
+      <div className={step.fields.length > 1 ? "hhcp-qz-pair" : undefined}>
+        {step.fields.map((field) => (
+          <div key={field.name} className="hhcp-form-field">
+            <label className="hhcp-form-label" htmlFor={`quiz-${field.name}`}>
+              {field.label}
+            </label>
+            <span className="hhcp-qz-unit-wrap">
+              <input
+                id={`quiz-${field.name}`}
+                className="hhcp-form-input"
+                type={field.type}
+                inputMode={field.type === "number" ? "numeric" : undefined}
+                min={field.min}
+                max={field.max}
+                placeholder={field.placeholder}
+                value={answers[field.name] ?? ""}
+                onChange={(event) => set(field.name, event.target.value)}
+              />
+              {field.unit !== undefined && (
+                <span className="hhcp-qz-unit">{field.unit}</span>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        className="hhcp-btn hhcp-qz-submit"
+        disabled={!complete}
+        onClick={() => go(step, "")}
+      >
+        Continue
+      </button>
+    </>
+  );
+}
+
+function BmiStep({
+  step,
+  answers,
+  bmi,
+  set,
+  go,
+}: StepBodyProps & { step: Extract<QuizStep, { kind: "bmi" }> }) {
+  return (
+    <>
+      <QuestionHead step={step} />
+      <div className="hhcp-qz-pair">
+        <div className="hhcp-form-field">
+          <label className="hhcp-form-label" htmlFor="quiz-weight">
+            Weight
+          </label>
+          <span className="hhcp-qz-unit-wrap">
+            <input
+              id="quiz-weight"
+              className="hhcp-form-input"
+              type="number"
+              inputMode="numeric"
+              min={30}
+              max={400}
+              placeholder="82"
+              value={answers.wl_weight_kg ?? ""}
+              onChange={(event) => set("wl_weight_kg", event.target.value)}
+            />
+            <span className="hhcp-qz-unit">kg</span>
+          </span>
+        </div>
+        <div className="hhcp-form-field">
+          <label className="hhcp-form-label" htmlFor="quiz-height">
+            Height
+          </label>
+          <span className="hhcp-qz-unit-wrap">
+            <input
+              id="quiz-height"
+              className="hhcp-form-input"
+              type="number"
+              inputMode="numeric"
+              min={100}
+              max={250}
+              placeholder="175"
+              value={answers.wl_height_cm ?? ""}
+              onChange={(event) => set("wl_height_cm", event.target.value)}
+            />
+            <span className="hhcp-qz-unit">cm</span>
+          </span>
+        </div>
+      </div>
+
+      <p className="hhcp-qz-bmi font-dm-sans">
+        {bmi === null ? (
+          "Enter your weight and height and we will work out your BMI."
+        ) : (
+          <>
+            <strong>{`Your BMI is ${bmi}.`}</strong> {bmiMessage(bmi)}
+          </>
+        )}
+      </p>
+
+      <button
+        type="button"
+        className="hhcp-btn hhcp-qz-submit"
+        disabled={bmi === null}
+        onClick={() => {
+          if (bmi !== null) set("wl_bmi", String(bmi));
+          go(step, "");
+        }}
+      >
+        Continue
+      </button>
+    </>
+  );
+}
+
+function SummaryStep({
+  step,
+  allAnswers,
+  go,
+}: StepBodyProps & { step: Extract<QuizStep, { kind: "summary" }> }) {
+  return (
+    <>
+      <h2 className="hhcp-qz-question font-dm-sans">{step.heading}</h2>
+      <p className="hhcp-qz-exit-body font-dm-sans">{step.body}</p>
+
+      <dl className="hhcp-qz-rows">
+        {summaryRows(allAnswers).map((row) => (
+          <div key={row.label} className="hhcp-qz-row">
+            <dt>{row.label}</dt>
+            <dd className="font-dm-sans">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <button
+        type="button"
+        className="hhcp-btn hhcp-qz-submit"
+        onClick={() => go(step, "")}
+      >
+        Confirm answers
+      </button>
+    </>
+  );
+}
+
+function ExitStep({ step }: { step: Extract<QuizStep, { kind: "exit" }> }) {
+  return (
+    <>
+      <h2 className="hhcp-qz-exit-heading font-dm-sans">{step.heading}</h2>
+      <p className="hhcp-qz-exit-body font-dm-sans">{step.body}</p>
+      {(step.variant === "crisis" || step.variant === "emergency") && (
+        <div className="hhcp-qz-urgent font-dm-sans">
+          {URGENT.map((line) => (
+            <a key={line.label} href={line.href}>
+              <span>{line.label}</span>
+              <strong>{line.number}</strong>
+            </a>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+function ContactStep({
+  allAnswers,
+  outcome,
+  consents,
+  status,
+  problem,
+  setConsents,
+  onSubmit,
+}: StepBodyProps) {
+  const messages =
+    allAnswers.service_selection === "Weight Loss"
+      ? TRIAGE_MESSAGES.weightLoss
+      : TRIAGE_MESSAGES.general;
+  const message = messages[outcome.level];
+
+  return (
+    <form onSubmit={onSubmit}>
+      <div className="hhcp-qz-banner" data-level={outcome.level}>
+        <h3 className="font-dm-sans">{message.heading}</h3>
+        <p className="font-dm-sans">{message.body}</p>
+      </div>
+
+      <h2 className="hhcp-qz-question font-dm-sans">{QUIZ_CONTACT.heading}</h2>
+      <p className="hhcp-qz-exit-body font-dm-sans">{QUIZ_CONTACT.body}</p>
+
+      <div className="hhcp-qz-pair" style={{ marginTop: 24 }}>
+        <div className="hhcp-form-field">
+          <label className="hhcp-form-label" htmlFor="quiz-first">
+            First name
+          </label>
+          <input
+            id="quiz-first"
+            className="hhcp-form-input"
+            name="firstName"
+            autoComplete="given-name"
+            required
+          />
+        </div>
+        <div className="hhcp-form-field">
+          <label className="hhcp-form-label" htmlFor="quiz-last">
+            Last name
+          </label>
+          <input
+            id="quiz-last"
+            className="hhcp-form-input"
+            name="lastName"
+            autoComplete="family-name"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="hhcp-form-field" style={{ marginTop: 20 }}>
+        <label className="hhcp-form-label" htmlFor="quiz-email">
+          Email
+        </label>
+        <input
+          id="quiz-email"
+          className="hhcp-form-input"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+      </div>
+
+      <div style={{ marginTop: 20 }}>
+        <PhoneField name="phone" label="Phone number" required />
+      </div>
+
+      <div className="hhcp-qz-important">
+        <h3>{QUIZ_CONTACT.important.heading}</h3>
+        <p className="font-dm-sans">{QUIZ_CONTACT.important.body}</p>
+      </div>
+
+      <div className="hhcp-qz-consents">
+        {QUIZ_CONSENTS.map((consent) => (
+          <label key={consent.id} className="hhcp-qz-consent font-dm-sans">
+            <input
+              type="checkbox"
+              name={consent.field}
+              checked={consents[consent.id] === true}
+              onChange={(event) =>
+                setConsents((current) => ({
+                  ...current,
+                  [consent.id]: event.target.checked,
+                }))
+              }
+              required={consent.required}
+            />
+            <span>{renderWithLinks(consent.label, consent.links)}</span>
+          </label>
+        ))}
+      </div>
+
+      <p className="hhcp-qz-privacy font-dm-sans">
+        {renderWithLinks(QUIZ_CONTACT.privacyNote, QUIZ_CONTACT.privacyLinks)}
+      </p>
+
+      <div className="hhcp-qz-trap" aria-hidden="true">
+        <label htmlFor="quiz-company">Company</label>
+        <input
+          id="quiz-company"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
+      {problem !== "" && (
+        <p className="hhcp-qz-error font-dm-sans" role="alert">
+          {problem}
+        </p>
+      )}
+
+      <button
+        className="hhcp-btn hhcp-qz-submit"
+        type="submit"
+        disabled={status === "sending"}
+      >
+        {status === "sending" ? "Sending…" : "Get my results"}
+      </button>
+    </form>
   );
 }
