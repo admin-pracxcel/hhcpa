@@ -76,6 +76,22 @@ export function buildAboutPage(input: {
   } as const;
 }
 
+/** The Contact page's BUILD BLOCK asks for ContactPage. */
+export function buildContactPage(input: {
+  name: string;
+  description: string;
+  path: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: input.name,
+    description: input.description,
+    url: absolute(input.path),
+    isPartOf: { "@type": "WebSite", name: CLINIC.name, url: SITE_URL },
+  } as const;
+}
+
 export function buildService(input: {
   name: string;
   description: string;
