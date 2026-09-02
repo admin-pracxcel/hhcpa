@@ -75,6 +75,10 @@ export default function HomeV2() {
       <HeroSection
         heading={HOME_HERO.heading}
         body={HOME_HERO.body}
+        /* 44px over the clone's fluid 64px, across half the container
+           rather than a fixed 536px, so the longer headline sets in
+           fewer lines. Full width once the columns collapse. */
+        headingClassName="max-w-[50%] text-[44px] max-[991px]:max-w-full"
         actions={
           <div className="flex flex-row flex-wrap items-center gap-[16px]">
             <a className="hhcp-btn" href={HOME_HERO.primary.href}>

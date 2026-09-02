@@ -99,11 +99,27 @@ const STYLES = `
 
 .hhcp-st-heading {
   display: flex;
-  flex-direction: column;
-  gap: var(--hhcp-space-s, 20px);
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--hhcp-space-m, 30px);
   /* Same hairline rule the Pricing and Blog headings carry. */
   padding-bottom: var(--hhcp-space-l, 45px);
   border-bottom: 1px solid #ececec;
+}
+
+.hhcp-st-heading-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hhcp-space-s, 20px);
+}
+
+@media (max-width: 767px) {
+  .hhcp-st-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--hhcp-space-s, 20px);
+  }
 }
 
 .hhcp-st-eyebrow {
@@ -138,7 +154,7 @@ const STYLES = `
 
 /* Same pill CTA the Approach and Story sections carry, dot first. */
 .hhcp-st-cta {
-  align-self: flex-start;
+  flex: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -349,13 +365,22 @@ export function StepsSection({
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-st-container">
         <div className="hhcp-st-heading">
-          <div className="hhcp-st-eyebrow">
-            <span className="hhcp-st-dot" />
-            <span className="hhcp-st-eyebrow-label font-roboto-mono">
-              {eyebrow}
-            </span>
+          <div className="hhcp-st-heading-text">
+            <div className="hhcp-st-eyebrow">
+              <span className="hhcp-st-dot" />
+              <span className="hhcp-st-eyebrow-label font-roboto-mono">
+                {eyebrow}
+              </span>
+            </div>
+            <h2 className="hhcp-st-title font-dm-sans">{heading}</h2>
           </div>
-          <h2 className="hhcp-st-title font-dm-sans">{heading}</h2>
+
+          {cta !== undefined && (
+            <a className="hhcp-st-cta font-roboto-mono" href={cta.href}>
+              <span className="hhcp-st-cta-dot" />
+              {cta.label}
+            </a>
+          )}
         </div>
 
         <div className="hhcp-st-grid">
@@ -395,13 +420,6 @@ export function StepsSection({
             </article>
           ))}
         </div>
-
-        {cta !== undefined && (
-          <a className="hhcp-st-cta font-roboto-mono" href={cta.href}>
-            <span className="hhcp-st-cta-dot" />
-            {cta.label}
-          </a>
-        )}
       </div>
     </section>
   );

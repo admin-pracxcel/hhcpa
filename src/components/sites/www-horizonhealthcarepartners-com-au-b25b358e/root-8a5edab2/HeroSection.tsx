@@ -35,6 +35,8 @@ interface HeroSectionProps {
   /** Defaults to the cloned homepage's headline. */
   heading?: string;
   body?: string;
+  /** Appended to the h1, so a page can set its own size and measure. */
+  headingClassName?: string;
   /**
    * Replaces the email-capture form and its mobile CTA. The rebuilt homepage
    * passes two buttons instead: the content spec's hero has no email field.
@@ -45,6 +47,7 @@ interface HeroSectionProps {
 export function HeroSection({
   heading = HEADING,
   body = BODY,
+  headingClassName,
   actions,
 }: HeroSectionProps = {}) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -118,7 +121,10 @@ export function HeroSection({
         <div className="flex flex-col items-start justify-center gap-[24px]">
           <div className="flex flex-col gap-[16px]">
             <h1
-              className="font-dm-sans max-w-[536px] text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-white"
+              className={cn(
+                "font-dm-sans max-w-[536px] text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-white",
+                headingClassName,
+              )}
             >
               {heading}
             </h1>
@@ -132,9 +138,10 @@ export function HeroSection({
           {/* Email capture + quiz link — desktop/tablet only */}
           <div
             className={cn(
-              actions !== undefined && "hidden",
               "flex flex-col items-start gap-[16px]",
               "max-[767px]:hidden",
+              /* Last, so tailwind-merge keeps it over the `flex` above. */
+              actions !== undefined && "hidden",
             )}
           >
             <div className="max-w-[500px] min-w-[404px] max-[767px]:w-full max-[767px]:max-w-[400px] max-[767px]:min-w-[auto]">

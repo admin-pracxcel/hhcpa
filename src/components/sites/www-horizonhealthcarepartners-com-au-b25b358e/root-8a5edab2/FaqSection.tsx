@@ -81,8 +81,9 @@ const ITEMS: readonly FaqItem[] = [
 ] as const;
 
 const STYLES = `
+/* Padding only. A margin here as well made the joins either side 270px,
+   against 180px everywhere else on the page. */
 .hhcp-fq-section {
-  margin: var(--hhcp-section-space-m) 0;
   padding: var(--hhcp-section-space-m) var(--hhcp-gutter);
 }
 

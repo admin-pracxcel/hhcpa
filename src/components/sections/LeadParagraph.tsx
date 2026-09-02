@@ -22,7 +22,7 @@ const STYLES = `
 }
 
 .hhcp-lp-text {
-  max-width: 900px;
+  max-width: 100%;
   font-size: var(--hhcp-text-l, 21.328px);
   line-height: 1.6;
   font-weight: 400;

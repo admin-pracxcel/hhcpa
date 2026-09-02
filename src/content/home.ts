@@ -50,8 +50,14 @@ export const HOME_VALUE_STRIP: readonly string[] = [
 export const HOME_INTRO =
   "Horizon Health Care Partners helps Australians get practical medical support without the waiting room. Our practitioners consult on peptides for weight loss, men's and women's health, and a wide range of everyday health needs. You tell us what is going on through a short pre-screening quiz, you book a time that suits you, and you speak with a registered practitioner who reviews your history and talks through your options. A prescription is never guaranteed. Any treatment comes from a real consultation, where it is clinically appropriate.";
 
+const ICON_BASE =
+  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+
 export interface FocusCard {
   readonly title: string;
+  /** The clone's own service icons, reused so the card set reads as a family. */
+  readonly icon: string;
+  readonly iconAlt: string;
   readonly badge: string;
   readonly body: string;
   readonly cta: string;
@@ -66,6 +72,8 @@ export const HOME_FOCUS = {
   cards: [
     {
       title: "Weight Loss & Peptides",
+      icon: `${ICON_BASE}icon-weight-management.svg`,
+      iconAlt: "Weight management",
       badge: `From $${PRICES.firstConsult.amount} · programs from $${PRICES.healthProgram.amount}`,
       body: "Peptides for weight loss, weight-loss injections, and medically supervised programs, assessed by a practitioner and reviewed over time.",
       cta: "Explore weight loss",
@@ -73,6 +81,8 @@ export const HOME_FOCUS = {
     },
     {
       title: "Men's Health",
+      icon: `${ICON_BASE}icon-mens-womens-health.svg`,
+      iconAlt: "Men's health",
       badge: `From $${PRICES.firstConsult.amount}`,
       body: "Discreet online consultations for erectile dysfunction, low testosterone, hair loss and more.",
       cta: "Explore men's health",
@@ -80,6 +90,8 @@ export const HOME_FOCUS = {
     },
     {
       title: "Women's Health",
+      icon: `${ICON_BASE}icon-continuity-preventative.svg`,
+      iconAlt: "Women's health",
       badge: `From $${PRICES.firstConsult.amount}`,
       body: "Menopause and perimenopause support, hormones, PCOS and contraception, on your schedule.",
       cta: "Explore women's health",
@@ -87,6 +99,8 @@ export const HOME_FOCUS = {
     },
     {
       title: "Medicinal Cannabis",
+      icon: `${ICON_BASE}icon-holistic-care.png`,
+      iconAlt: "Holistic care",
       badge: "Free eligibility check",
       body: "Find out if you may be eligible for a medicinal cannabis prescription, assessed under TGA pathways by registered practitioners.",
       cta: "Check eligibility",
@@ -94,6 +108,8 @@ export const HOME_FOCUS = {
     },
     {
       title: "Online Doctor",
+      icon: `${ICON_BASE}icon-prescriptions.svg`,
+      iconAlt: "Prescriptions",
       badge: `From $${PRICES.generalConsult.amount}`,
       body: "Prescriptions, repeat scripts, medical certificates, and pathology or specialist referrals, where clinically appropriate.",
       cta: "See an online doctor",
@@ -101,6 +117,8 @@ export const HOME_FOCUS = {
     },
     {
       title: "Mental Health Support",
+      icon: `${ICON_BASE}icon-mental-health.svg`,
+      iconAlt: "Mental health",
       badge: `From $${PRICES.mentalHealth.amount}`,
       body: "Practitioner-led support for ADHD, anxiety, sleep and smoking cessation.",
       cta: "Explore mental health",

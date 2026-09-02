@@ -76,11 +76,12 @@ export function FinalCtaSection({
   return (
     <section
       className={cn(
-        "relative flex h-[854px] flex-col justify-center overflow-hidden",
+        // Sized by its content and its own 90px padding. The 854px fixed
+        // height left ~270px of dead band above and below the copy, and the
+        // margins stacked on top of the neighbouring sections' padding.
+        "relative flex flex-col justify-center overflow-hidden",
         "bg-cover bg-no-repeat bg-blend-overlay bg-[position:50%_0%]",
         "px-[var(--hhcp-gutter)] py-[var(--hhcp-section-space-m)]",
-        "mt-[var(--hhcp-section-space-m)] mb-[var(--hhcp-space-m)]",
-        "max-[991px]:h-auto",
         className,
       )}
       style={{ backgroundImage: `url("${POSTER_SRC}")` }}

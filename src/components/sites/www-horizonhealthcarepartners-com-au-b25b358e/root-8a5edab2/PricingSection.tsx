@@ -128,6 +128,7 @@ const STYLES = `
 }
 
 .hhcp-pr-footnote {
+  text-align: center;
   font-size: var(--hhcp-text-s, 16px);
   line-height: 24px;
   color: rgba(1, 49, 38, 0.8);

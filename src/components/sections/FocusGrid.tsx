@@ -95,6 +95,14 @@ const STYLES = `
   box-shadow: 5px 5px 25px 0 rgba(33, 33, 33, 0.1);
 }
 
+/* Matches the booking wizard's service cards: 64px tall, width auto. */
+.hhcp-fo-icon {
+  height: 64px;
+  width: auto;
+  max-width: 100%;
+  display: block;
+}
+
 .hhcp-fo-badge {
   align-self: flex-start;
   padding: 3px 12px;
@@ -193,6 +201,15 @@ export function FocusGrid({
         <div className="hhcp-fo-grid">
           {visible.map((card) => (
             <article key={card.title} className="hhcp-fo-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="hhcp-fo-icon"
+                src={card.icon}
+                alt={card.iconAlt}
+                height={64}
+                loading="lazy"
+                decoding="async"
+              />
               <span className="hhcp-fo-badge font-roboto-mono">
                 {card.badge}
               </span>
