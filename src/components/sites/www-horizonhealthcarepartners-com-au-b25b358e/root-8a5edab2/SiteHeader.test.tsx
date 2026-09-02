@@ -72,8 +72,8 @@ describe("SiteHeader", () => {
   });
 
   it("carries the CTA as the drawer's last item", () => {
-    // Below 991px the bar is logo + hamburger only, so this is the CTA's only
-    // home in the header.
+    // Below 768px the bar is logo + hamburger only, so this is the CTA's only
+    // home in the header. Tablets keep it in the bar and hide this row.
     const { container } = render(<SiteHeader />);
     const drawerItems = container.querySelectorAll(".hhcp-hdr__drawer-list > li");
     const last = drawerItems[drawerItems.length - 1];
@@ -81,6 +81,27 @@ describe("SiteHeader", () => {
     const cta = last.querySelector("a");
     expect(cta).toHaveAttribute("href", "/quiz/");
     expect(cta?.textContent).toBe("Book a consultation");
+  });
+
+  it("shows the CTA in the bar on tablet and in the drawer on phones", () => {
+    // One CTA visible per viewport band, never two and never none: the bar's
+    // button below 991px, swapped for the drawer row below 768px.
+    const { container } = render(<SiteHeader />);
+    const css = Array.from(container.querySelectorAll("style"))
+      .map((node) => node.textContent ?? "")
+      .join("\n")
+      /* Comments would otherwise sit between a media query and its rule. */
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/\s+/g, " ");
+
+    // The bar's actions survive the tablet band and only drop out on phones.
+    expect(css).toContain("@media (max-width: 767px) { .hhcp-hdr__actions { display: none; } }");
+    // The drawer row is the mirror image: off by default, on below 768px.
+    expect(css).toContain(".hhcp-hdr__drawer-cta-row { display: none;");
+    expect(css).toContain("@media (max-width: 767px) { .hhcp-hdr__drawer-cta-row { display: block; } }");
+    // Tablet order: the button sits left of the hamburger, not right of it.
+    expect(css).toContain(".hhcp-hdr__actions { order: 1;");
+    expect(css).toContain(".hhcp-hdr__burger { display: block; order: 2; }");
   });
 
   it("points the primary CTA at the quiz", () => {

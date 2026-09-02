@@ -440,9 +440,15 @@ const HEADER_CSS = `
 .hhcp-hdr__phone:hover { color: var(--hhcp-action-dark); }
 
 @media (max-width: 991px) {
-  /* Logo left, hamburger right, nothing between them. The CTA moves into the
-     drawer as its last item and the phone is carried by the sticky bar. */
+  /* Tablet: logo left, CTA, hamburger right. The phone is carried by the
+     sticky bar rather than the pill, so only the button rides outside. */
   .hhcp-hdr__burger { display: block; order: 2; }
+  .hhcp-hdr__actions { order: 1; margin-left: auto; }
+  .hhcp-hdr__phone { display: none; }
+}
+@media (max-width: 767px) {
+  /* Phone: nothing between logo and hamburger. The CTA moves into the drawer
+     as its last item. */
   .hhcp-hdr__actions { display: none; }
 }
 
@@ -524,9 +530,14 @@ const HEADER_CSS = `
   line-height: 34px !important;
 }
 
+/* Only phone-width drawers carry the CTA; on tablet it is in the bar. */
 .hhcp-hdr__drawer-cta-row {
+  display: none;
   padding: var(--hhcp-space-m);
   margin-top: var(--hhcp-space-s);
+}
+@media (max-width: 767px) {
+  .hhcp-hdr__drawer-cta-row { display: block; }
 }
 .hhcp-hdr__drawer-cta {
   width: 100%;
@@ -823,8 +834,9 @@ export function SiteHeader() {
                 </li>
               ))}
 
-              {/* The CTA lives here rather than in the bar below 991px, so the
-                  header is just logo and hamburger. Last item, after the nav. */}
+              {/* Below 768px the bar is just logo and hamburger, so the CTA
+                  lives here as the drawer's last item. Tablets keep it in the
+                  bar and this row is hidden. */}
               <li className="hhcp-hdr__drawer-cta-row">
                 <a
                   className={cn("hhcp-btn", "hhcp-hdr__drawer-cta")}
