@@ -9,14 +9,15 @@
  *               └─ article × 4   — photo window, floating pill, revealed copy
  *
  * Interaction is a pure-CSS hover reveal: the card is a fixed 444px window that
- * shows only the photo at rest. On hover the image (and its wrapper's min-height)
- * shrinks to 319px, freeing exactly the 125px the copy block needs, and the copy
- * fades in from visibility:hidden/opacity:0. No state, no JS, no scroll listeners,
- * so this stays a server component.
+ * shows only the photo at rest. On hover the copy block's grid row grows from
+ * 0fr to 1fr — i.e. to its own content height — and the photo, which is the
+ * flex child that absorbs the remainder, gives up exactly that much. Nothing is
+ * hardcoded, so the copy cannot outgrow the space made for it. No state, no JS,
+ * no scroll listeners, so this stays a server component.
  *
- * The image is a plain <img> rather than next/image because the effect animates
- * `height` and `transform` on the element itself, which next/image's wrapper and
- * sizing machinery would fight.
+ * The image is a plain <img> rather than next/image because it has to fill a
+ * wrapper whose height the hover changes, and carry a transform of its own,
+ * which next/image's wrapper and sizing machinery would fight.
  *
  * Breakpoints 1199 / 767 / 478 are the target's own (Bricks defaults), not
  * Tailwind's, so the responsive rules live in the scoped <style> block. Below
@@ -148,24 +149,32 @@ const STYLES = `
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 30px;
 }
 
+/*
+ * Takes whatever height the copy leaves it. The photo used to shrink to a
+ * hardcoded 319px on hover, which frees a fixed 95px once the gap is paid for —
+ * and the copy does not have a fixed height. "Speak with an AHPRA-registered
+ * practitioner" wraps to two lines and needs 112px, so its last line was cut off
+ * by the card's own overflow; at 1280px, where every title wraps, three of the
+ * four cards lost 41px. Sizing the photo off the copy instead of the other way
+ * round cannot clip, whatever the copy grows to.
+ */
 .hhcp-st-image-block {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
-  min-height: 444px;
   border-radius: 10px;
-  transition: all 0.3s linear;
 }
 
 /* The 1.05 overscale is cropped by the wrapper at rest and released on hover. */
 .hhcp-st-image {
-  height: 444px;
+  height: 100%;
   width: 100%;
   object-fit: cover;
   border-radius: 10px;
   transform: scaleX(1.05) scaleY(1.05);
-  transition: all 0.3s linear;
+  transition: transform 0.3s linear;
 }
 
 .hhcp-st-pill {
@@ -181,10 +190,25 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
+/*
+ * grid-template-rows 0fr -> 1fr is what makes the reveal measure itself: the
+ * row resolves to the copy's own height, so the photo above it gives up exactly
+ * that much and no fixed number has to be kept in sync with the text.
+ */
 .hhcp-st-content {
-  visibility: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
   opacity: 0;
-  transition: all 0.3s linear;
+  padding-top: 0;
+  transition:
+    grid-template-rows 0.3s linear,
+    padding-top 0.3s linear,
+    opacity 0.3s linear;
+}
+
+.hhcp-st-content > * {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .hhcp-st-icon-box {
@@ -213,16 +237,12 @@ const STYLES = `
 }
 
 .hhcp-st-card:hover .hhcp-st-image {
-  height: 319px;
   transform: scale(1);
 }
 
-.hhcp-st-card:hover .hhcp-st-image-block {
-  min-height: 319px;
-}
-
 .hhcp-st-card:hover .hhcp-st-content {
-  visibility: visible;
+  grid-template-rows: 1fr;
+  padding-top: 30px;
   opacity: 1;
 }
 
@@ -246,16 +266,15 @@ const STYLES = `
     overflow: visible;
   }
 
+  /* Auto-height card: the photo needs a height of its own to size the img. */
   .hhcp-st-image-block {
-    min-height: 360px;
-  }
-
-  .hhcp-st-image {
+    flex: none;
     height: 360px;
   }
 
   .hhcp-st-content {
-    visibility: visible;
+    grid-template-rows: 1fr;
+    padding-top: 30px;
     opacity: 1;
   }
 }
