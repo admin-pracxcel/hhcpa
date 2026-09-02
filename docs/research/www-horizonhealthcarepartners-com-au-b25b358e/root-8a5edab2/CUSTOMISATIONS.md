@@ -110,3 +110,32 @@ Two structural details:
 
 `src/content/nav.test.ts` carries a width budget asserting the rendered top row
 stays under the available row, so this regression cannot return silently.
+
+## 5. The care-areas rail is full-bleed and draggable
+
+**Requested:** the "How We Support You" slider spans the full page width, the play/pause
+button stays where it was, and the rail can be dragged.
+
+**Target behaviour:** the rail sits inside the 1340px container like everything else, and
+Splide's auto-scroll is not draggable (`drag` is not enabled alongside `autoScroll`).
+
+**Change** — `CareAreasSection.tsx`:
+
+- `.hhcp-ca-viewport` breaks out with `width: 100vw; margin-inline: calc(50% - 50vw)`.
+  Only the rail escapes; the heading and the control stay in the container, so the
+  button is still flush with the container's right edge, 32px under the rail.
+  The section's own `overflow: hidden` absorbs the scrollbar's width, so this cannot
+  produce a horizontal scrollbar.
+- The transport moved from a CSS keyframe animation to a `requestAnimationFrame` loop
+  at the same 90px/second. A drag has to take over mid-flight and hand back a new offset
+  for the loop to continue from, which a keyframe animation cannot do. This is a rAF
+  loop, not a scroll listener — the AGENTS.md rule stands.
+- Pointer drag on the viewport, 1:1 with the pointer, wrapping at one copy's width.
+  `touch-action: pan-y` keeps vertical page scrolling working on touch.
+- `prefers-reduced-motion` stops the auto-advance; dragging still works, since that is
+  the user moving it themselves.
+
+Measured at 1534 / 1280 / 768 / 390px: rail width equals the window width at all four,
+`documentElement.scrollWidth` equals `clientWidth` (no horizontal scrollbar), the button's
+right edge equals the container's right edge, the gap under the rail stays 32px, and a
+200px drag moves the track exactly 200px.

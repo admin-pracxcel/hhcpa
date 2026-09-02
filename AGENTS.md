@@ -67,10 +67,13 @@ without collisions. Keep it if you add pages; don't flatten it.
 2. **The header is not sticky.** It is `position: absolute` and scrolls away. There are
    no scroll listeners or IntersectionObservers anywhere in this codebase, by design.
    Don't add any.
-3. **Both carousels are continuous CSS marquees, not slide-steppers.** The target uses
-   Splide auto-scroll (`pauseOnHover: false`); these are duplicated-track CSS animations.
-   The care-areas one has an explicit play/pause button — that is the only thing that
-   stops it.
+3. **Both carousels are continuous marquees, not slide-steppers.** The target uses
+   Splide auto-scroll (`pauseOnHover: false`); these are duplicated-track loops.
+   `FeatureMarquee` is a CSS animation. `CareAreasSection` is a requestAnimationFrame
+   loop instead, because it is draggable and a drag has to take over mid-flight and
+   hand back an offset to continue from — it is a rAF loop, not a scroll listener.
+   Hovering must not pause either of them; the care-areas play/pause button and
+   `prefers-reduced-motion` are the only things that stop them.
 4. **The target ships `html { font-size: 62.5% }`.** Its authored rem values are
    10px-based. Every token here was converted to px so Tailwind's own 16px rem scale
    still works. If you lift a new value from the target's CSS, multiply rem by 10.

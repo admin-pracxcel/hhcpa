@@ -14,25 +14,33 @@
  * Both pauseOnHover and pauseOnFocus are false, so hovering must NOT pause it;
  * the explicit play/pause button is the only thing that does.
  *
- * Reproduced with the same duplicated-track CSS marquee as FeatureMarquee: the
- * five slides are rendered twice inside one `width: max-content` flex track and
- * the track is translated by exactly one copy's worth. Unlike FeatureMarquee
- * there is no track `gap` here (Splide's gap is 0px — the slides carry their own
- * 8px inline padding instead), so a plain `translateX(-50%)` is exactly one copy
- * with no half-gap correction needed.
+ * The five slides are rendered twice inside one `width: max-content` flex track,
+ * and the track is translated by one copy's worth before wrapping. Unlike
+ * FeatureMarquee there is no track `gap` here (Splide's gap is 0px — the slides
+ * carry their own 8px inline padding instead), so one copy is exactly half the
+ * track's scroll width.
+ *
+ * The transport is a requestAnimationFrame loop rather than a CSS keyframe
+ * animation, because the track is draggable: a drag has to be able to take over
+ * mid-flight and hand back a new offset for the loop to continue from, which a
+ * keyframe animation cannot do. It is a rAF loop, not a scroll listener — see
+ * AGENTS.md. `prefers-reduced-motion` stops the auto-advance; dragging still
+ * works, since that is the user moving it themselves.
  *
  * Structure mirrors the source markup:
  *   section                       — --hhcp-section-space-m block / --hhcp-gutter inline
  *     └─ .hhcp-container          — global 1340px wrapper, gutter zeroed
  *          ├─ .heading            — eyebrow + h2, centred box / left-aligned text
  *          └─ .slider             — viewport + transport row, 32px apart
- *               ├─ .viewport      — overflow hidden
- *               │    └─ .track    — flex, `width: max-content`, animated
+ *               ├─ .viewport      — full-bleed, overflow hidden, drag surface
+ *               │    └─ .track    — flex, `width: max-content`, rAF-translated
  *               │         └─ .slide × 10 (5 real + 5 aria-hidden duplicates)
- *               └─ .controls      — right-aligned play/pause button
+ *               └─ .controls      — right-aligned play/pause button, still
+ *                                   inside the 1340px container
  */
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 
 import { cn } from "@/lib/utils";
 import { PauseCircleIcon, PlayCircleIcon } from "../shared/icons";
@@ -77,11 +85,8 @@ const CARE_AREAS: readonly CareArea[] = [
 const EYEBROW = "How We Support You";
 const HEADING = "Professional Medical Consultations";
 
-/**
- * One copy is 5 slides x 670px = 3350px; 3350 / 90px-per-second ≈ 37s.
- * Hard-coded to match the source's constant-velocity auto-scroll.
- */
-const SCROLL_DURATION = "37s";
+/** The source's auto-scroll runs at 1.5px per frame — 90px/second at 60fps. */
+const SCROLL_SPEED = 90;
 
 const STYLES = `
 .hhcp-ca-section {
@@ -143,27 +148,38 @@ const STYLES = `
   gap: 32px;
 }
 
+/*
+ * Full-bleed. The heading and the play/pause control stay inside the 1340px
+ * container; only the rail escapes it. calc(50% - 50vw) works because the
+ * container is centred in the viewport, so half the container plus that margin
+ * lands exactly on the viewport edge. The section's own overflow:hidden absorbs
+ * the scrollbar's width, so this cannot create a horizontal scrollbar.
+ */
 .hhcp-ca-viewport {
   overflow: hidden;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  /* Drag surface: horizontal gestures move the rail, vertical ones still scroll
+     the page. */
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.hhcp-ca-viewport[data-dragging="true"] {
+  cursor: grabbing;
 }
 
 .hhcp-ca-track {
   display: flex;
   width: max-content;
   will-change: transform;
-  animation: hhcp-ca-scroll ${SCROLL_DURATION} linear infinite;
+  /* A drag over images otherwise starts a native image drag or selects text. */
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.hhcp-ca-track--paused {
-  animation-play-state: paused;
-}
-
-/*
- * The track has no gap, so exactly half of it is one full copy of the slides.
- */
-@keyframes hhcp-ca-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.hhcp-ca-track img {
+  pointer-events: none;
 }
 
 .hhcp-ca-slide {
@@ -235,6 +251,88 @@ interface CareAreasSectionProps {
 
 export function CareAreasSection({ className }: CareAreasSectionProps) {
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  /* Distance the track has travelled left, in px, always inside [0, oneCopy). */
+  const offsetRef = useRef(0);
+  /* Read inside the rAF loop, which must not be torn down and rebuilt on every
+     play/pause toggle — that would reset its timestamp and drop a frame. */
+  const playingRef = useRef(true);
+  const draggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetRef = useRef(0);
+
+  /* Mirrored into a ref rather than read directly, so the rAF effect below does
+     not have to be torn down and rebuilt on every toggle. */
+  useEffect(() => {
+    playingRef.current = isPlaying;
+  }, [isPlaying]);
+
+  const applyOffset = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    /* Two identical copies, no track gap: one copy is exactly half of it. */
+    const oneCopy = track.scrollWidth / 2;
+    if (oneCopy > 0) {
+      offsetRef.current = ((offsetRef.current % oneCopy) + oneCopy) % oneCopy;
+    }
+    track.style.transform = "translate3d(" + -offsetRef.current + "px, 0, 0)";
+  }, []);
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let previous = performance.now();
+
+    const step = (now: number) => {
+      /* Clamped: a backgrounded tab hands back a delta of many seconds, which
+         would teleport the rail on return. */
+      const elapsed = Math.min(now - previous, 100) / 1000;
+      previous = now;
+      if (playingRef.current && !draggingRef.current && !reduced.matches) {
+        offsetRef.current += SCROLL_SPEED * elapsed;
+      }
+      applyOffset();
+      frame = requestAnimationFrame(step);
+    };
+
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [applyOffset]);
+
+  const handlePointerDown = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      draggingRef.current = true;
+      setIsDragging(true);
+      dragStartXRef.current = event.clientX;
+      dragStartOffsetRef.current = offsetRef.current;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    },
+    [],
+  );
+
+  const handlePointerMove = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (!draggingRef.current) return;
+      offsetRef.current =
+        dragStartOffsetRef.current - (event.clientX - dragStartXRef.current);
+      applyOffset();
+    },
+    [applyOffset],
+  );
+
+  const handlePointerUp = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (!draggingRef.current) return;
+      draggingRef.current = false;
+      setIsDragging(false);
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    },
+    [],
+  );
 
   // `duplicate` marks the second, purely visual copy that makes the wrap seamless.
   const renderCopy = (duplicate: boolean) =>
@@ -271,13 +369,15 @@ export function CareAreasSection({ className }: CareAreasSectionProps) {
         </div>
 
         <div className="hhcp-ca-slider">
-          <div className="hhcp-ca-viewport">
-            <div
-              className={cn(
-                "hhcp-ca-track hhcp-marquee-track",
-                !isPlaying && "hhcp-ca-track--paused",
-              )}
-            >
+          <div
+            className="hhcp-ca-viewport"
+            data-dragging={isDragging}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          >
+            <div className="hhcp-ca-track" ref={trackRef}>
               {renderCopy(false)}
               {renderCopy(true)}
             </div>
