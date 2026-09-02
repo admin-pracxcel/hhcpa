@@ -3,12 +3,18 @@
 /**
  * Contact details beside the contact form.
  *
- * ⚠️ The form does not submit anywhere yet. `/api/submit` is Phase 2 work and
- * the webhook, HMAC signing and retry behaviour are not built, so the handler
- * shows an inline message pointing at the phone number and email address —
- * both of which are live — rather than pretending a message was sent. A form
- * that silently swallows a patient's message would be worse than no form.
- * Wire `onSubmit` to the route handler when it exists and delete the notice.
+ * Submits to `/api/contact`, which forwards to the n8n webhook. Posting to our
+ * own route rather than the webhook keeps its URL out of the client bundle and
+ * lets the server stamp the fields a browser must not be trusted with.
+ *
+ * Alongside the five visible fields it sends three derived ones: the country
+ * the visitor is in (guessed from their browser, not the dial code they
+ * picked), the campaign that brought them (see `lib/attribution.ts`), and the
+ * submission date, which the server stamps in AEST.
+ *
+ * If delivery fails the visitor is told plainly and given the phone number and
+ * email, both live. A form that reports success on a dropped message is worse
+ * than one that admits the failure.
  *
  * Two compliance points are structural here, not incidental:
  *
@@ -24,6 +30,8 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 
 import { CLINIC } from "@/content/clinic";
+import { findCountry, guessCountry } from "@/content/countries";
+import { getLeadSource } from "@/lib/attribution";
 import { cn } from "@/lib/utils";
 import { PhoneField } from "./PhoneField";
 
@@ -243,6 +251,21 @@ const STYLES = `
   align-self: flex-start;
 }
 
+.hhcp-ct-submit[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* Off-screen rather than display:none, which some bots skip. */
+.hhcp-form-trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 @media (max-width: 991px) {
   .hhcp-ct-container {
     grid-template-columns: 1fr;
@@ -280,11 +303,66 @@ export function ContactSection({
   formHeading,
   formNote,
 }: ContactSectionProps) {
-  const [submitted, setSubmitted] = useState(false);
+  type Status = "idle" | "sending" | "sent" | "failed" | "invalid";
+  const [status, setStatus] = useState<Status>("idle");
+  const [problem, setProblem] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
+    if (status === "sending") return;
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const value = (name: string) => String(data.get(name) ?? "");
+
+    /* Where the visitor is, which is not necessarily the dial code they chose. */
+    const visitorCountry = findCountry(guessCountry());
+    const phoneCountry = findCountry(value("phoneCountry"));
+
+    setStatus("sending");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: value("firstName"),
+          lastName: value("lastName"),
+          email: value("email"),
+          phone: value("phone"),
+          phoneCountry: phoneCountry.code,
+          phoneDial: phoneCountry.dial,
+          message: value("message"),
+          company: value("company"),
+          leadCountry: visitorCountry.code,
+          leadCountryName: visitorCountry.name,
+          ...getLeadSource(),
+          pagePath:
+            typeof window === "undefined" ? "" : window.location.pathname,
+        }),
+      });
+
+      if (!response.ok) {
+        /*
+         * A 400 is the visitor's to fix and the server says how; anything else
+         * is ours, and they should be given the phone number instead of a
+         * correction they cannot act on.
+         */
+        if (response.status === 400) {
+          const detail = (await response.json().catch(() => ({}))) as {
+            error?: string;
+          };
+          setProblem(detail.error ?? "Please check the form and try again.");
+          setStatus("invalid");
+          return;
+        }
+        setStatus("failed");
+        return;
+      }
+      setStatus("sent");
+      form.reset();
+    } catch {
+      setStatus("failed");
+    }
   };
 
   return (
@@ -409,14 +487,45 @@ export function ContactSection({
             <p className="hhcp-form-note font-dm-sans">{formNote}</p>
           </div>
 
-          <button className="hhcp-btn hhcp-ct-submit" type="submit">
-            Send message
+          {/* Honeypot: no human sees it, bots fill everything. Hidden from
+              assistive tech too, so nobody is asked to complete it. */}
+          <div className="hhcp-form-trap" aria-hidden="true">
+            <label htmlFor="contact-company">Company</label>
+            <input
+              id="contact-company"
+              name="company"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
+          <button
+            className="hhcp-btn hhcp-ct-submit"
+            type="submit"
+            disabled={status === "sending"}
+          >
+            {status === "sending" ? "Sending…" : "Send message"}
           </button>
 
-          {submitted && (
+          {status === "sent" && (
             <p className="hhcp-form-status font-dm-sans" role="status">
-              This form is not connected yet, so your message has not been sent.
-              Please call <a href={CLINIC.phoneHref}>{CLINIC.phone}</a> or email{" "}
+              Thank you — your message has been sent. Our team will get back to
+              you during business hours. If it is urgent, call{" "}
+              <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>.
+            </p>
+          )}
+
+          {status === "invalid" && (
+            <p className="hhcp-form-status font-dm-sans" role="alert">
+              {problem}
+            </p>
+          )}
+
+          {status === "failed" && (
+            <p className="hhcp-form-status font-dm-sans" role="alert">
+              Sorry — we could not send your message just now. Please call{" "}
+              <a href={CLINIC.phoneHref}>{CLINIC.phone}</a> or email{" "}
               <a href={CLINIC.emailHref}>{CLINIC.email}</a> and our team will
               help you.
             </p>

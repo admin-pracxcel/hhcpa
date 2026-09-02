@@ -9,7 +9,9 @@
  * z-index 1 and must render before <main>, and must not be wrapped in anything
  * that establishes a new stacking or positioning context. See PAGE_TOPOLOGY.md.
  */
+import { Suspense } from "react";
 import type { ReactNode } from "react";
+import { AttributionCapture } from "@/components/AttributionCapture";
 import { SiteHeader } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteHeader";
 import { SiteFooter } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteFooter";
 import { SiteDisclaimer } from "@/components/layout/SiteDisclaimer";
@@ -21,6 +23,11 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <JsonLd data={buildMedicalClinic()} />
+      {/* useSearchParams needs a Suspense boundary so the rest of the page
+          can still be statically rendered around it. */}
+      <Suspense fallback={null}>
+        <AttributionCapture />
+      </Suspense>
       <SiteHeader />
       <main id="brx-content">{children}</main>
       <SiteFooter />
