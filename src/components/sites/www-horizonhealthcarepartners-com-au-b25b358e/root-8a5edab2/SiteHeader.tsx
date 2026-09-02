@@ -92,20 +92,6 @@ const HEADER_CSS = `
   background-size: 0% var(--bg-h);
   background-position-x: right;
 }
-@media (max-width: 478px) {
-  .hhcp-hdr__banner-inner {
-    align-items: flex-start;
-    padding-block: var(--hhcp-space-s);
-  }
-  .hhcp-hdr__banner-info {
-    flex-direction: column;
-  }
-  .hhcp-hdr__banner-link {
-    margin-bottom: 10px;
-    max-width: 200px;
-  }
-}
-
 /* ---------- White pill bar ---------- */
 .hhcp-hdr__bar {
   margin-top: var(--hhcp-space-xs);
