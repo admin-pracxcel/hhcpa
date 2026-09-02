@@ -162,7 +162,8 @@ const STYLES = `
 interface ScrollRevealParagraphProps {
   className?: string;
   text: string;
-  cta: { label: string; href: string };
+  /** Omitted where the section's own page is the destination, e.g. `/quiz/`. */
+  cta?: { label: string; href: string };
 }
 
 export function ScrollRevealParagraph({
@@ -196,12 +197,14 @@ export function ScrollRevealParagraph({
             ))}
           </p>
 
-          <a className="hhcp-sr-link font-dm-sans" href={cta.href}>
-            <span className="hhcp-sr-link-icon">
-              <ArrowRightIcon width={17} height={17} />
-            </span>
-            <span>{cta.label}</span>
-          </a>
+          {cta !== undefined && (
+            <a className="hhcp-sr-link font-dm-sans" href={cta.href}>
+              <span className="hhcp-sr-link-icon">
+                <ArrowRightIcon width={17} height={17} />
+              </span>
+              <span>{cta.label}</span>
+            </a>
+          )}
         </div>
       </div>
     </section>

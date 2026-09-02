@@ -5,8 +5,8 @@
  * two-column details-and-form block, which is not a content module and is used
  * nowhere else.
  *
- * ⚠️ The form does not submit anywhere. See ContactSection for why, and what
- * has to exist before it can.
+ * The form submits to `/api/contact`, which forwards to n8n. See ContactSection
+ * for what it sends beyond the visible fields.
  */
 
 import type { Metadata } from "next";

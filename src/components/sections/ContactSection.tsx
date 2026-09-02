@@ -180,50 +180,7 @@ const STYLES = `
   gap: var(--hhcp-space-s, 20px);
 }
 
-.hhcp-form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.hhcp-form-label {
-  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.36px;
-  text-transform: uppercase;
-  color: var(--hhcp-primary, #013126);
-}
-
-.hhcp-form-input,
-.hhcp-form-textarea {
-  width: 100%;
-  border: 1px solid var(--hhcp-base-20, rgba(1, 49, 38, 0.2));
-  border-radius: var(--hhcp-radius-s, 6.667px);
-  background: #ffffff;
-  padding: 14px;
-  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--hhcp-text-s, 16px);
-  color: var(--hhcp-primary, #013126);
-  outline: none;
-  transition: border-color 0.2s linear, box-shadow 0.2s linear;
-}
-
-.hhcp-form-textarea {
-  min-height: 140px;
-  resize: vertical;
-}
-
-.hhcp-form-input:focus,
-.hhcp-form-textarea:focus {
-  border-color: var(--hhcp-primary, #013126);
-  box-shadow: 0 0 0 3px rgba(88, 237, 162, 0.35);
-}
-
-.hhcp-form-input::placeholder,
-.hhcp-form-textarea::placeholder {
-  color: var(--hhcp-base-60, rgba(1, 49, 38, 0.6));
-}
+/* Field styling lives in globals.css — PhoneField shares it. */
 
 .hhcp-form-note {
   font-size: var(--hhcp-text-s, 16px);

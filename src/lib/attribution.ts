@@ -28,6 +28,21 @@
 
 const FIRST_TOUCH = "hhcp_lead_source";
 const LAST_TOUCH = "hhcp_lead_source_latest";
+/* The full attribution set the quiz payload carries (spec §6.2). */
+const ATTRIBUTION = "hhcp_attribution";
+
+/** Click ids and campaign parameters, captured once and kept. */
+const TRACKED = [
+  "gclid",
+  "wbraid",
+  "gbraid",
+  "fbclid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+] as const;
 
 /** 90 days: long enough to cover a considered health decision. */
 const MAX_AGE_SECONDS = 90 * 24 * 60 * 60;
@@ -65,6 +80,61 @@ export function captureLeadSource(): void {
 
   if (readCookie(FIRST_TOUCH) === "") writeCookie(FIRST_TOUCH, source);
   writeCookie(LAST_TOUCH, source);
+}
+
+/**
+ * Captures the wider attribution set, plus the landing page and referrer.
+ *
+ * Written once per browser and never overwritten: the landing page and
+ * referrer only mean anything for the visit that first arrived, and a later
+ * page would otherwise overwrite them with an internal URL.
+ */
+export function captureAttribution(): void {
+  if (typeof window === "undefined") return;
+  if (readCookie(ATTRIBUTION) !== "") return;
+
+  let params: URLSearchParams;
+  try {
+    params = new URL(window.location.href).searchParams;
+  } catch {
+    return;
+  }
+
+  const captured: Record<string, string> = {};
+  for (const key of TRACKED) {
+    const value = params.get(key);
+    if (value !== null && value.trim() !== "") {
+      captured[key] = value.trim().slice(0, 200);
+    }
+  }
+
+  captured.landingPage = window.location.pathname.slice(0, 200);
+  captured.referrer = (document.referrer || "").slice(0, 300);
+
+  /* Only worth storing if the visit actually carried a campaign or a referrer. */
+  const meaningful =
+    Object.keys(captured).some((key) => TRACKED.includes(key as never)) ||
+    captured.referrer !== "";
+  if (!meaningful) return;
+
+  try {
+    writeCookie(ATTRIBUTION, JSON.stringify(captured));
+  } catch {
+    /* Over the cookie size limit; the lead-source cookies still carry the source. */
+  }
+}
+
+export function getAttribution(): Record<string, string> {
+  const raw = readCookie(ATTRIBUTION);
+  if (raw === "") return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return typeof parsed === "object" && parsed !== null
+      ? (parsed as Record<string, string>)
+      : {};
+  } catch {
+    return {};
+  }
 }
 
 export interface LeadSource {

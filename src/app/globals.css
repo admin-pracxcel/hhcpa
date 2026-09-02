@@ -321,6 +321,55 @@
 }
 .hhcp-btn--outline:hover { background-color: var(--hhcp-primary); color: var(--hhcp-white); }
 
+/* Form fields.
+   Shared rather than scoped to a section, because PhoneField is dropped into
+   whichever form needs it and has to look native to that form. It carries no
+   styles of its own for the label and input; it uses these. */
+.hhcp-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hhcp-form-label {
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: var(--hhcp-primary);
+}
+
+.hhcp-form-input,
+.hhcp-form-textarea {
+  width: 100%;
+  border: 1px solid var(--hhcp-base-20);
+  border-radius: var(--hhcp-radius-s);
+  background: var(--hhcp-white);
+  padding: 14px;
+  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--hhcp-text-s);
+  color: var(--hhcp-primary);
+  outline: none;
+  transition: border-color 0.2s linear, box-shadow 0.2s linear;
+}
+
+.hhcp-form-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.hhcp-form-input:focus,
+.hhcp-form-textarea:focus {
+  border-color: var(--hhcp-primary);
+  box-shadow: 0 0 0 3px rgba(88, 237, 162, 0.35);
+}
+
+.hhcp-form-input::placeholder,
+.hhcp-form-textarea::placeholder {
+  color: var(--hhcp-base-60);
+}
+
 /* Eyebrow label above section headings. */
 .hhcp-eyebrow {
   font-family: var(--font-roboto-mono-local), ui-monospace, monospace;

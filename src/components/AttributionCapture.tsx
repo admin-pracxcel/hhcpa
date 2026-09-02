@@ -16,7 +16,7 @@
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-import { captureLeadSource } from "@/lib/attribution";
+import { captureAttribution, captureLeadSource } from "@/lib/attribution";
 
 export function AttributionCapture() {
   const pathname = usePathname();
@@ -24,6 +24,7 @@ export function AttributionCapture() {
 
   useEffect(() => {
     captureLeadSource();
+    captureAttribution();
     /* Client-side navigation changes the URL without remounting, so the
        campaign on a later page would otherwise be missed. */
   }, [pathname, searchParams]);
