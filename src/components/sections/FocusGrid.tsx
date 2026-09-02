@@ -74,25 +74,35 @@ const STYLES = `
   color: rgba(1, 49, 38, 0.8);
 }
 
+/*
+ * Card styling is the booking wizard's service cards verbatim: 20px grid gap,
+ * white face on a #d6e8e1 hairline, 12px radius, 24px padding, 220px floor, and
+ * the lift-and-shadow hover. Its own breakpoints too (900 / 600), which are the
+ * wizard's rather than the target's 1199 / 767.
+ */
 .hhcp-fo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--hhcp-space-m, 30px);
+  gap: 20px;
 }
 
 .hhcp-fo-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: var(--hhcp-space-m, 30px);
-  border-radius: 10px;
-  background-color: var(--hhcp-accent, #f5fff9);
-  border: 1px solid var(--hhcp-neutral-ultra-light, #f2f2f2);
-  transition: all 0.3s linear;
+  justify-content: space-between;
+  min-height: 220px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #d6e8e1;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hhcp-fo-card:hover {
-  box-shadow: 5px 5px 25px 0 rgba(33, 33, 33, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(1, 49, 39, 0.1);
+  border-color: var(--hhcp-primary, #013126);
 }
 
 /*
@@ -105,44 +115,55 @@ const STYLES = `
   align-self: flex-start;
   width: 64px;
   height: 64px;
+  margin-bottom: 16px;
   object-fit: contain;
   display: block;
 }
 
+/* The wizard's price chip: tinted block, not a mint pill. */
 .hhcp-fo-badge {
-  align-self: flex-start;
-  padding: 3px 12px;
-  border-radius: var(--hhcp-radius-xl, 22.5px);
-  background-color: var(--hhcp-action, #58eda2);
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(1, 49, 39, 0.08);
   color: var(--hhcp-primary, #013126);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 0.36px;
-  text-transform: uppercase;
 }
 
 .hhcp-fo-card-title {
-  font-size: var(--hhcp-h4, 20px);
-  line-height: 24.16px;
-  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 400;
+  margin-bottom: 8px;
   color: var(--hhcp-primary, #013126);
 }
 
 .hhcp-fo-card-body {
-  flex: 1;
-  font-size: var(--hhcp-text-s, 16px);
-  line-height: 24px;
-  color: rgba(1, 49, 38, 0.8);
+  flex-grow: 1;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #526f68;
+}
+
+/* Price chip and link share the card's last row. */
+.hhcp-fo-foot {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 /* Same icon-link treatment the FAQ footer uses: arrow first, row-reverse. */
 .hhcp-fo-link {
   display: flex;
   flex-direction: row-reverse;
-  align-self: flex-start;
   align-items: center;
   gap: 4px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--hhcp-primary, #013126);
   text-decoration: none;
@@ -159,13 +180,13 @@ const STYLES = `
   color: inherit;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 900px) {
   .hhcp-fo-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 600px) {
   .hhcp-fo-grid {
     grid-template-columns: 1fr;
   }
@@ -217,17 +238,17 @@ export function FocusGrid({
                 loading="lazy"
                 decoding="async"
               />
-              <span className="hhcp-fo-badge font-roboto-mono">
-                {card.badge}
-              </span>
               <h3 className="hhcp-fo-card-title font-dm-sans">{card.title}</h3>
               <p className="hhcp-fo-card-body font-dm-sans">{card.body}</p>
-              <a className="hhcp-fo-link font-dm-sans" href={card.href}>
-                <span className="hhcp-fo-link-icon">
-                  <ArrowRightIcon width={17} height={17} />
-                </span>
-                <span>{card.cta}</span>
-              </a>
+              <div className="hhcp-fo-foot">
+                <span className="hhcp-fo-badge font-dm-sans">{card.badge}</span>
+                <a className="hhcp-fo-link font-dm-sans" href={card.href}>
+                  <span className="hhcp-fo-link-icon">
+                    <ArrowRightIcon width={17} height={17} />
+                  </span>
+                  <span>{card.cta}</span>
+                </a>
+              </div>
             </article>
           ))}
         </div>
