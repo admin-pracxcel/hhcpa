@@ -3,8 +3,9 @@
  * larger, animated treatment of the same copy. Both are on `/home-v2/`; this
  * one does not replace the other.
  *
- * The copy sets faint and fills to the body colour word by word as the section
- * travels up the viewport.
+ * The copy sets faint, blurred and slightly low, and each word sharpens, rises
+ * and fills to the body colour as the section travels up the viewport. Full
+ * container width, no eyebrow column.
  *
  * No JS. It is a CSS scroll-driven animation: `animation-timeline: view()` ties
  * each word's colour to the section's own progress through the viewport, and
@@ -18,6 +19,9 @@
  * Nothing here hides content, so the copy is readable either way.
  */
 
+import { Fragment } from "react";
+import type { CSSProperties } from "react";
+
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/shared/icons";
 
@@ -28,36 +32,6 @@ const STYLES = `
 
 .hhcp-sr-container {
   padding-inline: 0;
-}
-
-.hhcp-sr-grid {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: var(--hhcp-space-xl, 67.5px);
-  align-items: start;
-}
-
-.hhcp-sr-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-top: 18px;
-}
-
-.hhcp-sr-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--hhcp-action, #58eda2);
-  flex: none;
-}
-
-.hhcp-sr-eyebrow-label {
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.36px;
-  color: var(--hhcp-primary, #013126);
 }
 
 .hhcp-sr-body {
@@ -72,13 +46,11 @@ const STYLES = `
   line-height: 1.25;
   font-weight: 400;
   letter-spacing: -0.5px;
-  /* The resting colour. Words animate from --hhcp-sr-faint up to this. */
+  /* The resting colour; the keyframes decide what the words start at. */
   color: var(--hhcp-primary, #013126);
 }
 
 .hhcp-sr-word {
-  /* Words are inline, so the space between them is a real text node; keeping
-     them inline is what lets the paragraph wrap normally. */
   color: var(--hhcp-primary, #013126);
 }
 
@@ -104,23 +76,39 @@ const STYLES = `
   color: inherit;
 }
 
+/*
+ * Colour alone was too quiet to read as an animation at a normal scroll speed.
+ * Each word also arrives out of focus and slightly low, so there is movement
+ * and a change of sharpness to catch, not just a tint.
+ */
 @keyframes hhcp-sr-fill {
-  from { color: rgba(1, 49, 38, 0.16); }
-  to { color: var(--hhcp-primary, #013126); }
+  from {
+    color: rgba(1, 49, 38, 0.08);
+    filter: blur(6px);
+    transform: translateY(0.18em);
+  }
+  to {
+    color: var(--hhcp-primary, #013126);
+    filter: blur(0);
+    transform: translateY(0);
+  }
 }
 
 @supports (animation-timeline: view()) {
   .hhcp-sr-word {
+    /* transform and filter need a box; inline boxes do not take one. */
+    display: inline-block;
     animation: hhcp-sr-fill linear both;
     animation-timeline: view();
     /*
-     * --i is the word's index and --n the count, both set inline. Each word
-     * starts 55% of the way through the section's pass in reading order and
-     * takes 12% of it to finish, so the fill sweeps rather than snapping.
+     * --i is the word's index and --n the count, both set inline. The stagger
+     * runs across 62% of the section's pass in reading order, and each word
+     * takes 9% of it, so a short wave travels the paragraph rather than the
+     * whole block easing together.
      */
     animation-range:
-      cover calc(20% + (var(--i) / var(--n)) * 55%)
-      cover calc(32% + (var(--i) / var(--n)) * 55%);
+      cover calc(12% + (var(--i) / var(--n)) * 62%)
+      cover calc(21% + (var(--i) / var(--n)) * 62%);
   }
 }
 
@@ -128,19 +116,12 @@ const STYLES = `
   .hhcp-sr-word {
     animation: none;
     color: var(--hhcp-primary, #013126);
+    filter: none;
+    transform: none;
   }
 }
 
 @media (max-width: 991px) {
-  .hhcp-sr-grid {
-    grid-template-columns: 1fr;
-    gap: var(--hhcp-space-m, 30px);
-  }
-
-  .hhcp-sr-eyebrow {
-    padding-top: 0;
-  }
-
   .hhcp-sr-text {
     font-size: 36px;
   }
@@ -155,14 +136,12 @@ const STYLES = `
 
 interface ScrollRevealParagraphProps {
   className?: string;
-  eyebrow: string;
   text: string;
   cta: { label: string; href: string };
 }
 
 export function ScrollRevealParagraph({
   className,
-  eyebrow,
   text,
   cta,
 }: ScrollRevealParagraphProps) {
@@ -172,41 +151,35 @@ export function ScrollRevealParagraph({
     <section className={cn("hhcp-sr-section", className)}>
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-sr-container">
-        <div className="hhcp-sr-grid">
-          <div className="hhcp-sr-eyebrow">
-            <span className="hhcp-sr-dot" />
-            <span className="hhcp-sr-eyebrow-label font-roboto-mono">
-              {eyebrow}
-            </span>
-          </div>
-
-          <div className="hhcp-sr-body">
-            <p className="hhcp-sr-text font-dm-sans">
-              {words.map((word, index) => (
+        <div className="hhcp-sr-body">
+          <p className="hhcp-sr-text font-dm-sans">
+            {words.map((word, index) => (
+              // Words repeat, so the index has to be part of the key. The space
+              // sits outside the span: an inline-block trims its own trailing
+              // whitespace, which would run the words together.
+              <Fragment key={`${index}-${word}`}>
                 <span
-                  // Words repeat, so the index has to be part of the key.
-                  key={`${index}-${word}`}
                   className="hhcp-sr-word"
                   style={
                     {
                       "--i": index,
                       "--n": words.length,
-                    } as React.CSSProperties
+                    } as CSSProperties
                   }
                 >
                   {word}
-                  {index < words.length - 1 ? " " : ""}
                 </span>
-              ))}
-            </p>
+                {index < words.length - 1 ? " " : ""}
+              </Fragment>
+            ))}
+          </p>
 
-            <a className="hhcp-sr-link font-dm-sans" href={cta.href}>
-              <span className="hhcp-sr-link-icon">
-                <ArrowRightIcon width={17} height={17} />
-              </span>
-              <span>{cta.label}</span>
-            </a>
-          </div>
+          <a className="hhcp-sr-link font-dm-sans" href={cta.href}>
+            <span className="hhcp-sr-link-icon">
+              <ArrowRightIcon width={17} height={17} />
+            </span>
+            <span>{cta.label}</span>
+          </a>
         </div>
       </div>
     </section>

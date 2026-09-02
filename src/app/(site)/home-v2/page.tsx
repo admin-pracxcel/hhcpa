@@ -106,11 +106,7 @@ export default function HomeV2() {
       />
 
       {/* Under trial alongside the plain version above, not replacing it. */}
-      <ScrollRevealParagraph
-        eyebrow={HOME_INTRO.eyebrow}
-        text={HOME_INTRO.text}
-        cta={HOME_INTRO.cta}
-      />
+      <ScrollRevealParagraph text={HOME_INTRO.text} cta={HOME_INTRO.cta} />
 
       {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into
           bands instead of one continuous white scroll. */}
