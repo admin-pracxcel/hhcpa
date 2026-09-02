@@ -104,7 +104,10 @@ export default function HomeV2() {
         cta={HOME_INTRO.cta}
       />
 
+      {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into
+          bands instead of one continuous white scroll. */}
       <FocusGrid
+        className="bg-[color:var(--hhcp-accent)]"
         eyebrow={HOME_FOCUS.eyebrow}
         heading={HOME_FOCUS.heading}
         intro={HOME_FOCUS.intro}
@@ -120,6 +123,7 @@ export default function HomeV2() {
       />
 
       <StepsSection
+        className="bg-[color:var(--hhcp-accent)]"
         eyebrow={HOME_STEPS.eyebrow}
         heading={HOME_STEPS.heading}
         steps={HOME_STEPS.steps}
@@ -148,6 +152,7 @@ export default function HomeV2() {
       />
 
       <BlogSection
+        className="bg-[color:var(--hhcp-accent)]"
         eyebrow={HOME_KNOWLEDGE.eyebrow}
         heading={HOME_KNOWLEDGE.heading}
         cta={HOME_KNOWLEDGE.cta}
