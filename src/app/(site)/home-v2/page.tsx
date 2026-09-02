@@ -98,7 +98,11 @@ export default function HomeV2() {
 
       <FeatureMarquee items={HOME_VALUE_STRIP} />
 
-      <LeadParagraph text={HOME_INTRO} />
+      <LeadParagraph
+        eyebrow={HOME_INTRO.eyebrow}
+        text={HOME_INTRO.text}
+        cta={HOME_INTRO.cta}
+      />
 
       <FocusGrid
         eyebrow={HOME_FOCUS.eyebrow}

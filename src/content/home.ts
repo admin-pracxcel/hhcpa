@@ -46,9 +46,17 @@ export const HOME_VALUE_STRIP: readonly string[] = [
  * primary money keyword and belongs to the Weight Loss & Peptides page; the
  * homepage supports it in the first paragraph without taking it as an H1, so
  * the two pages do not compete.
+ *
+ * `text` is verbatim from the content document. The eyebrow and the link are
+ * not in it — they were added because the paragraph was a 136-character-wide
+ * slab on its own, and because About Us was the one major page nothing on this
+ * homepage linked to.
  */
-export const HOME_INTRO =
-  "Horizon Health Care Partners helps Australians get practical medical support without the waiting room. Our practitioners consult on peptides for weight loss, men's and women's health, and a wide range of everyday health needs. You tell us what is going on through a short pre-screening quiz, you book a time that suits you, and you speak with a registered practitioner who reviews your history and talks through your options. A prescription is never guaranteed. Any treatment comes from a real consultation, where it is clinically appropriate.";
+export const HOME_INTRO = {
+  eyebrow: "Who we are",
+  text: "Horizon Health Care Partners helps Australians get practical medical support without the waiting room. Our practitioners consult on peptides for weight loss, men's and women's health, and a wide range of everyday health needs. You tell us what is going on through a short pre-screening quiz, you book a time that suits you, and you speak with a registered practitioner who reviews your history and talks through your options. A prescription is never guaranteed. Any treatment comes from a real consultation, where it is clinically appropriate.",
+  cta: { label: "More about Horizon", href: "/about-us/" },
+} as const;
 
 const ICON_BASE =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
