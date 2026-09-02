@@ -76,6 +76,7 @@ export default function Page() {
       />
 
       <FocusGrid
+        className="bg-[color:var(--hhcp-accent)]"
         id="book"
         eyebrow={HOME_FOCUS.eyebrow}
         heading={HOME_FOCUS.heading}
@@ -84,7 +85,6 @@ export default function Page() {
       />
 
       <RelatedCards
-        className="bg-[color:var(--hhcp-accent)]"
         eyebrow={SERVICES_PAGE.related.eyebrow}
         heading={SERVICES_PAGE.related.heading}
         cards={SERVICES_PAGE.related.cards}
