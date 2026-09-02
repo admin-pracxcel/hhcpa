@@ -4,15 +4,18 @@
  * Deliberately not `HeroSection`: that one is the homepage's full-viewport
  * video, and a 100dvh video on every one of nineteen service pages would push
  * the actual content below the fold on all of them. This is a compact dark
- * band — breadcrumb, H1, the two CTAs and the tap-to-call number — sized by its
- * content, so the page's first section starts where the reader can see it.
+ * band — breadcrumb, H1 and the two CTAs — sized by its content, so the page's
+ * first section starts where the reader can see it.
+ *
+ * No tap-to-call here, though the content document's hero lists one. The
+ * number is already in the header at every width and in the sticky bar on
+ * phones, so the call path is covered twice over without it.
  *
  * The breadcrumb is visible, not only in the BreadcrumbList schema. It is the
  * only in-page indication of which silo a service page belongs to.
  */
 
 import { cn } from "@/lib/utils";
-import { CLINIC } from "@/content/clinic";
 
 const STYLES = `
 .hhcp-sv-section {
@@ -107,20 +110,6 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
-.hhcp-sv-phone {
-  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--hhcp-text-s, 16px);
-  font-weight: 500;
-  color: var(--hhcp-action-light, #baf8d9);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.3s linear;
-}
-
-.hhcp-sv-phone:hover {
-  color: var(--hhcp-action, #58eda2);
-}
-
 @media (max-width: 991px) {
   .hhcp-sv-title {
     font-size: 36px;
@@ -186,9 +175,6 @@ export function ServiceHero({
           </a>
           <a className="hhcp-sv-cta-outline" href={secondary.href}>
             {secondary.label}
-          </a>
-          <a className="hhcp-sv-phone" href={CLINIC.phoneHref}>
-            {`Call ${CLINIC.phone}`}
           </a>
         </div>
       </div>
