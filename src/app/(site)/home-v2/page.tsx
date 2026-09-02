@@ -51,6 +51,7 @@ import {
 
 import { FocusGrid } from "@/components/sections/FocusGrid";
 import { LeadParagraph } from "@/components/sections/LeadParagraph";
+import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
 import { ValueTiles } from "@/components/sections/ValueTiles";
 
 import { ApproachSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
@@ -99,6 +100,13 @@ export default function HomeV2() {
       <FeatureMarquee items={HOME_VALUE_STRIP} />
 
       <LeadParagraph
+        eyebrow={HOME_INTRO.eyebrow}
+        text={HOME_INTRO.text}
+        cta={HOME_INTRO.cta}
+      />
+
+      {/* Under trial alongside the plain version above, not replacing it. */}
+      <ScrollRevealParagraph
         eyebrow={HOME_INTRO.eyebrow}
         text={HOME_INTRO.text}
         cta={HOME_INTRO.cta}
