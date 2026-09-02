@@ -153,12 +153,17 @@ export interface ServicePageData {
     readonly secondary: LinkRef;
   };
   readonly crumbs: readonly Crumb[];
-  /** Defaults to the site-wide trust bar. */
-  readonly trust?: readonly string[];
+  /**
+   * Defaults to the site-wide trust bar. `null` omits the strip: the transfer
+   * page's module map does not include one, and the shorter pages read better
+   * without it.
+   */
+  readonly trust?: readonly string[] | null;
   readonly intro: string;
   readonly introCta?: LinkRef;
   readonly modules: readonly ServiceModule[];
-  readonly faq: {
+  /** Omit on pages whose module map has no FAQ; no FAQPage schema is emitted. */
+  readonly faq?: {
     readonly heading: string;
     readonly items: readonly {
       readonly id: string;
@@ -217,7 +222,9 @@ export function ServicePage({ data }: { data: ServicePageData }) {
         secondary={data.hero.secondary}
       />
 
-      <FeatureMarquee items={data.trust ?? TRUST_BAR_DEFAULT} />
+      {data.trust !== null && (
+        <FeatureMarquee items={data.trust ?? TRUST_BAR_DEFAULT} />
+      )}
 
       <ScrollRevealParagraph
         text={data.intro}
@@ -228,7 +235,9 @@ export function ServicePage({ data }: { data: ServicePageData }) {
         <Module key={`${module.kind}-${index}`} module={module} />
       ))}
 
-      <FaqSection heading={data.faq.heading} items={data.faq.items} />
+      {data.faq !== undefined && (
+        <FaqSection heading={data.faq.heading} items={data.faq.items} />
+      )}
 
       <FinalCtaSection
         heading={data.closing.heading}

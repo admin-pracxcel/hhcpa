@@ -29,9 +29,10 @@ describe("pricing page", () => {
   it("carries no hardcoded dollar figure outside the tables", () => {
     // The intro and FAQ answers are prose from the source document; a literal
     // price in them would silently outlive a change to pricing.ts.
+    expect(PRICING_PAGE.faq).toBeDefined();
     const prose = [
       PRICING_PAGE.intro,
-      ...PRICING_PAGE.faq.items.map((item) => item.answer),
+      ...(PRICING_PAGE.faq?.items ?? []).map((item) => item.answer),
       ...PRICING_PAGE.modules.flatMap((module) =>
         module.kind === "statement" ? module.paragraphs : [],
       ),
