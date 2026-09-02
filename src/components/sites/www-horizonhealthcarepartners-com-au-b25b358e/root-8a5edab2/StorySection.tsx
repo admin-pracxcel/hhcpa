@@ -14,7 +14,7 @@
  *
  * The CTA is the source's `bricks-button` verbatim, including
  * `letter-spacing: normal` (the theme's 0.36px rule loses downstream) and the
- * `fa-circle` trailing dot that grows a ring on hover.
+ * `fa-circle` dot ahead of the label that grows a ring on hover.
  */
 
 import { cn } from "@/lib/utils";
@@ -160,7 +160,7 @@ const STYLES = `
   box-shadow: 5px 5px 25px 0 rgba(33, 33, 33, 0.1);
 }
 
-/* Source renders a 10px fa-circle icon after the label. */
+/* 10px fa-circle icon, before the label. */
 .hhcp-so-cta-dot {
   width: 10px;
   height: 10px;
@@ -241,8 +241,8 @@ export function StorySection({ className }: StorySectionProps) {
               </ul>
 
               <a className="hhcp-so-cta font-roboto-mono" href={CTA_HREF}>
-                Learn more about us
                 <span className="hhcp-so-cta-dot" />
+                Learn more about us
               </a>
             </div>
           </div>

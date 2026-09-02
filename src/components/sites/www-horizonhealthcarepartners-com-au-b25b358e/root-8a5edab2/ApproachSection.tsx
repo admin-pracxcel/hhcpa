@@ -253,7 +253,7 @@ const STYLES = `
   box-shadow: 5px 5px 25px 0 rgba(33, 33, 33, 0.1);
 }
 
-/* Source renders a 10px fa-circle icon after the label. */
+/* 10px fa-circle icon, before the label. */
 .hhcp-ap-cta-dot {
   width: 10px;
   height: 10px;
@@ -363,8 +363,8 @@ export function ApproachSection({ className }: ApproachSectionProps) {
               </div>
 
               <a className="hhcp-ap-cta font-roboto-mono" href={CTA_HREF}>
-                {CTA_LABEL}
                 <span className="hhcp-ap-cta-dot" />
+                {CTA_LABEL}
               </a>
             </div>
           </div>
