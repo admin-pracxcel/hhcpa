@@ -92,6 +92,31 @@ export function buildContactPage(input: {
   } as const;
 }
 
+/** Knowledge hub articles. */
+export function buildArticle(input: {
+  headline: string;
+  description: string;
+  path: string;
+  datePublished: string;
+  image: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: input.headline,
+    description: input.description,
+    url: absolute(input.path),
+    image: absolute(input.image),
+    datePublished: input.datePublished,
+    author: { "@type": "Organization", name: CLINIC.name, url: SITE_URL },
+    publisher: {
+      "@type": "MedicalClinic",
+      name: CLINIC.name,
+      url: SITE_URL,
+    },
+  } as const;
+}
+
 export function buildService(input: {
   name: string;
   description: string;

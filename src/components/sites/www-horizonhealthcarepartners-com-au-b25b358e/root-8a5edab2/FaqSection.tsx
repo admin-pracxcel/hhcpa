@@ -219,12 +219,19 @@ interface FaqSectionProps {
    * passed here, so the markup and the visible answers cannot drift apart.
    */
   items?: readonly FaqItem[];
+  /**
+   * Set false when a page shows several accordions. Only one FAQPage should
+   * describe a page, so the page emits a combined one and the groups render
+   * without schema of their own.
+   */
+  emitSchema?: boolean;
 }
 
 export function FaqSection({
   className,
   heading = HEADING,
   items = ITEMS,
+  emitSchema = true,
 }: FaqSectionProps) {
   /* Every row ships collapsed on the source page. */
   const [openId, setOpenId] = useState<string | null>(null);
@@ -232,11 +239,13 @@ export function FaqSection({
   return (
     <section className={cn("hhcp-fq-section", className)}>
       <style>{STYLES}</style>
-      <JsonLd
-        data={buildFaqPage(
-          items.map((item) => ({ q: item.question, a: item.answer })),
-        )}
-      />
+      {emitSchema && (
+        <JsonLd
+          data={buildFaqPage(
+            items.map((item) => ({ q: item.question, a: item.answer })),
+          )}
+        />
+      )}
       <div className="hhcp-fq-container">
         <div className="hhcp-fq-head">
           <h2 className="hhcp-fq-title font-dm-sans">{heading}</h2>
