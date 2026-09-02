@@ -202,8 +202,12 @@ interface StorySectionProps {
   heading?: string;
   /** Rendered as one paragraph with a blank line between entries. */
   paragraphs?: readonly string[];
+  /** An empty array renders no list. */
   points?: readonly string[];
-  cta?: { label: string; href: string };
+  /** null renders no button. */
+  cta?: { label: string; href: string } | null;
+  image?: string;
+  imageAlt?: string;
 }
 
 export function StorySection({
@@ -213,6 +217,8 @@ export function StorySection({
   paragraphs = [PARAGRAPH_ONE, PARAGRAPH_TWO],
   points = POINTS,
   cta = { label: "Learn more about us", href: CTA_HREF },
+  image = IMAGE_SRC,
+  imageAlt = IMAGE_ALT,
 }: StorySectionProps) {
   return (
     <section className={cn("hhcp-so-section", className)}>
@@ -245,6 +251,7 @@ export function StorySection({
                 ))}
               </p>
 
+              {points.length > 0 && (
               <ul className="hhcp-so-list">
                 {points.map((point) => (
                   <li key={point} className="hhcp-so-row">
@@ -259,19 +266,22 @@ export function StorySection({
                   </li>
                 ))}
               </ul>
+              )}
 
-              <a className="hhcp-so-cta font-roboto-mono" href={cta.href}>
-                <span className="hhcp-so-cta-dot" />
-                {cta.label}
-              </a>
+              {cta !== null && (
+                <a className="hhcp-so-cta font-roboto-mono" href={cta.href}>
+                  <span className="hhcp-so-cta-dot" />
+                  {cta.label}
+                </a>
+              )}
             </div>
           </div>
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="hhcp-so-image"
-            src={IMAGE_SRC}
-            alt={IMAGE_ALT}
+            src={image}
+            alt={imageAlt}
             width={768}
             height={771}
           />

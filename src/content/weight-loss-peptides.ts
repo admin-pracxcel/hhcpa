@@ -1,0 +1,221 @@
+/**
+ * Copy for `/weight-loss-peptides/`.
+ *
+ * Transcribed from HHCPA_Website_Content_UPDATED.md, "PAGE 2: WEIGHT LOSS &
+ * PEPTIDES ★ PRIMARY MONEY PAGE", including its eleven-module map.
+ *
+ * This page owns the site's primary money keyword, "peptides for weight loss",
+ * exact-matched in the meta title, the H1, the first paragraph and the URL. The
+ * homepage only supports it, so the two do not compete.
+ *
+ * Compliance notes carried over from the source copy, which are load-bearing
+ * rather than stylistic — Service Agreement clauses 2.6 and 6.5:
+ *   - No product or brand names anywhere on the page, and the copy says so out
+ *     loud ("We do not name specific products on this page, and we do not sell
+ *     them").
+ *   - No outcome guarantees. The prescription answer says no explicitly.
+ *   - Pregnancy and breastfeeding are addressed rather than left out.
+ *
+ * Prices come from `pricing.ts`. The source marks the weight-loss and program
+ * figures as still awaiting Ranjeeta's confirmation, which is the same
+ * provisional flag those entries already carry.
+ */
+
+import { PRICES } from "./pricing";
+
+export const WLP_META = {
+  title: "Peptides for Weight Loss | Medical Weight Loss Clinic AU",
+  description:
+    "Explore peptides for weight loss with AHPRA-registered practitioners. Medical weight-loss consults online, Australia-wide. Free pre-screening, no obligation.",
+  path: "/weight-loss-peptides/",
+} as const;
+
+export const WLP_HERO = {
+  eyebrow: "Weight loss & peptides",
+  heading:
+    "Peptides for weight loss, guided by AHPRA-registered practitioners",
+  primary: { label: "Check your eligibility", href: "/quiz/" },
+  secondary: { label: "Book a consultation", href: "/quiz/" },
+} as const;
+
+/** Trust bar, verbatim from the source. Four items on this page, not five. */
+export const WLP_TRUST: readonly string[] = [
+  "AHPRA-registered practitioners",
+  "Australia-wide telehealth",
+  "Ongoing review, not one-off scripts",
+  "Private and judgement-free",
+] as const;
+
+/** First on-page text. The exact-match keyword opens the first sentence. */
+export const WLP_INTRO =
+  "Peptides for weight loss have become one of the most searched-for treatments in Australia, and also one of the most misunderstood. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses whether a peptide-based or other medical weight-loss approach is clinically appropriate for you, then supports you through it with proper review. This is medical weight loss, delivered online. It starts with understanding your health, not with handing out a product.";
+
+const IMAGE_BASE =
+  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+
+export const WLP_EXPLAINER = {
+  eyebrow: "What are peptides for weight loss?",
+  heading: 'What "peptides for weight loss" actually means',
+  paragraphs: [
+    "Peptides are short chains of amino acids that act as signalling molecules in the body. Several prescription treatments used in medical weight management fall into this broader category, and they work by influencing appetite, fullness and how the body regulates weight. In practice, patients ask us about them because they have heard that a weekly treatment can make sustained weight loss more achievable when diet and exercise alone have stalled.",
+    "Here is the honest version. These are prescription treatments, not supplements, and they are not right for everyone. Whether any of them suits you depends on your health history, your current medications, your goals and your safety. That is a clinical decision, and it is exactly what the consultation is for. We do not name specific products on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
+  ],
+  image: `${IMAGE_BASE}care-physical-wellbeing.jpg`,
+  imageAlt:
+    "A smiling person with a bald head, wearing a striped shirt, sits indoors.",
+} as const;
+
+export const WLP_SUITS = {
+  eyebrow: "Who it may suit",
+  heading: "Who a medical weight-loss consultation may suit",
+  intro: "A consultation may be worth booking if you recognise some of the following:",
+  items: [
+    "You have tried to lose weight through diet and exercise, and it has not held.",
+    "Your weight is affecting your health, your energy, your sleep or your confidence.",
+    "You want a plan that is supervised by a practitioner, with follow-up, rather than a product bought without advice.",
+    "You would prefer to have this conversation privately, from home.",
+  ],
+  /* Rendered as a callout, not a bullet: it is the counterweight to the list. */
+  caveat:
+    "A consultation may not be the right step if you are pregnant or breastfeeding, if you have certain medical conditions, or if a different pathway would serve you better. Your practitioner will tell you honestly if that is the case.",
+} as const;
+
+export const WLP_STEPS = {
+  eyebrow: "How it works",
+  heading: "How weight-loss care works at Horizon",
+  steps: [
+    {
+      pill: "Free pre-screening quiz",
+      title: "Free pre-screening quiz",
+      description:
+        "A few short questions help us understand your situation and whether we are likely to be able to help. It takes about two minutes and it is not a diagnosis.",
+    },
+    {
+      pill: "Book your consultation",
+      title: "Book your consultation",
+      description:
+        "Choose a time that suits you. Consultations happen by video or phone, Australia-wide.",
+    },
+    {
+      pill: "Talk it through",
+      title: "Talk it through with a practitioner",
+      description:
+        "Your practitioner reviews your history, your goals and any current medications, and discusses whether a peptide-based or other medical weight-loss option is appropriate. Where useful, they may arrange pathology so decisions are based on real data.",
+    },
+    {
+      pill: "Ongoing review",
+      title: "Ongoing review",
+      description:
+        "Weight management is not a single appointment. If treatment begins, your practitioner reviews how you are going, adjusts the plan, and manages eligible prescriptions over time.",
+    },
+  ],
+  cta: { label: "Start the free quiz", href: "/quiz/" },
+} as const;
+
+export const WLP_SUPERVISION = {
+  eyebrow: "Why supervision matters",
+  heading: "Why practitioner review changes the outcome",
+  body: "Weight is regulated by biology, not just willpower. Appetite, metabolism and hormones all push back when you lose weight, which is a large part of why weight returns after a diet ends. Medical weight-loss care works with that biology instead of ignoring it. A practitioner can assess your whole picture, monitor your progress, watch for side effects, and adjust the approach as your body adapts. That ongoing relationship is where results are protected over the long term.",
+} as const;
+
+export const WLP_PRICING = {
+  eyebrow: "What to expect on cost",
+  heading: "Straightforward pricing",
+  headline: `$${PRICES.firstConsult.amount}`,
+  headlineLabel: "First consultation",
+  secondary: [
+    { label: "Pre-screening quiz", value: "Free" },
+    {
+      label: "Follow-up consultation",
+      value: `$${PRICES.followUpConsult.amount}`,
+    },
+    {
+      label: "Structured weight-management programs",
+      value: `from $${PRICES.healthProgram.amount}`,
+    },
+  ],
+  note: "Any medication supplied by a pharmacy is separate from the consultation fee. There is no commitment until you decide to book.",
+  cta: { label: "See full pricing", href: "/pricing/" },
+} as const;
+
+export const WLP_RELATED = {
+  eyebrow: "Related services",
+  heading: "Explore your options",
+  cards: [
+    {
+      title: "Weight loss injections",
+      body: "How injectable options are assessed.",
+      links: [
+        {
+          label: "Weight loss injections",
+          href: "/weight-loss-peptides/weight-loss-injections/",
+        },
+      ],
+    },
+    {
+      title: "Medical weight loss program",
+      body: "The supervised, review-based path.",
+      links: [
+        {
+          label: "Medical weight loss program",
+          href: "/weight-loss-peptides/medical-weight-loss-program/",
+        },
+      ],
+    },
+    {
+      title: "Men's and women's health",
+      body: "Because weight, hormones and energy are often connected.",
+      links: [
+        { label: "Men's health", href: "/mens-health/" },
+        { label: "Women's health", href: "/womens-health/" },
+      ],
+    },
+  ],
+  footnote: "New here? See the full patient journey on",
+  footnoteLinks: [
+    { label: "how it works", href: "/how-it-works/" },
+    { label: "pricing", href: "/pricing/" },
+  ],
+} as const;
+
+export const WLP_FAQ = {
+  heading: "Common questions about peptides for weight loss",
+  items: [
+    {
+      id: "availability",
+      question: "Are peptides for weight loss available in Australia?",
+      answer:
+        "Some peptide-based treatments used in weight management are prescription-only in Australia. Whether any is appropriate for you is a clinical decision made by a practitioner after a consultation. We do not supply or promote specific products.",
+    },
+    {
+      id: "prescription",
+      question: "Will I definitely get a prescription?",
+      answer:
+        "No. Your practitioner prescribes only where it is clinically appropriate and safe for you. The consultation may lead to a prescription, a different plan, further tests, or a recommendation that this is not the right option.",
+    },
+    {
+      id: "referral",
+      question: "Do I need a referral?",
+      answer:
+        "No referral is needed to book a consultation. Start with the free pre-screening quiz.",
+    },
+    {
+      id: "wait",
+      question: "How quickly can I be seen?",
+      answer:
+        "You can usually book a consultation within a short time of completing the quiz. Availability is shown when you book.",
+    },
+    {
+      id: "pregnancy",
+      question: "Is this suitable during pregnancy?",
+      answer:
+        "Medical weight-loss treatments are generally not appropriate during pregnancy or breastfeeding. Tell your practitioner, and they will advise a safe path.",
+    },
+  ],
+} as const;
+
+export const WLP_CLOSING = {
+  heading: "Ready to see whether this suits you?",
+  body: "Start with the free pre-screening quiz. Two minutes, no diagnosis, no commitment. If a medical weight-loss approach is right for you, your practitioner will guide it from there.",
+  primary: { label: "Start the free quiz", href: "/quiz/" },
+} as const;
