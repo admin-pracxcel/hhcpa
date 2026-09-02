@@ -10,7 +10,7 @@
  *
  *    1. Hero                          HeroSection      (clone, new copy + CTAs)
  *    2. Value-proposition strip       FeatureMarquee   (clone, new items)
- *    3. Intro paragraph               LeadParagraph    (new)
+ *    3. Intro paragraph               ScrollRevealParagraph (new)
  *    4. Choose your focus             FocusGrid        (new)
  *    5. Consultation pricing          PricingSection   (clone, new plans)
  *    6. How it works                  StepsSection     (clone, new copy)
@@ -50,7 +50,6 @@ import {
 } from "@/content/home";
 
 import { FocusGrid } from "@/components/sections/FocusGrid";
-import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
 import { ValueTiles } from "@/components/sections/ValueTiles";
 
@@ -99,13 +98,6 @@ export default function HomeV2() {
 
       <FeatureMarquee items={HOME_VALUE_STRIP} />
 
-      <LeadParagraph
-        eyebrow={HOME_INTRO.eyebrow}
-        text={HOME_INTRO.text}
-        cta={HOME_INTRO.cta}
-      />
-
-      {/* Under trial alongside the plain version above, not replacing it. */}
       <ScrollRevealParagraph text={HOME_INTRO.text} cta={HOME_INTRO.cta} />
 
       {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into

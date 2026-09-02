@@ -144,15 +144,17 @@ const STYLES = `
   }
 }
 
+/* Tablet. */
 @media (max-width: 991px) {
   .hhcp-sr-text {
-    font-size: 36px;
+    font-size: 30px;
   }
 }
 
+/* Phone. */
 @media (max-width: 767px) {
   .hhcp-sr-text {
-    font-size: 28px;
+    font-size: 20px;
   }
 }
 `;
