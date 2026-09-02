@@ -3,10 +3,10 @@
 Everything else in this clone is a faithful reproduction. The items below are
 requested changes, recorded here so a later reader does not "fix" them back.
 
-## 1. Hero is capped at the viewport, content sits bottom-right
+## 1. Hero is capped at the viewport, content sits bottom-left
 
 **Requested:** the hero must not exceed the view height; its content sits at the
-bottom-right, one standard section space clear of the bottom edge.
+bottom-left, one standard section space clear of the bottom edge.
 
 **Target behaviour:** `.hero--section` is a flat `height: 106rem` (1060px) at ≥992px,
 with the content container pushed down by a fixed `margin-top: 39rem` (390px) and
@@ -19,7 +19,6 @@ left-aligned.
 | section height | `1060px` | `h-[min(1060px,100dvh)] min-h-fit` |
 | content position | `margin-top: 390px` | `flex flex-col justify-end` on the section |
 | bottom spacing | none (content sits flush) | `pb-[var(--hhcp-section-space-m)]` — 90px desktop |
-| horizontal | left | `items-end` (copy inside stays left-aligned) |
 | ≤991px offset | `margin-top` 390 / 290 / 240 | same values as section `pt` |
 
 `--hhcp-section-space-m` is the token every other section pads with, so the gap under
@@ -31,8 +30,8 @@ at 122.25px tall, so on a viewport too short for the whole stack the content sto
 of the logo and `min-h-fit` grows the section rather than clipping the form.
 
 Measured at 1534px wide: 1200px viewport → hero 1060, content bottom gap 90; 900px
-viewport → hero 900, gap 90. Headline and form both sit flush to the container's right
-edge at every width.
+viewport → hero 900, gap 90. Headline and form sit flush to the container's left
+edge, as in the target.
 
 Below 991px the section is `height: auto`, so top padding is what gives it height.
 

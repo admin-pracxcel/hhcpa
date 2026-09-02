@@ -9,7 +9,7 @@
  *     │    ├─ video         — object-cover, click toggles play/pause
  *     │    └─ .overlay      — transparent → black gradient scrim above the video
  *     ├─ .scrim478          — extra rgba(0,0,0,.3) wash, ≤478px only
- *     └─ .hhcp-container    — content, anchored to the bottom-right of the
+ *     └─ .hhcp-container    — content, anchored to the bottom-left of the
  *                             section, one section space clear of the edge
  *
  * Breakpoints 991 / 767 / 478 are the target's own, not Tailwind defaults, so
@@ -107,10 +107,8 @@ export function HeroSection() {
       <div
         className="hhcp-container relative flex flex-col gap-[var(--hhcp-space-l)]"
       >
-        {/* Bottom-right: the block hugs the container's right edge. The copy
-            inside it stays left-aligned — a ragged left edge on a headline this
-            size reads as a mistake. */}
-        <div className="flex flex-col items-end justify-center gap-[24px] max-[767px]:items-start">
+        {/* Bottom-left: the block hugs the container's left edge. */}
+        <div className="flex flex-col items-start justify-center gap-[24px]">
           <div className="flex flex-col gap-[16px]">
             <h1
               className="font-dm-sans max-w-[536px] text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-white"
@@ -125,7 +123,7 @@ export function HeroSection() {
           {/* Email capture + quiz link — desktop/tablet only */}
           <div
             className={cn(
-              "flex flex-col items-end gap-[16px]",
+              "flex flex-col items-start gap-[16px]",
               "max-[767px]:hidden",
             )}
           >
