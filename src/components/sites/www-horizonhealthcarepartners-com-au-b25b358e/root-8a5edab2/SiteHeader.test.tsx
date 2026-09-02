@@ -104,6 +104,21 @@ describe("SiteHeader", () => {
     expect(css).toContain(".hhcp-hdr__burger { display: block; order: 2; }");
   });
 
+  it("stacks above the rest of the page", () => {
+    // `.hhcp-hdr__container` has a z-index, so it is a stacking context: the
+    // drawer's 999 and the overlay's 998 only order things inside the header.
+    // Against the page this one number is all that counts, and it lost at 1 —
+    // the marquee's edge fades (z-index 1, later in the document) drew a white
+    // band across the open drawer and the sticky CTA bar (z-50) covered it.
+    const { container } = render(<SiteHeader />);
+    const css = Array.from(container.querySelectorAll("style"))
+      .map((node) => node.textContent ?? "")
+      .join("\n");
+    const match = /\.hhcp-hdr__container\s*\{[^}]*z-index:\s*(\d+)/.exec(css);
+    expect(match).not.toBeNull();
+    expect(Number(match![1])).toBeGreaterThan(50);
+  });
+
   it("points the primary CTA at the quiz", () => {
     render(<SiteHeader />);
     expect(

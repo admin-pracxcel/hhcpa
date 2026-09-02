@@ -41,7 +41,15 @@ const HEADER_CSS = `
   right: 0;
   left: 0;
   width: 100%;
-  z-index: 1;
+  /*
+   * This z-index makes the header a stacking context, so the drawer's 999 and
+   * the overlay's 998 only order things *inside* the header — against the rest
+   * of the page they count as this one number. At 1 the header lost to anything
+   * later in the document with a z-index of its own: the marquee's edge fades
+   * (1) drew a white band across the open drawer, and the sticky CTA bar (50)
+   * covered its bottom. It has to outrank every such element on the page.
+   */
+  z-index: 100;
 }
 
 /* ---------- Announcement bar ---------- */
