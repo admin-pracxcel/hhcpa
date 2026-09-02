@@ -95,11 +95,17 @@ const STYLES = `
   box-shadow: 5px 5px 25px 0 rgba(33, 33, 33, 0.1);
 }
 
-/* Matches the booking wizard's service cards: 64px tall, width auto. */
+/*
+ * The card is a flex column, so an auto width alone does not keep the icon
+ * square: the default align-items of stretch pulls it to the card's full width
+ * and squashes the artwork. align-self opts it out, and the supplied icons are
+ * square, so the box is too.
+ */
 .hhcp-fo-icon {
+  align-self: flex-start;
+  width: 64px;
   height: 64px;
-  width: auto;
-  max-width: 100%;
+  object-fit: contain;
   display: block;
 }
 
@@ -206,6 +212,7 @@ export function FocusGrid({
                 className="hhcp-fo-icon"
                 src={card.icon}
                 alt={card.iconAlt}
+                width={64}
                 height={64}
                 loading="lazy"
                 decoding="async"

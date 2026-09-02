@@ -55,7 +55,11 @@ const ICON_BASE =
 
 export interface FocusCard {
   readonly title: string;
-  /** The clone's own service icons, reused so the card set reads as a family. */
+  /**
+   * Square 500px icons supplied for this page. The gated Medicinal Cannabis
+   * card still points at one of the clone's service icons — no bespoke icon was
+   * supplied for it, since it does not render until compliance signs off.
+   */
   readonly icon: string;
   readonly iconAlt: string;
   readonly badge: string;
@@ -72,7 +76,7 @@ export const HOME_FOCUS = {
   cards: [
     {
       title: "Weight Loss & Peptides",
-      icon: `${ICON_BASE}icon-weight-management.svg`,
+      icon: `${ICON_BASE}weight-management.webp`,
       iconAlt: "Weight management",
       badge: `From $${PRICES.firstConsult.amount} · programs from $${PRICES.healthProgram.amount}`,
       body: "Peptides for weight loss, weight-loss injections, and medically supervised programs, assessed by a practitioner and reviewed over time.",
@@ -81,7 +85,7 @@ export const HOME_FOCUS = {
     },
     {
       title: "Men's Health",
-      icon: `${ICON_BASE}icon-mens-womens-health.svg`,
+      icon: `${ICON_BASE}mens-health.webp`,
       iconAlt: "Men's health",
       badge: `From $${PRICES.firstConsult.amount}`,
       body: "Discreet online consultations for erectile dysfunction, low testosterone, hair loss and more.",
@@ -90,7 +94,7 @@ export const HOME_FOCUS = {
     },
     {
       title: "Women's Health",
-      icon: `${ICON_BASE}icon-continuity-preventative.svg`,
+      icon: `${ICON_BASE}womens-health.webp`,
       iconAlt: "Women's health",
       badge: `From $${PRICES.firstConsult.amount}`,
       body: "Menopause and perimenopause support, hormones, PCOS and contraception, on your schedule.",
@@ -108,7 +112,7 @@ export const HOME_FOCUS = {
     },
     {
       title: "Online Doctor",
-      icon: `${ICON_BASE}icon-prescriptions.svg`,
+      icon: `${ICON_BASE}doctor.webp`,
       iconAlt: "Prescriptions",
       badge: `From $${PRICES.generalConsult.amount}`,
       body: "Prescriptions, repeat scripts, medical certificates, and pathology or specialist referrals, where clinically appropriate.",
@@ -117,7 +121,7 @@ export const HOME_FOCUS = {
     },
     {
       title: "Mental Health Support",
-      icon: `${ICON_BASE}icon-mental-health.svg`,
+      icon: `${ICON_BASE}mental-health.webp`,
       iconAlt: "Mental health",
       badge: `From $${PRICES.mentalHealth.amount}`,
       body: "Practitioner-led support for ADHD, anxiety, sleep and smoking cessation.",
