@@ -135,7 +135,7 @@ export default function WeightLossPeptides() {
       <StatementBand
         eyebrow={WLP_SUPERVISION.eyebrow}
         heading={WLP_SUPERVISION.heading}
-        body={WLP_SUPERVISION.body}
+        paragraphs={WLP_SUPERVISION.paragraphs}
       />
 
       <PricingCueBand

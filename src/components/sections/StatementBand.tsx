@@ -1,5 +1,5 @@
 /**
- * A single-paragraph band on the dark brand colour.
+ * A prose band on the dark brand colour.
  *
  * The content document's module map calls this section feature tiles, but its
  * copy is one continuous argument rather than four separable points. Splitting
@@ -90,14 +90,14 @@ interface StatementBandProps {
   className?: string;
   eyebrow: string;
   heading: string;
-  body: string;
+  paragraphs: readonly string[];
 }
 
 export function StatementBand({
   className,
   eyebrow,
   heading,
-  body,
+  paragraphs,
 }: StatementBandProps) {
   return (
     <section className={cn("hhcp-sm-section", className)}>
@@ -112,7 +112,11 @@ export function StatementBand({
 
         <div className="hhcp-sm-body">
           <h2 className="hhcp-sm-title font-dm-sans">{heading}</h2>
-          <p className="hhcp-sm-text font-dm-sans">{body}</p>
+          {paragraphs.map((paragraph) => (
+            <p key={paragraph} className="hhcp-sm-text font-dm-sans">
+              {paragraph}
+            </p>
+          ))}
         </div>
       </div>
     </section>

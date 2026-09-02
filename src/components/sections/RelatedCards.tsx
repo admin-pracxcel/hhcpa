@@ -67,7 +67,9 @@ const STYLES = `
 /* Same card treatment as the homepage focus grid. */
 .hhcp-rc-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* auto-fit rather than a fixed three: pages carry two or three cards, and a
+     fixed grid left a third of the row empty on the two-card pages. */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 

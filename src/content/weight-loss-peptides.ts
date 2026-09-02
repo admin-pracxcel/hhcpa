@@ -116,7 +116,7 @@ export const WLP_STEPS = {
 export const WLP_SUPERVISION = {
   eyebrow: "Why supervision matters",
   heading: "Why practitioner review changes the outcome",
-  body: "Weight is regulated by biology, not just willpower. Appetite, metabolism and hormones all push back when you lose weight, which is a large part of why weight returns after a diet ends. Medical weight-loss care works with that biology instead of ignoring it. A practitioner can assess your whole picture, monitor your progress, watch for side effects, and adjust the approach as your body adapts. That ongoing relationship is where results are protected over the long term.",
+  paragraphs: ["Weight is regulated by biology, not just willpower. Appetite, metabolism and hormones all push back when you lose weight, which is a large part of why weight returns after a diet ends. Medical weight-loss care works with that biology instead of ignoring it. A practitioner can assess your whole picture, monitor your progress, watch for side effects, and adjust the approach as your body adapts. That ongoing relationship is where results are protected over the long term."],
 } as const;
 
 export const WLP_PRICING = {

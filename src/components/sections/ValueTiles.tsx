@@ -69,6 +69,11 @@ const STYLES = `
   gap: var(--hhcp-space-m, 30px);
 }
 
+/* Four tiles across three columns leave an orphan on the second row. */
+.hhcp-vt-grid[data-columns="2"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .hhcp-vt-tile {
   display: flex;
   flex-direction: row;
@@ -118,6 +123,8 @@ interface ValueTilesProps {
   eyebrow: string;
   heading: string;
   tiles: readonly ValueTile[];
+  /** Defaults to 3. Use 2 for an even count of four. */
+  columns?: 2 | 3;
 }
 
 export function ValueTiles({
@@ -125,6 +132,7 @@ export function ValueTiles({
   eyebrow,
   heading,
   tiles,
+  columns = 3,
 }: ValueTilesProps) {
   return (
     <section className={cn("hhcp-vt-section", className)}>
@@ -140,7 +148,7 @@ export function ValueTiles({
           <h2 className="hhcp-vt-title font-dm-sans">{heading}</h2>
         </div>
 
-        <div className="hhcp-vt-grid">
+        <div className="hhcp-vt-grid" data-columns={columns}>
           {tiles.map((tile) => (
             <div key={tile.title} className="hhcp-vt-tile">
               <CheckCircleIcon
