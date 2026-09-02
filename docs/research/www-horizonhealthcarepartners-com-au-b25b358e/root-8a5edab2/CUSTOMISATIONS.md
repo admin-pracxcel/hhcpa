@@ -3,37 +3,44 @@
 Everything else in this clone is a faithful reproduction. The items below are
 requested changes, recorded here so a later reader does not "fix" them back.
 
-## 1. Hero is capped at the viewport, content sits bottom-left
+## 1. Hero fills exactly one screen, content bottom-left
 
-**Requested:** the hero must not exceed the view height; its content sits at the
-bottom-left, one standard section space clear of the bottom edge.
+**Requested:** the hero fills the screen at every viewport — no overflow, no underflow —
+with its content at the bottom-left, one standard section space clear of the bottom.
 
-**Target behaviour:** `.hero--section` is a flat `height: 106rem` (1060px) at ≥992px,
-with the content container pushed down by a fixed `margin-top: 39rem` (390px) and
-left-aligned.
+**Target behaviour:** `.hero--section` is a flat `height: 106rem` (1060px) at ≥992px
+and `height: auto` below, with the content pushed down by `margin-top: 39rem` (390px).
 
 **Change** — `HeroSection.tsx`:
 
 | | Target | Here |
 |---|---|---|
-| section height | `1060px` | `h-[min(1060px,100dvh)] min-h-fit` |
+| section height | `1060px` / auto | `h-[100dvh]` |
+| ≤767px height | auto | `calc(100dvh - var(--hhcp-sticky-cta-h))` |
 | content position | `margin-top: 390px` | `flex flex-col justify-end` on the section |
 | bottom spacing | none (content sits flush) | `pb-[var(--hhcp-section-space-m)]` — 90px desktop |
-| ≤991px offset | `margin-top` 390 / 290 / 240 | same values as section `pt` |
+
+`dvh` rather than `vh`: a mobile browser collapsing its toolbar changes `vh` only on
+reload, which leaves the section taller than the visible area.
+
+Below 767px the fixed CTA bar owns the bottom of the screen, so the hero takes the
+screen minus that bar and the two together fill it exactly. The bar's height is pinned
+to the same `--hhcp-sticky-cta-h` token (73px) instead of being left to its own padding,
+so the subtraction cannot drift out of step with it.
 
 `--hhcp-section-space-m` is the token every other section pads with, so the gap under
-the hero matches the gaps between everything below it, and scales the same way
+the hero content matches the gaps between everything below it, and scales the same way
 (90px → 48px).
 
-`pt-[142px]` is a floor, not spacing: the header is `position: absolute` over the hero
-at 122.25px tall, so on a viewport too short for the whole stack the content stops clear
-of the logo and `min-h-fit` grows the section rather than clipping the form.
+Measured — section height against viewport height:
 
-Measured at 1534px wide: 1200px viewport → hero 1060, content bottom gap 90; 900px
-viewport → hero 900, gap 90. Headline and form sit flush to the container's left
-edge, as in the target.
-
-Below 991px the section is `height: auto`, so top padding is what gives it height.
+| viewport | section | sticky bar | total |
+|---|---:|---:|---:|
+| 1534×1200 | 1200 | — | 1200 |
+| 1534×900 | 900 | — | 900 |
+| 900×800 | 800 | — | 800 |
+| 375×800 | 727 | 73 | 800 |
+| 375×667 | 594 | 73 | 667 |
 
 ## 2. Halaxy booking widget
 

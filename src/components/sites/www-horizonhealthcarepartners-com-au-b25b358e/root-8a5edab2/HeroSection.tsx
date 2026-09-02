@@ -4,7 +4,7 @@
  * Hero for https://www.horizonhealthcarepartners.com.au/
  *
  * Structure mirrors the source markup:
- *   section.hero            — 1060px tall, poster image behind, overflow hidden
+ *   section.hero            — exactly one screen tall, poster image behind
  *     ├─ .bg-wrap           — absolute layer holding the looping video…
  *     │    ├─ video         — object-cover, click toggles play/pause
  *     │    └─ .overlay      — transparent → black gradient scrim above the video
@@ -54,28 +54,20 @@ export function HeroSection() {
   return (
     <section
       className={cn(
-        // Customisation (not in the target): the hero is capped at the viewport
-        // so it never scrolls past one screen. The source is a flat 1060px tall,
-        // which is what `min()` still resolves to on a viewport that can hold it.
-        // `min-h-fit` is the safety net — on a viewport too short for the
-        // headline + form it lets the section grow rather than clip them.
-        "relative h-[min(1060px,100dvh)] min-h-fit overflow-hidden bg-cover bg-no-repeat bg-blend-overlay",
+        // The hero fills exactly one screen at every width — no overflow, no
+        // underflow. `dvh` rather than `vh` so a mobile browser collapsing its
+        // toolbar does not leave the section taller than the visible area.
+        "relative h-[100dvh] overflow-hidden bg-cover bg-no-repeat bg-blend-overlay",
+        // ≤767px the fixed CTA bar occupies the bottom of the screen, so the
+        // hero gets the screen minus that bar. Same token the bar's own height
+        // is set from, so the two cannot drift apart.
+        "max-[767px]:h-[calc(100dvh-var(--hhcp-sticky-cta-h))]",
         "bg-[position:50%_0%]",
-        // Content sits at the bottom of the section, one standard section space
-        // clear of the edge — the same `--hhcp-section-space-m` every other
-        // section pads with (90px at desktop, scaling down with the viewport),
-        // so the gap under the hero matches the gaps between everything below.
+        // Content sits at the bottom-left, one standard section space clear of
+        // the edge — the same `--hhcp-section-space-m` every other section pads
+        // with (90px at desktop, scaling down with the viewport), so the gap
+        // under the hero matches the gaps between everything below it.
         "flex flex-col justify-end pb-[var(--hhcp-section-space-m)]",
-        // Floor, not spacing: the header is `position: absolute` over the hero
-        // and measures 122.25px, so on a viewport too short to hold the whole
-        // stack the content stops here instead of sliding under the logo.
-        // `min-h-fit` then grows the section rather than overlapping.
-        "pt-[142px]",
-        // Below 991px the section is auto-height, so there is no bottom to
-        // anchor to and the top padding is what gives the hero its height.
-        "max-[991px]:h-auto max-[991px]:pt-[390px]",
-        "max-[767px]:pt-[290px]",
-        "max-[478px]:pt-[240px]",
       )}
       style={{ backgroundImage: `url("${POSTER_SRC}")` }}
     >

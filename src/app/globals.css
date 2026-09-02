@@ -193,6 +193,11 @@
   --hhcp-content-gap: clamp(24px, calc(0.5882352941vw + 22.117647059px), 30px);
   --hhcp-section-space-xs: clamp(27.0135px, calc(1.273185778vw + 22.939310575px), 40px);
 
+  /* Height of the fixed mobile CTA bar (≤767px). Declared once so the bar and
+     anything that has to sit clear of it cannot drift apart — the hero
+     subtracts it from its own height. */
+  --hhcp-sticky-cta-h: 73px;
+
   /* --- Radii --- */
   --hhcp-radius-xs: 4.444px;
   --hhcp-radius-s: 6.667px;
