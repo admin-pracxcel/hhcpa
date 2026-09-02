@@ -27,9 +27,11 @@ import {
   buildService,
 } from "@/lib/schema";
 import { cn } from "@/lib/utils";
+import type { PriceKey } from "@/content/pricing";
 
 import { ChecklistSection } from "./ChecklistSection";
 import { InlineCtaBand } from "./InlineCtaBand";
+import { PriceTable } from "./PriceTable";
 import { PricingCueBand } from "./PricingCueBand";
 import { RelatedCards } from "./RelatedCards";
 import { ScrollRevealParagraph } from "./ScrollRevealParagraph";
@@ -116,6 +118,17 @@ export type ServiceModule =
       readonly cards: readonly RelatedCard[];
       readonly footnote: string;
       readonly footnoteLinks: readonly LinkRef[];
+    }
+  | {
+      readonly kind: "priceTable";
+      readonly tinted?: boolean;
+      readonly eyebrow: string;
+      readonly heading: string;
+      readonly valueHeading: string;
+      readonly rows: readonly PriceKey[];
+      readonly labels?: Partial<Record<PriceKey, string>>;
+      readonly stripFrom?: boolean;
+      readonly note?: string;
     }
   | {
       readonly kind: "inlineCta";
@@ -314,6 +327,19 @@ function Module({ module }: { module: ServiceModule }) {
           cards={module.cards}
           footnote={module.footnote}
           footnoteLinks={module.footnoteLinks}
+        />
+      );
+    case "priceTable":
+      return (
+        <PriceTable
+          className={cn(module.tinted === true && TINT)}
+          eyebrow={module.eyebrow}
+          heading={module.heading}
+          valueHeading={module.valueHeading}
+          rows={module.rows}
+          labels={module.labels}
+          stripFrom={module.stripFrom}
+          note={module.note}
         />
       );
     case "inlineCta":
