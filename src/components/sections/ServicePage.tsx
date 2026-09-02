@@ -22,6 +22,7 @@
 import { CLINIC, TRUST_BAR_DEFAULT } from "@/content/clinic";
 import { JsonLd } from "@/components/JsonLd";
 import {
+  buildAboutPage,
   buildBreadcrumbList,
   buildMedicalWebPage,
   buildService,
@@ -181,6 +182,11 @@ export interface ServicePageData {
    * beneath them do not, following each page's own BUILD BLOCK.
    */
   readonly serviceSchemaName?: string;
+  /**
+   * Defaults to MedicalWebPage, which is what every service page's BUILD BLOCK
+   * asks for. About Us asks for AboutPage instead.
+   */
+  readonly pageSchema?: "MedicalWebPage" | "AboutPage";
 }
 
 const TINT = "bg-[color:var(--hhcp-accent)]";
@@ -189,7 +195,9 @@ export function ServicePage({ data }: { data: ServicePageData }) {
   return (
     <>
       <JsonLd
-        data={buildMedicalWebPage({
+        data={(data.pageSchema === "AboutPage"
+          ? buildAboutPage
+          : buildMedicalWebPage)({
           name: data.meta.title,
           description: data.meta.description,
           path: data.meta.path,

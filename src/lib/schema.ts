@@ -54,6 +54,28 @@ export function buildMedicalWebPage(input: {
   } as const;
 }
 
+/**
+ * The About page's BUILD BLOCK asks for AboutPage rather than MedicalWebPage.
+ * It also asks for MedicalOrganization; the layout already emits MedicalClinic
+ * on every page, which is a subtype of it, so this does not repeat the
+ * organisation on one page.
+ */
+export function buildAboutPage(input: {
+  name: string;
+  description: string;
+  path: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: input.name,
+    description: input.description,
+    url: absolute(input.path),
+    isPartOf: { "@type": "WebSite", name: CLINIC.name, url: SITE_URL },
+    about: { "@type": "MedicalClinic", name: CLINIC.name, url: SITE_URL },
+  } as const;
+}
+
 export function buildService(input: {
   name: string;
   description: string;
