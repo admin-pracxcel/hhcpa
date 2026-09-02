@@ -22,9 +22,21 @@ import { createHmac } from "node:crypto";
 
 import { aestDate, aestDateTime } from "@/lib/aest";
 
-const WEBHOOK_URL =
-  process.env.CONTACT_WEBHOOK_URL ??
+const DEFAULT_WEBHOOK_URL =
   "https://n8n.pracxcel.com.au/webhook/hhcpa-contact";
+
+const WEBHOOK_URL = process.env.CONTACT_WEBHOOK_URL ?? DEFAULT_WEBHOOK_URL;
+
+/*
+ * Say so, loudly, when submissions are being diverted. An override is for
+ * local testing, and a stale one silently swallows real enquiries while the
+ * form still reports success to the person who sent it.
+ */
+if (WEBHOOK_URL !== DEFAULT_WEBHOOK_URL) {
+  console.warn(
+    `[contact] CONTACT_WEBHOOK_URL override active — submissions go to ${WEBHOOK_URL}, not n8n.`,
+  );
+}
 
 const FIELD_LIMIT = 4000;
 const TIMEOUT_MS = 10_000;
