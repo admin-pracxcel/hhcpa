@@ -3,9 +3,21 @@
  * larger, animated treatment of the same copy. Both are on `/home-v2/`; this
  * one does not replace the other.
  *
- * The copy sets faint, blurred and slightly low, and each word sharpens, rises
- * and fills to the body colour as the section travels up the viewport. Full
- * container width, no eyebrow column.
+ * Words rest at 0.2 opacity and come up to 1, one after another, as the section
+ * travels up the viewport. Full container width, no eyebrow column.
+ *
+ * The timing is modelled on Salient's `scroll-opacity-reveal`, which is the
+ * reference for this effect. Three things carry it, and all three are timing
+ * rather than styling:
+ *
+ *   1. Opacity only — no blur, no movement, no colour change.
+ *   2. The whole reveal spans about one viewport of scroll, beginning as the
+ *      block's top reaches the bottom of the viewport. For a block this size
+ *      that is 51% of the view() cover range, hence --sr-span.
+ *   3. Each word's fade lasts 1.8x the gap between word starts (Salient runs
+ *      450ms fades on a 250ms stagger), so only about two words are in flight
+ *      at once. A longer fade relative to the stagger blurs the wave into a
+ *      whole-block dissolve, which is what a first attempt here did.
  *
  * No JS. It is a CSS scroll-driven animation: `animation-timeline: view()` ties
  * each word's colour to the section's own progress through the viewport, and
@@ -19,7 +31,6 @@
  * Nothing here hides content, so the copy is readable either way.
  */
 
-import { Fragment } from "react";
 import type { CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
@@ -76,48 +87,53 @@ const STYLES = `
   color: inherit;
 }
 
-/*
- * Colour alone was too quiet to read as an animation at a normal scroll speed.
- * Each word also arrives out of focus and slightly low, so there is movement
- * and a change of sharpness to catch, not just a tint.
- */
 @keyframes hhcp-sr-fill {
-  from {
-    color: rgba(1, 49, 38, 0.08);
-    filter: blur(6px);
-    transform: translateY(0.18em);
-  }
-  to {
-    color: var(--hhcp-primary, #013126);
-    filter: blur(0);
-    transform: translateY(0);
-  }
+  from { opacity: 0.2; }
+  to { opacity: 1; }
 }
 
 @supports (animation-timeline: view()) {
+  /*
+   * One timeline for the whole paragraph, which the words attach to by name.
+   * A bare view() on each word would track that word's own trip through the
+   * viewport, so a word on the last line would start its fade only once it had
+   * entered — the stagger would be counted twice and the reveal would run at
+   * whatever rate the reader happened to be scrolling past each line. Salient
+   * drives every word from the block's progress, and so does this.
+   */
+  .hhcp-sr-text {
+    view-timeline-name: --hhcp-sr-progress;
+    view-timeline-axis: block;
+  }
+
   .hhcp-sr-word {
-    /* transform and filter need a box; inline boxes do not take one. */
-    display: inline-block;
-    animation: hhcp-sr-fill linear both;
-    animation-timeline: view();
     /*
-     * --i is the word's index and --n the count, both set inline. The stagger
-     * runs across 62% of the section's pass in reading order, and each word
-     * takes 9% of it, so a short wave travels the paragraph rather than the
-     * whole block easing together.
+     * --i is the word's index and --n the count, both set inline.
+     *
+     * --sr-span is the slice of the paragraph's cover range that the whole
+     * reveal occupies. cover runs from the block's top touching the viewport
+     * bottom to its bottom clearing the viewport top, so its length is
+     * blockHeight + winH; 45% of that is about one viewport of scroll at this
+     * block's height, which is where Salient's own speed formula lands.
+     *
+     * --sr-step is the gap between word starts. The 1.8 is Salient's 450ms
+     * fade over its 250ms stagger, and the same 1.8 sets each word's own
+     * duration below, so the wave stays two words wide however many there are.
      */
+    --sr-span: 45%;
+    --sr-step: calc(var(--sr-span) / (var(--n) + 0.8));
+    animation: hhcp-sr-fill linear both;
+    animation-timeline: --hhcp-sr-progress;
     animation-range:
-      cover calc(12% + (var(--i) / var(--n)) * 62%)
-      cover calc(21% + (var(--i) / var(--n)) * 62%);
+      cover calc(var(--i) * var(--sr-step))
+      cover calc(var(--i) * var(--sr-step) + 1.8 * var(--sr-step));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hhcp-sr-word {
     animation: none;
-    color: var(--hhcp-primary, #013126);
-    filter: none;
-    transform: none;
+    opacity: 1;
   }
 }
 
@@ -154,23 +170,20 @@ export function ScrollRevealParagraph({
         <div className="hhcp-sr-body">
           <p className="hhcp-sr-text font-dm-sans">
             {words.map((word, index) => (
-              // Words repeat, so the index has to be part of the key. The space
-              // sits outside the span: an inline-block trims its own trailing
-              // whitespace, which would run the words together.
-              <Fragment key={`${index}-${word}`}>
-                <span
-                  className="hhcp-sr-word"
-                  style={
-                    {
-                      "--i": index,
-                      "--n": words.length,
-                    } as CSSProperties
-                  }
-                >
-                  {word}
-                </span>
+              <span
+                // Words repeat, so the index has to be part of the key.
+                key={`${index}-${word}`}
+                className="hhcp-sr-word"
+                style={
+                  {
+                    "--i": index,
+                    "--n": words.length,
+                  } as CSSProperties
+                }
+              >
+                {word}
                 {index < words.length - 1 ? " " : ""}
-              </Fragment>
+              </span>
             ))}
           </p>
 
