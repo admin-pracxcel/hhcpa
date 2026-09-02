@@ -9,9 +9,8 @@
  *     │    ├─ video         — object-cover, click toggles play/pause
  *     │    └─ .overlay      — transparent → black gradient scrim above the video
  *     ├─ .scrim478          — extra rgba(0,0,0,.3) wash, ≤478px only
- *     └─ .hhcp-container    — content, anchored to the bottom of the section
- *                             (the target pushes it down 390px instead; see the
- *                             comment on the section for why this differs)
+ *     └─ .hhcp-container    — content, anchored to the bottom-right of the
+ *                             section, one section space clear of the edge
  *
  * Breakpoints 991 / 767 / 478 are the target's own, not Tailwind defaults, so
  * every responsive rule is written as an arbitrary `max-[…]` variant.
@@ -62,29 +61,19 @@ export function HeroSection() {
         // headline + form it lets the section grow rather than clip them.
         "relative h-[min(1060px,100dvh)] min-h-fit overflow-hidden bg-cover bg-no-repeat bg-blend-overlay",
         "bg-[position:50%_0%]",
-        // The content is anchored to the BOTTOM of the fixed-height band, not
-        // offset from the top. The target authors a 390px top margin, which
-        // only works because its hero is a flat 1060px: the moment the section
-        // is capped to a shorter viewport, a top offset walks the form off the
-        // bottom edge. Bottom-anchoring inverts that — the form's distance from
-        // the bottom is the constant, the slack lands above the headline, and
-        // nothing can be pushed out of the clipped area.
-        //
-        // 288.36px is measured, not chosen: at the target's own 1060px height
-        // and 390px top margin, that is what is left below the content. So this
-        // renders identically to the target wherever the target's height fits.
-        "flex flex-col justify-end pb-[288.36px]",
+        // Content sits at the bottom of the section, one standard section space
+        // clear of the edge — the same `--hhcp-section-space-m` every other
+        // section pads with (90px at desktop, scaling down with the viewport),
+        // so the gap under the hero matches the gaps between everything below.
+        "flex flex-col justify-end pb-[var(--hhcp-section-space-m)]",
         // Floor, not spacing: the header is `position: absolute` over the hero
         // and measures 122.25px, so on a viewport too short to hold the whole
         // stack the content stops here instead of sliding under the logo.
         // `min-h-fit` then grows the section rather than overlapping.
         "pt-[142px]",
         // Below 991px the section is auto-height, so there is no bottom to
-        // anchor to and the top offset is the mechanism again — as padding on
-        // the section, which is the same box the height belongs to. These are
-        // the target's own values; the fixed-height band no longer needs the
-        // viewport-scaled offset that used to stand in for them.
-        "max-[991px]:h-auto max-[991px]:pt-[390px] max-[991px]:pb-0",
+        // anchor to and the top padding is what gives the hero its height.
+        "max-[991px]:h-auto max-[991px]:pt-[390px]",
         "max-[767px]:pt-[290px]",
         "max-[478px]:pt-[240px]",
       )}
@@ -118,8 +107,11 @@ export function HeroSection() {
       <div
         className="hhcp-container relative flex flex-col gap-[var(--hhcp-space-l)]"
       >
-        <div className="flex flex-col items-center justify-center gap-[24px]">
-          <div className="flex w-full flex-col gap-[16px]">
+        {/* Bottom-right: the block hugs the container's right edge. The copy
+            inside it stays left-aligned — a ragged left edge on a headline this
+            size reads as a mistake. */}
+        <div className="flex flex-col items-end justify-center gap-[24px] max-[767px]:items-start">
+          <div className="flex flex-col gap-[16px]">
             <h1
               className="font-dm-sans max-w-[536px] text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-white"
             >
@@ -133,7 +125,7 @@ export function HeroSection() {
           {/* Email capture + quiz link — desktop/tablet only */}
           <div
             className={cn(
-              "flex w-full flex-col gap-[16px]",
+              "flex flex-col items-end gap-[16px]",
               "max-[767px]:hidden",
             )}
           >

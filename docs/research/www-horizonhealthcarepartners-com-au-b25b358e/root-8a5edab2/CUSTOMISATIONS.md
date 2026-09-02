@@ -3,61 +3,38 @@
 Everything else in this clone is a faithful reproduction. The items below are
 requested changes, recorded here so a later reader does not "fix" them back.
 
-## 1. Hero is capped at the viewport height, and its content is bottom-anchored
+## 1. Hero is capped at the viewport, content sits bottom-right
 
-**Requested:** the hero section should not exceed the view height. The content should
-be positioned from the bottom of the section, not pushed down from the top.
+**Requested:** the hero must not exceed the view height; its content sits at the
+bottom-right, one standard section space clear of the bottom edge.
 
 **Target behaviour:** `.hero--section` is a flat `height: 106rem` (1060px) at ≥992px,
-with the content container pushed down by a fixed `margin-top: 39rem` (390px).
-On a 727px-tall window the hero therefore ran 333px past the fold.
+with the content container pushed down by a fixed `margin-top: 39rem` (390px) and
+left-aligned.
 
 **Change** — `HeroSection.tsx`:
 
-| | Before (target) | After |
+| | Target | Here |
 |---|---|---|
-| section height | `h-[1060px]` | `h-[min(1060px,100dvh)] min-h-fit` |
-| content position | `mt-[390px]` on the container | `flex flex-col justify-end` + `pb-[288.36px]` on the section |
-| top clearance | — | `pt-[142px]` on the section |
-| ≤991px offset | `margin-top` 390 / 290 / 240 | `pt-[390px]` / `pt-[290px]` / `pt-[240px]` on the section |
+| section height | `1060px` | `h-[min(1060px,100dvh)] min-h-fit` |
+| content position | `margin-top: 390px` | `flex flex-col justify-end` on the section |
+| bottom spacing | none (content sits flush) | `pb-[var(--hhcp-section-space-m)]` — 90px desktop |
+| horizontal | left | `items-end` (copy inside stays left-aligned) |
+| ≤991px offset | `margin-top` 390 / 290 / 240 | same values as section `pt` |
 
-Capping the height is what forces the second row. A top offset measures the content
-from an edge that is no longer fixed: cap the section to a 700px viewport and the
-390px offset walks the email form straight out of the `overflow: hidden` box. Anchoring
-to the bottom inverts the dependency — the form's distance from the bottom edge is the
-constant, and the slack that a shorter viewport removes comes off the top, above the
-headline, where there is nothing to lose.
+`--hhcp-section-space-m` is the token every other section pads with, so the gap under
+the hero matches the gaps between everything below it, and scales the same way
+(90px → 48px).
 
-`288.36px` is measured, not chosen. At the target's own 1060px height and 390px top
-margin, that is exactly what is left below the 381.64px content block, so **any viewport
-tall enough to hold the original design renders identically to the target.**
+`pt-[142px]` is a floor, not spacing: the header is `position: absolute` over the hero
+at 122.25px tall, so on a viewport too short for the whole stack the content stops clear
+of the logo and `min-h-fit` grows the section rather than clipping the form.
 
-`pt-[142px]` is a floor rather than spacing. The header is `position: absolute` over the
-hero and measures 122.25px, so on a viewport too short to hold the whole stack the
-content stops there instead of sliding under the logo; `min-h-fit` then grows the
-section a little past the fold. Losing the CTA is worse than a short scroll.
+Measured at 1534px wide: 1200px viewport → hero 1060, content bottom gap 90; 900px
+viewport → hero 900, gap 90. Headline and form both sit flush to the container's right
+edge at every width.
 
-Resolved behaviour, measured at 1534px wide:
-
-| viewport height | hero | content top | gap below content |
-|---:|---:|---:|---:|
-| 1200 | 1060 | 390 | 288.36 |
-| 1060 | 1060 | 390 | 288.36 |
-| 900 | 900 | 230 | 288.36 |
-| 700 | 812 | 142 | 288.36 |
-
-**One consequence worth knowing.** The content block's height varies with viewport
-*width*, because the headline rewraps: 381.64px at 1534px wide, 366.13px at 1200px.
-With the bottom fixed, that variance now lands on the top offset (390px at 1534px wide,
-405.52px at 1200px) rather than on the gap below. The target holds the top constant and
-lets the bottom vary. Section heights are unchanged either way, so the `VISUAL_QA.md`
-comparison still holds.
-
-Below 991px the section is `height: auto`, so there is no bottom to anchor to and the
-top offset is the mechanism again — carried as padding on the section, the same box the
-height belongs to. Those are the target's own 390 / 290 / 240 values; the viewport-scaled
-offset that used to stand in for them at 768–991px is gone, so that band now matches the
-target exactly where it previously ran ~57px short.
+Below 991px the section is `height: auto`, so top padding is what gives it height.
 
 ## 2. Halaxy booking widget
 
