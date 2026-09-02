@@ -76,6 +76,14 @@ export function HeroSection({
         // underflow. `dvh` rather than `vh` so a mobile browser collapsing its
         // toolbar does not leave the section taller than the visible area.
         "relative h-[100dvh] overflow-hidden bg-cover bg-no-repeat bg-blend-overlay",
+        // Floor and safety net, both inert on any viewport with room to spare.
+        // The header is `position: absolute` over the hero at 108-122px tall,
+        // and the content is bottom-anchored, so on a short screen the copy
+        // climbs until it is behind the logo — 24px behind it at 320x568, and
+        // clipped outright at 320x480. `pt` stops it there; `min-h-fit` then
+        // lets the section grow a little past the fold rather than hiding the
+        // top of the headline, which is the better of the two failures.
+        "min-h-fit pt-[142px]",
         // ≤767px the fixed CTA bar occupies the bottom of the screen, so the
         // hero gets the screen minus that bar. Same token the bar's own height
         // is set from, so the two cannot drift apart.

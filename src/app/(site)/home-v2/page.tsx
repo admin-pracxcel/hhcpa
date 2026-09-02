@@ -75,10 +75,16 @@ export default function HomeV2() {
       <HeroSection
         heading={HOME_HERO.heading}
         body={HOME_HERO.body}
-        /* 44px over the clone's fluid 64px, across half the container
-           rather than a fixed 536px, so the longer headline sets in
-           fewer lines. Full width once the columns collapse. */
-        headingClassName="max-w-[50%] text-[44px] max-[991px]:max-w-full"
+        /* Half the container rather than the clone's fixed 536px, so the
+           longer headline sets in fewer lines, and full width once the
+           columns collapse.
+
+           The step down at 991 and 767 is not only taste: the hero is
+           100dvh (less the CTA bar) with its content bottom-anchored, so an
+           over-large headline eats the space from the top. At 44px the block
+           ran 517-734px tall on phones and pushed itself under the header at
+           360x780, then clipped 287px off at 320x568. */
+        headingClassName="max-w-[50%] text-[52px] max-[991px]:max-w-full max-[991px]:text-[36px] max-[767px]:text-[28px] max-[478px]:text-[24px]"
         actions={
           <div className="flex flex-row flex-wrap items-center gap-[16px]">
             <a className="hhcp-btn" href={HOME_HERO.primary.href}>
