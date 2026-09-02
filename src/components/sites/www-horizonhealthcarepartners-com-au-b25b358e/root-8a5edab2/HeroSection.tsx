@@ -9,7 +9,9 @@
  *     │    ├─ video         — object-cover, click toggles play/pause
  *     │    └─ .overlay      — transparent → black gradient scrim above the video
  *     ├─ .scrim478          — extra rgba(0,0,0,.3) wash, ≤478px only
- *     └─ .hhcp-container    — content, pushed down 390px (290/240 on mobile)
+ *     └─ .hhcp-container    — content, anchored to the bottom of the section
+ *                             (the target pushes it down 390px instead; see the
+ *                             comment on the section for why this differs)
  *
  * Breakpoints 991 / 767 / 478 are the target's own, not Tailwind defaults, so
  * every responsive rule is written as an arbitrary `max-[…]` variant.
@@ -60,7 +62,31 @@ export function HeroSection() {
         // headline + form it lets the section grow rather than clip them.
         "relative h-[min(1060px,100dvh)] min-h-fit overflow-hidden bg-cover bg-no-repeat bg-blend-overlay",
         "bg-[position:50%_0%]",
-        "max-[991px]:h-auto",
+        // The content is anchored to the BOTTOM of the fixed-height band, not
+        // offset from the top. The target authors a 390px top margin, which
+        // only works because its hero is a flat 1060px: the moment the section
+        // is capped to a shorter viewport, a top offset walks the form off the
+        // bottom edge. Bottom-anchoring inverts that — the form's distance from
+        // the bottom is the constant, the slack lands above the headline, and
+        // nothing can be pushed out of the clipped area.
+        //
+        // 288.36px is measured, not chosen: at the target's own 1060px height
+        // and 390px top margin, that is what is left below the content. So this
+        // renders identically to the target wherever the target's height fits.
+        "flex flex-col justify-end pb-[288.36px]",
+        // Floor, not spacing: the header is `position: absolute` over the hero
+        // and measures 122.25px, so on a viewport too short to hold the whole
+        // stack the content stops here instead of sliding under the logo.
+        // `min-h-fit` then grows the section rather than overlapping.
+        "pt-[142px]",
+        // Below 991px the section is auto-height, so there is no bottom to
+        // anchor to and the top offset is the mechanism again — as padding on
+        // the section, which is the same box the height belongs to. These are
+        // the target's own values; the fixed-height band no longer needs the
+        // viewport-scaled offset that used to stand in for them.
+        "max-[991px]:h-auto max-[991px]:pt-[390px] max-[991px]:pb-0",
+        "max-[767px]:pt-[290px]",
+        "max-[478px]:pt-[240px]",
       )}
       style={{ backgroundImage: `url("${POSTER_SRC}")` }}
     >
@@ -90,14 +116,7 @@ export function HeroSection() {
       <div className="absolute inset-0 hidden bg-[rgba(0,0,0,0.3)] max-[478px]:block" />
 
       <div
-        className={cn(
-          "hhcp-container relative flex flex-col gap-[var(--hhcp-space-l)]",
-          // The top offset has to shrink with the section, or capping the height
-          // would push the email form out of the clipped area. 37dvh crosses
-          // 390px at ~1054px tall, so any viewport that fits the original design
-          // still gets the original 390px offset exactly.
-          "mt-[min(390px,37dvh)] max-[767px]:mt-[290px] max-[478px]:mt-[240px]",
-        )}
+        className="hhcp-container relative flex flex-col gap-[var(--hhcp-space-l)]"
       >
         <div className="flex flex-col items-center justify-center gap-[24px]">
           <div className="flex w-full flex-col gap-[16px]">
