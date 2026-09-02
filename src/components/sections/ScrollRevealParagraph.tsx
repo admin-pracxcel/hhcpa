@@ -53,8 +53,8 @@ const STYLES = `
 }
 
 .hhcp-sr-text {
-  font-size: 50px;
-  line-height: 1.25;
+  font-size: 40px;
+  line-height: 1.3;
   font-weight: 400;
   letter-spacing: -0.5px;
   /* The resting colour; the keyframes decide what the words start at. */
@@ -110,23 +110,30 @@ const STYLES = `
     /*
      * --i is the word's index and --n the count, both set inline.
      *
-     * --sr-span is the slice of the paragraph's cover range that the whole
-     * reveal occupies. cover runs from the block's top touching the viewport
-     * bottom to its bottom clearing the viewport top, so its length is
-     * blockHeight + winH; 45% of that is about one viewport of scroll at this
-     * block's height, which is where Salient's own speed formula lands.
+     * cover runs from the block's top touching the viewport bottom to its
+     * bottom clearing the viewport top, so its length is blockHeight + winH.
+     *
+     * --sr-start holds the reveal off until the block is properly on screen.
+     * Beginning at cover 0 meant it began the instant the first line crossed
+     * the fold and was nearly spent by the time the reader arrived: the block
+     * read as already-dark with a pale tail.
+     *
+     * --sr-span then runs it out to roughly where the block's bottom reaches
+     * the middle of the viewport, so the wave is travelling while the reader
+     * is looking at the text rather than before.
      *
      * --sr-step is the gap between word starts. The 1.8 is Salient's 450ms
      * fade over its 250ms stagger, and the same 1.8 sets each word's own
      * duration below, so the wave stays two words wide however many there are.
      */
-    --sr-span: 45%;
+    --sr-start: 15%;
+    --sr-span: 64%;
     --sr-step: calc(var(--sr-span) / (var(--n) + 0.8));
     animation: hhcp-sr-fill linear both;
     animation-timeline: --hhcp-sr-progress;
     animation-range:
-      cover calc(var(--i) * var(--sr-step))
-      cover calc(var(--i) * var(--sr-step) + 1.8 * var(--sr-step));
+      cover calc(var(--sr-start) + var(--i) * var(--sr-step))
+      cover calc(var(--sr-start) + var(--i) * var(--sr-step) + 1.8 * var(--sr-step));
   }
 }
 
