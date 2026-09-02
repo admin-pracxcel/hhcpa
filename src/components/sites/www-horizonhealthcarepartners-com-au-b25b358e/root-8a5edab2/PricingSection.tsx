@@ -23,7 +23,7 @@ import { CheckCircleIcon } from "../shared/icons";
 const QUIZ_HREF = "https://www.horizonhealthcarepartners.com.au/quiz/";
 const DISCHARGE_HREF = "https://www.horizonhealthcarepartners.com.au/discharge/";
 
-interface PricingPlan {
+export interface PricingPlan {
   /** White chip above the price. */
   label: string;
   price: string;
@@ -125,6 +125,24 @@ const STYLES = `
   font-weight: 400;
   letter-spacing: -0.42px;
   color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-pr-footnote {
+  font-size: var(--hhcp-text-s, 16px);
+  line-height: 24px;
+  color: rgba(1, 49, 38, 0.8);
+}
+
+.hhcp-pr-footnote-link {
+  color: var(--hhcp-primary, #013126);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: all 0.3s linear;
+}
+
+.hhcp-pr-footnote-link:hover {
+  color: var(--hhcp-action-dark, #0c7340);
 }
 
 .hhcp-pr-grid {
@@ -290,9 +308,22 @@ const STYLES = `
 
 interface PricingSectionProps {
   className?: string;
+  eyebrow?: string;
+  heading?: string;
+  plans?: readonly PricingPlan[];
+  /** Small print under the grid. The cloned homepage has none. */
+  footnote?: string;
+  footnoteCta?: { label: string; href: string };
 }
 
-export function PricingSection({ className }: PricingSectionProps) {
+export function PricingSection({
+  className,
+  eyebrow = EYEBROW,
+  heading = HEADING,
+  plans = PLANS,
+  footnote,
+  footnoteCta,
+}: PricingSectionProps) {
   return (
     <section className={cn("hhcp-pr-section", className)}>
       <style>{STYLES}</style>
@@ -301,14 +332,14 @@ export function PricingSection({ className }: PricingSectionProps) {
           <div className="hhcp-pr-eyebrow">
             <span className="hhcp-pr-dot" />
             <span className="hhcp-pr-eyebrow-label font-roboto-mono">
-              {EYEBROW}
+              {eyebrow}
             </span>
           </div>
-          <h2 className="hhcp-pr-title font-dm-sans">{HEADING}</h2>
+          <h2 className="hhcp-pr-title font-dm-sans">{heading}</h2>
         </div>
 
         <div className="hhcp-pr-grid">
-          {PLANS.map((plan) => (
+          {plans.map((plan) => (
             <article
               key={plan.label}
               className={cn("hhcp-pr-card", `hhcp-pr-card--${plan.variant}`)}
@@ -353,6 +384,20 @@ export function PricingSection({ className }: PricingSectionProps) {
             </article>
           ))}
         </div>
+
+        {footnote !== undefined && (
+          <p className="hhcp-pr-footnote font-dm-sans">
+            {footnote}
+            {footnoteCta !== undefined && (
+              <>
+                {" "}
+                <a className="hhcp-pr-footnote-link" href={footnoteCta.href}>
+                  {footnoteCta.label}
+                </a>
+              </>
+            )}
+          </p>
+        )}
       </div>
     </section>
   );

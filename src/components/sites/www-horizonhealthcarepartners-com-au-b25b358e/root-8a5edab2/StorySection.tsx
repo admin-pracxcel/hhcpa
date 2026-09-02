@@ -198,9 +198,22 @@ const STYLES = `
 
 interface StorySectionProps {
   className?: string;
+  eyebrow?: string;
+  heading?: string;
+  /** Rendered as one paragraph with a blank line between entries. */
+  paragraphs?: readonly string[];
+  points?: readonly string[];
+  cta?: { label: string; href: string };
 }
 
-export function StorySection({ className }: StorySectionProps) {
+export function StorySection({
+  className,
+  eyebrow = EYEBROW,
+  heading = HEADING,
+  paragraphs = [PARAGRAPH_ONE, PARAGRAPH_TWO],
+  points = POINTS,
+  cta = { label: "Learn more about us", href: CTA_HREF },
+}: StorySectionProps) {
   return (
     <section className={cn("hhcp-so-section", className)}>
       <style>{STYLES}</style>
@@ -212,21 +225,28 @@ export function StorySection({ className }: StorySectionProps) {
                 <div className="hhcp-so-eyebrow">
                   <span className="hhcp-so-dot" />
                   <span className="hhcp-so-eyebrow-label font-roboto-mono">
-                    {EYEBROW}
+                    {eyebrow}
                   </span>
                 </div>
-                <h2 className="hhcp-so-title font-dm-sans">{HEADING}</h2>
+                <h2 className="hhcp-so-title font-dm-sans">{heading}</h2>
               </div>
 
               <p className="hhcp-so-body font-dm-sans">
-                {PARAGRAPH_ONE}
-                <br />
-                <br />
-                {PARAGRAPH_TWO}
+                {paragraphs.map((paragraph, index) => (
+                  <span key={paragraph}>
+                    {index > 0 && (
+                      <>
+                        <br />
+                        <br />
+                      </>
+                    )}
+                    {paragraph}
+                  </span>
+                ))}
               </p>
 
               <ul className="hhcp-so-list">
-                {POINTS.map((point) => (
+                {points.map((point) => (
                   <li key={point} className="hhcp-so-row">
                     <CheckCircleIcon
                       className="hhcp-so-row-icon"
@@ -240,9 +260,9 @@ export function StorySection({ className }: StorySectionProps) {
                 ))}
               </ul>
 
-              <a className="hhcp-so-cta font-roboto-mono" href={CTA_HREF}>
+              <a className="hhcp-so-cta font-roboto-mono" href={cta.href}>
                 <span className="hhcp-so-cta-dot" />
-                Learn more about us
+                {cta.label}
               </a>
             </div>
           </div>

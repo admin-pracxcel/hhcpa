@@ -125,12 +125,17 @@ const STYLES = `
 
 interface FeatureMarqueeProps {
   className?: string;
+  /**
+   * Defaults to the cloned homepage's five. SCROLL_DURATION is tuned to that
+   * set's width, so a materially longer list scrolls a little faster.
+   */
+  items?: readonly string[];
 }
 
-export function FeatureMarquee({ className }: FeatureMarqueeProps) {
+export function FeatureMarquee({ className, items = ITEMS }: FeatureMarqueeProps) {
   // `duplicate` marks the second, purely visual copy that makes the wrap seamless.
   const renderCopy = (duplicate: boolean) =>
-    ITEMS.map((label) => (
+    items.map((label) => (
       <div
         className="hhcp-fm-item"
         key={`${duplicate ? "b" : "a"}-${label}`}

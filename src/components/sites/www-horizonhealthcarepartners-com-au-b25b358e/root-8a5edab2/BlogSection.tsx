@@ -297,9 +297,17 @@ const STYLES = `
 
 interface BlogSectionProps {
   className?: string;
+  eyebrow?: string;
+  heading?: string;
+  cta?: { label: string; href: string };
 }
 
-export function BlogSection({ className }: BlogSectionProps) {
+export function BlogSection({
+  className,
+  eyebrow = EYEBROW,
+  heading = HEADING,
+  cta = { label: CTA_LABEL, href: CTA_HREF },
+}: BlogSectionProps) {
   return (
     <section className={cn("hhcp-bl-section", className)}>
       <style>{STYLES}</style>
@@ -309,16 +317,16 @@ export function BlogSection({ className }: BlogSectionProps) {
             <div className="hhcp-bl-eyebrow">
               <span className="hhcp-bl-dot" />
               <span className="hhcp-bl-eyebrow-label font-roboto-mono">
-                {EYEBROW}
+                {eyebrow}
               </span>
             </div>
-            <h2 className="hhcp-bl-title font-dm-sans">{HEADING}</h2>
+            <h2 className="hhcp-bl-title font-dm-sans">{heading}</h2>
           </div>
 
           <div className="hhcp-bl-head-action">
-            <a className="hhcp-bl-cta font-roboto-mono" href={CTA_HREF}>
+            <a className="hhcp-bl-cta font-roboto-mono" href={cta.href}>
               <span className="hhcp-bl-cta-dot" />
-              {CTA_LABEL}
+              {cta.label}
             </a>
           </div>
         </div>

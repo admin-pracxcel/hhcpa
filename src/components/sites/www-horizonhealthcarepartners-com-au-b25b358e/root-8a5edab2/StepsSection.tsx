@@ -136,6 +136,43 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
+/* Same pill CTA the Approach and Story sections carry, dot first. */
+.hhcp-st-cta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12.132px 19.2px;
+  border-radius: 800px;
+  background-color: var(--hhcp-action, #58eda2);
+  border: 1px solid var(--hhcp-action, #58eda2);
+  color: var(--hhcp-primary, #013126);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: normal;
+  text-decoration: none;
+  transition: all 0.3s linear;
+}
+
+.hhcp-st-cta:hover {
+  box-shadow: 5px 5px 25px 0 rgba(33, 33, 33, 0.1);
+}
+
+.hhcp-st-cta-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+  transition: all 0.3s linear;
+}
+
+.hhcp-st-cta:hover .hhcp-st-cta-dot {
+  box-shadow: 0 0 0 3px rgba(1, 49, 38, 0.25);
+}
+
 .hhcp-st-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -280,11 +317,33 @@ const STYLES = `
 }
 `;
 
-interface StepsSectionProps {
-  className?: string;
+/** Copy for the four cards. The photography and numerals stay put. */
+export interface StepCopy {
+  readonly pill: string;
+  readonly title: string;
+  readonly description: string;
 }
 
-export function StepsSection({ className }: StepsSectionProps) {
+interface StepsSectionProps {
+  className?: string;
+  eyebrow?: string;
+  heading?: string;
+  /** Four entries, matched positionally to the four photographs. */
+  steps?: readonly StepCopy[];
+  cta?: { label: string; href: string };
+}
+
+export function StepsSection({
+  className,
+  eyebrow = EYEBROW,
+  heading = HEADING,
+  steps,
+  cta,
+}: StepsSectionProps) {
+  const cards = STEPS.map((step, index) => {
+    const copy = steps?.[index];
+    return copy === undefined ? step : { ...step, ...copy };
+  });
   return (
     <section className={cn("hhcp-st-section", className)}>
       <style>{STYLES}</style>
@@ -293,14 +352,14 @@ export function StepsSection({ className }: StepsSectionProps) {
           <div className="hhcp-st-eyebrow">
             <span className="hhcp-st-dot" />
             <span className="hhcp-st-eyebrow-label font-roboto-mono">
-              {EYEBROW}
+              {eyebrow}
             </span>
           </div>
-          <h2 className="hhcp-st-title font-dm-sans">{HEADING}</h2>
+          <h2 className="hhcp-st-title font-dm-sans">{heading}</h2>
         </div>
 
         <div className="hhcp-st-grid">
-          {STEPS.map((step) => (
+          {cards.map((step) => (
             <article key={step.number} className="hhcp-st-card">
               <div className="hhcp-st-image-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -336,6 +395,13 @@ export function StepsSection({ className }: StepsSectionProps) {
             </article>
           ))}
         </div>
+
+        {cta !== undefined && (
+          <a className="hhcp-st-cta font-roboto-mono" href={cta.href}>
+            <span className="hhcp-st-cta-dot" />
+            {cta.label}
+          </a>
+        )}
       </div>
     </section>
   );

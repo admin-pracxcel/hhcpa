@@ -23,7 +23,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const ASSET_BASE =
@@ -37,7 +37,23 @@ const HEADING = "Easy Access, Professional Care";
 const BODY =
   "Book online consultations with AHPRA-registered medical practitioners. Our streamlined telehealth process is simple and confidential.";
 
-export function FinalCtaSection({ className }: { className?: string }) {
+interface FinalCtaSectionProps {
+  className?: string;
+  heading?: string;
+  body?: string;
+  /**
+   * Replaces the email-capture form. The rebuilt homepage's closing band is a
+   * quiz button and a tap-to-call, per the content spec.
+   */
+  actions?: ReactNode;
+}
+
+export function FinalCtaSection({
+  className,
+  heading = HEADING,
+  body = BODY,
+  actions,
+}: FinalCtaSectionProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [email, setEmail] = useState("");
 
@@ -94,14 +110,21 @@ export function FinalCtaSection({ className }: { className?: string }) {
               the one carrying text--center). The flex parent centres the box, so a
               single line still reads centred. */}
           <h2 className="font-dm-sans text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-start text-white">
-            {HEADING}
+            {heading}
           </h2>
           <p className="max-w-[536px] text-[16px] leading-[24px] font-normal text-center text-white">
-            {BODY}
+            {body}
           </p>
 
+          {actions}
+
           {/* Email capture + quiz link — shown at every width */}
-          <div className="flex flex-col items-center gap-[16px]">
+          <div
+            className={cn(
+              "flex flex-col items-center gap-[16px]",
+              actions !== undefined && "hidden",
+            )}
+          >
             <div className="max-w-[500px] min-w-[404px] max-[767px]:w-full max-[767px]:max-w-[400px] max-[767px]:min-w-[auto]">
               <form
                 onSubmit={handleSubmit}

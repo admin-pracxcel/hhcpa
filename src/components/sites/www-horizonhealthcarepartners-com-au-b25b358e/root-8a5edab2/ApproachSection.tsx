@@ -34,7 +34,7 @@ const HEADING = "How We Support You";
 const PARAGRAPH =
   "Access practitioner-led consultations from anywhere in Australia. Our AHPRA-registered practitioners provide confidential telehealth appointments, guiding you through every step with professional support and transparent processes.";
 
-interface AccordionItem {
+export interface AccordionItem {
   readonly id: string;
   readonly title: string;
   readonly body: string;
@@ -295,9 +295,22 @@ const STYLES = `
 
 interface ApproachSectionProps {
   className?: string;
+  eyebrow?: string;
+  heading?: string;
+  /** Omit to render no lead paragraph above the accordion. */
+  paragraph?: string;
+  items?: readonly AccordionItem[];
+  cta?: { label: string; href: string };
 }
 
-export function ApproachSection({ className }: ApproachSectionProps) {
+export function ApproachSection({
+  className,
+  eyebrow = EYEBROW,
+  heading = HEADING,
+  paragraph = PARAGRAPH,
+  items = ITEMS,
+  cta = { label: CTA_LABEL, href: CTA_HREF },
+}: ApproachSectionProps) {
   /* The source ships item 0 expanded (.brx-open / aria-expanded="true"). */
   const [openIndex, setOpenIndex] = useState(0);
 
@@ -312,16 +325,18 @@ export function ApproachSection({ className }: ApproachSectionProps) {
                 <div className="hhcp-ap-eyebrow">
                   <span className="hhcp-ap-dot" />
                   <span className="hhcp-ap-eyebrow-label font-roboto-mono">
-                    {EYEBROW}
+                    {eyebrow}
                   </span>
                 </div>
-                <h2 className="hhcp-ap-title font-dm-sans">{HEADING}</h2>
+                <h2 className="hhcp-ap-title font-dm-sans">{heading}</h2>
               </div>
 
-              <p className="hhcp-ap-body font-dm-sans">{PARAGRAPH}</p>
+              {paragraph !== "" && (
+                <p className="hhcp-ap-body font-dm-sans">{paragraph}</p>
+              )}
 
               <div className="hhcp-ap-accordion">
-                {ITEMS.map((item, index) => {
+                {items.map((item, index) => {
                   const open = index === openIndex;
                   const panelId = "hhcp-ap-panel-" + item.id;
                   const titleId = "hhcp-ap-title-" + item.id;
@@ -362,9 +377,9 @@ export function ApproachSection({ className }: ApproachSectionProps) {
                 })}
               </div>
 
-              <a className="hhcp-ap-cta font-roboto-mono" href={CTA_HREF}>
+              <a className="hhcp-ap-cta font-roboto-mono" href={cta.href}>
                 <span className="hhcp-ap-cta-dot" />
-                {CTA_LABEL}
+                {cta.label}
               </a>
             </div>
           </div>

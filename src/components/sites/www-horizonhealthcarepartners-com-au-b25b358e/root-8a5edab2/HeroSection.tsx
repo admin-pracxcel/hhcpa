@@ -17,7 +17,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const ASSET_BASE =
@@ -31,7 +31,22 @@ const HEADING = "Professional Healthcare at Your Fingertips";
 const BODY =
   "Access registered healthcare professionals from the comfort of your home. Complete our pre-screening and schedule your consultation in minutes.";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  /** Defaults to the cloned homepage's headline. */
+  heading?: string;
+  body?: string;
+  /**
+   * Replaces the email-capture form and its mobile CTA. The rebuilt homepage
+   * passes two buttons instead: the content spec's hero has no email field.
+   */
+  actions?: ReactNode;
+}
+
+export function HeroSection({
+  heading = HEADING,
+  body = BODY,
+  actions,
+}: HeroSectionProps = {}) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [email, setEmail] = useState("");
 
@@ -105,16 +120,19 @@ export function HeroSection() {
             <h1
               className="font-dm-sans max-w-[536px] text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-white"
             >
-              {HEADING}
+              {heading}
             </h1>
             <p className="max-w-[536px] text-[length:var(--hhcp-text-s)] leading-[24px] font-normal text-white">
-              {BODY}
+              {body}
             </p>
           </div>
+
+          {actions}
 
           {/* Email capture + quiz link — desktop/tablet only */}
           <div
             className={cn(
+              actions !== undefined && "hidden",
               "flex flex-col items-start gap-[16px]",
               "max-[767px]:hidden",
             )}
@@ -156,7 +174,12 @@ export function HeroSection() {
           </div>
 
           {/* Mobile-only CTA */}
-          <div className="hidden w-full max-[767px]:block">
+          <div
+            className={cn(
+              "hidden w-full max-[767px]:block",
+              actions !== undefined && "max-[767px]:hidden",
+            )}
+          >
             <a className="hhcp-btn" href={QUIZ_HREF}>
               Get Started Today
             </a>
