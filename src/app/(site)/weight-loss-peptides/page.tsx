@@ -7,7 +7,7 @@
  *    1. Hero                        ServiceHero            (new)
  *    2. Value-proposition strip     FeatureMarquee         (clone)
  *    3. Intro paragraph             ScrollRevealParagraph  (shared with /home-v2/)
- *    4. What are peptides           StorySection           (clone, text + image)
+ *    4. What are peptides           SplitFeature           (new)
  *    5. Who it may suit             ChecklistSection       (new)
  *    6. How it works                StepsSection           (clone)
  *    7. Why supervision matters     StatementBand          (new)
@@ -53,13 +53,13 @@ import { PricingCueBand } from "@/components/sections/PricingCueBand";
 import { RelatedCards } from "@/components/sections/RelatedCards";
 import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
+import { SplitFeature } from "@/components/sections/SplitFeature";
 import { StatementBand } from "@/components/sections/StatementBand";
 
 import { FaqSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FaqSection";
 import { FeatureMarquee } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FeatureMarquee";
 import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
 import { StepsSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/StepsSection";
-import { StorySection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/StorySection";
 
 export const metadata: Metadata = {
   title: WLP_META.title,
@@ -106,13 +106,12 @@ export default function WeightLossPeptides() {
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />
 
-      <StorySection
+      <SplitFeature
         className="bg-[color:var(--hhcp-accent)]"
         eyebrow={WLP_EXPLAINER.eyebrow}
         heading={WLP_EXPLAINER.heading}
         paragraphs={WLP_EXPLAINER.paragraphs}
-        points={[]}
-        cta={null}
+        cta={WLP_EXPLAINER.cta}
         image={WLP_EXPLAINER.image}
         imageAlt={WLP_EXPLAINER.imageAlt}
       />

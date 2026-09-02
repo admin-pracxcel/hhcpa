@@ -60,6 +60,7 @@ export const WLP_EXPLAINER = {
     "Peptides are short chains of amino acids that act as signalling molecules in the body. Several prescription treatments used in medical weight management fall into this broader category, and they work by influencing appetite, fullness and how the body regulates weight. In practice, patients ask us about them because they have heard that a weekly treatment can make sustained weight loss more achievable when diet and exercise alone have stalled.",
     "Here is the honest version. These are prescription treatments, not supplements, and they are not right for everyone. Whether any of them suits you depends on your health history, your current medications, your goals and your safety. That is a clinical decision, and it is exactly what the consultation is for. We do not name specific products on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
   ],
+  cta: { label: "Book a consultation", href: "/quiz/" },
   image: `${IMAGE_BASE}care-physical-wellbeing.jpg`,
   imageAlt:
     "A smiling person with a bald head, wearing a striped shirt, sits indoors.",
