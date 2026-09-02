@@ -32,6 +32,7 @@ const STYLES = `
 .hhcp-fo-heading {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--hhcp-space-s, 20px);
   padding-bottom: var(--hhcp-space-l, 45px);
   border-bottom: 1px solid #ececec;
@@ -40,6 +41,7 @@ const STYLES = `
 .hhcp-fo-eyebrow {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
@@ -60,6 +62,7 @@ const STYLES = `
 }
 
 .hhcp-fo-title {
+  text-align: center;
   font-size: var(--hhcp-h2, 42px);
   line-height: var(--hhcp-heading-lh, 46.336px);
   font-weight: 400;
@@ -69,6 +72,7 @@ const STYLES = `
 
 .hhcp-fo-intro {
   max-width: 620px;
+  text-align: center;
   font-size: var(--hhcp-text-s, 16px);
   line-height: 24px;
   color: rgba(1, 49, 38, 0.8);
@@ -80,10 +84,22 @@ const STYLES = `
  * the lift-and-shadow hover. Its own breakpoints too (900 / 600), which are the
  * wizard's rather than the target's 1199 / 767.
  */
+/*
+ * Flex rather than grid, so a row that is not full centres its cards instead
+ * of leaving a hole on the right. Five cards across three columns is the usual
+ * case here, and the gated sixth returning would make it six -- both look
+ * right this way. The card widths reproduce a three-column grid exactly:
+ * a third of the row, less its share of the two gaps.
+ */
 .hhcp-fo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
+}
+
+.hhcp-fo-card {
+  flex: 0 1 calc((100% - 40px) / 3);
 }
 
 .hhcp-fo-card {
@@ -181,14 +197,14 @@ const STYLES = `
 }
 
 @media (max-width: 900px) {
-  .hhcp-fo-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .hhcp-fo-card {
+    flex-basis: calc((100% - 20px) / 2);
   }
 }
 
 @media (max-width: 600px) {
-  .hhcp-fo-grid {
-    grid-template-columns: 1fr;
+  .hhcp-fo-card {
+    flex-basis: 100%;
   }
 }
 `;
