@@ -45,6 +45,7 @@ export const MENOPAUSE: ServicePageData = {
       paragraphs: [
         "Perimenopause is the transition that can start years before periods stop, when hormone levels fluctuate and symptoms often begin. Menopause is confirmed once you have gone twelve months without a period. The symptoms overlap, and many women are surprised to learn that the difficult years are often the perimenopausal ones. Knowing which stage you are in shapes what support makes sense, which is part of what your practitioner works out with you.",
       ],
+      cta: { label: "Start the free quiz", href: "/quiz/" },
       image: IMAGE.sleepHealth,
       imageAlt: IMAGE_ALT.sleepHealth,
     },

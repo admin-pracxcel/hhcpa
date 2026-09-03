@@ -45,6 +45,7 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
       paragraphs: [
         "Erections depend on blood flow, nerves, hormones and mood all working together, so erectile dysfunction can have physical causes, psychological causes, or both. Common contributors include stress, tiredness, alcohol, relationship pressure, blood pressure and cholesterol issues, diabetes, low testosterone, and some medications. Because ED can sit alongside heart and metabolic health, a practitioner does not just reach for a script. They look at the bigger picture, which is better for your health overall.",
       ],
+      cta: { label: "Start the free quiz", href: "/quiz/" },
       image: IMAGE.generalHealth,
       imageAlt: IMAGE_ALT.generalHealth,
     },

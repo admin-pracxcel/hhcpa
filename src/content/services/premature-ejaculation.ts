@@ -45,6 +45,7 @@ export const PREMATURE_EJACULATION: ServicePageData = {
       paragraphs: [
         "Premature ejaculation means reaching climax sooner than you or your partner would like, often enough to cause frustration or distress. It can be lifelong or something that appears later, and it can be tied to anxiety, sensitivity, relationship stress, or other health factors. It is a medical topic, not a character flaw, and framing it that way is the first step to dealing with it.",
       ],
+      cta: { label: "Start the free quiz", href: "/quiz/" },
       image: IMAGE.mentalWellbeing,
       imageAlt: IMAGE_ALT.mentalWellbeing,
     },

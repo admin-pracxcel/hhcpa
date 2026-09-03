@@ -46,6 +46,7 @@ export const PCOS: ServicePageData = {
       paragraphs: [
         "Polycystic ovary syndrome is a common hormonal condition that can cause irregular periods, acne, excess hair growth, difficulty with weight, and challenges with fertility. It also has links to insulin and long-term metabolic health, which is why management looks at more than one symptom at a time. There is no single fix, and there is a lot that can be done to manage it well.",
       ],
+      cta: { label: "Start the free quiz", href: "/quiz/" },
       image: IMAGE.complexHealth,
       imageAlt: IMAGE_ALT.complexHealth,
     },

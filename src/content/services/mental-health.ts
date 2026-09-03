@@ -120,6 +120,7 @@ export const MENTAL_HEALTH: ServicePageData = {
       paragraphs: [
         "No two people arrive with the same story, so support starts with listening. Your practitioner asks what you are experiencing, how long it has been going on, and how it is affecting your daily life. From there, a plan takes shape. That can mean practical strategies, treatment where it is appropriate, a referral to a psychologist or specialist service, or a combination that changes over time. The aim is steady, practical support that meets you where you are.",
       ],
+      cta: { label: "Check your eligibility", href: "/quiz/" },
       image: IMAGE.painManagement,
       imageAlt: IMAGE_ALT.painManagement,
       imageSide: "left",
