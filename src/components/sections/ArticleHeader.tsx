@@ -25,8 +25,14 @@ const STYLES = `
    * site's header is in flow and needs no such allowance; ours is the one that
    * has to be paid for. Matches ServiceHero, so articles and service pages
    * start at the same height.
+   *
+   * The bottom is --hhcp-space-xl, which is the gap the live template leaves
+   * between the featured image and the opening paragraph: 67 / 59 / 44px at
+   * 1534 / 991 / 375px, matching that token at all three. The body section
+   * below has no top padding of its own, so this is the whole of it.
    */
-  padding: calc(var(--hhcp-section-space-m) + 122px) var(--hhcp-gutter) 0;
+  padding: calc(var(--hhcp-section-space-m) + 122px) var(--hhcp-gutter)
+    var(--hhcp-space-xl);
 }
 
 @media (max-width: 991px) {

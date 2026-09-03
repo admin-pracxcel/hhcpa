@@ -33,7 +33,13 @@ under the header. `BreadcrumbList` JSON-LD still ships from the page.
 | byline | 615 | 304 | avatar 48px, `gap: 14px`, radius 22.5px |
 | featured image | 231 | 1072 | 715 tall — **3:2**, radius 0 |
 | body container | 410 | 715 | `row-gap: --hhcp-space-l`, `align-items: flex-start` |
-| section padding | — | — | `0 var(--hhcp-gutter) 90px` |
+| section padding | — | — | header block `… var(--hhcp-gutter) var(--hhcp-space-xl)`, body block `0 var(--hhcp-gutter) 90px` |
+
+### The gap under the featured image
+
+The body block has no top padding, so the whole gap between the image and the
+opening paragraph is the header block's bottom padding: **67 / 59 / 44px** at
+1534 / 991 / 375px. That is `--hhcp-space-xl` at all three.
 
 ## Typography
 
@@ -77,6 +83,25 @@ Headings are black and bold here, not brand green and regular as everywhere else
 on this site. That is the reference, not an oversight. Letter-spacing is left to
 the base layer, which already sets exactly these values.
 
+## The closing disclaimer
+
+Set apart from the body three ways at once, which is why it is its own block
+kind (`note` in `articles.ts`) rather than another paragraph:
+
+| | Value |
+|---|---|
+| rule above | `border-top: 2px solid #808080`, `margin: 1em 0 0` |
+| size | **13px flat** — the one size on the page that does not scale |
+| line-height | 19.5px (1.5) |
+| style | italic |
+| colour | `rgba(1, 49, 38, 0.8)` |
+| space above | 13px, i.e. its own 1em |
+
+The reference italicises it with an `<em>`; this uses `font-style` instead.
+`<em>` means stress emphasis, and a disclaimer set in italic is a convention of
+the form rather than a sentence being emphasised — so a screen reader reads it
+plainly instead of leaning on every word.
+
 ## Paragraph spacing
 
 `1em` above a paragraph that follows **a paragraph or a heading**, and nothing
@@ -99,3 +124,7 @@ Line spacing between list items is 8px.
 - **`object-fit`.** The live featured image uses `fill`; this uses `cover`. The
   images are already 3:2 so the two render identically, and `cover` is what stops
   a differently-shaped one being stretched.
+- **Italics inside a paragraph.** The reference sets the journal name in the
+  References line in italic. The block union is deliberately closed — plain text,
+  no inline markup — so a phrase inside a paragraph cannot be styled without
+  opening that up. Left as plain text.

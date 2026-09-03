@@ -32,7 +32,14 @@ export type ArticleBlock =
   | { readonly kind: "h2"; readonly text: string }
   | { readonly kind: "h3"; readonly text: string }
   | { readonly kind: "p"; readonly text: string }
-  | { readonly kind: "ul"; readonly items: readonly string[] };
+  | { readonly kind: "ul"; readonly items: readonly string[] }
+  /**
+   * The closing disclaimer. Its own kind rather than another paragraph because
+   * the live template sets it apart three ways at once — a rule above it, 13px
+   * rather than body size, and italic — and because what it is matters: it is
+   * the line that says this article is not medical advice.
+   */
+  | { readonly kind: "note"; readonly text: string };
 
 export interface Article {
   readonly slug: string;
@@ -246,7 +253,7 @@ export const ARTICLES: readonly Article[] = [
         text: "Hall KD, Kahan S. (2018). Maintenance of lost weight and long-term management of obesity. Medical Clinics of North America.",
       },
       {
-        kind: "p",
+        kind: "note",
         text: "Disclaimer: This article provides general health information only and is not intended as medical advice. Individual circumstances vary, and readers should consult a qualified health practitioner for personalised assessment and guidance.",
       },
     ],
@@ -453,7 +460,7 @@ export const ARTICLES: readonly Article[] = [
         text: "Ramos AR, Wheaton AG, Johnson DA. (2023). Sleep Deprivation, Sleep Disorders, and Chronic Disease. Preventing Chronic Disease.",
       },
       {
-        kind: "p",
+        kind: "note",
         text: "Disclaimer: This article provides general health information only and is not intended as medical advice. Individual circumstances vary, and readers should consult a qualified health practitioner for personalised assessment and guidance.",
       },
     ],
@@ -581,7 +588,7 @@ export const ARTICLES: readonly Article[] = [
         text: "Reference: Why sleep matters in chronic pain: evidence across the lifespan – PMC",
       },
       {
-        kind: "p",
+        kind: "note",
         text: "Disclaimer: This article provides general health information only and is not intended as medical advice. Individual circumstances vary, and readers should consult a qualified health practitioner for personalised assessment and guidance.",
       },
     ],

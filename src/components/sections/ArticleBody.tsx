@@ -14,10 +14,11 @@
  * each matching to the fourth decimal at every width. Only the h1, h2 and their
  * spacing needed new ones.
  *
- * Two things are the live template's, not this site's, and look wrong beside the
- * rest of the site until you know that: the measure is 715px rather than the
- * 720px this file used to cap at, and the headings are 700-weight black rather
- * than 400-weight brand green. Both are what the reference does.
+ * Three things are the live template's, not this site's, and look wrong beside
+ * the rest of the site until you know that: the measure is 715px rather than the
+ * 720px this file used to cap at, the headings are 700-weight black rather than
+ * 400-weight brand green, and the closing disclaimer is 13px italic under a 2px
+ * grey rule. All three are what the reference does.
  */
 
 import { Fragment } from "react";
@@ -85,7 +86,7 @@ const STYLES = `
  * The money-page block is excluded because it sets its own margins, and this
  * selector would otherwise outrank them on specificity.
  */
-.hhcp-ab-body :is(p, h2, h3) + p:not(.hhcp-ab-money) {
+.hhcp-ab-body :is(p, h2, h3) + p:not(.hhcp-ab-money, .hhcp-ab-note) {
   margin-top: 1em;
 }
 
@@ -103,6 +104,39 @@ const STYLES = `
 
 .hhcp-ab-list li + li {
   margin-top: 8px;
+}
+
+/* ---------- Closing disclaimer ---------- */
+/*
+ * A rule, then the line in 13px italic. The rule is the live template's
+ * wp-block-separator: 2px, grey, one line of space above it and none below,
+ * so the note sits tight under it.
+ *
+ * 13px is a flat number rather than a fluid one — it is the only size on the
+ * page that does not scale, and it measures 13px at 375px as well as at 1534px.
+ */
+.hhcp-ab-rule {
+  width: 100%;
+  border: 0;
+  border-top: 2px solid #808080;
+  margin: 1em 0 0;
+}
+
+/*
+ * Qualified with a type selector so it outranks .hhcp-ab-body p above, which
+ * is a class plus a type and would otherwise keep the note at body size.
+ *
+ * Italic through CSS rather than an <em>, which the reference uses. <em> means
+ * stress emphasis, and a disclaimer set in italic is a convention of the form
+ * rather than a sentence being emphasised — this way a screen reader reads it
+ * plainly instead of leaning on every word of it.
+ */
+p.hhcp-ab-note {
+  font-size: 13px;
+  line-height: 1.5;
+  font-style: italic;
+  color: rgba(1, 49, 38, 0.8);
+  margin-top: 13px;
 }
 
 /* ---------- Money-page prompt ---------- */
@@ -296,6 +330,13 @@ function Block({ block }: { block: ArticleBlock }) {
             <li key={item}>{item}</li>
           ))}
         </ul>
+      );
+    case "note":
+      return (
+        <>
+          <hr className="hhcp-ab-rule" />
+          <p className="hhcp-ab-note">{block.text}</p>
+        </>
       );
     default: {
       /* Exhaustiveness guard; see ServicePage for why this is not redundant. */
