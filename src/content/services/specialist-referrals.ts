@@ -1,14 +1,7 @@
 /** PAGE 19: SPECIALIST REFERRALS. */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const SPECIALIST_REFERRALS: ServicePageData = {
@@ -40,8 +33,9 @@ export const SPECIALIST_REFERRALS: ServicePageData = {
         "Complete the free pre-screening quiz, book a consultation, and discuss your situation with a practitioner. Where a referral is appropriate, they issue it so you can arrange to see the relevant specialist. Your practitioner will also tell you if your situation needs an in-person assessment first.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("specialist-referrals-how-it-works"),
+      imageAlt:
+        "A woman at a desk makes an appointment, a paper diary open in front of her.",
     },
     {
       kind: "statement",
@@ -83,8 +77,9 @@ export const SPECIALIST_REFERRALS: ServicePageData = {
       paragraphs: [
         "Getting a referral often means booking a separate appointment just to be pointed onward, which wastes time when you already know you need specialist input. A telehealth consultation removes that step. Your practitioner reviews your situation, confirms that a referral is the right move, and issues it, all in one visit. They also make sure a referral is genuinely the best next step, and flag when an in-person assessment should come first.",
       ],
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("specialist-referrals-why-start-online"),
+      imageAlt:
+        "A man stands up from a dining table after a consultation, reaching for his jacket.",
       imageSide: "left",
     },
     {

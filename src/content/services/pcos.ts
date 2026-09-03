@@ -8,14 +8,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PCOS: ServicePageData = {
@@ -47,8 +40,9 @@ export const PCOS: ServicePageData = {
         "Polycystic ovary syndrome is a common hormonal condition that can cause irregular periods, acne, excess hair growth, difficulty with weight, and challenges with fertility. It also has links to insulin and long-term metabolic health, which is why management looks at more than one symptom at a time. There is no single fix, and there is a lot that can be done to manage it well.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.complexHealth,
-      imageAlt: IMAGE_ALT.complexHealth,
+      image: sectionImage("pcos-understanding-pcos"),
+      imageAlt:
+        "A woman sits by a window in natural daylight.",
     },
     {
       kind: "statement",
@@ -88,8 +82,9 @@ export const PCOS: ServicePageData = {
         "PCOS shows up differently for different women, and your plan reflects that. Common concerns patients bring to us include irregular or missing periods, acne and skin changes, unwanted hair growth, difficulty managing weight, and questions about fertility. Mood and energy often come into it too. Because PCOS connects to insulin and longer-term metabolic health, your practitioner looks beyond any single symptom and helps you manage the whole picture over time.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.physicalWellbeing,
-      imageAlt: IMAGE_ALT.physicalWellbeing,
+      image: sectionImage("pcos-symptoms"),
+      imageAlt:
+        "A woman at a kitchen table points to a handwritten list during a phone consultation.",
       imageSide: "left",
     },
     {

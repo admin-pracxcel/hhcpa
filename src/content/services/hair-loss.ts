@@ -7,14 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const HAIR_LOSS: ServicePageData = {
@@ -54,8 +47,9 @@ export const HAIR_LOSS: ServicePageData = {
         "Take the free pre-screening quiz, book a consultation, and speak with a practitioner who reviews your hair loss, your health and your goals. Where treatment is appropriate, they explain the options honestly, including how long they take to show effect and what maintenance involves.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("hair-loss-how-it-works"),
+      imageAlt:
+        "A man at a home desk speaks with a practitioner during a video consultation.",
     },
     {
       kind: "related",
@@ -80,8 +74,9 @@ export const HAIR_LOSS: ServicePageData = {
         "Most male hair loss is driven by a mix of genetics and hormones, and it follows a recognisable pattern that tends to progress over time. Age, family history and individual sensitivity all shape how quickly it happens. Less commonly, hair loss can point to another health factor worth checking, which is one reason a practitioner assessment helps before starting anything. Your practitioner confirms the type of hair loss you have and sets realistic expectations about what each option can do.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.ourStory,
-      imageAlt: IMAGE_ALT.ourStory,
+      image: sectionImage("hair-loss-what-causes-it"),
+      imageAlt:
+        "A father and his adult son stand talking in a backyard in afternoon light.",
       imageSide: "left",
     },
     {

@@ -9,14 +9,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const CONTRACEPTION: ServicePageData = {
@@ -114,8 +107,9 @@ export const CONTRACEPTION: ServicePageData = {
         "Contraception is personal, and the right choice depends on your health, your preferences and your stage of life. In a consultation, your practitioner talks through the options that may suit you, explains how they work, and checks that a given option is appropriate and safe for you. They can continue an existing prescription where it remains suitable, and arrange testing or an in-person review when that is the safer path. You leave with a clear understanding and a plan you are comfortable with.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.generalHealth,
-      imageAlt: IMAGE_ALT.generalHealth,
+      image: sectionImage("contraception-options"),
+      imageAlt:
+        "A woman and a general practitioner talk in a private consulting room.",
       imageSide: "left",
     },
     {

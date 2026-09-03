@@ -11,14 +11,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MENS_HEALTH: ServicePageData = {
@@ -108,8 +101,9 @@ export const MENS_HEALTH: ServicePageData = {
         "Take the free pre-screening quiz, book a time that suits you, and speak with an AHPRA-registered practitioner by video or phone. They review your history, discuss your options, and arrange tests or eligible prescriptions where appropriate. Follow-up is part of the service.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("mens-health-how-it-works"),
+      imageAlt:
+        "A man at a kitchen bench speaks with a practitioner over a laptop video call.",
     },
     {
       kind: "inlineCta",

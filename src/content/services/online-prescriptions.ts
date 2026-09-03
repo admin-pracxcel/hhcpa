@@ -7,14 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const ONLINE_PRESCRIPTIONS: ServicePageData = {
@@ -111,8 +104,9 @@ export const ONLINE_PRESCRIPTIONS: ServicePageData = {
         "Many requests are to continue treatment that is already working, where a review confirms it remains appropriate to renew. Others are for a new concern a practitioner can assess and, where suitable, treat. Common areas include ongoing conditions managed with regular medication, skin concerns, and everyday health issues. Some medications carry restrictions and are not suitable for a first telehealth consultation, and your practitioner will tell you when that applies and what the safe alternative is.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.ongoing,
-      imageAlt: IMAGE_ALT.ongoing,
+      image: sectionImage("online-prescriptions-what-patients-ask"),
+      imageAlt:
+        "A woman at a home desk gestures as she speaks during a video consultation.",
       imageSide: "left",
     },
     {

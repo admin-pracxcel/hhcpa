@@ -1,14 +1,7 @@
 /** PAGE 18: PATHOLOGY & IMAGING REFERRALS. */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PATHOLOGY_IMAGING: ServicePageData = {
@@ -59,8 +52,9 @@ export const PATHOLOGY_IMAGING: ServicePageData = {
         "Complete the free pre-screening quiz, book a consultation, and your practitioner discusses your concern and issues appropriate referrals. You take the referral to a collection centre or imaging provider. Where useful, your practitioner reviews the results with you in a follow-up.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("pathology-imaging-referrals-how-it-works"),
+      imageAlt:
+        "A man walks into a suburban pathology collection centre holding a folded form.",
     },
     {
       kind: "related",

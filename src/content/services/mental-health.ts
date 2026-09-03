@@ -9,13 +9,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MENTAL_HEALTH: ServicePageData = {
@@ -77,8 +71,9 @@ export const MENTAL_HEALTH: ServicePageData = {
         "Your practitioner listens first, then works with you on a plan. That might involve advice and strategies, treatment where appropriate, referral to a psychologist or specialist service, or a combination. Mental health is health, and it responds to the same careful, individualised approach we bring to everything else.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.mentalWellbeing,
-      imageAlt: IMAGE_ALT.mentalWellbeing,
+      image: sectionImage("mental-health-our-approach"),
+      imageAlt:
+        "A practitioner sits in a softly lit room, giving her full attention to someone speaking.",
     },
     {
       kind: "statement",
@@ -121,8 +116,9 @@ export const MENTAL_HEALTH: ServicePageData = {
         "No two people arrive with the same story, so support starts with listening. Your practitioner asks what you are experiencing, how long it has been going on, and how it is affecting your daily life. From there, a plan takes shape. That can mean practical strategies, treatment where it is appropriate, a referral to a psychologist or specialist service, or a combination that changes over time. The aim is steady, practical support that meets you where you are.",
       ],
       cta: { label: "Check your eligibility", href: "/quiz/" },
-      image: IMAGE.painManagement,
-      imageAlt: IMAGE_ALT.painManagement,
+      image: sectionImage("mental-health-tailored-support"),
+      imageAlt:
+        "Two people sit in chairs angled toward each other, one talking and one listening.",
       imageSide: "left",
     },
     {

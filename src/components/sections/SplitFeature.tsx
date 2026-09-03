@@ -113,6 +113,16 @@ const STYLES = `
 
   .hhcp-sf-image {
     aspect-ratio: 16 / 10;
+    /*
+     * Crop from above centre, not from the centre.
+     *
+     * The section photography is 4:5 portrait with the subject's head in the
+     * upper third, so a centred 16:10 crop takes the band across their chest.
+     * On /online-doctor/pathology-imaging-referrals/ that cut the man's head off
+     * at the mouth. 32% keeps faces in every one of the thirty-two, checked as a
+     * sheet rather than one at a time.
+     */
+    object-position: 50% 32%;
   }
 }
 `;

@@ -14,6 +14,7 @@
  */
 
 import { CALL_CTA } from "./clinic";
+import { sectionImage } from "./services/shared";
 
 const IMAGE_BASE =
   "/images/";
@@ -75,8 +76,9 @@ export const WLI_SAFETY = {
     "Injectable weight-loss treatments are not suitable for everyone. They are generally not used in pregnancy or breastfeeding, and certain medical histories change what is safe. This is why the consultation matters, and why ongoing review is part of the service rather than an optional extra. If a side effect appears or your circumstances change, your practitioner adjusts the plan.",
   ],
   cta: { label: "Check your eligibility", href: "/quiz/" },
-  image: `${IMAGE_BASE}approach-to-care.jpg`,
-  imageAlt: "A practitioner speaking with a patient in a consultation.",
+  image: sectionImage("weight-loss-injections-safety"),
+  imageAlt:
+    "A general practitioner leans forward at her desk, listening during a video consultation.",
   /* Left, so the page alternates against the split rows on the parent page. */
   imageSide: "left",
 } as const;

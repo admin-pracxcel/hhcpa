@@ -11,7 +11,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT } from "./shared";
+import { IMAGE, IMAGE_ALT, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PATIENT_SAFETY: ServicePageData = {
@@ -49,8 +49,9 @@ export const PATIENT_SAFETY: ServicePageData = {
       paragraphs: [
         "Your practitioner will recommend an in-person option when your situation calls for it, for example when a physical examination is needed, when symptoms are serious or worsening, or when a hands-on test is required to be safe. Recommending the right setting is part of good care, and we would always rather do that than stretch telehealth past where it belongs.",
       ],
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("patient-safety-in-person-care"),
+      imageAlt:
+        "A general practitioner examines a seated patient with a stethoscope in a consulting room.",
     },
     {
       kind: "tiles",
@@ -88,8 +89,9 @@ export const PATIENT_SAFETY: ServicePageData = {
         "Give your practitioner accurate information about your health, your medications and your history. Tell them if something changes or gets worse. Follow the plan you agree together, and come back for review when asked. Safe care is a partnership.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("patient-safety-your-part"),
+      imageAlt:
+        "A patient and a practitioner sit side by side at a desk, looking at a page together.",
       imageSide: "left",
     },
   ],

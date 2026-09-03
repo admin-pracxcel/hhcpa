@@ -27,6 +27,20 @@ export const IMAGE = {
 } as const;
 
 /**
+ * The section photography commissioned for the service pages — one image per
+ * section, named for where it goes.
+ *
+ * A helper rather than another IMAGE/IMAGE_ALT pair because these are used once
+ * each. A map of thirty-two single-use keys is indirection for its own sake; the
+ * filename reads better sitting next to the section it belongs to, and grepping
+ * it finds the one place it is used. Alt text is written inline at each section
+ * for the same reason.
+ */
+export function sectionImage(name: string): string {
+  return `${IMAGES}${name}.webp`;
+}
+
+/**
  * Alt text for the stock photography. These are the descriptions captured from
  * the source site; they describe the picture, not the page it sits on, which is
  * what alt text is for.

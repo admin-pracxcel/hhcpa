@@ -8,14 +8,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MEDICAL_CERTIFICATES: ServicePageData = {
@@ -65,8 +58,9 @@ export const MEDICAL_CERTIFICATES: ServicePageData = {
         "Complete the free pre-screening quiz, book a short consultation, and speak with a practitioner who assesses your situation. Where appropriate, your certificate is issued promptly and sent to you.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.sleepPain,
-      imageAlt: IMAGE_ALT.sleepPain,
+      image: sectionImage("medical-certificates-how-it-works"),
+      imageAlt:
+        "A person wrapped in a blanket on the couch speaks with a practitioner on a laptop.",
     },
     {
       kind: "statement",
@@ -85,8 +79,9 @@ export const MEDICAL_CERTIFICATES: ServicePageData = {
         "A medical certificate makes sense when illness or injury genuinely affects your ability to work, study or care for someone, and you need documentation for your employer or institution. Your practitioner assesses your situation in a short consultation and issues a certificate where the assessment supports it. Because the certificate rests on a real consultation with a registered practitioner, it is a genuine document that holds up. If a certificate is not appropriate, your practitioner explains why and what you can do instead.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("medical-certificates-when-appropriate"),
+      imageAlt:
+        "A general practitioner listens and asks a follow-up question during a consultation.",
       imageSide: "left",
     },
     {

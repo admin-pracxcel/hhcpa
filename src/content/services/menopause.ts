@@ -7,14 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MENOPAUSE: ServicePageData = {
@@ -46,8 +39,9 @@ export const MENOPAUSE: ServicePageData = {
         "Perimenopause is the transition that can start years before periods stop, when hormone levels fluctuate and symptoms often begin. Menopause is confirmed once you have gone twelve months without a period. The symptoms overlap, and many women are surprised to learn that the difficult years are often the perimenopausal ones. Knowing which stage you are in shapes what support makes sense, which is part of what your practitioner works out with you.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.sleepHealth,
-      imageAlt: IMAGE_ALT.sleepHealth,
+      image: sectionImage("menopause-perimenopause-explained"),
+      imageAlt:
+        "A woman stands in a garden in morning light, holding a mug.",
     },
     {
       kind: "statement",
@@ -66,8 +60,9 @@ export const MENOPAUSE: ServicePageData = {
         "Your practitioner discusses your symptoms and history, considers your personal and family health, and where useful arranges tests. They explain the range of options, from lifestyle and non-hormonal approaches to menopausal hormone therapy, and help you weigh what suits you. The goal is a plan that fits your body, your history and your preferences, reviewed over time.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("menopause-how-treatment-is-assessed"),
+      imageAlt:
+        "A practitioner and a patient sit across a table, discussing options together.",
       imageSide: "left",
     },
     {

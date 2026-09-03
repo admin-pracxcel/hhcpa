@@ -21,7 +21,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT, STANDARD_CLOSING } from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const DISCHARGE: ServicePageData = {
@@ -82,8 +82,9 @@ export const DISCHARGE: ServicePageData = {
         "Any current medication details, recent test results if you have them, and a short summary of your treatment so far. If you do not have everything, that is fine. Your practitioner will guide you.",
       ],
       cta: { label: "Start your transfer", href: "/quiz/" },
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("discharge-what-to-bring"),
+      imageAlt:
+        "A woman gathers a few pages into a folder at a kitchen table.",
     },
     {
       kind: "related",

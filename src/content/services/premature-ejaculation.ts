@@ -7,14 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PREMATURE_EJACULATION: ServicePageData = {
@@ -46,8 +39,9 @@ export const PREMATURE_EJACULATION: ServicePageData = {
         "Premature ejaculation means reaching climax sooner than you or your partner would like, often enough to cause frustration or distress. It can be lifelong or something that appears later, and it can be tied to anxiety, sensitivity, relationship stress, or other health factors. It is a medical topic, not a character flaw, and framing it that way is the first step to dealing with it.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.mentalWellbeing,
-      imageAlt: IMAGE_ALT.mentalWellbeing,
+      image: sectionImage("premature-ejaculation-understanding-it"),
+      imageAlt:
+        "A man stands at a kitchen window in late afternoon light, holding a glass of water.",
     },
     {
       kind: "statement",
@@ -90,8 +84,9 @@ export const PREMATURE_EJACULATION: ServicePageData = {
         "Premature ejaculation can have several contributors, and often more than one is involved at once. Anxiety and stress play a large part for many men, particularly performance-related worry that becomes self-reinforcing. Sensitivity, relationship dynamics and general health can all feed in. In some cases it appears alongside erectile difficulty, which is worth assessing together. Understanding the drivers is what makes a management plan work, and that is the first thing your practitioner explores with you.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.painManagement,
-      imageAlt: IMAGE_ALT.painManagement,
+      image: sectionImage("premature-ejaculation-contributors"),
+      imageAlt:
+        "A couple sit together on a couch in daylight, turned toward each other in conversation.",
       imageSide: "left",
     },
     {

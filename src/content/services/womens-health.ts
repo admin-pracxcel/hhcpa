@@ -10,14 +10,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const WOMENS_HEALTH: ServicePageData = {
@@ -97,8 +90,9 @@ export const WOMENS_HEALTH: ServicePageData = {
         "Women often describe having to push to be taken seriously about fatigue, mood, cycles and menopause. We build our consultations around listening first. Your practitioner asks about what you are actually experiencing, connects the dots, arranges tests where they help, and gives you a plan you understand. You should leave feeling assessed, not dismissed.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.painManagement,
-      imageAlt: IMAGE_ALT.painManagement,
+      image: sectionImage("womens-health-being-heard"),
+      imageAlt:
+        "A general practitioner listens closely as a patient speaks in a consulting room.",
     },
     {
       kind: "split",
@@ -108,8 +102,9 @@ export const WOMENS_HEALTH: ServicePageData = {
         "Start with the free pre-screening quiz, book a time that suits you, and speak with an AHPRA-registered practitioner by video or phone. They review your history, discuss your options, and arrange tests or eligible prescriptions where appropriate. Follow-up is part of the service.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("womens-health-how-it-works"),
+      imageAlt:
+        "A woman sits in a sunlit armchair on a phone consultation, a notebook on her knee.",
       imageSide: "left",
     },
     {

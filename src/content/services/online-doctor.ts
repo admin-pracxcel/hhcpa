@@ -14,14 +14,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const ONLINE_DOCTOR: ServicePageData = {
@@ -129,8 +122,9 @@ export const ONLINE_DOCTOR: ServicePageData = {
         "Take the free pre-screening quiz, book a consultation by video or phone, and speak with an AHPRA-registered practitioner who reviews your situation and provides a clear outcome. Follow-up is available where care continues.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.consultation,
-      imageAlt: IMAGE_ALT.consultation,
+      image: sectionImage("online-doctor-how-it-works"),
+      imageAlt:
+        "A person stands at a kitchen bench speaking with a practitioner on a propped tablet.",
     },
     {
       kind: "inlineCta",

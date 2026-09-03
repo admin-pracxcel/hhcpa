@@ -19,12 +19,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MEDICINAL_CANNABIS: ServicePageData = {
@@ -93,8 +88,9 @@ export const MEDICINAL_CANNABIS: ServicePageData = {
       paragraphs: [
         "Good prescribing includes planning for the whole course of treatment, not just the first script. Your practitioner discusses expected review points, how progress will be monitored, and the circumstances in which treatment would be changed or stopped. This kind of exit and review planning is part of responsible care, and it is built into how we work.",
       ],
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("medicinal-cannabis-considered-approach"),
+      imageAlt:
+        "A general practitioner pauses in thought at his desk during a consultation.",
     },
     {
       kind: "related",

@@ -7,14 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const ERECTILE_DYSFUNCTION: ServicePageData = {
@@ -46,8 +39,9 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
         "Erections depend on blood flow, nerves, hormones and mood all working together, so erectile dysfunction can have physical causes, psychological causes, or both. Common contributors include stress, tiredness, alcohol, relationship pressure, blood pressure and cholesterol issues, diabetes, low testosterone, and some medications. Because ED can sit alongside heart and metabolic health, a practitioner does not just reach for a script. They look at the bigger picture, which is better for your health overall.",
       ],
       cta: { label: "Start the free quiz", href: "/quiz/" },
-      image: IMAGE.generalHealth,
-      imageAlt: IMAGE_ALT.generalHealth,
+      image: sectionImage("erectile-dysfunction-what-causes-it"),
+      imageAlt:
+        "A man sits on the arm of a sofa in afternoon light, looking out in thought.",
     },
     {
       kind: "statement",

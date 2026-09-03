@@ -11,7 +11,7 @@
 
 import { CALL_CTA, CLINIC } from "../clinic";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT } from "./shared";
+import { IMAGE, IMAGE_ALT, sectionImage } from "./shared";
 
 export const COMPLAINTS: ServicePageData = {
   meta: {
@@ -54,8 +54,9 @@ export const COMPLAINTS: ServicePageData = {
         "Please include your name, the best way to reach you, and a short description of what happened. If your concern relates to a specific consultation, the date and practitioner help us look into it quickly.",
       ],
       cta: { label: "Contact our team", href: "/contact/" },
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("complaints-what-to-include"),
+      imageAlt:
+        "A woman at a dining table types a message on a laptop, a cup of tea beside her.",
     },
     {
       kind: "tiles",
@@ -97,8 +98,9 @@ export const COMPLAINTS: ServicePageData = {
       paragraphs: [
         "You are always free to contact an independent body, at any stage. AHPRA handles concerns about a registered practitioner, on 1300 419 495 or at ahpra.gov.au. Your state or territory health complaints commissioner handles service complaints — for example the Health Ombudsman in Queensland, or the Health Care Complaints Commission in New South Wales. The Office of the Australian Information Commissioner handles privacy concerns, at oaic.gov.au.",
       ],
-      image: IMAGE.generalHealth,
-      imageAlt: IMAGE_ALT.generalHealth,
+      image: sectionImage("complaints-external-options"),
+      imageAlt:
+        "A man stands by a window with a phone to his ear.",
       imageSide: "left",
     },
   ],

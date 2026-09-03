@@ -23,6 +23,7 @@
 
 import { PRICES } from "./pricing";
 import { CALL_CTA } from "./clinic";
+import { sectionImage } from "./services/shared";
 
 export const WLP_META = {
   title: "Peptides for Weight Loss | Medical Weight Loss Clinic AU",
@@ -62,9 +63,9 @@ export const WLP_EXPLAINER = {
     "Here is the honest version. These are prescription treatments, not supplements, and they are not right for everyone. Whether any of them suits you depends on your health history, your current medications, your goals and your safety. That is a clinical decision, and it is exactly what the consultation is for. We do not name specific products on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
   ],
   cta: { label: "Book a consultation", href: "/quiz/" },
-  image: `${IMAGE_BASE}care-physical-wellbeing.jpg`,
+  image: sectionImage("weight-loss-peptides-what-peptides-are"),
   imageAlt:
-    "A smiling person with a bald head, wearing a striped shirt, sits indoors.",
+    "A woman at a kitchen table listens during a video consultation, a notebook open beside her.",
 } as const;
 
 export const WLP_SUITS = {

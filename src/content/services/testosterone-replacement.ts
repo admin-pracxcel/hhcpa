@@ -7,14 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-  howToBegin,
-} from "./shared";
+import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const TESTOSTERONE_REPLACEMENT: ServicePageData = {
@@ -86,8 +79,9 @@ export const TESTOSTERONE_REPLACEMENT: ServicePageData = {
         "Testosterone therapy is not something to start and forget. It needs ongoing review to keep it safe and effective, including periodic blood tests and check-ins. Our service builds that monitoring in, so you are supported rather than left to manage it alone.",
       ],
       cta: { label: "Book a consultation", href: "/quiz/" },
-      image: IMAGE.ongoing,
-      imageAlt: IMAGE_ALT.ongoing,
+      image: sectionImage("testosterone-replacement-monitoring"),
+      imageAlt:
+        "A man talks with a nurse in a pathology collection centre before a routine blood test.",
       imageSide: "left",
     },
     {
