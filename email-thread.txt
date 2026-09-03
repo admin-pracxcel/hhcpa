@@ -1,0 +1,327 @@
+Pracxcel: "Hi Ranjeeta,
+
+It was so lovely to meet you today. 
+
+Thanks again for going through everything with me. I just wanted to send through a quick summary of the remaining items and a few things we need to confirm.
+
+Brand colours & fonts
+You mentioned you’re happy with the current colour palette, but you’re also open to recommendations from the team if they feel there’s an opportunity to refine it and make the overall look and feel stronger.
+
+HHCPA Sitemap
+I’ve linked the HHCPA Sitemap below for you to review in your own time. When you get a chance, please let me know if you’re happy with the proposed structure and navigation, or if there’s anything you’d like changed.
+
+
+https://docs.google.com/document/d/12s_r1GUNLHAwjod9SojSvQN-G9at-p8gwIT9SJ0GW6U/edit?usp=sharing
+
+Weight Loss / Peptides
+Could you please confirm who is eligible for the weight loss/peptide service and what the program includes, such as the assessment, monitoring and review process?"
+
+Ranjeeta: "Peptides may assist in
+-   ● Accelerated healing and recovery.
+    ● Weight loss and muscle development.
+    ● Skin health and anti-aging support.
+  Peptide-based solutions for women’s health, men’s health, stress management, enhancing energy and stamina, and improving cognitive function, 
+  Growth Hormone-Releasing Peptide (GHRP) is reported to promote muscle growth, reduce body fat and enhance energy levels during exercise.
+  ● Peptides promote neuroprotection, enhance brain cell regeneration, and improve focus
+   and cognitive performance. Peptides for cognitive support are a
+   powerful tool for brain health and mental clarity. 
+  ● Peptides increase libido and work on improving sexual function. This information is not
+    gender-specific. 
+
+Patient Journey: A structured patient process:
+1. Initial Assessment – Patients complete a comprehensive evaluation to identify health goals
+and concerns.
+2. Diagnostic Testing – In-depth blood tests assess hormonal, nutrient, and cellular health.
+3. Personalised Plan – A tailored treatment plan may include peptide-based therapies
+designed to support long-term well-being.
+4. Flexible Appointments – Services are available online via telehealth.
+5. Ongoing Support – Patients attend regular follow-up appointments, and therapies are
+adjusted to suit individual needs.
+
+Patient Journey To begin peptide-based therapy, patients are required to
+complete an online eligibility quiz. This collects information on:
+● Personal details (name, gender, date of birth, contact details, ID, and age confirmation).
+● Medical goals and areas of interest.
+● Medical history, including pregnancy status, cancer, and organ function (heart, liver,
+kidney).
+● Mental health conditions, treatment history, and current emotional state.
+● Sleep patterns and disturbances.
+● Recent pathology results.
+● Medical documents (e.g. imaging, referrals, specialist notes).
+● Confirmation of information accuracy.
+
+Eligibility for weight loss - prescreening questions foe Weight Loss
+
+
+Below are pre-screening questions designed to assess the initial eligibility of a patient.
+
+Question 1
+What is your date of birth?
+Question 2
+What is your sex at birth?
+Female
+Male
+Why are we asking this question?
+Abdominal obesity and treatment approach will differ according to sex
+Question 3
+What is your current weight (kg)?
+Question 4
+What is your height (cm)?
+
+(The program should calculate BMI according to this formula: BMI = weight (kg) / height2 (m2)
+with the input for weight and height).If BMI is ≥30 kg/m2 (≥27.5 kg/m2 Asian and Australian
+Indigenous population),
+
+Result:
+If ≥27 kg/m2 => your BMI result suggests that you are overweight and you might need medication
+as part of your overall weight loss treatment. Please answer the following questions to have a
+better understanding of your health condition.
+If 25-26.9 kg/m2 => your BMI result suggests that you are overweight and you should begin with a
+reduced or a low energy diet, combined with a program to increase regular physical activity.
+
+Question 5
+What is your waist circumference (cm)?
+
+(You can measure properly if you place the tape measure between the top of your hip and the
+bottom of your ribs)
+
+Question 6
+What is your ethnic background?
+African
+Asian (incl. Indian subcontinent)
+Australian Aboriginal & Torres Strait Islander
+Caucasian
+Middle Eastern
+Latino/Hispanic
+Pacific Islander or Maori
+Other: __________________
+
+Why do we ask about your ethnic background?
+Fat distribution in the body can differ across races. By understanding your ethnic background, our
+practitioners can better assess potential risks.
+
+Question 7
+Have you had a recent blood test where your doctor identified elevated levels of any of the
+following?
+(choose all that apply)
+Blood sugar
+Cholesterol
+Triglycerides?
+
+Question 8
+Does any member of your family have weight issues?
+Yes
+No
+
+Question 9
+Did you have difficulty maintaining a healthy weight during childhood?
+Yes
+No
+Question 10
+Have you recently experienced any of the following? (choose all that apply)
+Moving out of home
+Starting new job
+Living with a partner
+Currently pregnant => We advise you to consult your GP and follow the recommendations.
+Ceasing sport
+Ceasing smoking
+Retirement
+Other, please add_________________________
+Question 11
+Do you have any ongoing health conditions? (choose all that apply)
+Diabetes or pre-diabetes =>Treatment for overweight and obesity in individuals with
+diabetes requires special consideration of their current diabetes management. We
+recommend discussing your concerns with the physician managing your diabetes care.
+high blood pressure
+Allergy
+Metabolic syndrome
+Coronary heart disease and stroke
+Certain cancers
+Hypothyroidism
+Cushing syndrome
+Liver and biliary diseases
+Breathing conditions
+Osteoarthritis
+Infertility
+Cataracts
+Gastroesophageal reflux disease
+Metabolic syndrome
+Polycystic ovary syndrome
+Urinary stress incontinence
+Depression and anxiety
+Eating disorders
+Other (Please insert)
+
+Why do we ask about other diseases and health conditions?
+The presence of certain health conditions may require the involvement of specific specialists for
+more comprehensive care. Please answer this question accurately so our team can provide you
+with the best possible care
+Question 12
+Do you take any of the medications below? (choose all that apply)
+corticosteroids
+anti-psychotics
+antidepressants (e.g. mirtazapine)
+lithium
+anti seizure medications (e.g. valproate, carbamazepine, gabapentin)
+certain diabetes medications
+other, please add ______________________________
+Question 13
+Have you previously tried any of the weight loss methods listed below?
+Low Calorie Diet
+Fasting
+Exercise
+Weight loss medications
+Surgery
+Other: ______________________
+
+Question 14
+Have you previously tried any medications for weight loss treatment?
+Yes
+No
+If yes, please specify _____________________________
+
+Your Summary
+
+Age:
+Sex at birth:
+Weight:
+Height:
+Ethnicity:
+
+Confirm answers
+Review all
+
+Well done! Our Weight Loss Program might work for you!
+Based on your answers we can create a treatment program that suits you the most.
+You are only a few steps away. See what’s next.
+
+
+ Health Optimisation Screening
+Primary Health Goal
+
+What is your primary reason for seeking a Health Optimisation Program?
+
+○ Weight Management & Metabolic Health
+
+○ Healthy Ageing & Longevity
+
+○ Recovery & Physical Wellbeing
+
+○ Mental Clarity & Focus
+
+○ Energy, Vitality & Wellness
+
+○ Sexual Health & Wellbeing
+
+○ General Wellness Optimisation
+
+Step 2 – Basic Eligibility
+Are you 18 years or older?
+
+○ Yes
+
+○ No
+
+Are you currently located in Australia?
+
+○ Yes
+
+○ No
+
+Step 3 – Medical Screening
+Have you previously used peptide therapy or prescription weight management medications?
+
+○ Yes
+
+○ No
+
+If yes, please provide details.
+
+Are you currently under the care of a GP or Specialist?
+
+○ Yes
+
+○ No
+
+Step 4 – Safety Questions
+Are you pregnant, planning pregnancy or breastfeeding?
+
+○ Yes
+
+○ No
+
+Have you ever been diagnosed with cancer?
+
+○ Yes
+
+○ No
+
+Do you have a liver, kidney or heart condition?
+
+○ Yes
+
+○ No
+
+Are you currently taking any prescription medications?
+
+○ Yes
+
+○ No
+
+If yes, please list.
+
+Do you have any allergies to injectable medications?
+
+○ Yes
+
+○ No
+
+Step 5 – Consent
+Important Information
+
+Health Optimisation programs may include prescription-only treatments where clinically appropriate. All patients require assessment by a registered healthcare practitioner. Additional pathology testing may be required before treatment recommendations can be made.
+
+☐ I understand that completing this form does not guarantee treatment eligibility.
+
+☐ I understand that treatment decisions can only be made following consultation with a qualified practitioner.
+
+☐ I consent to HHCPA collecting my health information for assessment purposes.
+
+Automatic Triage
+Green (Proceed to Booking)
+Age ≥18
+Australian resident
+No pregnancy
+No active cancer
+No significant contraindications
+➡️ Book Initial Consultation
+
+Amber (Practitioner Review Required)
+Specialist care
+Complex medications
+Controlled chronic disease
+➡️ Book Consultation
+➡️ Practitioner to review
+
+Red (Do Not Auto Book)
+Pregnant/Breastfeeding
+Active cancer treatment
+Serious uncontrolled cardiac disease
+➡️ Display:
+
+"Based on your responses, your situation requires further review before booking. A member of our team will contact you."
+
+
+
+For Weight Management
+If BMI is:
+
+Below 25
+➡ Show message:
+"Your BMI is within the healthy range. Weight management treatments may not be appropriate, however a practitioner can discuss your health goals and determine suitable options."
+
+25–29.9
+➡ Eligible for practitioner review
+
+30+
+➡ Eligible for practitioner review"

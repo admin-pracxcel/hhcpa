@@ -69,14 +69,16 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
  *
  * `nofollow` on the agency link because it is a paid-relationship credit rather
  * than an editorial recommendation, which is what Google asks that attribute to
- * mark. It is a plain same-tab link — `noreferrer` implies `noopener`, so there
- * is nothing further to add for safety.
+ * mark. It opens in a new tab, and `noreferrer` covers the safety side of that
+ * on its own — it implies `noopener`, so the opened page gets no handle back to
+ * this one.
  */
 export const FOOTER_CREDIT = {
   before: "Web Design & Digital Marketing by ",
   label: "Pracxcel",
   href: "https://pracxcel.com.au",
   rel: "nofollow noreferrer",
+  target: "_blank",
 } as const;
 
 export function visibleFooterColumns(): FooterColumn[] {

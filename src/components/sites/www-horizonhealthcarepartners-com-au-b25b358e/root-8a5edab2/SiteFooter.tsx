@@ -569,7 +569,11 @@ export function SiteFooter({ className }: SiteFooterProps) {
 
             <small className="hhcp-ft-byline font-dm-sans">
               {FOOTER_CREDIT.before}
-              <a href={FOOTER_CREDIT.href} rel={FOOTER_CREDIT.rel}>
+              <a
+                href={FOOTER_CREDIT.href}
+                rel={FOOTER_CREDIT.rel}
+                target={FOOTER_CREDIT.target}
+              >
                 {FOOTER_CREDIT.label}
               </a>
             </small>
