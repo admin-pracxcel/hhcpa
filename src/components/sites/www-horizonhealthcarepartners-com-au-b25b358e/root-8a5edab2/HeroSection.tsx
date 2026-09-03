@@ -23,15 +23,18 @@ import { cn } from "@/lib/utils";
 const ASSET_BASE =
   "/videos";
 /*
- * WebM and WebP, not MP4 and PNG. The source files were re-encoded — the
- * hero video went from 6.4MB to 1.7MB and its poster from 1.1MB to 78KB,
- * which is most of this page's weight.
+ * MP4 for the video, WebP for the poster.
  *
- * There is no MP4 alongside it. Every browser this site supports plays WebM,
- * and one that does not gets the poster frame and a still hero rather than a
- * gap — the video is decoration, nothing is read from it.
+ * The WebM re-encode was visibly distorted on this footage — heavy foliage and
+ * blown-out sunlight is about the worst case for it at that bitrate — so the
+ * original MP4 is back. It costs 6.4MB against the WebM's 1.7MB, which is most
+ * of this page's transfer weight; worth revisiting with a higher-bitrate WebM
+ * or an AV1 encode if page speed becomes the priority.
+ *
+ * The poster stays WebP. That one is a still frame and shows no distortion at
+ * 78KB, against 1.1MB for the PNG it replaced, so the saving is free.
  */
-const VIDEO_SRC = `${ASSET_BASE}/hero-background.webm`;
+const VIDEO_SRC = `${ASSET_BASE}/hero-background.mp4`;
 const POSTER_SRC = `${ASSET_BASE}/hero-background-poster.webp`;
 
 /* Relative: this site now *is* horizonhealthcarepartners.com.au. */

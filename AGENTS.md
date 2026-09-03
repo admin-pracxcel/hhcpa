@@ -69,6 +69,13 @@ rather than deleted.
   arbitrary variants (`max-[991px]:`).
 - Content is modelled as typed `readonly` const arrays and mapped once.
 
+## Search indexing
+
+`SITE_INDEXABLE=true` must be set on the production host and nowhere else. Without it
+every page serves `noindex` and the sitemap is empty — see `src/lib/indexable.ts`. It
+defaults to off so a new environment is safe by omission rather than by someone
+remembering to exclude it. `.env.example` carries the same note.
+
 ## Gotchas that cost real time
 
 1. **`globals.css` base typography must stay inside `@layer base`.** Unlayered CSS

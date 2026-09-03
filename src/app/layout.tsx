@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+
+import { SITE_INDEXABLE } from "@/lib/indexable";
 import "./globals.css";
 
 // The exact woff2 files the target serves — DM Sans 400/500, Roboto Mono 500.
@@ -19,6 +21,15 @@ const robotoMono = localFont({
 });
 
 export const metadata: Metadata = {
+  /*
+   * Every page on a non-indexable deployment carries noindex, from here, so no
+   * page can be missed. Pages that set their own robots — the thank-you pages,
+   * the 404, the archived clone — override this and are noindex either way.
+   *
+   * Spread rather than a conditional property so that on production the key is
+   * absent entirely and pages default to indexable.
+   */
+  ...(SITE_INDEXABLE ? {} : { robots: { index: false, follow: false } }),
   title: "Telehealth Australia | AHPRA-Registered Practitioners",
   description:
     "Access AHPRA-registered practitioners online. Book telehealth consultations. Professional healthcare from home across Australia.",
