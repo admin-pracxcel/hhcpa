@@ -22,7 +22,7 @@
  * guessing the previous step from the flow.
  */
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -46,8 +46,113 @@ import { cn } from "@/lib/utils";
 import { PhoneField } from "./PhoneField";
 
 const STYLES = `
+/* ---------- Modal shell ---------- */
+/*
+ * The quiz opens over the landing page rather than sitting under it. Two
+ * reasons it is a real overlay and not a route: nothing is submitted until the
+ * closing step, so a half-finished quiz should not be a page someone can land
+ * on or link to; and closing it should put the reader back where they were,
+ * with the landing page still behind.
+ */
+.hhcp-qz-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  background: var(--hhcp-accent, #f5fff9);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/*
+ * Pinned to the top of the overlay, full width, above the scrolling body — a
+ * long branch scrolls under it rather than taking the progress bar with it.
+ */
+.hhcp-qz-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  flex: none;
+  background: #ffffff;
+  border-bottom: 1px solid #d6e8e1;
+}
+
+.hhcp-qz-track {
+  height: 4px;
+  width: 100%;
+  background: #d6e8e1;
+}
+
+.hhcp-qz-fill {
+  height: 100%;
+  background: var(--hhcp-action, #58eda2);
+  transition: width 0.3s ease;
+}
+
+.hhcp-qz-topbar-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hhcp-space-m, 30px);
+  padding: 14px var(--hhcp-gutter);
+}
+
+.hhcp-qz-topbar-logo {
+  height: 30px;
+  width: auto;
+}
+
+.hhcp-qz-count {
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: #526f68;
+}
+
+.hhcp-qz-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid #d6e8e1;
+  background: #ffffff;
+  color: var(--hhcp-primary, #013126);
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+
+.hhcp-qz-close:hover {
+  background: var(--hhcp-primary, #013126);
+  color: #ffffff;
+  border-color: var(--hhcp-primary, #013126);
+}
+
+@media (max-width: 767px) {
+  .hhcp-qz-topbar-logo {
+    height: 24px;
+  }
+  .hhcp-qz-count {
+    display: none;
+  }
+}
+
 .hhcp-qz-section {
   padding: var(--hhcp-section-space-m) var(--hhcp-gutter);
+}
+
+/* Inside the overlay the section is the scrolling body, not a page band. */
+.hhcp-qz-overlay .hhcp-qz-section {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .hhcp-qz-container {
@@ -588,7 +693,16 @@ function renderWithLinks(
     );
 }
 
-export function QuizForm({ className }: { className?: string }) {
+interface QuizFormProps {
+  className?: string;
+  /**
+   * Closes the overlay. Supplied by the landing page, which owns whether the
+   * quiz is open — the form has enough state of its own.
+   */
+  onClose: () => void;
+}
+
+export function QuizForm({ className, onClose }: QuizFormProps) {
   const [history, setHistory] = useState<string[]>(["age"]);
   /** Single-value answers: choices, follow-up text, numbers, dates. */
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -596,6 +710,24 @@ export function QuizForm({ className }: { className?: string }) {
   const [picked, setPicked] = useState<Record<string, string[]>>({});
   const [consents, setConsents] = useState<Record<string, boolean>>({});
   const router = useRouter();
+
+  /*
+   * Escape closes, and the page behind is held still so a long branch does not
+   * scroll the landing page under the overlay. This is not a scroll listener —
+   * AGENTS.md rules those out and there are still none.
+   */
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [onClose]);
   const [status, setStatus] = useState<"idle" | "sending">("idle");
   const [problem, setProblem] = useState("");
 
@@ -762,231 +894,274 @@ export function QuizForm({ className }: { className?: string }) {
   );
 
   return (
-    <section id="quiz" className={cn("hhcp-qz-section", className)}>
+    <div
+      className="hhcp-qz-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Pre-screening quiz"
+    >
       <style>{STYLES}</style>
-      <div className="hhcp-container hhcp-qz-container">
+
+      {/*
+        The progress bar sits at the top of the overlay rather than inside the
+        card. It measures the whole quiz, not the step you happen to be reading,
+        and a card that scrolls would otherwise carry it out of view.
+      */}
+      <div className="hhcp-qz-topbar">
         <div
-          className="hhcp-qz-card"
-          data-variant={step.kind === "exit" ? step.variant : "question"}
+          className="hhcp-qz-track"
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Quiz progress"
         >
-          {step.kind !== "exit" && (
-            <>
-              <div
-                className="hhcp-qz-progress"
-                role="progressbar"
-                aria-valuenow={progress}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label="Quiz progress"
-              >
-                <div
-                  className="hhcp-qz-progress-bar"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className="hhcp-qz-step-count">{`Step ${done}`}</p>
-            </>
-          )}
-
-          <StepBody
-            step={step}
-            answers={answers}
-            picked={picked}
-            allAnswers={allAnswers}
-            bmi={bmi}
-            outcome={outcome}
-            consents={consents}
-            status={status}
-            problem={problem}
-            set={set}
-            toggle={toggle}
-            go={go}
-            setConsents={setConsents}
-            onSubmit={submit}
+          <div
+            className="hhcp-qz-fill"
+            style={{ width: `${step.kind === "exit" ? 100 : progress}%` }}
           />
-
-          {history.length > 1 && (
-            <button type="button" className="hhcp-qz-back" onClick={back}>
-              ← Back
-            </button>
+        </div>
+        <div className="hhcp-qz-topbar-inner">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="hhcp-qz-topbar-logo"
+            src="/images/logo-colour.svg"
+            alt="Horizon Health Care Partners"
+            width={195}
+            height={30}
+          />
+          {step.kind !== "exit" && (
+            <p className="hhcp-qz-count font-roboto-mono">{`Step ${done}`}</p>
           )}
+          <button
+            type="button"
+            className="hhcp-qz-close"
+            onClick={onClose}
+            aria-label="Close the quiz"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M3 3l10 10M13 3L3 13" />
+            </svg>
+          </button>
         </div>
       </div>
-    </section>
-  );
-}
 
-/* -------------------------------------------------------------------------
-   Step bodies
-   ------------------------------------------------------------------------- */
+      <section id="quiz" className={cn("hhcp-qz-section", className)}>
+        <div className="hhcp-container hhcp-qz-container">
+          <div
+            className="hhcp-qz-card"
+            data-variant={step.kind === "exit" ? step.variant : "question"}
+          >
 
-interface StepBodyProps {
-  step: QuizStep;
-  answers: Record<string, string>;
-  picked: Record<string, string[]>;
-  allAnswers: Record<string, string>;
-  bmi: number | null;
-  outcome: { level: TriageLevel; reasons: readonly string[] };
-  consents: Record<string, boolean>;
-  status: "idle" | "sending";
-  problem: string;
-  set: (name: string, value: string) => void;
-  toggle: (field: string, option: string) => void;
-  go: (from: QuizStep, answer: string) => void;
-  setConsents: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-}
+            <StepBody
+              step={step}
+              answers={answers}
+              picked={picked}
+              allAnswers={allAnswers}
+              bmi={bmi}
+              outcome={outcome}
+              consents={consents}
+              status={status}
+              problem={problem}
+              set={set}
+              toggle={toggle}
+              go={go}
+              setConsents={setConsents}
+              onSubmit={submit}
+            />
 
-function StepBody(props: StepBodyProps) {
-  const { step } = props;
+              {history.length > 1 && (
+                <button type="button" className="hhcp-qz-back" onClick={back}>
+                  ← Back
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
-  switch (step.kind) {
-    case "choice":
-      return <ChoiceStep {...props} step={step} />;
-    case "multi":
-      return <MultiStep {...props} step={step} />;
-    case "input":
-      return <InputStep {...props} step={step} />;
-    case "bmi":
-      return <BmiStep {...props} step={step} />;
-    case "summary":
-      return <SummaryStep {...props} step={step} />;
-    case "exit":
-      return <ExitStep step={step} />;
-    case "contact":
-      return <ContactStep {...props} />;
-    default: {
-      /* A new step kind must be rendered here — this is a compile error until
-         it is. Do not replace it with a null return. */
-      const exhaustive: never = step;
-      return exhaustive;
+  /* -------------------------------------------------------------------------
+     Step bodies
+     ------------------------------------------------------------------------- */
+
+  interface StepBodyProps {
+    step: QuizStep;
+    answers: Record<string, string>;
+    picked: Record<string, string[]>;
+    allAnswers: Record<string, string>;
+    bmi: number | null;
+    outcome: { level: TriageLevel; reasons: readonly string[] };
+    consents: Record<string, boolean>;
+    status: "idle" | "sending";
+    problem: string;
+    set: (name: string, value: string) => void;
+    toggle: (field: string, option: string) => void;
+    go: (from: QuizStep, answer: string) => void;
+    setConsents: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  }
+
+  function StepBody(props: StepBodyProps) {
+    const { step } = props;
+
+    switch (step.kind) {
+      case "choice":
+        return <ChoiceStep {...props} step={step} />;
+      case "multi":
+        return <MultiStep {...props} step={step} />;
+      case "input":
+        return <InputStep {...props} step={step} />;
+      case "bmi":
+        return <BmiStep {...props} step={step} />;
+      case "summary":
+        return <SummaryStep {...props} step={step} />;
+      case "exit":
+        return <ExitStep step={step} />;
+      case "contact":
+        return <ContactStep {...props} />;
+      default: {
+        /* A new step kind must be rendered here — this is a compile error until
+           it is. Do not replace it with a null return. */
+        const exhaustive: never = step;
+        return exhaustive;
+      }
     }
   }
-}
 
-function QuestionHead({
-  step,
-}: {
-  step: Extract<QuizStep, { kind: "choice" | "multi" | "input" | "bmi" }>;
-}) {
-  return (
-    <>
-      <h2 className="hhcp-qz-question font-dm-sans">{step.question}</h2>
-      {step.note !== undefined && (
-        <p className="hhcp-qz-note font-dm-sans">{step.note}</p>
-      )}
-    </>
-  );
-}
+  function QuestionHead({
+    step,
+  }: {
+    step: Extract<QuizStep, { kind: "choice" | "multi" | "input" | "bmi" }>;
+  }) {
+    return (
+      <>
+        <h2 className="hhcp-qz-question font-dm-sans">{step.question}</h2>
+        {step.note !== undefined && (
+          <p className="hhcp-qz-note font-dm-sans">{step.note}</p>
+        )}
+      </>
+    );
+  }
 
-function ChoiceStep({
-  step,
-  answers,
-  set,
-  go,
-}: StepBodyProps & { step: Extract<QuizStep, { kind: "choice" }> }) {
-  const chosen = answers[step.field] ?? "";
-  const followUp = step.followUp;
-  const advisory = step.optionNotes?.[chosen];
-  const needsFollowUp = followUp !== undefined && followUp.when === chosen;
+  function ChoiceStep({
+    step,
+    answers,
+    set,
+    go,
+  }: StepBodyProps & { step: Extract<QuizStep, { kind: "choice" }> }) {
+    const chosen = answers[step.field] ?? "";
+    const followUp = step.followUp;
+    const advisory = step.optionNotes?.[chosen];
+    const needsFollowUp = followUp !== undefined && followUp.when === chosen;
 
-  /* An answer carrying an advisory or a follow-up has something more to show,
-     so it waits for Continue. Every other answer is the click itself. */
-  const waiting = advisory !== undefined || needsFollowUp;
+    /* An answer carrying an advisory or a follow-up has something more to show,
+       so it waits for Continue. Every other answer is the click itself. */
+    const waiting = advisory !== undefined || needsFollowUp;
 
-  const choose = (option: string) => {
-    set(step.field, option);
-    const stops =
-      step.optionNotes?.[option] !== undefined ||
-      (followUp !== undefined && followUp.when === option);
-    if (!stops) go(step, option);
-  };
+    const choose = (option: string) => {
+      set(step.field, option);
+      const stops =
+        step.optionNotes?.[option] !== undefined ||
+        (followUp !== undefined && followUp.when === option);
+      if (!stops) go(step, option);
+    };
 
-  return (
-    <>
-      <QuestionHead step={step} />
-      <div className="hhcp-qz-options">
-        {step.options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            className="hhcp-qz-option"
-            data-selected={option === chosen}
-            onClick={() => choose(option)}
-          >
-            <span className="hhcp-qz-option-mark" aria-hidden="true" />
-            <span>{option}</span>
-          </button>
-        ))}
-      </div>
-
-      {advisory !== undefined && (
-        <p className="hhcp-qz-advisory font-dm-sans">{advisory}</p>
-      )}
-
-      {needsFollowUp && followUp !== undefined && (
-        <div className="hhcp-form-field hhcp-qz-followup">
-          <label className="hhcp-form-label" htmlFor={`quiz-${followUp.name}`}>
-            {followUp.label}
-          </label>
-          <input
-            id={`quiz-${followUp.name}`}
-            className="hhcp-form-input"
-            value={answers[followUp.name] ?? ""}
-            onChange={(event) => set(followUp.name, event.target.value)}
-          />
+    return (
+      <>
+        <QuestionHead step={step} />
+        <div className="hhcp-qz-options">
+          {step.options.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className="hhcp-qz-option"
+              data-selected={option === chosen}
+              onClick={() => choose(option)}
+            >
+              <span className="hhcp-qz-option-mark" aria-hidden="true" />
+              <span>{option}</span>
+            </button>
+          ))}
         </div>
-      )}
 
-      {waiting && (
-        <button
-          type="button"
-          className="hhcp-btn hhcp-qz-submit"
-          onClick={() => go(step, chosen)}
-        >
-          Continue
-        </button>
-      )}
-    </>
-  );
-}
+        {advisory !== undefined && (
+          <p className="hhcp-qz-advisory font-dm-sans">{advisory}</p>
+        )}
 
-function MultiStep({
-  step,
-  answers,
-  picked,
-  set,
-  toggle,
-  go,
-}: StepBodyProps & { step: Extract<QuizStep, { kind: "multi" }> }) {
-  const selected = picked[step.field] ?? [];
-  const other = step.other;
-  const otherText = other === undefined ? "" : (answers[other.name] ?? "");
-  const answered = selected.length > 0 || otherText.trim() !== "";
+        {needsFollowUp && followUp !== undefined && (
+          <div className="hhcp-form-field hhcp-qz-followup">
+            <label className="hhcp-form-label" htmlFor={`quiz-${followUp.name}`}>
+              {followUp.label}
+            </label>
+            <input
+              id={`quiz-${followUp.name}`}
+              className="hhcp-form-input"
+              value={answers[followUp.name] ?? ""}
+              onChange={(event) => set(followUp.name, event.target.value)}
+            />
+          </div>
+        )}
 
-  return (
-    <>
-      <QuestionHead step={step} />
-      <p className="hhcp-qz-hint">Choose all that apply</p>
+        {waiting && (
+          <button
+            type="button"
+            className="hhcp-btn hhcp-qz-submit"
+            onClick={() => go(step, chosen)}
+          >
+            Continue
+          </button>
+        )}
+      </>
+    );
+  }
 
-      <div className="hhcp-qz-options">
-        {step.options.map((option) => {
-          const on = selected.includes(option);
-          const advisory = step.optionNotes?.[option];
-          return (
-            <div key={option}>
-              <button
-                type="button"
-                className="hhcp-qz-option"
-                data-selected={on}
-                aria-pressed={on}
-                onClick={() => toggle(step.field, option)}
-              >
-                <span
-                  className="hhcp-qz-option-mark"
-                  data-shape="box"
-                  aria-hidden="true"
-                />
+  function MultiStep({
+    step,
+    answers,
+    picked,
+    set,
+    toggle,
+    go,
+  }: StepBodyProps & { step: Extract<QuizStep, { kind: "multi" }> }) {
+    const selected = picked[step.field] ?? [];
+    const other = step.other;
+    const otherText = other === undefined ? "" : (answers[other.name] ?? "");
+    const answered = selected.length > 0 || otherText.trim() !== "";
+
+    return (
+      <>
+        <QuestionHead step={step} />
+        <p className="hhcp-qz-hint">Choose all that apply</p>
+
+        <div className="hhcp-qz-options">
+          {step.options.map((option) => {
+            const on = selected.includes(option);
+            const advisory = step.optionNotes?.[option];
+            return (
+              <div key={option}>
+                <button
+                  type="button"
+                  className="hhcp-qz-option"
+                  data-selected={on}
+                  aria-pressed={on}
+                  onClick={() => toggle(step.field, option)}
+                >
+                  <span
+                    className="hhcp-qz-option-mark"
+                    data-shape="box"
+                    aria-hidden="true"
+                  />
                 <span>{option}</span>
               </button>
               {on && advisory !== undefined && (

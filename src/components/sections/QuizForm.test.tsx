@@ -11,6 +11,9 @@ import { QuizForm } from "./QuizForm";
 const push = vi.fn();
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 
+/* The landing page owns whether the overlay is open; the form just calls this. */
+const close = vi.fn();
+
 /**
  * What matters here is not the wiring, it is the four rules the flow exists to
  * enforce.
@@ -79,6 +82,7 @@ describe("quiz form", () => {
 
   beforeEach(() => {
     push.mockClear();
+    close.mockClear();
     fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ ok: true }),
@@ -92,8 +96,20 @@ describe("quiz form", () => {
 
   /* ---------- safety ---------- */
 
+  it("closes on Escape and hands the decision back to the page", () => {
+    render(<QuizForm onClose={close} />);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(close).toHaveBeenCalledTimes(1);
+  });
+
+  it("offers a close button rather than trapping the reader in the overlay", () => {
+    render(<QuizForm onClose={close} />);
+    fireEvent.click(screen.getByRole("button", { name: /close the quiz/i }));
+    expect(close).toHaveBeenCalledTimes(1);
+  });
+
   it("blocks under-18s without submitting anything", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     choose("No");
 
     expect(screen.getByText("Unable to Proceed")).toBeTruthy();
@@ -101,7 +117,7 @@ describe("quiz form", () => {
   });
 
   it("shows crisis numbers and does not submit", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Mental Health");
     choose("Yes"); // diagnosed
     choose("Yes"); // on treatment
@@ -115,7 +131,7 @@ describe("quiz form", () => {
   });
 
   it("walks back through the answers actually given", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     choose("Yes");
     choose("Yes");
     expect(screen.getByText("What service are you interested in?")).toBeTruthy();
@@ -129,7 +145,7 @@ describe("quiz form", () => {
   /* ---------- BMI ---------- */
 
   it("shows the medication band at a BMI of 27 or over", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     startWeightLoss();
 
     type("Weight", "96");
@@ -140,7 +156,7 @@ describe("quiz form", () => {
   });
 
   it("shows the diet-and-activity band between 25 and 27", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     startWeightLoss();
 
     type("Weight", "80"); // 1.78m → 25.2
@@ -150,7 +166,7 @@ describe("quiz form", () => {
   });
 
   it("shows the healthy-range band below 25", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     startWeightLoss();
 
     type("Weight", "70"); // 1.78m → 22.1
@@ -162,7 +178,7 @@ describe("quiz form", () => {
   /* ---------- advisories ---------- */
 
   it("shows the pregnancy advisory without ending the flow", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     startWeightLoss();
     type("Weight", "96");
     type("Height", "178");
@@ -186,7 +202,7 @@ describe("quiz form", () => {
   /* ---------- triage ---------- */
 
   it("submits a red triage rather than dead-ending it", async () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Complete Wellness");
     choose("Healthy Ageing & Longevity");
     choose("No"); // prior therapy
@@ -214,7 +230,7 @@ describe("quiz form", () => {
   });
 
   it("triages a clean run green", async () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Complete Wellness");
     choose("Mental Clarity & Focus");
     choose("No");
@@ -232,7 +248,7 @@ describe("quiz form", () => {
   });
 
   it("offers amber a booking too, and leaves the review to n8n", async () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Complete Wellness");
     choose("Healthy Ageing & Longevity");
     choose("No"); // prior therapy
@@ -255,7 +271,7 @@ describe("quiz form", () => {
   });
 
   it("asks whether a cancer diagnosis is in active treatment", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Complete Wellness");
     choose("General Wellness Optimisation");
     choose("No");
@@ -271,7 +287,7 @@ describe("quiz form", () => {
   /* ---------- payload ---------- */
 
   it("segregates clinical answers and keeps the goal in the open payload", async () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Complete Wellness");
     choose("Energy, Vitality & Wellness");
     choose("No");
@@ -300,7 +316,7 @@ describe("quiz form", () => {
   });
 
   it("refuses to submit without the required consents", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     start("Mental Health");
     choose("No");
     choose("No");
@@ -319,7 +335,7 @@ describe("quiz form", () => {
   /* ---------- multi-select ---------- */
 
   it("makes 'None of these' exclusive both ways", () => {
-    render(<QuizForm />);
+    render(<QuizForm onClose={close} />);
     startWeightLoss();
     type("Weight", "96");
     type("Height", "178");
