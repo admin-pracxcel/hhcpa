@@ -139,3 +139,73 @@ Measured at 1534 / 1280 / 768 / 390px: rail width equals the window width at all
 `documentElement.scrollWidth` equals `clientWidth` (no horizontal scrollbar), the button's
 right edge equals the container's right edge, the gap under the rail stays 32px, and a
 200px drag moves the track exactly 200px.
+
+## 6. The header is pinned, and the announcement strip furls away
+
+**Requested:** make the header sticky. Asked which of three shapes was wanted; the
+answer was the strip scrolling away with the white pill pinning on its own.
+
+**Target behaviour:** `.header--container` is `position: absolute; top: 0` with
+`z-index: 1`. The whole header — cream strip and white pill together — scrolls off
+with the page and does not come back.
+
+**Change** — `SiteHeader.tsx`:
+
+| | Target | Here |
+|---|---|---|
+| container | `position: absolute` | `position: fixed` |
+| announcement strip | scrolls away | furls to nothing over the first 46px of scroll |
+| pill's top gap | `13.5px`, static | closes to `0` over the same 46px |
+| pill shadow | none | `0 4px 18px rgba(1,49,38,0.12)`, faded in over the same 46px |
+
+`fixed`, not `sticky`. Sticky puts the element in flow, and every hero here is
+`100dvh` starting at the top of the document — the page would grow by the header's own
+height and gain a scrollbar it never had. Fixed keeps it out of flow exactly as the
+absolute overlay did, so nothing below it moves.
+
+The furl is `grid-template-rows: 1fr → 0fr` on a wrapper around the strip, not an
+animated height or a translate on the container. The row measures the strip itself, so
+the pill seats flush whatever the strip's content or wrapping does — nothing in the CSS
+needs to know how tall the strip is. The `46px` range only sets the pace: it is the
+strip's own height (11px padding, 24px line box, 11px padding), which makes the strip
+rise at exactly scroll speed so it reads as scrolling away rather than folding shut. If
+that height ever drifts, the furl finishes slightly early or late; the header does not
+move.
+
+The gap above the pill closes for the same reason the shadow arrives. The pill is inset
+from the sides, so a gap left open above it is a 13px letterbox with the page sliding
+through it, and a card caught half out of the viewport there reads as a rendering fault.
+Closed, the only thing passing the pill is beside it — which is what an inset pill looks
+like by design — and the shadow is what says so.
+
+**No scroll listener and no IntersectionObserver.** All three are CSS scroll-driven
+animations on `scroll(root block)`, the same mechanism `ScrollRevealParagraph` uses. The
+AGENTS.md rule stands.
+
+Two ways it degrades, both to a header that is pinned with the strip still showing:
+
+- browsers without scroll-driven animation support (`@supports`)
+- nothing else — deliberately **not** disabled under `prefers-reduced-motion`, unlike
+  the two marquees. There is no autonomous motion to spare anyone here: the furl
+  advances only as far as the reader scrolls and stops the moment they do.
+
+`--hhcp-header-pinned-h` (100px, in `globals.css`) is the pinned footprint, and
+`html { scroll-padding-top }` reads it so an anchor jump does not land its target under
+the pill. Two links rely on it: `/services/#book` and `/quiz/#quiz`.
+
+Measured on `/` at 1534×900, 900×800 and 390×844 — strip height and pill top, by scroll
+position, at 1534×900:
+
+| scrollY | strip height | pill top |
+|---:|---:|---:|
+| 0 | 46 | 60 |
+| 12 | 34 | 44 |
+| 23 | 23 | 30 |
+| 34 | 12 | 16 |
+| 46 | 0 | 0 |
+| 80 | 0 | 0 |
+
+The strip's height falls exactly in step with scroll. Hero heights are unchanged at all
+three viewports (900 / 800 / 771, the last being 844 less the 73px CTA bar), so pinning
+the header shifted no layout. `/services/#book` lands its target at 100px with the pill
+ending at 63px.

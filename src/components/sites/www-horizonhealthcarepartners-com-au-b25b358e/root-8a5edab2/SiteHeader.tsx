@@ -4,12 +4,17 @@
  * Site header for https://www.horizonhealthcarepartners.com.au/
  *
  * Structure mirrors the source markup:
- *   header > .header--container (absolute overlay, z-index 1)
+ *   header > .header--container (fixed overlay, z-index 100)
  *     ├─ .banner-7   — cream announcement strip
  *     └─ .header-15  — the white pill nav bar
  *
- * The header is NOT sticky: it is an absolutely-positioned overlay that scrolls
- * away with the page. No scroll listeners anywhere.
+ * The header is pinned. It departs from the target, which lets the whole thing
+ * scroll away; see CUSTOMISATIONS.md. The strip furls up over the first stretch
+ * of scroll and the white pill stays, so what is held is ~70px rather than the
+ * ~110px of the pair.
+ *
+ * Still no scroll listeners and no IntersectionObserver: the furl is a CSS
+ * scroll-driven animation, the same mechanism ScrollRevealParagraph uses.
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -36,7 +41,14 @@ const CTA = { label: "Book a consultation", href: "/quiz/" } as const;
 /* Scoped stylesheet — every value transcribed from the source's computed styles. */
 const HEADER_CSS = `
 .hhcp-hdr__container {
-  position: absolute;
+  /*
+   * fixed, not sticky. Sticky would put the header in flow, and every hero
+   * on the site is 100dvh starting at the top of the document — so the page
+   * would grow by the header's own height and gain a scrollbar it never had.
+   * Fixed holds it out of flow exactly as the absolute overlay did, and nothing
+   * below it moves.
+   */
+  position: fixed;
   top: 0;
   right: 0;
   left: 0;
@@ -53,6 +65,103 @@ const HEADER_CSS = `
 }
 
 /* ---------- Announcement bar ---------- */
+/*
+ * The strip furls away over the first stretch of scroll, leaving the pill
+ * floating on its own. Without this the header would hold ~110px of every
+ * viewport, which costs most on phones, where the sticky CTA bar already has
+ * 73px at the other end.
+ *
+ * grid-template-rows 1fr -> 0fr rather than animating a height or translating
+ * the container: the row measures the strip itself, so the pill lands flush at
+ * the top whatever the strip's content or wrapping does. Nothing here needs to
+ * know how tall the strip is.
+ *
+ * Not disabled under prefers-reduced-motion, unlike the marquees. There is no
+ * autonomous motion to spare anyone — the furl advances only as far as the
+ * reader scrolls, and stops the moment they do.
+ */
+.hhcp-hdr__furl {
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+.hhcp-hdr__furl > * {
+  min-height: 0;
+}
+
+@keyframes hhcp-hdr-furl {
+  to {
+    grid-template-rows: 0fr;
+  }
+}
+
+/*
+ * The pill's own gap closes with the strip, seating it against the top of the
+ * viewport. It is not tidiness: the pill is inset from the sides, so a gap left
+ * open above it is a 13px letterbox with the page sliding through it, and a
+ * card caught half out of the viewport there reads as a rendering fault. Closed,
+ * the only thing passing the pill is beside it, which is what the inset pill
+ * looks like by design.
+ */
+@keyframes hhcp-hdr-seat {
+  to {
+    margin-top: 0;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .hhcp-hdr__bar {
+    animation: hhcp-hdr-seat linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 46px;
+  }
+
+  .hhcp-hdr__furl {
+    animation: hhcp-hdr-furl linear both;
+    animation-timeline: scroll(root block);
+    /*
+     * 46px is the strip's own height — 11px padding, a 24px line box, 11px
+     * padding. Matching the two makes it rise at exactly scroll speed, so it
+     * reads as scrolling away rather than folding shut.
+     *
+     * The number is not load-bearing. The 0fr row is what seats the pill; this
+     * only sets the pace, so if the strip's height ever drifts the symptom is a
+     * furl that finishes slightly early or late, not a misplaced header.
+     */
+    animation-range: 0 46px;
+  }
+}
+
+/* Where support is missing the strip simply stays, and the header holds both
+   rows — no content is hidden either way. */
+
+/*
+ * Over the hero the pill needs no edge: it sits on video. Over the page it does
+ * — the pill is inset from the sides, so once it is pinned the content scrolls
+ * past beside and above it, and with nothing separating the two a card caught
+ * half-out of the viewport behind the pill reads as a rendering fault rather
+ * than as the page continuing underneath.
+ *
+ * So the shadow arrives with the furl and on the same range, which is also when
+ * it is first needed. Tinted with the brand green rather than black, matching
+ * the card shadows elsewhere.
+ */
+@keyframes hhcp-hdr-lift {
+  from {
+    box-shadow: 0 4px 18px rgba(1, 49, 38, 0);
+  }
+  to {
+    box-shadow: 0 4px 18px rgba(1, 49, 38, 0.12);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .hhcp-hdr__bar-inner {
+    animation: hhcp-hdr-lift linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 46px;
+  }
+}
 .hhcp-hdr__banner {
   background-color: var(--hhcp-cream);
   display: flex;
@@ -619,14 +728,16 @@ export function SiteHeader() {
       <style>{HEADER_CSS}</style>
 
       <div className="hhcp-hdr__container">
-        {/* Announcement bar */}
-        <div className="hhcp-hdr__banner">
-          <div className={cn("hhcp-container", "hhcp-hdr__banner-inner")}>
-            <div className="hhcp-hdr__banner-info">
-              <a className="hhcp-hdr__banner-link" href="/quiz/">
-                {"Take our "}
-                <span>Pre-Screening Quiz</span>
-              </a>
+        {/* Announcement bar, in the wrapper that furls it away on scroll */}
+        <div className="hhcp-hdr__furl">
+          <div className="hhcp-hdr__banner">
+            <div className={cn("hhcp-container", "hhcp-hdr__banner-inner")}>
+              <div className="hhcp-hdr__banner-info">
+                <a className="hhcp-hdr__banner-link" href="/quiz/">
+                  {"Take our "}
+                  <span>Pre-Screening Quiz</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

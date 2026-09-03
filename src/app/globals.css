@@ -126,6 +126,9 @@
   }
   html {
     @apply font-sans;
+    /* The header is pinned, so an anchor jump would otherwise put its target
+       under the pill. Two links rely on this: /services/#book and /quiz/#quiz. */
+    scroll-padding-top: var(--hhcp-header-pinned-h);
   }
 }
 /* ==========================================================================
@@ -197,6 +200,17 @@
      anything that has to sit clear of it cannot drift apart — the hero
      subtracts it from its own height. */
   --hhcp-sticky-cta-h: 73px;
+
+  /* Footprint of the pinned header once its announcement strip has furled
+     away — the white pill plus the gap above it. Declared here so anything
+     that has to clear the pill reads one number; `scroll-padding-top` below is
+     the reason it exists, since without it an anchor jump lands its target
+     underneath the pill.
+
+     Measured, not derived: the pill sits 14-76px from the top of the viewport
+     once furled (14-62px below 478px, where the logo steps down). 100px leaves
+     the jumped-to heading clear of it rather than tucked against it. */
+  --hhcp-header-pinned-h: 100px;
 
   /* --- Radii --- */
   --hhcp-radius-xs: 4.444px;

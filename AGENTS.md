@@ -70,9 +70,14 @@ without collisions. Keep it if you add pages; don't flatten it.
    `text-white` on the hero headline. Same reason `p, li { line-height }` is in there:
    the booking wizard's wrapper sets `1.6`, and only a directly-matching rule overrides
    an inherited one.
-2. **The header is not sticky.** It is `position: absolute` and scrolls away. There are
-   no scroll listeners or IntersectionObservers anywhere in this codebase, by design.
-   Don't add any.
+2. **The header is pinned, but there are still no scroll listeners.** It is
+   `position: fixed`; the cream announcement strip furls away over the first 46px of
+   scroll and the white pill stays. That furl, the pill seating itself against the top,
+   and its shadow are three CSS scroll-driven animations on `scroll(root block)` — the
+   same mechanism `ScrollRevealParagraph` uses. There are no scroll listeners and no
+   IntersectionObservers anywhere in this codebase, by design. Don't add any. See
+   CUSTOMISATIONS.md deviation 6; `--hhcp-header-pinned-h` is the pinned footprint that
+   `scroll-padding-top` reads so anchor jumps clear the pill.
 3. **Both carousels are continuous marquees, not slide-steppers.** The target uses
    Splide auto-scroll (`pauseOnHover: false`); these are duplicated-track loops.
    `FeatureMarquee` is a CSS animation. `CareAreasSection` is a requestAnimationFrame
