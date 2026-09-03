@@ -12,8 +12,9 @@ describe("CLINIC", () => {
     expect(CLINIC.phoneHref).toBe("tel:1300336572");
   });
 
-  it("flags the business hours as unconfirmed", () => {
-    expect(CLINIC.hoursProvisional).toBe(true);
+  it("carries the confirmed business hours", () => {
+    expect(CLINIC.hours).toContain("8am to 10pm");
+    expect(CLINIC.hoursProvisional).toBe(false);
   });
 });
 

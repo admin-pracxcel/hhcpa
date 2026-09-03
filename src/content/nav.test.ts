@@ -44,13 +44,13 @@ describe("NAV_ITEMS", () => {
 });
 
 describe("visibleNavItems", () => {
-  it("drops a gated silo's whole column, not just its hub link", () => {
+  it("carries every services silo now that none is gated", () => {
     const services = visibleNavItems()[0];
-    expect(services.columns?.map((c) => c.href)).not.toContain("/medicinal-cannabis/");
-    expect(services.columns).toHaveLength(4);
+    expect(services.columns?.map((c) => c.href)).toContain("/medicinal-cannabis/");
+    expect(services.columns).toHaveLength(5);
   });
 
-  it("omits gated destinations", () => {
+  it("shows the two formerly gated destinations", () => {
     const hrefs = visibleNavItems().flatMap((item) => [
       item.href,
       ...(item.children ?? []).map((child) => child.href),
@@ -59,8 +59,8 @@ describe("visibleNavItems", () => {
         ...column.links.map((link) => link.href),
       ]),
     ]);
-    expect(hrefs).not.toContain("/medicinal-cannabis/");
-    expect(hrefs).not.toContain("/our-practitioners/");
+    expect(hrefs).toContain("/medicinal-cannabis/");
+    expect(hrefs).toContain("/our-practitioners/");
   });
 });
 
@@ -78,11 +78,11 @@ describe("FOOTER_COLUMNS", () => {
 });
 
 describe("visibleFooterColumns", () => {
-  it("omits gated links but keeps every column", () => {
+  it("keeps every column and carries the formerly gated links", () => {
     const columns = visibleFooterColumns();
     expect(columns).toHaveLength(5);
     const hrefs = columns.flatMap((column) => column.links.map((link) => link.href));
-    expect(hrefs).not.toContain("/medicinal-cannabis/");
-    expect(hrefs).not.toContain("/our-practitioners/");
+    expect(hrefs).toContain("/medicinal-cannabis/");
+    expect(hrefs).toContain("/our-practitioners/");
   });
 });

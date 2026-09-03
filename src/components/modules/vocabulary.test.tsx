@@ -22,6 +22,13 @@ describe("module vocabulary", () => {
   });
 });
 
+/*
+ * Nothing is gated as of 2026-09-03 — Medicinal Cannabis and Our Practitioners
+ * were released for the client review build. These keep working either way: the
+ * loops below run over whatever is gated at the time, so they hold if a page is
+ * withdrawn again, and the About Us case asserts the other half of the
+ * mechanism — that lifting a gate actually restores the copy it suppressed.
+ */
 describe("gated routes", () => {
   const gatedPaths = gatedRoutes().map((route) => route.path);
 
@@ -49,12 +56,7 @@ describe("gated routes", () => {
      * Rendered output, not the data behind it. Some components filter gated
      * destinations themselves — RelatedCards drops gated links and then drops
      * a card left with none — so the data legitimately still holds the href
-     * that brings the card back when the gate lifts. What must never appear is
-     * the rendered result.
-     *
-     * About Us is the live case: its approved copy ends with a sentence and a
-     * button pointing at /our-practitioners/, gated pending the AHPRA
-     * registration numbers, and both are withheld while the gate holds.
+     * that brings the card back when the gate lifts.
      */
     const { container } = render(<ServicePage data={ABOUT_US} />);
     const html = container.innerHTML;
@@ -66,8 +68,23 @@ describe("gated routes", () => {
       expect(hrefs).not.toContain(path);
       expect(html).not.toContain(path);
     }
-    // Nor a sentence describing a page the reader cannot open.
-    expect(container.textContent).not.toContain("practitioners page");
   });
 
+  it("restore the copy they suppressed once the gate lifts", () => {
+    /*
+     * About Us is where a gate is visible in prose rather than only in a link:
+     * its approved copy ends with a sentence pointing at /our-practitioners/,
+     * and both the sentence and the button were withheld while that page was
+     * gated. Now that it is published, both must be back — otherwise lifting a
+     * gate would quietly leave the page reading as though the destination did
+     * not exist.
+     */
+    expect(gatedPaths).not.toContain("/our-practitioners/");
+    const { container } = render(<ServicePage data={ABOUT_US} />);
+    const hrefs = [...container.querySelectorAll("a[href]")].map((a) =>
+      a.getAttribute("href"),
+    );
+    expect(hrefs).toContain("/our-practitioners/");
+    expect(container.textContent).toContain("practitioners page");
+  });
 });

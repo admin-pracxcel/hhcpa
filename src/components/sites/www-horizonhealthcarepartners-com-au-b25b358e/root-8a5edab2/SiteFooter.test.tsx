@@ -28,13 +28,13 @@ describe("SiteFooter", () => {
     );
   });
 
-  it("omits gated destinations", () => {
+  it("links the formerly gated destinations", () => {
     const { container } = render(<SiteFooter />);
     const hrefs = Array.from(container.querySelectorAll("a[href]")).map((a) =>
       a.getAttribute("href"),
     );
-    expect(hrefs).not.toContain("/medicinal-cannabis/");
-    expect(hrefs).not.toContain("/our-practitioners/");
+    expect(hrefs).toContain("/medicinal-cannabis/");
+    expect(hrefs).toContain("/our-practitioners/");
   });
 
   it("does not repeat the site-wide disclaimer, which the layout owns", () => {

@@ -52,7 +52,7 @@ describe("SiteHeader", () => {
     const hrefs = new Set(
       Array.from(container.querySelectorAll("a[href]")).map((a) => a.getAttribute("href")),
     );
-    // 4 visible hubs + 14 sub-pages. Medicinal Cannabis and its hub are gated.
+    // 5 hubs + their sub-pages, with nothing gated.
     const servicePaths = publicRoutes()
       .map((r) => r.path)
       .filter((p) =>
@@ -62,13 +62,13 @@ describe("SiteHeader", () => {
     for (const path of servicePaths) expect(hrefs).toContain(path);
   });
 
-  it("omits gated destinations", () => {
+  it("links the formerly gated destinations", () => {
     const { container } = render(<SiteHeader />);
     const hrefs = Array.from(container.querySelectorAll("a[href]")).map((a) =>
       a.getAttribute("href"),
     );
-    expect(hrefs).not.toContain("/medicinal-cannabis/");
-    expect(hrefs).not.toContain("/our-practitioners/");
+    expect(hrefs).toContain("/medicinal-cannabis/");
+    expect(hrefs).toContain("/our-practitioners/");
   });
 
   it("carries the CTA as the drawer's last item", () => {

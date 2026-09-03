@@ -38,7 +38,7 @@ export const ROUTES: readonly RouteEntry[] = [
   { path: "/womens-health/contraception/", title: "Contraception & Sexual Health" },
 
   // Medicinal Cannabis — withheld pending compliance sign-off
-  { path: "/medicinal-cannabis/", title: "Medicinal Cannabis", gated: true },
+  { path: "/medicinal-cannabis/", title: "Medicinal Cannabis" },
 
   // Online Doctor
   { path: "/online-doctor/", title: "Online Doctor" },
@@ -53,7 +53,7 @@ export const ROUTES: readonly RouteEntry[] = [
   { path: "/pricing/", title: "Pricing" },
   { path: "/about-us/", title: "About Us" },
   // Withheld: only one named practitioner, no AHPRA number, no headshot on file.
-  { path: "/our-practitioners/", title: "Our Practitioners", gated: true },
+  { path: "/our-practitioners/", title: "Our Practitioners" },
   { path: "/contact/", title: "Contact" },
   { path: "/faqs/", title: "FAQs" },
 

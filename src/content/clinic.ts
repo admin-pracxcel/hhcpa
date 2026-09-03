@@ -24,12 +24,12 @@ export const CLINIC = {
   addressRegion: "West End, Queensland",
   serviceArea: "Australia-wide telehealth",
   /**
-   * Onboarding item 6 answered "8-10am - Monday to Sunday", which is ambiguous —
-   * most likely a typo for 8am to 10pm, matching the current live site. Awaiting
-   * written confirmation; `hoursProvisional` keeps that visible to reviewers.
+   * Onboarding item 6 answered "8-10am - Monday to Sunday", which was ambiguous.
+   * The client confirmed 8am to 10pm on 2026-09-03, matching the live site, so
+   * the reading below is no longer provisional.
    */
   hours: "Monday to Sunday, 8am to 10pm AEST",
-  hoursProvisional: true,
+  hoursProvisional: false,
 } as const;
 
 /**

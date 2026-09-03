@@ -1,8 +1,14 @@
 /**
- * `/our-practitioners/` — COMPLIANCE-CRITICAL, GATED.
+ * `/our-practitioners/` — COMPLIANCE-CRITICAL.
  *
- * ⚠️ noindex until Ranjeeta confirms each practitioner's name, public title and
- * AHPRA registration number. The roster is empty today and the page says so.
+ * Published on 2026-09-03 at the client's instruction, for their review. The
+ * route gate and the per-page noindex were lifted together.
+ *
+ * ⚠️ The roster is still empty, and the page says so in its own words rather
+ * than pretending otherwise — no practitioner may be listed until their name,
+ * public title and AHPRA registration number are confirmed. PractitionerCards
+ * refuses to render anyone without a registration number, so publishing the
+ * page cannot by itself put a non-compliant card in front of anyone.
  *
  * The BUILD BLOCK asks for Physician/Person schema per practitioner with the
  * AHPRA number as `identifier`. None is emitted, because there is nobody to
@@ -33,7 +39,6 @@ export const metadata: Metadata = {
   title: PRACTITIONERS_META.title,
   description: PRACTITIONERS_META.description,
   alternates: { canonical: PRACTITIONERS_META.path },
-  robots: { index: false, follow: false },
 };
 
 export default function Page() {

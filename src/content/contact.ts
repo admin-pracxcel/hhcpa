@@ -5,11 +5,9 @@
  * MedicalOrganization, which the layout's site-wide MedicalClinic satisfies as
  * a subtype.
  *
- * ⚠️ Hours are unconfirmed. The content document flags Ranjeeta's onboarding
- * answer, "8-10am - Monday to Sunday", as ambiguous and probably a typo for
- * 8am to 10pm, matching the live site. `clinic.ts` already carries that reading
- * behind `hoursProvisional`, and this page shows it. Confirm before publishing:
- * published opening hours that are wrong are worse than none.
+ * Hours were ambiguous in onboarding ("8-10am - Monday to Sunday") and were
+ * confirmed as 8am to 10pm on 2026-09-03. `clinic.ts` carries the confirmed
+ * reading and this page shows it.
  */
 
 import { CALL_CTA, CLINIC } from "./clinic";

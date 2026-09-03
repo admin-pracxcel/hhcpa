@@ -18,7 +18,10 @@
  * refuses to render anyone without a registration number, so adding a record
  * and forgetting the number cannot publish a non-compliant card.
  *
- * The page is gated in `routes.ts` and set to noindex until sign-off.
+ * The page itself was published on 2026-09-03 at the client's instruction. That
+ * changes nothing here: the roster stays empty until each person's registration
+ * number is confirmed, and the page renders its empty state rather than a claim
+ * it cannot support.
  */
 
 import type { Practitioner } from "@/components/sections/PractitionerCards";

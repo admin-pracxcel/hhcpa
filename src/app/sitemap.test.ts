@@ -32,10 +32,10 @@ describe("sitemap", () => {
     }
   });
 
-  it("excludes compliance-gated routes", async () => {
+  it("lists the formerly gated routes now that they are published", async () => {
     const urls = (await sitemapWith(true)).map((entry) => entry.url);
-    expect(urls).not.toContain(`${SITE_URL}/medicinal-cannabis/`);
-    expect(urls).not.toContain(`${SITE_URL}/our-practitioners/`);
+    expect(urls).toContain(`${SITE_URL}/medicinal-cannabis/`);
+    expect(urls).toContain(`${SITE_URL}/our-practitioners/`);
   });
 
   it("gives the homepage the highest priority", async () => {
