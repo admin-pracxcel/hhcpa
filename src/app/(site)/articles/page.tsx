@@ -15,12 +15,12 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
 import { CALL_CTA, CLINIC } from "@/content/clinic";
-import { ARTICLES } from "@/content/articles";
+import { articleCards } from "@/content/articles";
 
-import { RelatedCards } from "@/components/sections/RelatedCards";
 import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 
+import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
 import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
 
 const META = {
@@ -66,22 +66,19 @@ export default function Page() {
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />
 
-      <RelatedCards
+      {/*
+        The same cards the homepage teases, from the same source — requested, and
+        the reason articleCards() exists. No limit here: the homepage shows the
+        newest few, the index shows all of them.
+
+        No CTA in the header: it is the way out to this page, and this is it.
+      */}
+      <BlogSection
         className="bg-[color:var(--hhcp-accent)]"
         eyebrow="Articles"
         heading="Latest articles"
-        cards={ARTICLES.map((article) => ({
-          title: article.title,
-          body: `${article.topic} · ${article.readTime}`,
-          links: [
-            { label: "Read the article", href: `/article/${article.slug}/` },
-          ],
-        }))}
-        footnote="Looking for something specific? Try the"
-        footnoteLinks={[
-          { label: "FAQs", href: "/faqs/" },
-          { label: "how it works", href: "/how-it-works/" },
-        ]}
+        posts={articleCards()}
+        showCta={false}
       />
 
       <FinalCtaSection

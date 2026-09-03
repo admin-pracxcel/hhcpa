@@ -37,17 +37,24 @@ const TOPIC_HREF = "/articles/";
 const IMAGE_BASE =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
 
-interface Post {
+/**
+ * One card. Exported because two pages feed it their own: the homepage and the
+ * knowledge hub both list the same articles, and they read them from
+ * `articles.ts` so the two cannot disagree about a title, a date or a read
+ * time. The default POSTS below stay as the target wrote them, for the clone.
+ */
+export interface BlogPost {
   readonly topic: string;
   readonly readTime: string;
   readonly date: string;
   readonly title: string;
   readonly href: string;
+  /** Full path. The defaults below prefix IMAGE_BASE themselves. */
   readonly image: string;
   readonly alt: string;
 }
 
-const POSTS: readonly Post[] = [
+const POSTS: readonly BlogPost[] = [
   {
     topic: "General",
     readTime: "3 minutes",
@@ -55,7 +62,7 @@ const POSTS: readonly Post[] = [
     title:
       "Why Weight Loss is Difficult to Maintain, and What Actually Works Long-Term",
     href: "/article/why-weight-loss-is-difficult-to-maintain-and-what-actually-works-long-term/",
-    image: "blog-weight-loss.jpeg",
+    image: `${IMAGE_BASE}blog-weight-loss.jpeg`,
     alt: "Two women exercising outdoors in activewear, representing a healthy active lifestyle for sustainable long-term weight management",
   },
   {
@@ -64,7 +71,7 @@ const POSTS: readonly Post[] = [
     date: "May 05, 2026",
     title: "Why Sleep is Essential for Chronic Pain, Weight, and Overall Health",
     href: "/article/why-sleep-is-essential-for-chronic-pain-weight-and-overall-health/",
-    image: "blog-sleep-health.jpg",
+    image: `${IMAGE_BASE}blog-sleep-health.jpg`,
     alt: "Woman sitting on bed stretching in the morning, representing the connection between healthy sleep and overall wellbeing",
   },
   {
@@ -73,7 +80,7 @@ const POSTS: readonly Post[] = [
     date: "May 05, 2026",
     title: "Why Sleep Matters in Chronic Pain",
     href: "/article/why-sleep-matters-in-chronic-pain/",
-    image: "blog-sleep-pain.jpg",
+    image: `${IMAGE_BASE}blog-sleep-pain.jpg`,
     alt: "Young woman sleeping peacefully in white sheets, representing the importance of quality sleep for chronic pain relief",
   },
 ] as const;
@@ -306,14 +313,24 @@ interface BlogSectionProps {
   className?: string;
   eyebrow?: string;
   heading?: string;
+  /** Defaults to the target's own three. Pages pass articles.ts instead. */
+  posts?: readonly BlogPost[];
   cta?: { label: string; href: string };
+  /**
+   * Set false on `/articles/`. The CTA is the way out to the article index, so
+   * on the index it links to the page being read — the same reason FaqSection
+   * carries one of these.
+   */
+  showCta?: boolean;
 }
 
 export function BlogSection({
   className,
   eyebrow = EYEBROW,
   heading = HEADING,
+  posts = POSTS,
   cta = { label: CTA_LABEL, href: CTA_HREF },
+  showCta = true,
 }: BlogSectionProps) {
   return (
     <section className={cn("hhcp-bl-section", className)}>
@@ -330,16 +347,18 @@ export function BlogSection({
             <h2 className="hhcp-bl-title font-dm-sans">{heading}</h2>
           </div>
 
-          <div className="hhcp-bl-head-action">
-            <a className="hhcp-bl-cta font-roboto-mono" href={cta.href}>
-              <span className="hhcp-bl-cta-dot" />
-              {cta.label}
-            </a>
-          </div>
+          {showCta && (
+            <div className="hhcp-bl-head-action">
+              <a className="hhcp-bl-cta font-roboto-mono" href={cta.href}>
+                <span className="hhcp-bl-cta-dot" />
+                {cta.label}
+              </a>
+            </div>
+          )}
         </div>
 
         <div className="hhcp-bl-list">
-          {POSTS.map((post) => (
+          {posts.map((post) => (
             <article key={post.href} className="hhcp-bl-post">
               <div className="hhcp-bl-meta">
                 <a
@@ -368,7 +387,7 @@ export function BlogSection({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className="hhcp-bl-image"
-                  src={`${IMAGE_BASE}${post.image}`}
+                  src={post.image}
                   alt={post.alt}
                   width={300}
                   height={200}

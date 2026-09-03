@@ -23,6 +23,8 @@
  * built here.
  */
 
+import type { BlogPost } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
+
 const IMAGE_BASE =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
 
@@ -588,4 +590,28 @@ export const ARTICLES: readonly Article[] = [
 
 export function findArticle(slug: string): Article | undefined {
   return ARTICLES.find((article) => article.slug === slug);
+}
+
+/**
+ * Articles as blog cards.
+ *
+ * Two pages list the same articles the same way — the homepage's teaser and the
+ * knowledge hub index — so both read them from here. Before this they did not:
+ * the homepage carried the target's own hardcoded copy of these three, which
+ * called them all "General · 3 minutes · May 05, 2026" while the article pages
+ * called them "Weight management · 6 min read · 26 Jan 2026". Same three
+ * articles, two sets of facts about them, on one site.
+ *
+ * `limit` is for the teaser, which shows the newest few rather than all of them.
+ */
+export function articleCards(limit?: number): readonly BlogPost[] {
+  return ARTICLES.slice(0, limit).map((article) => ({
+    topic: article.topic,
+    readTime: article.readTime,
+    date: article.date,
+    title: article.title,
+    href: `/article/${article.slug}/`,
+    image: article.image,
+    alt: article.imageAlt,
+  }));
 }

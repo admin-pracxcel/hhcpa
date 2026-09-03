@@ -40,6 +40,7 @@
 import type { Metadata } from "next";
 
 import { CLINIC } from "@/content/clinic";
+import { articleCards } from "@/content/articles";
 import {
   HOME_APPROACH,
   HOME_CLOSING,
@@ -160,10 +161,14 @@ export default function Home() {
         cta={HOME_SEARCH.cta}
       />
 
+      {/* The newest three, from the same source /articles/ lists in full. The
+          clone's own hardcoded copies of these three disagreed with the article
+          pages about every one of topic, read time and date. */}
       <BlogSection
         className="bg-[color:var(--hhcp-accent)]"
         eyebrow={HOME_KNOWLEDGE.eyebrow}
         heading={HOME_KNOWLEDGE.heading}
+        posts={articleCards(3)}
         cta={HOME_KNOWLEDGE.cta}
       />
 
