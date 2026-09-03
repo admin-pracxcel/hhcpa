@@ -6,9 +6,10 @@
  * Structure mirrors the source markup:
  *   footer                          — #013126, 45px block / 30px inline padding
  *     └─ .container                 — 1340px wrapper, 45px row-gap
- *          ├─ .top                  — logo left, social row right
+ *          ├─ .top                  — logo with the social row under it, then
+ *          │                          the newsletter on the right
  *          ├─ .divider
- *          ├─ nav .middle           — two menu columns + the newsletter column
+ *          ├─ nav .middle           — four equal menu columns
  *          ├─ .divider
  *          └─ .bottom               — credit + legal links, then the disclaimer
  *
@@ -97,12 +98,27 @@ const STYLES = `
 }
 
 /* --- Top row: logo / social --- */
+/*
+ * Requested rearrangement of the target's top row. It had the logo left and the
+ * social icons hard right, with the newsletter dropped onto its own row below
+ * the menus. The social icons now tuck under the logo — where they read as
+ * belonging to it rather than floating alone at the far edge — and the
+ * newsletter takes the space they vacated.
+ */
 .hhcp-ft-top {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--hhcp-space-l, 45px);
+  flex-wrap: wrap;
+}
+
+.hhcp-ft-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hhcp-space-m, 30px);
 }
 
 .hhcp-ft-logo {
@@ -144,13 +160,27 @@ const STYLES = `
 }
 
 /* --- Middle: two menu columns + newsletter --- */
+/*
+ * Four equal columns across the full width. It was a wrapping flex row with a
+ * 268px cap on each column, which left 178px of dead space to the right of the
+ * fourth — the columns stopped growing while the row kept going.
+ */
 .hhcp-ft-middle {
-  display: flex;
-  flex-direction: row;
-  /* Five columns now share this row rather than three, so the gap tightens and
-     the columns are allowed to wrap before they crush. */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--hhcp-space-m, 30px);
-  flex-wrap: wrap;
+}
+
+@media (max-width: 991px) {
+  .hhcp-ft-middle {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 478px) {
+  .hhcp-ft-middle {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Column 1 — NAP block. */
@@ -175,15 +205,13 @@ const STYLES = `
   color: var(--hhcp-action-light, #baf8d9);
 }
 
+/* A grid track now sizes these; the flex basis and the 268px cap were what
+   held them short of the container's right edge. */
 .hhcp-ft-menu {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   row-gap: var(--hhcp-space-s, 20px);
-  max-width: 268px;
-  flex-basis: 180px;
-  flex-grow: 1;
-  flex-shrink: 1;
   width: auto;
   padding: 0;
 }
@@ -221,10 +249,9 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 536px;
+  width: 460px;
   max-width: 100%;
-  flex-shrink: 0;
-  margin-left: auto;
+  flex-shrink: 1;
   gap: var(--hhcp-space-m, 30px);
 }
 
@@ -425,18 +452,53 @@ export function SiteFooter({ className }: SiteFooterProps) {
       <style>{STYLES}</style>
       <div className="hhcp-ft-container">
         <div className="hhcp-ft-top">
-          <Link className="hhcp-ft-logo" href="/">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={LOGO_SRC} alt="HHCPA" />
-          </Link>
+          <div className="hhcp-ft-brand">
+            <Link className="hhcp-ft-logo" href="/">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={LOGO_SRC} alt="HHCPA" />
+            </Link>
 
-          <div className="hhcp-ft-social">
-            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-              <a key={href} href={href} aria-label={label}>
-                <Icon />
-              </a>
-            ))}
+            <div className="hhcp-ft-social">
+              {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                <a key={href} href={href} aria-label={label}>
+                  <Icon />
+                </a>
+              ))}
+            </div>
           </div>
+
+        <div className="hhcp-ft-news">
+          <div className="hhcp-ft-news-inner">
+            <span className="hhcp-ft-news-heading font-roboto-mono">
+              Newsletter
+            </span>
+            <p className="hhcp-ft-news-blurb font-dm-sans">
+              Email sign-up for occasional health guidance.
+            </p>
+
+            <form
+              className="hhcp-ft-form"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <input
+                className="hhcp-ft-input"
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                aria-label="Enter your email"
+              />
+              <button className="hhcp-ft-submit font-roboto-mono" type="submit">
+                Register
+              </button>
+            </form>
+
+            <p className="hhcp-ft-terms">
+              {"By clicking Register, you acknowledge that you have read and accepted our "}
+              <a href="/terms-and-conditions/">Terms and Conditions</a>.
+            </p>
+          </div>
+
+        </div>
         </div>
 
         <div className="hhcp-ft-divider" />
@@ -481,38 +543,6 @@ export function SiteFooter({ className }: SiteFooterProps) {
             </div>
           ))}
 
-          <div className="hhcp-ft-news">
-            <div className="hhcp-ft-news-inner">
-              <span className="hhcp-ft-news-heading font-roboto-mono">
-                Newsletter
-              </span>
-              <p className="hhcp-ft-news-blurb font-dm-sans">
-                Email sign-up for occasional health guidance.
-              </p>
-
-              <form
-                className="hhcp-ft-form"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <input
-                  className="hhcp-ft-input"
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  aria-label="Enter your email"
-                />
-                <button className="hhcp-ft-submit font-roboto-mono" type="submit">
-                  Register
-                </button>
-              </form>
-
-              <p className="hhcp-ft-terms">
-                {"By clicking Register, you acknowledge that you have read and accepted our "}
-                <a href="/terms-and-conditions/">Terms and Conditions</a>.
-              </p>
-            </div>
-
-          </div>
         </nav>
 
         <div className="hhcp-ft-divider" />
