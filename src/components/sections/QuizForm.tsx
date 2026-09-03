@@ -61,8 +61,37 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   background: var(--hhcp-accent, #f5fff9);
-  overflow-y: auto;
+  overflow-y: scroll;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /*
+   * scroll, not auto, and a scrollbar that is drawn rather than left to the
+   * platform. macOS fades its overlay scrollbars out a second after you stop,
+   * so on the closing step — which is taller than the window — there was
+   * nothing on screen saying the rest of the form was below.
+   */
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(1, 49, 38, 0.35) transparent;
+  /* Nothing above the reader loads late, so anchoring has nothing useful to do
+     here and can only move the page under them mid-form. */
+  overflow-anchor: none;
+}
+
+.hhcp-qz-overlay::-webkit-scrollbar {
+  width: 10px;
+}
+
+.hhcp-qz-overlay::-webkit-scrollbar-thumb {
+  background: rgba(1, 49, 38, 0.35);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.hhcp-qz-overlay::-webkit-scrollbar-thumb:hover {
+  background: rgba(1, 49, 38, 0.55);
+  background-clip: content-box;
 }
 
 /*
@@ -712,21 +741,20 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
   const router = useRouter();
 
   /*
-   * Escape closes, and the page behind is held still so a long branch does not
-   * scroll the landing page under the overlay. This is not a scroll listener —
-   * AGENTS.md rules those out and there are still none.
+   * Escape closes. This is not a scroll listener — AGENTS.md rules those out
+   * and there are still none.
+   *
+   * The body scroll lock that used to live here is gone. The overlay covers the
+   * viewport and the landing page behind it is exactly one screen tall, so
+   * there was never any background scroll to lock; all it did was put a second
+   * scroll container in the chain on the one step tall enough to need scrolling.
    */
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     document.addEventListener("keydown", onKey);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previous;
-    };
+    return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
   const [status, setStatus] = useState<"idle" | "sending">("idle");
   const [problem, setProblem] = useState("");
