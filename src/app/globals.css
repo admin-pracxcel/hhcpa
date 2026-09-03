@@ -207,10 +207,10 @@
      the reason it exists, since without it an anchor jump lands its target
      underneath the pill.
 
-     Measured, not derived: the pill sits 14-76px from the top of the viewport
-     once furled (14-62px below 478px, where the logo steps down). 100px leaves
+     Measured, not derived: the pill sits 20-83px from the top of the viewport
+     once furled (20-68px below 478px, where the logo steps down). 110px leaves
      the jumped-to heading clear of it rather than tucked against it. */
-  --hhcp-header-pinned-h: 100px;
+  --hhcp-header-pinned-h: 110px;
 
   /* --- Radii --- */
   --hhcp-radius-xs: 4.444px;

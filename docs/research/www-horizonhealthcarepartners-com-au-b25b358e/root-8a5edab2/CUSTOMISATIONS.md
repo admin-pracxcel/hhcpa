@@ -155,7 +155,7 @@ with the page and does not come back.
 |---|---|---|
 | container | `position: absolute` | `position: fixed` |
 | announcement strip | scrolls away | furls to nothing over the first 46px of scroll |
-| pill's top gap | `13.5px`, static | closes to `0` over the same 46px |
+| pill's top gap | `13.5px`, static | opens `13.5px` → `20px` over the same 46px |
 | pill shadow | none | `0 4px 18px rgba(1,49,38,0.12)`, faded in over the same 46px |
 
 `fixed`, not `sticky`. Sticky puts the element in flow, and every hero here is
@@ -172,11 +172,21 @@ rise at exactly scroll speed so it reads as scrolling away rather than folding s
 that height ever drifts, the furl finishes slightly early or late; the header does not
 move.
 
-The gap above the pill closes for the same reason the shadow arrives. The pill is inset
-from the sides, so a gap left open above it is a 13px letterbox with the page sliding
-through it, and a card caught half out of the viewport there reads as a rendering fault.
-Closed, the only thing passing the pill is beside it — which is what an inset pill looks
-like by design — and the shadow is what says so.
+The gap above the pill opens rather than closing, so the pill floats clear of the top
+edge instead of being stuck against it. A first pass closed it — reasoning that a gap
+left open is a letterbox with the page sliding through it — and that read as jammed
+against the edge; opening it was requested after seeing that.
+
+`--hhcp-space-xs` → `--hhcp-space-s`, both existing tokens, because the gap does two
+different jobs at the two ends. At rest it separates two stacked bars, and `xs` is the
+target's own value — leaving it alone is what keeps the clone at `/home-v2/` matching
+pixel for pixel. Pinned, it is the pill's inset from the edge of the screen, and `s`
+(18–20px) matches the 20px the container insets by on the sides, so the pill floats by
+the same amount all the way round.
+
+The accepted cost: an inset pill with a gap above it means page content passes through
+that gap, and a card caught half out of the viewport shows there. The shadow is what
+keeps that reading as the page continuing underneath rather than as a fault.
 
 **No scroll listener and no IntersectionObserver.** All three are CSS scroll-driven
 animations on `scroll(root block)`, the same mechanism `ScrollRevealParagraph` uses. The
@@ -189,7 +199,7 @@ Two ways it degrades, both to a header that is pinned with the strip still showi
   the two marquees. There is no autonomous motion to spare anyone here: the furl
   advances only as far as the reader scrolls and stops the moment they do.
 
-`--hhcp-header-pinned-h` (100px, in `globals.css`) is the pinned footprint, and
+`--hhcp-header-pinned-h` (110px, in `globals.css`) is the pinned footprint, and
 `html { scroll-padding-top }` reads it so an anchor jump does not land its target under
 the pill. Two links rely on it: `/services/#book` and `/quiz/#quiz`.
 
@@ -199,13 +209,13 @@ position, at 1534×900:
 | scrollY | strip height | pill top |
 |---:|---:|---:|
 | 0 | 46 | 60 |
-| 12 | 34 | 44 |
-| 23 | 23 | 30 |
-| 34 | 12 | 16 |
-| 46 | 0 | 0 |
-| 80 | 0 | 0 |
+| 12 | 34 | 49 |
+| 23 | 23 | 40 |
+| 34 | 12 | 30 |
+| 46 | 0 | 20 |
+| 80 | 0 | 20 |
 
 The strip's height falls exactly in step with scroll. Hero heights are unchanged at all
 three viewports (900 / 800 / 771, the last being 844 less the 73px CTA bar), so pinning
 the header shifted no layout. `/services/#book` lands its target at 100px with the pill
-ending at 63px.
+ending at 83px.

@@ -72,8 +72,9 @@ without collisions. Keep it if you add pages; don't flatten it.
    an inherited one.
 2. **The header is pinned, but there are still no scroll listeners.** It is
    `position: fixed`; the cream announcement strip furls away over the first 46px of
-   scroll and the white pill stays. That furl, the pill seating itself against the top,
-   and its shadow are three CSS scroll-driven animations on `scroll(root block)` — the
+   scroll and the white pill stays, floating one `--hhcp-space-s` clear of the top edge.
+   That furl, the gap opening, and the pill's shadow are three CSS scroll-driven
+   animations on `scroll(root block)` — the
    same mechanism `ScrollRevealParagraph` uses. There are no scroll listeners and no
    IntersectionObservers anywhere in this codebase, by design. Don't add any. See
    CUSTOMISATIONS.md deviation 6; `--hhcp-header-pinned-h` is the pinned footprint that

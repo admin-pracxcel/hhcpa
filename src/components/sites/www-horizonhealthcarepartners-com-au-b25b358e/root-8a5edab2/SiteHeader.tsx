@@ -96,22 +96,30 @@ const HEADER_CSS = `
 }
 
 /*
- * The pill's own gap closes with the strip, seating it against the top of the
- * viewport. It is not tidiness: the pill is inset from the sides, so a gap left
- * open above it is a 13px letterbox with the page sliding through it, and a
- * card caught half out of the viewport there reads as a rendering fault. Closed,
- * the only thing passing the pill is beside it, which is what the inset pill
- * looks like by design.
+ * The pill's gap opens up as the strip goes, so it floats clear of the top edge
+ * rather than being stuck against it. Requested; an earlier pass closed the gap
+ * instead and read as jammed.
+ *
+ * xs -> s, both existing tokens, because the gap is doing two different jobs at
+ * the two ends. At rest it separates two stacked bars, and xs is the value the
+ * target uses — leaving it alone is what keeps the clone at /home-v2/ matching
+ * pixel for pixel. Pinned, it is the pill's inset from the edge of the screen,
+ * and s (18-20px) matches the 20px the container insets by on the sides, so the
+ * pill floats by the same amount all the way round.
+ *
+ * The cost, accepted: an inset pill with a gap above it means page content
+ * passes through that gap. The shadow below is what keeps that reading as the
+ * page continuing underneath rather than as a fault.
  */
-@keyframes hhcp-hdr-seat {
+@keyframes hhcp-hdr-settle {
   to {
-    margin-top: 0;
+    margin-top: var(--hhcp-space-s);
   }
 }
 
 @supports (animation-timeline: scroll()) {
   .hhcp-hdr__bar {
-    animation: hhcp-hdr-seat linear both;
+    animation: hhcp-hdr-settle linear both;
     animation-timeline: scroll(root block);
     animation-range: 0 46px;
   }
@@ -124,9 +132,10 @@ const HEADER_CSS = `
      * padding. Matching the two makes it rise at exactly scroll speed, so it
      * reads as scrolling away rather than folding shut.
      *
-     * The number is not load-bearing. The 0fr row is what seats the pill; this
-     * only sets the pace, so if the strip's height ever drifts the symptom is a
-     * furl that finishes slightly early or late, not a misplaced header.
+     * The number is not load-bearing. The 0fr row is what takes the strip to
+     * nothing; this only sets the pace, so if the strip's height ever drifts the
+     * symptom is a furl that finishes slightly early or late, not a misplaced
+     * header.
      */
     animation-range: 0 46px;
   }
@@ -137,8 +146,8 @@ const HEADER_CSS = `
 
 /*
  * Over the hero the pill needs no edge: it sits on video. Over the page it does
- * — the pill is inset from the sides, so once it is pinned the content scrolls
- * past beside and above it, and with nothing separating the two a card caught
+ * — the pill is inset on every side once pinned, so the content scrolls past
+ * beside and above it, and with nothing separating the two a card caught
  * half-out of the viewport behind the pill reads as a rendering fault rather
  * than as the page continuing underneath.
  *
