@@ -737,12 +737,15 @@ export function QuizForm({ className }: { className?: string }) {
        * disabled — going back to "idle" would re-enable it and let a slow
        * redirect be submitted twice.
        *
-       * The triage level is not handed to the thank-you page any more. It used
-       * to travel in sessionStorage so the page could pick one of four
-       * messages; there is one message now. The level still goes to n8n in the
-       * payload above, which is where it does the work.
+       * Where they land is the one thing the triage level decides on the site.
+       * Green and amber are offered a booking; red is told a person will be in
+       * touch, because red means the answers need review before any booking.
+       * The amber-versus-green difference is an email to the clinic, which n8n
+       * branches on from the `outcome` in the payload above — nothing here.
        */
-      router.push("/quiz-thank-you/");
+      router.push(
+        outcome.level === "red" ? "/quiz-thank-you/" : "/quiz-book/",
+      );
     } catch {
       setProblem(
         "We could not send your answers just now. Please check your connection and try again.",
