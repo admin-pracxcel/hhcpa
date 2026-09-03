@@ -23,6 +23,7 @@
  */
 
 import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   CONSENT_VERSION,
@@ -30,7 +31,7 @@ import {
   QUIZ_CONSENTS,
   QUIZ_CONTACT,
   QUIZ_STEPS,
-  QUIZ_SUCCESS,
+  TRIAGE_STORAGE_KEY,
   TRIAGE_MESSAGES,
   bmiMessage,
   calculateBmi,
@@ -595,7 +596,8 @@ export function QuizForm({ className }: { className?: string }) {
   /** Multi-select answers, kept as arrays for the checkbox UI. */
   const [picked, setPicked] = useState<Record<string, string[]>>({});
   const [consents, setConsents] = useState<Record<string, boolean>>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const router = useRouter();
+  const [status, setStatus] = useState<"idle" | "sending">("idle");
   const [problem, setProblem] = useState("");
 
   const currentId = history[history.length - 1];
@@ -730,7 +732,19 @@ export function QuizForm({ className }: { className?: string }) {
         setStatus("idle");
         return;
       }
-      setStatus("done");
+
+      /*
+       * The level goes into sessionStorage rather than the URL: it is inferred
+       * health information, and a query string is written into browser history,
+       * sent as the Referer to anything the next page loads, and read by
+       * analytics. See TRIAGE_STORAGE_KEY.
+       *
+       * `status` stays "sending" through the navigation so the button stays
+       * disabled — going back to "idle" would re-enable it and let a slow
+       * redirect be submitted twice.
+       */
+      window.sessionStorage.setItem(TRIAGE_STORAGE_KEY, outcome.level);
+      router.push("/quiz-thank-you/");
     } catch {
       setProblem(
         "We could not send your answers just now. Please check your connection and try again.",
@@ -738,23 +752,6 @@ export function QuizForm({ className }: { className?: string }) {
       setStatus("idle");
     }
   };
-
-  if (status === "done") {
-    const closing = QUIZ_SUCCESS[outcome.level];
-    return (
-      <section id="quiz" className={cn("hhcp-qz-section", className)}>
-        <style>{STYLES}</style>
-        <div className="hhcp-container hhcp-qz-container">
-          <div className="hhcp-qz-card">
-            <h2 className="hhcp-qz-exit-heading font-dm-sans">
-              {closing.heading}
-            </h2>
-            <p className="hhcp-qz-exit-body font-dm-sans">{closing.body}</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (step === undefined) return null;
 
@@ -830,7 +827,7 @@ interface StepBodyProps {
   bmi: number | null;
   outcome: { level: TriageLevel; reasons: readonly string[] };
   consents: Record<string, boolean>;
-  status: "idle" | "sending" | "done";
+  status: "idle" | "sending";
   problem: string;
   set: (name: string, value: string) => void;
   toggle: (field: string, option: string) => void;

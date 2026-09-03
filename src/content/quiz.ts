@@ -991,7 +991,29 @@ export const REQUIRED_CONSENT_IDS = QUIZ_CONSENTS.filter(
  */
 export const CONSENT_VERSION = "2026-09-03";
 
+/**
+ * What a patient reads after submitting, by triage level.
+ *
+ * `unknown` is for someone who opens `/quiz-thank-you/` without having just
+ * submitted — a bookmark, a back button, a shared link. It cannot claim to have
+ * their answers, and it must not tell them their situation needs review, so it
+ * says only what is true for anyone standing there.
+ */
+/**
+ * Where the quiz leaves the triage level for `/quiz-thank-you/` to read.
+ *
+ * sessionStorage rather than a query string: a triage level is inferred health
+ * information, and a query string goes into browser history, into the Referer
+ * header of anything the next page loads, and into analytics. This stays in the
+ * tab and never crosses the network. The browser drops it when the tab closes.
+ */
+export const TRIAGE_STORAGE_KEY = "hhcp-quiz-outcome";
+
 export const QUIZ_SUCCESS = {
+  unknown: {
+    heading: "Thank you",
+    body: "If you have just completed the pre-screening quiz, we have your answers and a member of our team will be in touch. Nothing is prescribed from the quiz itself, and any care plan comes from a consultation with an AHPRA-registered practitioner.",
+  },
   green: {
     heading: "Thank you — we have your answers",
     body: "A member of our team will be in touch to help you book a consultation with an AHPRA-registered practitioner. Nothing has been prescribed from this quiz, and any care plan comes from that consultation.",

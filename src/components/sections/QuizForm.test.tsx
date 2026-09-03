@@ -2,6 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 
 import { QuizForm } from "./QuizForm";
+import { TRIAGE_STORAGE_KEY } from "@/content/quiz";
+
+/*
+ * The form navigates to /quiz-thank-you/ on success, and useRouter throws
+ * outside an app-router tree. The push spy is also how the tests below assert
+ * that a submission finished — there is no success screen to look for any more.
+ */
+const push = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 
 /**
  * What matters here is not the wiring, it is the four rules the flow exists to
@@ -70,6 +79,8 @@ describe("quiz form", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    push.mockClear();
+    window.sessionStorage.clear();
     fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ ok: true }),
@@ -101,6 +112,8 @@ describe("quiz form", () => {
     expect(screen.getByText("Crisis Support")).toBeTruthy();
     expect(screen.getByText("13 11 14")).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
+    /* And no thank-you page either: nothing was submitted to thank them for. */
+    expect(push).not.toHaveBeenCalled();
   });
 
   it("walks back through the answers actually given", () => {
@@ -194,7 +207,13 @@ describe("quiz form", () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(sentBody().outcome).toBe("red");
 
-    await screen.findByText(/a member of our team will contact you/i);
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-thank-you/"));
+    /*
+     * The level is handed on out of band. A query string would put inferred
+     * health information into browser history, the Referer header and
+     * analytics; this stays in the tab.
+     */
+    expect(window.sessionStorage.getItem(TRIAGE_STORAGE_KEY)).toBe("red");
   });
 
   it("triages a clean run green", async () => {
@@ -212,6 +231,7 @@ describe("quiz form", () => {
     fillContactAndSubmit();
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(sentBody().outcome).toBe("green");
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-thank-you/"));
   });
 
   it("asks whether a cancer diagnosis is in active treatment", () => {

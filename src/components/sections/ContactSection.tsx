@@ -27,6 +27,7 @@
  */
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 
 import { CLINIC } from "@/content/clinic";
@@ -260,7 +261,12 @@ export function ContactSection({
   formHeading,
   formNote,
 }: ContactSectionProps) {
-  type Status = "idle" | "sending" | "sent" | "failed" | "invalid";
+  /*
+   * No "sent": a successful send navigates to /thank-you/ rather than swapping
+   * a line of text in under the button, so there is no such state to be in.
+   */
+  type Status = "idle" | "sending" | "failed" | "invalid";
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
   const [problem, setProblem] = useState("");
 
@@ -315,8 +321,13 @@ export function ContactSection({
         setStatus("failed");
         return;
       }
-      setStatus("sent");
-      form.reset();
+      /*
+       * `status` stays "sending" through the navigation, so the button stays
+       * disabled. Going back to idle would re-enable it and let a slow redirect
+       * be submitted twice. The form is not reset for the same reason — nothing
+       * here is shown again.
+       */
+      router.push("/thank-you/");
     } catch {
       setStatus("failed");
     }
@@ -464,14 +475,6 @@ export function ContactSection({
           >
             {status === "sending" ? "Sending…" : "Send message"}
           </button>
-
-          {status === "sent" && (
-            <p className="hhcp-form-status font-dm-sans" role="status">
-              Thank you — your message has been sent. Our team will get back to
-              you during business hours. If it is urgent, call{" "}
-              <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>.
-            </p>
-          )}
 
           {status === "invalid" && (
             <p className="hhcp-form-status font-dm-sans" role="alert">
