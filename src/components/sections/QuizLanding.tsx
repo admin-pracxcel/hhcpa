@@ -17,6 +17,8 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import type { MouseEvent } from "react";
+import Link from "next/link";
 
 import { QUIZ_LANDING } from "@/content/quiz-landing";
 import { QuizForm } from "./QuizForm";
@@ -85,10 +87,47 @@ const STYLES = `
   max-width: 640px;
 }
 
+/*
+ * The page has no header, so these two are its whole navigation. Back returns
+ * to wherever the reader came from — most arrive from a CTA somewhere on the
+ * site — and the logo is the fallback for anyone who landed here cold, from an
+ * ad or a shared link, with nothing to go back to.
+ *
+ * Both sit above the logo in the copy column rather than floating over the
+ * photograph: the top-left of the section is 30px of padding, too little for a
+ * control, and anything laid over the image would have to survive whatever is
+ * behind it.
+ */
+.hhcp-ql-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(12px, 2vh, 20px);
+}
+
+.hhcp-ql-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: #526f68;
+  text-decoration: none;
+  transition: color 0.2s linear;
+}
+
+.hhcp-ql-back:hover {
+  color: var(--hhcp-primary, #013126);
+}
+
 .hhcp-ql-logo {
   height: 55px;
   width: auto;
   align-self: flex-start;
+  display: block;
 }
 
 .hhcp-ql-copy {
@@ -210,6 +249,21 @@ export function QuizLanding() {
     opener.current?.focus();
   }, []);
 
+  /*
+   * Steps back only when the reader came from this site. `document.referrer`
+   * is empty on a cold landing and cross-origin when they arrived from an ad,
+   * and history.back() in either case either does nothing or throws them off
+   * the site entirely. Falling through to the href sends them home instead.
+   */
+  const back = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window === "undefined") return;
+    const from = document.referrer;
+    if (from !== "" && new URL(from).origin === window.location.origin) {
+      event.preventDefault();
+      window.history.back();
+    }
+  }, []);
+
   return (
     <section className="hhcp-ql-section">
       <style>{STYLES}</style>
@@ -225,14 +279,41 @@ export function QuizLanding() {
         />
 
         <div className="hhcp-ql-body">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="hhcp-ql-logo"
-            src="/images/logo-colour-tagline.svg"
-            alt="Horizon Health Care Partners Australia"
-            width={195}
-            height={55}
-          />
+          <div className="hhcp-ql-nav">
+            {/*
+              A real link to "/" first, so it works before hydration and shows a
+              destination on hover. The click only steps back in history when
+              there is same-origin history to step back to — otherwise it does
+              what the href says and goes home, rather than being a dead button.
+            */}
+            <Link className="hhcp-ql-back" href="/" onClick={back}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M8.5 2.5 4 7l4.5 4.5" />
+              </svg>
+              Back
+            </Link>
+
+            <Link href="/" aria-label="Horizon Health Care Partners — home">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="hhcp-ql-logo"
+                src="/images/logo-colour-tagline.svg"
+                alt="Horizon Health Care Partners Australia"
+                width={195}
+                height={55}
+              />
+            </Link>
+          </div>
 
           <div className="hhcp-ql-copy">
             <div className="hhcp-ql-eyebrow">
