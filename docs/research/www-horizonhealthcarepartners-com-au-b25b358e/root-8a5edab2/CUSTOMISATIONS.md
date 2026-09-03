@@ -219,3 +219,36 @@ The strip's height falls exactly in step with scroll. Hero heights are unchanged
 three viewports (900 / 800 / 771, the last being 844 less the 73px CTA bar), so pinning
 the header shifted no layout. `/services/#book` lands its target at 100px with the pill
 ending at 83px.
+
+## 7. The About dropdown's links match the Services mega panel
+
+**Requested:** the items under About should have the same font style as the mega
+panel's items, e.g. "Weight Loss Injections".
+
+**Target behaviour:** the two panels are typeset differently. `.hhcp-hdr__submenu a`
+is `font-weight: 600` in flat `#000000` at `line-height: 120%`; the mega panel's
+`.hhcp-hdr__mega-list a` is regular weight in `--hhcp-base-80` at `1.4`. They hang off
+adjacent items in the same bar, so opening About after Services looked like a menu from
+a different site.
+
+**Change** — `SiteHeader.tsx`, `.hhcp-hdr__submenu a`:
+
+| | Target | Here |
+|---|---|---|
+| `font-weight` | `600` | inherited `400` |
+| `color` | `#000000` | `var(--hhcp-base-80)` |
+| `line-height` | `120%` | `1.4` |
+| hover | row background only | row background **and** `--hhcp-action-dark`, as the mega panel does |
+
+Family and size were already the same in both — DM Sans at `--hhcp-text-s`.
+
+The row's hover background stays. It belongs to this panel rather than to the type, and
+a dropdown of plain links with nothing marking the pointer's row is worse than an
+inconsistency.
+
+Measured — every computed property on a link in each panel, at 1534px:
+
+| | family | size | weight | line-height | colour |
+|---|---|---|---|---|---|
+| mega ("Weight Loss Injections") | dmSans | 16px | 400 | 22.4px | rgba(1, 49, 38, 0.8) |
+| About ("About Us") | dmSans | 16px | 400 | 22.4px | rgba(1, 49, 38, 0.8) |

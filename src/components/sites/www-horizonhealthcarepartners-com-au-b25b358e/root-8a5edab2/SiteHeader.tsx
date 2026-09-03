@@ -479,16 +479,30 @@ const HEADER_CSS = `
 .hhcp-hdr__submenu li:hover {
   background-color: var(--hhcp-neutral-ultra-light);
 }
+/*
+ * Set to match .hhcp-hdr__mega-list a exactly — same weight, colour, leading
+ * and hover. The two panels hang off adjacent items in the same bar, and the
+ * target had this one at 600 in flat black while the mega panel's links were
+ * regular weight in --hhcp-base-80, so opening About after Services looked like
+ * a different menu from a different site.
+ *
+ * The row's hover background stays. That belongs to this panel rather than to
+ * the type, and without it a dropdown of plain links has nothing to show which
+ * row the pointer is on.
+ */
 .hhcp-hdr__submenu a {
   display: block;
   width: 100%;
-  color: #000000;
+  color: var(--hhcp-base-80);
   font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--hhcp-text-s);
-  font-weight: 600;
-  line-height: 120%;
+  line-height: 1.4;
   padding: var(--hhcp-space-xs) var(--hhcp-space-s);
   text-decoration: none;
+  transition: all 0.3s linear;
+}
+.hhcp-hdr__submenu a:hover {
+  color: var(--hhcp-action-dark);
 }
 
 /* ---------- Hamburger ---------- */
