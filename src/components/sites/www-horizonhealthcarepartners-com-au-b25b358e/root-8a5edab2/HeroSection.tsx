@@ -22,8 +22,17 @@ import { cn } from "@/lib/utils";
 
 const ASSET_BASE =
   "/videos";
-const VIDEO_SRC = `${ASSET_BASE}/hero-background.mp4`;
-const POSTER_SRC = `${ASSET_BASE}/hero-background-poster.png`;
+/*
+ * WebM and WebP, not MP4 and PNG. The source files were re-encoded — the
+ * hero video went from 6.4MB to 1.7MB and its poster from 1.1MB to 78KB,
+ * which is most of this page's weight.
+ *
+ * There is no MP4 alongside it. Every browser this site supports plays WebM,
+ * and one that does not gets the poster frame and a still hero rather than a
+ * gap — the video is decoration, nothing is read from it.
+ */
+const VIDEO_SRC = `${ASSET_BASE}/hero-background.webm`;
+const POSTER_SRC = `${ASSET_BASE}/hero-background-poster.webp`;
 
 /* Relative: this site now *is* horizonhealthcarepartners.com.au. */
 const QUIZ_HREF = "/quiz/";
