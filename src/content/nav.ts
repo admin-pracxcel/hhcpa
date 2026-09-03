@@ -45,6 +45,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
         links: [
           { label: "Weight Loss Injections", href: "/weight-loss-peptides/weight-loss-injections/" },
           { label: "Medical Weight Loss Program", href: "/weight-loss-peptides/medical-weight-loss-program/" },
+          /*
+           * Medicinal Cannabis sits here rather than as a column of its own. It
+           * has no sub-pages, so as a column it was a heading with nothing under
+           * it — which read as a silo that had lost its contents rather than as
+           * a page. As a link it takes the same styling as its siblings.
+           */
+          { label: "Medicinal Cannabis", href: "/medicinal-cannabis/" },
         ],
       },
       {
@@ -77,8 +84,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
           { label: "Mental Health Support", href: "/online-doctor/mental-health/" },
         ],
       },
-      // Appears as a fifth column on compliance sign-off; filtered out until then.
-      { title: "Medicinal Cannabis", href: "/medicinal-cannabis/", links: [] },
     ],
   },
   { label: "How It Works", href: "/how-it-works/" },

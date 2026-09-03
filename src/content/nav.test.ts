@@ -36,7 +36,7 @@ describe("NAV_ITEMS", () => {
 
   it("gives every mega-menu column a hub link of its own", () => {
     const services = NAV_ITEMS[0];
-    expect(services.columns?.length).toBe(5);
+    expect(services.columns?.length).toBe(4);
     for (const column of services.columns ?? []) {
       expect(column.href.startsWith("/")).toBe(true);
     }
@@ -44,10 +44,23 @@ describe("NAV_ITEMS", () => {
 });
 
 describe("visibleNavItems", () => {
-  it("carries every services silo now that none is gated", () => {
+  it("keeps Medicinal Cannabis as a link under Weight Loss, not a column", () => {
+    /*
+     * It has no sub-pages, so a column of its own was a heading with nothing
+     * beneath it. Moved at request to sit directly below Medical Weight Loss
+     * Program, where it renders with the same styling as its siblings.
+     */
     const services = visibleNavItems()[0];
-    expect(services.columns?.map((c) => c.href)).toContain("/medicinal-cannabis/");
-    expect(services.columns).toHaveLength(5);
+    expect(services.columns).toHaveLength(4);
+    expect(services.columns?.map((c) => c.href)).not.toContain("/medicinal-cannabis/");
+
+    const weightLoss = services.columns?.[0];
+    expect(weightLoss?.href).toBe("/weight-loss-peptides/");
+    expect(weightLoss?.links.map((l) => l.href)).toEqual([
+      "/weight-loss-peptides/weight-loss-injections/",
+      "/weight-loss-peptides/medical-weight-loss-program/",
+      "/medicinal-cannabis/",
+    ]);
   });
 
   it("shows the two formerly gated destinations", () => {
