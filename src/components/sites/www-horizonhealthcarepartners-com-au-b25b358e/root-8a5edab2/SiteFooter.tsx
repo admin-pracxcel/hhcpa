@@ -11,7 +11,7 @@
  *          ├─ .divider
  *          ├─ nav .middle           — four equal menu columns
  *          ├─ .divider
- *          └─ .bottom               — credit + legal links, then the disclaimer
+ *          └─ .bottom               — copyright and the agency credit
  *
  * Client component purely so the newsletter form can `preventDefault()` — the
  * source posts to a CRM endpoint we do not clone, so the demo submit is inert.
@@ -34,7 +34,7 @@ import {
   FacebookSquareIcon,
   InstagramIcon,
 } from "../shared/icons";
-import { visibleFooterColumns, FOOTER_BAR_LINKS } from "@/content/footer";
+import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
 import { CLINIC } from "@/content/clinic";
 
 const LOGO_SRC =
@@ -366,6 +366,22 @@ const STYLES = `
   column-gap: var(--hhcp-space-m, 30px);
 }
 
+.hhcp-ft-byline {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(245, 255, 249, 0.6);
+}
+
+.hhcp-ft-byline a {
+  color: var(--hhcp-accent, #f5fff9);
+  text-decoration: none;
+  transition: color 0.3s linear;
+}
+
+.hhcp-ft-byline a:hover {
+  color: var(--hhcp-action, #58eda2);
+}
+
 .hhcp-ft-bottom-row {
   display: flex;
   flex-direction: row;
@@ -551,15 +567,12 @@ export function SiteFooter({ className }: SiteFooterProps) {
           <div className="hhcp-ft-bottom-row">
             <small className="hhcp-ft-credit">{CREDIT}</small>
 
-            <ul className="hhcp-ft-legal">
-              {FOOTER_BAR_LINKS.map((link) => (
-                <li key={link.href}>
-                  <a className="font-dm-sans" href={link.href}>
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <small className="hhcp-ft-byline font-dm-sans">
+              {FOOTER_CREDIT.before}
+              <a href={FOOTER_CREDIT.href} rel={FOOTER_CREDIT.rel}>
+                {FOOTER_CREDIT.label}
+              </a>
+            </small>
           </div>
         </div>
       </div>
