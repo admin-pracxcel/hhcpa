@@ -109,6 +109,13 @@ interface ThankYouPanelProps {
   body: string;
   primary: { label: string; href: string };
   secondary: { label: string; href: string };
+  /**
+   * Replaces the closing line. `/quiz-thank-you/` supplies its own, which
+   * points at 000 and a GP rather than at us — so the default's phone number
+   * and opening hours would read as an alternative to that, which is not what
+   * an urgent enquiry needs.
+   */
+  note?: string;
 }
 
 export function ThankYouPanel({
@@ -117,6 +124,7 @@ export function ThankYouPanel({
   body,
   primary,
   secondary,
+  note,
 }: ThankYouPanelProps) {
   return (
     <section className={cn("hhcp-ty-section", className)}>
@@ -150,9 +158,13 @@ export function ThankYouPanel({
         </div>
 
         <p className="hhcp-ty-note font-dm-sans">
-          {"Need us sooner? Call "}
-          <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
-          {` — ${CLINIC.hours}. In an emergency, call 000.`}
+          {note ?? (
+            <>
+              {"Need us sooner? Call "}
+              <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
+              {` — ${CLINIC.hours}. In an emergency, call 000.`}
+            </>
+          )}
         </p>
       </div>
     </section>

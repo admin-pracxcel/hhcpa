@@ -2,20 +2,21 @@
  * `/quiz-thank-you/` — where the pre-screening quiz lands after it submits.
  *
  * Absent from `ROUTES`, so it appears in no sitemap, nav or breadcrumb, and
- * `noindex` on top of that. A confirmation page has nothing to offer a
- * searcher, and one that ranks gets opened by people who never submitted
- * anything — who would then read a message written for someone who did.
+ * `noindex` on top of that: a confirmation page has nothing to offer a searcher,
+ * and one that ranks gets opened by people who never submitted anything.
  *
- * No closing CTA band: pushing "start the free quiz" at someone who has just
+ * No closing CTA band. Pushing "start the free quiz" at someone who has just
  * finished the quiz reads as nobody being home.
  *
- * The panel is a client component because the triage level it needs is in
- * sessionStorage; see QuizThankYouPanel.
+ * A plain server component. It used to be a client one that read the triage
+ * level out of sessionStorage to choose between four messages; there is one
+ * message now, so there is nothing to read and nothing to hydrate.
  */
 
 import type { Metadata } from "next";
 
-import { QuizThankYouPanel } from "@/components/sections/QuizThankYouPanel";
+import { QUIZ_SUCCESS } from "@/content/quiz";
+import { ThankYouPanel } from "@/components/sections/ThankYouPanel";
 
 export const metadata: Metadata = {
   title: "Thank you | Horizon Health Care Partners",
@@ -23,5 +24,13 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <QuizThankYouPanel />;
+  return (
+    <ThankYouPanel
+      heading={QUIZ_SUCCESS.heading}
+      body={QUIZ_SUCCESS.body}
+      note={QUIZ_SUCCESS.note}
+      primary={{ label: "Back to home", href: "/" }}
+      secondary={{ label: "Read the knowledge hub", href: "/articles/" }}
+    />
+  );
 }

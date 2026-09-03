@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 
 import { QuizForm } from "./QuizForm";
-import { TRIAGE_STORAGE_KEY } from "@/content/quiz";
 
 /*
  * The form navigates to /quiz-thank-you/ on success, and useRouter throws
@@ -80,7 +79,6 @@ describe("quiz form", () => {
 
   beforeEach(() => {
     push.mockClear();
-    window.sessionStorage.clear();
     fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ ok: true }),
@@ -207,13 +205,12 @@ describe("quiz form", () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(sentBody().outcome).toBe("red");
 
-    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-thank-you/"));
     /*
-     * The level is handed on out of band. A query string would put inferred
-     * health information into browser history, the Referer header and
-     * analytics; this stays in the tab.
+     * The thank-you page shows one message for every outcome, so what matters
+     * here is that a red submission reaches n8n and the patient reaches the
+     * page — not what either of them then says.
      */
-    expect(window.sessionStorage.getItem(TRIAGE_STORAGE_KEY)).toBe("red");
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-thank-you/"));
   });
 
   it("triages a clean run green", async () => {

@@ -992,49 +992,25 @@ export const REQUIRED_CONSENT_IDS = QUIZ_CONSENTS.filter(
 export const CONSENT_VERSION = "2026-09-03";
 
 /**
- * What a patient reads after submitting, by triage level.
+ * What a patient reads on `/quiz-thank-you/` after submitting. Client copy,
+ * supplied verbatim.
  *
- * `unknown` is the fallback for a page load that cannot see the level — a
- * bookmark, a shared link, a tab without the stored value. It is written for the
- * person who did just finish the quiz, because that is who is almost always
- * reading it: the page is noindex and linked from nowhere, so the only ordinary
- * way to reach it is by submitting.
+ * One message for everyone. This replaced four, one per triage level, and the
+ * variation is gone rather than dormant — nothing on the page reads the level
+ * any more, so the sessionStorage hand-off the quiz used to do went with it.
  *
- * An earlier version hedged — "if you have just completed the quiz" — which
- * told the reader we did not know whether they had, when of course they had.
+ * What the four were for is still covered. Green offered to help you book;
+ * "your results and the next steps" says that without promising a booking to
+ * someone who should not have one. Red carried the urgent-care line, and that
+ * line now shows to everybody — the safer direction to have got it wrong in.
  *
- * What it must not do is promise an outcome. Green offers to book; this only
- * confirms receipt and says a person will be in touch, which is true whichever
- * way the answers were triaged. So a red submission that somehow lost its level
- * is understated here rather than told the wrong thing.
+ * The triage level is still calculated and still sent to n8n with the
+ * submission. Only the on-page message stopped depending on it.
  */
-/**
- * Where the quiz leaves the triage level for `/quiz-thank-you/` to read.
- *
- * sessionStorage rather than a query string: a triage level is inferred health
- * information, and a query string goes into browser history, into the Referer
- * header of anything the next page loads, and into analytics. This stays in the
- * tab and never crosses the network. The browser drops it when the tab closes.
- */
-export const TRIAGE_STORAGE_KEY = "hhcp-quiz-outcome";
-
 export const QUIZ_SUCCESS = {
-  unknown: {
-    heading: "Thank you — we have your answers",
-    body: "A member of our team will review them and be in touch about your next step. Nothing has been prescribed from this quiz, and any care plan comes from a consultation with an AHPRA-registered practitioner.",
-  },
-  green: {
-    heading: "Thank you — we have your answers",
-    body: "A member of our team will be in touch to help you book a consultation with an AHPRA-registered practitioner. Nothing has been prescribed from this quiz, and any care plan comes from that consultation.",
-  },
-  amber: {
-    heading: "Thank you — we have your answers",
-    body: "A practitioner will review your answers before we arrange your consultation, and a member of our team will be in touch. Nothing has been prescribed from this quiz.",
-  },
-  red: {
-    heading: "Thank you — a member of our team will contact you",
-    body: "Based on your responses, your situation requires further review before booking. Someone from our team will be in touch. If anything changes in the meantime, or you feel unwell, please contact your GP — and in an emergency, call 000.",
-  },
+  heading: "Thanks — we’ve got your details",
+  body: "Your pre-screening answers have been received. Our clinical team will review them and be in touch shortly with your results and the next steps.",
+  note: "If your enquiry is urgent, please call 000 or contact your GP.",
 } as const;
 
 /* -------------------------------------------------------------------------

@@ -169,7 +169,6 @@ export function NotFoundPanel({ className }: { className?: string }) {
           </h1>
           <p className="hhcp-nf-body font-dm-sans">
             The link may be out of date, or the address may have a typo in it.
-            Nothing has gone wrong with your care or any form you have sent.
           </p>
         </div>
 

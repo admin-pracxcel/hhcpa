@@ -31,7 +31,6 @@ import {
   QUIZ_CONSENTS,
   QUIZ_CONTACT,
   QUIZ_STEPS,
-  TRIAGE_STORAGE_KEY,
   TRIAGE_MESSAGES,
   bmiMessage,
   calculateBmi,
@@ -734,16 +733,15 @@ export function QuizForm({ className }: { className?: string }) {
       }
 
       /*
-       * The level goes into sessionStorage rather than the URL: it is inferred
-       * health information, and a query string is written into browser history,
-       * sent as the Referer to anything the next page loads, and read by
-       * analytics. See TRIAGE_STORAGE_KEY.
-       *
        * `status` stays "sending" through the navigation so the button stays
        * disabled — going back to "idle" would re-enable it and let a slow
        * redirect be submitted twice.
+       *
+       * The triage level is not handed to the thank-you page any more. It used
+       * to travel in sessionStorage so the page could pick one of four
+       * messages; there is one message now. The level still goes to n8n in the
+       * payload above, which is where it does the work.
        */
-      window.sessionStorage.setItem(TRIAGE_STORAGE_KEY, outcome.level);
       router.push("/quiz-thank-you/");
     } catch {
       setProblem(
