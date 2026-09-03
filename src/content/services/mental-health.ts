@@ -16,6 +16,7 @@ import {
   STANDARD_FOOTNOTE,
   STANDARD_FOOTNOTE_LINKS,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const MENTAL_HEALTH: ServicePageData = {
   meta: {
@@ -28,7 +29,7 @@ export const MENTAL_HEALTH: ServicePageData = {
     eyebrow: "Mental health support",
     heading: "Mental health support, without the waiting room",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },

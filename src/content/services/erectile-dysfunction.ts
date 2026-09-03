@@ -15,6 +15,7 @@ import {
   STANDARD_FOOTNOTE_LINKS,
   howToBegin,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const ERECTILE_DYSFUNCTION: ServicePageData = {
   meta: {
@@ -27,7 +28,7 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
     eyebrow: "Erectile dysfunction",
     heading: "Erectile dysfunction treatment, assessed privately online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },

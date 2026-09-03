@@ -14,7 +14,7 @@ import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/JsonLd";
 import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
-import { CLINIC } from "@/content/clinic";
+import { CALL_CTA, CLINIC } from "@/content/clinic";
 import { ARTICLES } from "@/content/articles";
 
 import { RelatedCards } from "@/components/sections/RelatedCards";
@@ -58,7 +58,7 @@ export default function Page() {
         heading="Guidance worth reading"
         crumbs={[{ label: "Home", href: "/" }]}
         primary={{ label: "Check your eligibility", href: "/quiz/" }}
-        secondary={{ label: "Book a consultation", href: "/quiz/" }}
+        secondary={CALL_CTA}
       />
 
       <ScrollRevealParagraph

@@ -22,6 +22,7 @@
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { IMAGE, IMAGE_ALT, STANDARD_CLOSING } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const DISCHARGE: ServicePageData = {
   meta: {
@@ -33,7 +34,7 @@ export const DISCHARGE: ServicePageData = {
     eyebrow: "Transfer your care",
     heading: "Transfer your care to Horizon Health Care Partners",
     primary: { label: "Start your transfer", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   trust: null,

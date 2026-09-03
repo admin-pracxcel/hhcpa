@@ -20,6 +20,7 @@
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { STANDARD_CLOSING } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const HOW_IT_WORKS: ServicePageData = {
   meta: {
@@ -32,7 +33,7 @@ export const HOW_IT_WORKS: ServicePageData = {
     eyebrow: "How it works",
     heading: "How it works: from pre-screening to ongoing care in four steps",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:

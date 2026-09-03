@@ -21,6 +21,7 @@ import {
   STANDARD_FOOTNOTE,
   STANDARD_FOOTNOTE_LINKS,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
   meta: {
@@ -33,7 +34,7 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
     eyebrow: "Medical weight loss program",
     heading: "A medical weight loss program built around review, not quick fixes",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },

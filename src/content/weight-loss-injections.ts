@@ -13,6 +13,8 @@
  * product, an active ingredient or a manufacturer (clause 2.6).
  */
 
+import { CALL_CTA } from "./clinic";
+
 const IMAGE_BASE =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
 
@@ -28,7 +30,7 @@ export const WLI_HERO = {
   heading:
     "Weight loss injections in Australia, assessed online by a practitioner",
   primary: { label: "Check your eligibility", href: "/quiz/" },
-  secondary: { label: "Book a consultation", href: "/quiz/" },
+  secondary: CALL_CTA,
 } as const;
 
 export const WLI_INTRO =

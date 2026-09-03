@@ -12,6 +12,7 @@
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { IMAGE, IMAGE_ALT } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const PATIENT_SAFETY: ServicePageData = {
   meta: {
@@ -24,7 +25,7 @@ export const PATIENT_SAFETY: ServicePageData = {
     eyebrow: "Patient safety",
     heading: "Your safety comes first",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   trust: null,

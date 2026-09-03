@@ -12,6 +12,7 @@
  */
 
 import { PRICES } from "./pricing";
+import { CALL_CTA } from "./clinic";
 
 export const FAQS_META = {
   title: "FAQs | Telehealth, Prescriptions & Consultations | HHCPA",
@@ -25,7 +26,7 @@ export const FAQS_PAGE = {
     eyebrow: "FAQs",
     heading: "Your questions, answered",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:

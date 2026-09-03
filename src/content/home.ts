@@ -18,6 +18,7 @@
 
 import { CONSULTATION_PLANS } from "./consultation-plans";
 import { PRICES } from "./pricing";
+import { CALL_CTA } from "./clinic";
 
 export const HOME_META = {
   title: "Online Telehealth Clinic Australia | Weight Loss & More",
@@ -30,7 +31,7 @@ export const HOME_HERO = {
     "Australia's practitioner-led telehealth clinic for weight loss, hormones and everyday care",
   body: "See an AHPRA-registered practitioner from home, anywhere in Australia. Start with a free two-minute pre-screening quiz, then book a real consultation by video or phone. Care is private, transparent, and centred on you.",
   primary: { label: "Check your eligibility", href: "/quiz/" },
-  secondary: { label: "Book a consultation", href: "/quiz/" },
+  secondary: CALL_CTA,
 } as const;
 
 /** Value-proposition strip, full width directly under the hero. */

@@ -25,6 +25,7 @@ import {
   STANDARD_FOOTNOTE,
   STANDARD_FOOTNOTE_LINKS,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const MEDICINAL_CANNABIS: ServicePageData = {
   meta: {
@@ -38,7 +39,7 @@ export const MEDICINAL_CANNABIS: ServicePageData = {
     heading:
       "Medicinal cannabis prescription: eligibility assessed by registered practitioners",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:

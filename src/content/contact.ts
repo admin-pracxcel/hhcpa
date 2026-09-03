@@ -12,7 +12,7 @@
  * published opening hours that are wrong are worse than none.
  */
 
-import { CLINIC } from "./clinic";
+import { CALL_CTA, CLINIC } from "./clinic";
 
 export const CONTACT_META = {
   title: "Contact Us | Horizon Health Care Partners Australia",
@@ -25,7 +25,7 @@ export const CONTACT_PAGE = {
     eyebrow: "Contact",
     heading: "Contact our team",
     primary: { label: "Book a consultation", href: "/quiz/" },
-    secondary: { label: "Take the free quiz", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:

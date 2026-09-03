@@ -9,7 +9,7 @@
  * body. Confirm the primary one before publishing.
  */
 
-import { CLINIC } from "../clinic";
+import { CALL_CTA, CLINIC } from "../clinic";
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { IMAGE, IMAGE_ALT } from "./shared";
 
@@ -24,7 +24,7 @@ export const COMPLAINTS: ServicePageData = {
     eyebrow: "Complaints",
     heading: "Complaints and feedback",
     primary: { label: "Contact our team", href: "/contact/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   trust: null,

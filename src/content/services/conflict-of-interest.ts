@@ -23,6 +23,7 @@
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { IMAGE, IMAGE_ALT } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const CONFLICT_OF_INTEREST: ServicePageData = {
   meta: {
@@ -35,7 +36,7 @@ export const CONFLICT_OF_INTEREST: ServicePageData = {
     eyebrow: "Conflict of interest",
     heading: "Conflict of interest and pharmacy disclosure",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   trust: null,

@@ -18,6 +18,7 @@ import {
   STANDARD_FOOTNOTE_LINKS,
   howToBegin,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const WOMENS_HEALTH: ServicePageData = {
   meta: {
@@ -30,7 +31,7 @@ export const WOMENS_HEALTH: ServicePageData = {
     eyebrow: "Women's health",
     heading: "Women's health, on your schedule and online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   trust: [

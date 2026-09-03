@@ -9,6 +9,7 @@ import {
   STANDARD_FOOTNOTE_LINKS,
   howToBegin,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const SPECIALIST_REFERRALS: ServicePageData = {
   meta: {
@@ -21,7 +22,7 @@ export const SPECIALIST_REFERRALS: ServicePageData = {
     eyebrow: "Specialist referrals",
     heading: "Specialist referrals, assessed and issued online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },

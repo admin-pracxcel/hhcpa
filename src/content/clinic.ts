@@ -32,6 +32,32 @@ export const CLINIC = {
   hoursProvisional: true,
 } as const;
 
+/**
+ * The secondary CTA every page hero carries, beside the quiz.
+ *
+ * It is a phone call rather than a second link into the quiz, which is what it
+ * used to be — two buttons side by side that both opened the same page. Two
+ * CTAs should offer two different things to do: the quiz screens you yourself,
+ * this puts you through to a person. The contact form was the other candidate
+ * and is the same act as the quiz in different clothes — fill something in and
+ * wait for a reply.
+ *
+ * The label names the number rather than saying "Book a consultation", because
+ * a call is what happens when it is pressed. Nothing on the public site takes a
+ * booking directly: the Halaxy widget that does is in the BookingWizard, which
+ * renders only on the archived clone at `/home-v2/` (CUSTOMISATIONS.md
+ * deviation 2). Until it is rehomed, "book" is a promise no button here can
+ * keep, and the phone is the honest version of it.
+ *
+ * FinalCtaSection and the mobile CTA bar already pair the quiz with this call,
+ * so the heroes now match the rest of the page rather than being a third
+ * pattern.
+ */
+export const CALL_CTA = {
+  label: `Call ${CLINIC.phone}`,
+  href: CLINIC.phoneHref,
+} as const;
+
 export const SITE_DISCLAIMER =
   "Individual results may vary and no treatment outcomes are guaranteed. " +
   "Prescriptions are provided only where clinically appropriate following a " +

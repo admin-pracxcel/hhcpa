@@ -22,6 +22,7 @@
  */
 
 import type { Practitioner } from "@/components/sections/PractitionerCards";
+import { CALL_CTA } from "./clinic";
 
 export const PRACTITIONERS_META = {
   title: "Our Practitioners | AHPRA-Registered Team | HHCPA",
@@ -38,7 +39,7 @@ export const PRACTITIONERS_PAGE = {
     eyebrow: "Our practitioners",
     heading: "Our AHPRA-registered practitioners",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:

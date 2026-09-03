@@ -22,6 +22,7 @@
  */
 
 import { PRICES } from "./pricing";
+import { CALL_CTA } from "./clinic";
 
 export const WLP_META = {
   title: "Peptides for Weight Loss | Medical Weight Loss Clinic AU",
@@ -35,7 +36,7 @@ export const WLP_HERO = {
   heading:
     "Peptides for weight loss, guided by AHPRA-registered practitioners",
   primary: { label: "Check your eligibility", href: "/quiz/" },
-  secondary: { label: "Book a consultation", href: "/quiz/" },
+  secondary: CALL_CTA,
 } as const;
 
 /** Trust bar, verbatim from the source. Four items on this page, not five. */

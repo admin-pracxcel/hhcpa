@@ -23,6 +23,7 @@
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { CONSULTATION_PLANS } from "../consultation-plans";
 import { STANDARD_CLOSING } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const PRICING_PAGE: ServicePageData = {
   meta: {
@@ -35,7 +36,7 @@ export const PRICING_PAGE: ServicePageData = {
     eyebrow: "Pricing",
     heading: "Transparent pricing, no surprises",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro:

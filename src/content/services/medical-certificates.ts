@@ -16,6 +16,7 @@ import {
   STANDARD_FOOTNOTE_LINKS,
   howToBegin,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const MEDICAL_CERTIFICATES: ServicePageData = {
   meta: {
@@ -28,7 +29,7 @@ export const MEDICAL_CERTIFICATES: ServicePageData = {
     eyebrow: "Medical certificates",
     heading: "Online medical certificates for work, study and carer's leave",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },

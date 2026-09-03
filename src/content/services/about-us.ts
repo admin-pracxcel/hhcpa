@@ -29,7 +29,7 @@
 
 import { isGated } from "../routes";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { CLINIC } from "../clinic";
+import { CALL_CTA, CLINIC } from "../clinic";
 import {
   IMAGE,
   IMAGE_ALT,
@@ -62,7 +62,7 @@ export const ABOUT_US: ServicePageData = {
     eyebrow: "About us",
     heading: "About Horizon Health Care Partners",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   intro: `Horizon Health Care Partners is an Australian telehealth clinic, based in ${CLINIC.addressRegion}, serving patients across the country. We were founded on a straightforward belief: every Australian deserves accessible, practitioner-led healthcare, wherever they live. We are an Australian entity focused on Australian patients, and everything we do runs through AHPRA-registered practitioners.`,

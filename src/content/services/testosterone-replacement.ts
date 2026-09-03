@@ -15,6 +15,7 @@ import {
   STANDARD_FOOTNOTE_LINKS,
   howToBegin,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const TESTOSTERONE_REPLACEMENT: ServicePageData = {
   meta: {
@@ -27,7 +28,7 @@ export const TESTOSTERONE_REPLACEMENT: ServicePageData = {
     eyebrow: "Testosterone replacement",
     heading: "TRT in Australia: low testosterone, assessed properly online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },

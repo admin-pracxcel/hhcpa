@@ -14,7 +14,7 @@ import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/JsonLd";
 import { buildArticle, buildBreadcrumbList } from "@/lib/schema";
-import { CLINIC } from "@/content/clinic";
+import { CALL_CTA, CLINIC } from "@/content/clinic";
 import { ARTICLES, findArticle } from "@/content/articles";
 
 import { ArticleBody } from "@/components/sections/ArticleBody";
@@ -80,7 +80,7 @@ export default async function Page({
           { label: "Knowledge hub", href: "/articles/" },
         ]}
         primary={{ label: "Check your eligibility", href: "/quiz/" }}
-        secondary={{ label: "Book a consultation", href: "/quiz/" }}
+        secondary={CALL_CTA}
       />
 
       <ArticleBody blocks={article.blocks} moneyPage={article.moneyPage} />

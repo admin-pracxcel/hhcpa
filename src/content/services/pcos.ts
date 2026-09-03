@@ -16,6 +16,7 @@ import {
   STANDARD_FOOTNOTE_LINKS,
   howToBegin,
 } from "./shared";
+import { CALL_CTA } from "../clinic";
 
 export const PCOS: ServicePageData = {
   meta: {
@@ -28,7 +29,7 @@ export const PCOS: ServicePageData = {
     eyebrow: "PCOS management",
     heading: "PCOS management, coordinated online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
-    secondary: { label: "Book a consultation", href: "/quiz/" },
+    secondary: CALL_CTA,
   },
   crumbs: [
     { label: "Home", href: "/" },
