@@ -25,7 +25,8 @@ const ASSET_BASE =
 const VIDEO_SRC = `${ASSET_BASE}/hero-background.mp4`;
 const POSTER_SRC = `${ASSET_BASE}/hero-background-poster.png`;
 
-const QUIZ_HREF = "https://www.horizonhealthcarepartners.com.au/quiz/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const QUIZ_HREF = "/quiz/";
 
 const HEADING = "Professional Healthcare at Your Fingertips";
 const BODY =

@@ -20,7 +20,8 @@
 import { cn } from "@/lib/utils";
 import { CheckCircleIcon } from "../shared/icons";
 
-const CTA_HREF = "https://www.horizonhealthcarepartners.com.au/about-us/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const CTA_HREF = "/about-us/";
 
 const EYEBROW = "OUR STORY";
 const HEADING = "Healthcare That Puts You in Control";

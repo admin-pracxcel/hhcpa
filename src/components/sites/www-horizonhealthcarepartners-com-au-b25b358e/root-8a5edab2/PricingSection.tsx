@@ -22,8 +22,9 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { CheckCircleIcon } from "../shared/icons";
 
-const QUIZ_HREF = "https://www.horizonhealthcarepartners.com.au/quiz/";
-const DISCHARGE_HREF = "https://www.horizonhealthcarepartners.com.au/discharge/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const QUIZ_HREF = "/quiz/";
+const DISCHARGE_HREF = "/discharge/";
 
 export interface PricingPlan {
   /** White chip above the price. */

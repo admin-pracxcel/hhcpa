@@ -20,13 +20,20 @@
 
 import { cn } from "@/lib/utils";
 
-const CTA_HREF = "https://www.horizonhealthcarepartners.com.au/articles/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const CTA_HREF = "/articles/";
 const CTA_LABEL = "Read All Blogs";
 
 const EYEBROW = "Our Health & Wellness Blogs";
 const HEADING = "Our Knowledge Hub";
 
-const TOPIC_HREF = "https://www.horizonhealthcarepartners.com.au/topic/general/";
+/*
+ * The source has a topic taxonomy at /topic/<name>/. This site does not, so the
+ * topic label goes to the article index instead — the one page here that lists
+ * articles. Pointing it at the source would send the reader off-site; leaving it
+ * absolute-but-local would 404.
+ */
+const TOPIC_HREF = "/articles/";
 const IMAGE_BASE =
   "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
 
@@ -47,7 +54,7 @@ const POSTS: readonly Post[] = [
     date: "May 05, 2026",
     title:
       "Why Weight Loss is Difficult to Maintain, and What Actually Works Long-Term",
-    href: "https://www.horizonhealthcarepartners.com.au/article/why-weight-loss-is-difficult-to-maintain-and-what-actually-works-long-term/",
+    href: "/article/why-weight-loss-is-difficult-to-maintain-and-what-actually-works-long-term/",
     image: "blog-weight-loss.jpeg",
     alt: "Two women exercising outdoors in activewear, representing a healthy active lifestyle for sustainable long-term weight management",
   },
@@ -56,7 +63,7 @@ const POSTS: readonly Post[] = [
     readTime: "3 minutes",
     date: "May 05, 2026",
     title: "Why Sleep is Essential for Chronic Pain, Weight, and Overall Health",
-    href: "https://www.horizonhealthcarepartners.com.au/article/why-sleep-is-essential-for-chronic-pain-weight-and-overall-health/",
+    href: "/article/why-sleep-is-essential-for-chronic-pain-weight-and-overall-health/",
     image: "blog-sleep-health.jpg",
     alt: "Woman sitting on bed stretching in the morning, representing the connection between healthy sleep and overall wellbeing",
   },
@@ -65,7 +72,7 @@ const POSTS: readonly Post[] = [
     readTime: "2 minutes",
     date: "May 05, 2026",
     title: "Why Sleep Matters in Chronic Pain",
-    href: "https://www.horizonhealthcarepartners.com.au/article/why-sleep-matters-in-chronic-pain/",
+    href: "/article/why-sleep-matters-in-chronic-pain/",
     image: "blog-sleep-pain.jpg",
     alt: "Young woman sleeping peacefully in white sheets, representing the importance of quality sleep for chronic pain relief",
   },

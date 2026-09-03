@@ -25,7 +25,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowRightLongIcon } from "../shared/icons";
 
-const CTA_HREF = "https://www.horizonhealthcarepartners.com.au/quiz/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const CTA_HREF = "/quiz/";
 const CTA_LABEL = "Start pre-screening quiz";
 
 const EYEBROW = "Our Approach to Care";

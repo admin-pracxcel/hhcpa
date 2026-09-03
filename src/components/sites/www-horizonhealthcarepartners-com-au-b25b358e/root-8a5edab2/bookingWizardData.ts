@@ -21,7 +21,17 @@
  */
 export const BOOKING_REDIRECT_URL =
   "https://www.horizonhealthcarepartners.com.au/book-consultation/";
-/** Used only by the "1 Day" medical-certificate branch, which does navigate. */
+/**
+ * Used only by the "1 Day" medical-certificate branch, which does navigate in
+ * the source. It does not here: that branch renders its spinner panel and stops
+ * (AGENTS.md).
+ *
+ * These two stay absolute while every other link in the cloned sections was made
+ * relative. Neither is ever followed, and neither `/book-consultation/` nor
+ * `/medical-certificate/` is a route on this site — made relative they would be
+ * two 404s rather than two dead constants. If the certificate branch is ever
+ * enabled, point it at a route that exists instead of at the source.
+ */
 export const CERT_REDIRECT_URL =
   "https://www.horizonhealthcarepartners.com.au/medical-certificate/";
 

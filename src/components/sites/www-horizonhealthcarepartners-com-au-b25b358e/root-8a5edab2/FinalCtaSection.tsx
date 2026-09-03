@@ -31,7 +31,8 @@ const ASSET_BASE =
 const VIDEO_SRC = `${ASSET_BASE}/cta-background.mp4`;
 const POSTER_SRC = `${ASSET_BASE}/cta-background-poster.png`;
 
-const QUIZ_HREF = "https://www.horizonhealthcarepartners.com.au/quiz/";
+/* Relative: this site now *is* horizonhealthcarepartners.com.au. */
+const QUIZ_HREF = "/quiz/";
 
 const HEADING = "Easy Access, Professional Care";
 const BODY =
