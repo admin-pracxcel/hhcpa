@@ -33,6 +33,21 @@ describe("FaqSection", () => {
     expect(schema.mainEntity[0].acceptedAnswer.text).toBe("No referral is needed.");
   });
 
+  it("drops the CTA, and its prompt, when the page is the index it points at", () => {
+    render(<FaqSection showCta={false} />);
+    expect(screen.queryByRole("link", { name: /Explore All FAQs/i })).toBeNull();
+    /* The prompt has to go too — asking "Still have questions?" with nothing
+       to click is worse than not asking. */
+    expect(screen.queryByText("Still have questions?")).toBeNull();
+  });
+
+  it("shows the CTA everywhere else", () => {
+    render(<FaqSection />);
+    expect(
+      screen.getByRole("link", { name: /Explore All FAQs/i }),
+    ).toHaveAttribute("href", "/faqs/");
+  });
+
   it("links the CTA relatively, not at the live WordPress domain", () => {
     const { container } = render(<FaqSection />);
     const external = Array.from(container.querySelectorAll("a[href]")).filter((a) =>

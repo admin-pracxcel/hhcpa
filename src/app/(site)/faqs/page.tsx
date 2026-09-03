@@ -61,6 +61,8 @@ export default function Page() {
           heading={group.heading}
           items={group.items}
           emitSchema={false}
+          /* This page is the FAQ index the CTA points at. */
+          showCta={false}
         />
       ))}
 

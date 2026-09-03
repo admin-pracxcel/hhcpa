@@ -8,7 +8,8 @@
  *                               centred column, 67.5px row gap
  *          ├─ head            — centred h2, no eyebrow row in this section
  *          ├─ accordion       — 662px max-width, hairline top/bottom rules
- *          └─ cta             — pill link out to the full FAQ index
+ *          └─ cta             — pill link out to the full FAQ index, suppressible
+ *                               (see showCta) because /faqs/ *is* that index
  *
  * Client component purely for the accordion's open-index state. The source is a
  * Bricks accordion: single-open, click-driven, and — unlike ApproachSection —
@@ -225,6 +226,15 @@ interface FaqSectionProps {
    * without schema of their own.
    */
   emitSchema?: boolean;
+  /**
+   * Set false on `/faqs/` itself. The CTA is a way out to the full FAQ index, so
+   * on the index it links to the page you are already reading — and that page
+   * renders four of these, so it appeared four times over. The prompt above it
+   * goes with it: "Still have questions?" with nothing to click is worse than
+   * neither, and `/faqs/` answers it twice anyway, in the intro's contact link
+   * and again in the closing band.
+   */
+  showCta?: boolean;
 }
 
 export function FaqSection({
@@ -232,6 +242,7 @@ export function FaqSection({
   heading = HEADING,
   items = ITEMS,
   emitSchema = true,
+  showCta = true,
 }: FaqSectionProps) {
   /* Every row ships collapsed on the source page. */
   const [openId, setOpenId] = useState<string | null>(null);
@@ -288,15 +299,17 @@ export function FaqSection({
           })}
         </div>
 
-        <div className="hhcp-fq-cta-row font-dm-sans">
-          <span>{CTA_PROMPT}</span>
-          <a className="hhcp-fq-cta" href={CTA_HREF}>
-            <span className="hhcp-fq-cta-icon">
-              <ArrowRightIcon width={17} height={17} />
-            </span>
-            <span>{CTA_LABEL}</span>
-          </a>
-        </div>
+        {showCta && (
+          <div className="hhcp-fq-cta-row font-dm-sans">
+            <span>{CTA_PROMPT}</span>
+            <a className="hhcp-fq-cta" href={CTA_HREF}>
+              <span className="hhcp-fq-cta-icon">
+                <ArrowRightIcon width={17} height={17} />
+              </span>
+              <span>{CTA_LABEL}</span>
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );
