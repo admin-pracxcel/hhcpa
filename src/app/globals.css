@@ -173,6 +173,25 @@
   --hhcp-text-s: clamp(14px, calc(0.1960784314vw + 13.37254902px), 16px);
   --hhcp-text-m: clamp(14px, calc(0.1960784314vw + 13.37254902px), 16px);
   --hhcp-text-l: clamp(16.8px, calc(0.4439215686vw + 15.37945098px), 21.328px);
+
+  /* --- Article typography ---------------------------------------------------
+     The single-post template runs its own scale, measured off the live article
+     at 375 / 480 / 767 / 991 / 1200 / 1534px. Every one of these fits a straight
+     line through those points and tops out at a 1340px viewport, which is
+     --hhcp-content-width; the mins are that same line evaluated at 360px.
+
+     Only h1, h2 and their spacing needed new values. The article's h3 is exactly
+     --hhcp-text-l, its body copy and paragraph spacing exactly --hhcp-text-m,
+     its list margin exactly --hhcp-space-m, and its section padding exactly
+     --hhcp-gutter — all four already carried the same curve. */
+  --hhcp-article-h1: clamp(24.7294px, calc(1.343685vw + 19.8922px), 37.8976px);
+  --hhcp-article-h2: clamp(20.4843px, calc(0.810812vw + 17.5654px), 28.4302px);
+  /* Space above an h2, above an h3, and below either. */
+  --hhcp-article-h2-space: clamp(24.5812px, calc(0.972971vw + 21.0785px), 34.1163px);
+  --hhcp-article-h3-space: clamp(20.3731px, calc(0.532711vw + 18.4553px), 25.5937px);
+  --hhcp-article-h-gap: clamp(18.0828px, calc(0.195633vw + 17.3785px), 20px);
+  /* The list's own indent. Same shape, not one of the shared tokens. */
+  --hhcp-article-list-indent: clamp(28.1572px, calc(0.392143vw + 26.745px), 32px);
   --hhcp-text-xl: clamp(20.16px, calc(0.8108062745vw + 17.565419922px), 28.430224px);
 
   /* Heading line-height is `calc(4px + 2ex)`; body is a plain 1.5 ratio. */

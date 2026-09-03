@@ -4,6 +4,21 @@
  * Statically generated from `ARTICLES`, so an unknown slug 404s rather than
  * rendering an empty shell.
  *
+ * Built to the live single-post template rather than to this site's own page
+ * furniture, at request. The reference is
+ * `https://www.horizonhealthcarepartners.com.au/article/why-weight-loss-is-difficult-to-maintain-and-what-actually-works-long-term/`;
+ * the measurements are in `docs/research/.../SINGLE_POST_SPEC.md`. Two swaps:
+ *
+ *   - `ServiceHero` -> `ArticleHeader`. The live template has no dark band and
+ *     no breadcrumbs; the title sits centred on white under the header, over a
+ *     byline and a 3:2 image. `BreadcrumbList` JSON-LD still ships below, so the
+ *     trail survives where search engines read it even though the page no longer
+ *     draws it.
+ *   - `RelatedCards` -> `BlogSection`. The live "Related Posts" block is the
+ *     same row — meta, title, image — that the homepage and `/articles/` use,
+ *     down to its 32px 16px padding and 300px image. Reusing the component is
+ *     what makes them identical rather than approximately alike.
+ *
  * Article schema carries `datePublished`, which is a placeholder — see the note
  * in `articles.ts`. Publishing health content under a wrong date is worse than
  * publishing it under none, so confirm the real dates before this goes live.
@@ -14,13 +29,14 @@ import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/JsonLd";
 import { buildArticle, buildBreadcrumbList } from "@/lib/schema";
-import { CALL_CTA, CLINIC } from "@/content/clinic";
-import { ARTICLES, findArticle } from "@/content/articles";
+import { CLINIC } from "@/content/clinic";
+import { ARTICLES, articleCards, findArticle } from "@/content/articles";
+import { SITE_URL } from "@/lib/schema";
 
 import { ArticleBody } from "@/components/sections/ArticleBody";
-import { RelatedCards } from "@/components/sections/RelatedCards";
-import { ServiceHero } from "@/components/sections/ServiceHero";
+import { ArticleHeader } from "@/components/sections/ArticleHeader";
 
+import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
 import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
 
 export function generateStaticParams() {
@@ -51,7 +67,8 @@ export default async function Page({
   const article = findArticle(slug);
   if (article === undefined) notFound();
 
-  const others = ARTICLES.filter((other) => other.slug !== article.slug);
+  const path = `/article/${article.slug}/`;
+  const others = articleCards().filter((card) => card.href !== path);
 
   return (
     <>
@@ -59,49 +76,41 @@ export default async function Page({
         data={buildArticle({
           headline: article.title,
           description: article.description,
-          path: `/article/${article.slug}/`,
+          path,
           datePublished: article.date,
           image: article.image,
         })}
       />
+      {/* The page no longer draws a trail; this is where it still exists. */}
       <JsonLd
         data={buildBreadcrumbList([
           { name: "Home", path: "/" },
           { name: "Knowledge hub", path: "/articles/" },
-          { name: article.title, path: `/article/${article.slug}/` },
+          { name: article.title, path },
         ])}
       />
 
-      <ServiceHero
-        eyebrow={article.topic}
-        heading={article.title}
-        crumbs={[
-          { label: "Home", href: "/" },
-          { label: "Knowledge hub", href: "/articles/" },
-        ]}
-        primary={{ label: "Check your eligibility", href: "/quiz/" }}
-        secondary={CALL_CTA}
+      <ArticleHeader
+        title={article.title}
+        author={CLINIC.name + " Team"}
+        date={article.date}
+        image={article.image}
+        imageAlt={article.imageAlt}
       />
 
-      <ArticleBody blocks={article.blocks} moneyPage={article.moneyPage} />
+      <ArticleBody
+        blocks={article.blocks}
+        moneyPage={article.moneyPage}
+        shareUrl={`${SITE_URL}${path}`}
+        shareTitle={article.title}
+      />
 
       {others.length > 0 && (
-        <RelatedCards
-          className="bg-[color:var(--hhcp-accent)]"
-          eyebrow="Keep reading"
-          heading="More from the knowledge hub"
-          cards={others.map((other) => ({
-            title: other.title,
-            body: `${other.topic} · ${other.readTime}`,
-            links: [
-              { label: "Read the article", href: `/article/${other.slug}/` },
-            ],
-          }))}
-          footnote="Back to the full"
-          footnoteLinks={[
-            { label: "knowledge hub", href: "/articles/" },
-            { label: "FAQs", href: "/faqs/" },
-          ]}
+        <BlogSection
+          heading="Related Posts"
+          posts={others}
+          showEyebrow={false}
+          showCta={false}
         />
       )}
 

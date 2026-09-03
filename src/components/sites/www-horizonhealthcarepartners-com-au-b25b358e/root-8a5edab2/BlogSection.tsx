@@ -315,6 +315,11 @@ interface BlogSectionProps {
   heading?: string;
   /** Defaults to the target's own three. Pages pass articles.ts instead. */
   posts?: readonly BlogPost[];
+  /**
+   * Set false on an article page. The live single-post template heads its
+   * related-posts block with a bare "Related Posts" and no eyebrow row.
+   */
+  showEyebrow?: boolean;
   cta?: { label: string; href: string };
   /**
    * Set false on `/articles/`. The CTA is the way out to the article index, so
@@ -329,6 +334,7 @@ export function BlogSection({
   eyebrow = EYEBROW,
   heading = HEADING,
   posts = POSTS,
+  showEyebrow = true,
   cta = { label: CTA_LABEL, href: CTA_HREF },
   showCta = true,
 }: BlogSectionProps) {
@@ -338,12 +344,14 @@ export function BlogSection({
       <div className="hhcp-container hhcp-bl-container">
         <div className="hhcp-bl-head">
           <div className="hhcp-bl-head-text">
-            <div className="hhcp-bl-eyebrow">
-              <span className="hhcp-bl-dot" />
-              <span className="hhcp-bl-eyebrow-label font-roboto-mono">
-                {eyebrow}
-              </span>
-            </div>
+            {showEyebrow && (
+              <div className="hhcp-bl-eyebrow">
+                <span className="hhcp-bl-dot" />
+                <span className="hhcp-bl-eyebrow-label font-roboto-mono">
+                  {eyebrow}
+                </span>
+              </div>
+            )}
             <h2 className="hhcp-bl-title font-dm-sans">{heading}</h2>
           </div>
 

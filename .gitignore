@@ -29,3 +29,7 @@ yarn-error.log*
 # details. Kept on disk for reference, deliberately not published to the repo.
 HHCPA_Service_Agreement_Final.pdf
 HHCPA_Onboarding_Sheet - Onboarding Checklist.csv
+
+# A saved copy of a live page, dropped in for comparison. 6MB of the target's
+# own assets; docs/research holds the extracts worth keeping.
+/reference-article/
