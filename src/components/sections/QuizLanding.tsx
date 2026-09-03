@@ -22,15 +22,27 @@ import { QUIZ_LANDING } from "@/content/quiz-landing";
 import { QuizForm } from "./QuizForm";
 
 const STYLES = `
+/*
+ * One screen, and it does not scroll unless the copy genuinely needs more than
+ * one. height rather than min-height is the part that matters: it gives the
+ * grid row a definite height, without which height: 100% on the photograph
+ * cannot resolve and the image falls back to its own 1340x1839 aspect ratio —
+ * which is what made it 899px tall in a 800px window and pushed the page into
+ * scrolling.
+ *
+ * min-height: fit-content is the escape hatch. On a short window, or at a
+ * large text size, the copy wins and the page scrolls rather than being clipped.
+ */
 .hhcp-ql-section {
-  min-height: 100dvh;
+  height: 100dvh;
+  min-height: fit-content;
   padding: var(--hhcp-space-m) var(--hhcp-gutter);
   background: #ffffff;
 }
 
 .hhcp-ql-grid {
+  height: 100%;
   max-width: var(--hhcp-content-width, 1340px);
-  min-height: calc(100dvh - var(--hhcp-space-m) * 2);
   margin-inline: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -41,7 +53,13 @@ const STYLES = `
 .hhcp-ql-image {
   width: 100%;
   height: 100%;
-  min-height: 420px;
+  /*
+   * Grid items default to min-height: auto, and for a replaced element that
+   * floor is its own aspect-ratio height — 1340x1839 here, so the photograph
+   * refused to shrink below 1.37x the column width and kept pushing the page
+   * past one screen even with the row given a definite height. 0 lets it crop.
+   */
+  min-height: 0;
   object-fit: cover;
   object-position: 50% 30%;
   display: block;
@@ -52,11 +70,17 @@ const STYLES = `
  * The copy is inset from the column and vertically centred, which is what puts
  * the headline level with the middle of the photograph beside it.
  */
+/*
+ * The gaps are in vh, not the usual vw-based tokens. Every other section on the
+ * site is constrained by how wide the window is; this one is constrained by how
+ * tall it is, and a short laptop window is exactly where the copy stopped
+ * fitting. They still cap at the values the design uses on a roomy screen.
+ */
 .hhcp-ql-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--hhcp-section-space-xs);
+  gap: clamp(20px, 4vh, 40px);
   padding: var(--hhcp-space-m) 0 var(--hhcp-space-m) var(--hhcp-space-xxl, 101px);
   max-width: 640px;
 }
@@ -70,7 +94,7 @@ const STYLES = `
 .hhcp-ql-copy {
   display: flex;
   flex-direction: column;
-  gap: var(--hhcp-space-m, 30px);
+  gap: clamp(14px, 3vh, 30px);
 }
 
 .hhcp-ql-eyebrow {
@@ -151,9 +175,13 @@ const STYLES = `
 }
 
 @media (max-width: 991px) {
+  /* Stacked, one screen stops being the right unit — let it be as tall as it is. */
+  .hhcp-ql-section {
+    height: auto;
+  }
   .hhcp-ql-grid {
     grid-template-columns: 1fr;
-    min-height: 0;
+    height: auto;
   }
   /* Stacked, the copy leads — the photograph is not the reason to be here. */
   .hhcp-ql-body {
