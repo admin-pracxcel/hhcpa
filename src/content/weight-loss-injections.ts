@@ -16,9 +16,6 @@
 import { CALL_CTA } from "./clinic";
 import { sectionImage } from "./services/shared";
 
-const IMAGE_BASE =
-  "/images/";
-
 export const WLI_META = {
   title: "Weight Loss Injections Australia | Online Medical Assessment",
   description:

@@ -30,13 +30,7 @@
 import { isGated } from "../routes";
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { CALL_CTA, CLINIC } from "../clinic";
-import {
-  IMAGE,
-  IMAGE_ALT,
-  STANDARD_CLOSING,
-  STANDARD_FOOTNOTE,
-  STANDARD_FOOTNOTE_LINKS,
-} from "./shared";
+import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage } from "./shared";
 
 const PRACTITIONERS = "/our-practitioners/";
 const PRACTITIONERS_PUBLISHED = !isGated(PRACTITIONERS);
@@ -76,8 +70,9 @@ export const ABOUT_US: ServicePageData = {
         "Horizon Health Care Partners was founded by Ranjeeta Roshan, who saw the same gap again and again. Patients with ongoing or complex needs struggled to get consistent, unhurried care, especially in regional and remote areas, and especially for the concerns people find hardest to raise. Many felt rushed, dismissed, or lost in a fragmented system.",
         "We built Horizon to change that. Through a secure telehealth platform, patients connect with qualified, AHPRA-registered practitioners from home. The mission is simple to say and demanding to deliver: accessible, professional consultations that help people take control of their health with confidence and dignity.",
       ],
-      image: IMAGE.ourStory,
-      imageAlt: IMAGE_ALT.ourStory,
+      image: sectionImage("about-us-our-story"),
+      imageAlt:
+        "A woman on a verandah in regional Australia has a video consultation on a laptop.",
     },
     {
       kind: "statement",
@@ -120,8 +115,9 @@ export const ABOUT_US: ServicePageData = {
       ...(PRACTITIONERS_PUBLISHED
         ? { cta: { label: "Meet our practitioners", href: PRACTITIONERS } }
         : {}),
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("about-us-meet-the-team"),
+      imageAlt:
+        "Two health practitioners stand talking together in a bright workspace.",
       imageSide: "left",
     },
     {

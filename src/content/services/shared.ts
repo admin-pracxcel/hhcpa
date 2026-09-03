@@ -11,59 +11,23 @@
 const IMAGES =
   "/images/";
 
-export const IMAGE = {
-  approach: `${IMAGES}approach-to-care.jpg`,
-  complexHealth: `${IMAGES}care-complex-health.jpg`,
-  generalHealth: `${IMAGES}care-general-health.jpg`,
-  mentalWellbeing: `${IMAGES}care-mental-wellbeing.jpg`,
-  painManagement: `${IMAGES}care-pain-management.jpg`,
-  physicalWellbeing: `${IMAGES}care-physical-wellbeing.jpg`,
-  ourStory: `${IMAGES}our-story.jpg`,
-  weightLoss: `${IMAGES}blog-weight-loss.jpeg`,
-  sleepHealth: `${IMAGES}blog-sleep-health.jpg`,
-  sleepPain: `${IMAGES}blog-sleep-pain.jpg`,
-  consultation: `${IMAGES}steps-03-attend-appointment.jpg`,
-  ongoing: `${IMAGES}steps-04-ongoing-support.jpg`,
-} as const;
-
 /**
  * The section photography commissioned for the service pages — one image per
  * section, named for where it goes.
  *
- * A helper rather than another IMAGE/IMAGE_ALT pair because these are used once
- * each. A map of thirty-two single-use keys is indirection for its own sake; the
- * filename reads better sitting next to the section it belongs to, and grepping
- * it finds the one place it is used. Alt text is written inline at each section
- * for the same reason.
+ * A helper rather than a map of keys, because these are used once each. A map of
+ * thirty-six single-use entries is indirection for its own sake; the filename
+ * reads better sitting next to the section it belongs to, and grepping it finds
+ * the one place it is used. Alt text is written inline at each section for the
+ * same reason.
+ *
+ * This replaced an IMAGE / IMAGE_ALT pair of shared stock photographs. Those had
+ * no consumers left once every section had its own picture, so they are gone —
+ * along with the reason one of them was appearing on nine pages at once.
  */
 export function sectionImage(name: string): string {
   return `${IMAGES}${name}.webp`;
 }
-
-/**
- * Alt text for the stock photography. These are the descriptions captured from
- * the source site; they describe the picture, not the page it sits on, which is
- * what alt text is for.
- */
-export const IMAGE_ALT = {
-  approach:
-    "A practitioner and a patient talking together in a bright consulting room.",
-  complexHealth:
-    "A woman in athletic wear performs a side lunge stretch on a path outdoors.",
-  generalHealth: "A woman and man sitting close together, talking.",
-  mentalWellbeing: "A man and a woman sit indoors, looking at a laptop together.",
-  painManagement:
-    "Two people sit facing each other indoors, holding hands and talking warmly.",
-  physicalWellbeing:
-    "A smiling person with a bald head, wearing a striped shirt, sits indoors.",
-  ourStory: "A practitioner smiling in a consulting room.",
-  weightLoss: "A person preparing a fresh meal at home.",
-  sleepHealth: "A person resting comfortably in bed.",
-  sleepPain: "A person sitting up in bed, holding their lower back.",
-  consultation: "A person at a desk having a video consultation on a laptop.",
-  ongoing:
-    "An older man with grey hair and a beard smiles while using a laptop.",
-} as const;
 
 /** Used wherever the source says "use standard closing CTA band". */
 export const STANDARD_CLOSING = {

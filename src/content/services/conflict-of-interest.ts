@@ -22,7 +22,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT } from "./shared";
+import { sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const CONFLICT_OF_INTEREST: ServicePageData = {
@@ -64,8 +64,9 @@ export const CONFLICT_OF_INTEREST: ServicePageData = {
         "You have the right to ask questions about any recommendation, to seek a second opinion, and to choose where an eligible prescription is dispensed. If anything on this page is unclear, ask us, and we will explain it.",
       ],
       cta: { label: "Contact our team", href: "/contact/" },
-      image: IMAGE.approach,
-      imageAlt: IMAGE_ALT.approach,
+      image: sectionImage("conflict-of-interest-your-choices"),
+      imageAlt:
+        "A patient raises a hand to ask a question while a practitioner listens.",
     },
     {
       kind: "split",
@@ -75,8 +76,9 @@ export const CONFLICT_OF_INTEREST: ServicePageData = {
       paragraphs: [
         "If our arrangements change, we update this page. It is reviewed as part of our ongoing compliance process.",
       ],
-      image: IMAGE.ourStory,
-      imageAlt: IMAGE_ALT.ourStory,
+      image: sectionImage("conflict-of-interest-keeping-current"),
+      imageAlt:
+        "A man at a desk reads a printed page, pen in hand.",
       imageSide: "left",
     },
   ],

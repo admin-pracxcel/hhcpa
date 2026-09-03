@@ -11,7 +11,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT, sectionImage } from "./shared";
+import { sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PATIENT_SAFETY: ServicePageData = {

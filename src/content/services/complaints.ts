@@ -11,7 +11,7 @@
 
 import { CALL_CTA, CLINIC } from "../clinic";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT, sectionImage } from "./shared";
+import { sectionImage } from "./shared";
 
 export const COMPLAINTS: ServicePageData = {
   meta: {

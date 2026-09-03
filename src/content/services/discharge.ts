@@ -21,7 +21,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { IMAGE, IMAGE_ALT, STANDARD_CLOSING, sectionImage } from "./shared";
+import { STANDARD_CLOSING, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const DISCHARGE: ServicePageData = {
