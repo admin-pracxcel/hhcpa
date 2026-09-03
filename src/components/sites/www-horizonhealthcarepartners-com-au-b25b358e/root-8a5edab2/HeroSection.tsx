@@ -77,6 +77,8 @@ export function HeroSection({
         // underflow. `dvh` rather than `vh` so a mobile browser collapsing its
         // toolbar does not leave the section taller than the visible area.
         "relative h-[100dvh] overflow-hidden bg-cover bg-no-repeat bg-blend-overlay",
+        // Video ground: see .hhcp-on-dark in globals.css.
+        "hhcp-on-dark",
         // Floor and safety net, both inert on any viewport with room to spare.
         // The header is `position: absolute` over the hero at 108-122px tall,
         // and the content is bottom-anchored, so on a short screen the copy

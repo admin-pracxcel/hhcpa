@@ -299,3 +299,46 @@ at the same time:
 
 Those three are left as they are. If they should match, it is a separate decision about
 the statement sections rather than about the CTA.
+
+## 9. Buttons hover to white on dark grounds
+
+**Reported:** the first button in the inner-page hero turns dark green on hover, matching
+the background, so it disappears into it.
+
+**Target behaviour:** `.hhcp-btn` inverts on hover — mint fill to `--hhcp-primary`, dark
+text to mint. That reads well on the light sections it was measured against.
+
+**The failure:** `ServiceHero`'s background *is* `--hhcp-primary`. On hover the fill lands
+on exactly the background colour, `rgb(1, 49, 38)` on `rgb(1, 49, 38)`, and the button
+stops existing — only its mint label is left floating on the dark green. The two video
+bands are near enough to the same colour to have the same problem.
+
+**Change** — `globals.css` gains one rule, and three sections opt into it:
+
+```css
+.hhcp-on-dark .hhcp-btn:hover,
+.hhcp-on-dark .hhcp-btn--outline:hover {
+  background-color: var(--hhcp-white);
+  color: var(--hhcp-primary);
+}
+```
+
+Applied to `ServiceHero`, `HeroSection` and `FinalCtaSection`. Light sections keep the
+target's own hover untouched, so the clone at `/home-v2/` is unchanged everywhere except
+on its video hero's button.
+
+White is not an invention. `.hhcp-sv-cta-outline` — the *second* button in the same hero —
+already hovers to `#ffffff` with `--hhcp-primary` text, so the pair now inverts the same
+way instead of one of them vanishing.
+
+Measured with `:hover` forced through CDP, so these are the real hovered values:
+
+| page | button | at rest | hovered | section |
+|---|---|---|---|---|
+| `/patient-safety/` | ServiceHero primary | `rgb(88, 237, 162)` | `rgb(255, 255, 255)` | `rgb(1, 49, 38)` |
+| `/pricing/` | ServiceHero primary | `rgb(88, 237, 162)` | `rgb(255, 255, 255)` | `rgb(1, 49, 38)` |
+| `/` | hero primary | `rgb(88, 237, 162)` | `rgb(255, 255, 255)` | video |
+| `/home-v2/` | hero primary | `rgb(88, 237, 162)` | `rgb(255, 255, 255)` | video |
+
+No test: jsdom does not simulate `:hover`, so there is nothing to assert against. The
+measurements above are the check.

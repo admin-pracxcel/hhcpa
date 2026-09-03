@@ -152,7 +152,7 @@ export function ServiceHero({
   secondary,
 }: ServiceHeroProps) {
   return (
-    <section className={cn("hhcp-sv-section", className)}>
+    <section className={cn("hhcp-sv-section", "hhcp-on-dark", className)}>
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-sv-container">
         <nav className="hhcp-sv-crumbs" aria-label="Breadcrumb">

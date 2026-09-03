@@ -335,6 +335,26 @@
 }
 .hhcp-btn--outline:hover { background-color: var(--hhcp-primary); color: var(--hhcp-white); }
 
+/*
+ * Buttons on a dark ground.
+ *
+ * Both hovers above fill with --hhcp-primary, which is the target's own
+ * behaviour and reads well on the light sections it was measured on. On a
+ * section whose background *is* --hhcp-primary the fill lands on exactly the
+ * background colour and the button disappears, leaving its mint label floating
+ * on the dark green. The inner-page hero is precisely that section; the video
+ * bands are near enough to it to have the same problem.
+ *
+ * White is not an invention here. It is already the hover the outlined buttons
+ * carry on the hero and the closing band, so the two buttons in a pair now
+ * invert the same way instead of one of them vanishing.
+ */
+.hhcp-on-dark .hhcp-btn:hover,
+.hhcp-on-dark .hhcp-btn--outline:hover {
+  background-color: var(--hhcp-white);
+  color: var(--hhcp-primary);
+}
+
 /* Form fields.
    Shared rather than scoped to a section, because PhoneField is dropped into
    whichever form needs it and has to look native to that form. It carries no
