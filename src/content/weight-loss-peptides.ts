@@ -52,7 +52,7 @@ export const WLP_INTRO =
   "Peptides for weight loss have become one of the most searched-for treatments in Australia, and also one of the most misunderstood. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses whether a peptide-based or other medical weight-loss approach is clinically appropriate for you, then supports you through it with proper review. This is medical weight loss, delivered online. It starts with understanding your health, not with handing out a product.";
 
 const IMAGE_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+  "/images/";
 
 export const WLP_EXPLAINER = {
   eyebrow: "What are peptides for weight loss?",

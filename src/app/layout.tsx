@@ -33,10 +33,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/seo/favicon-32x32.png", sizes: "32x32" },
-      { url: "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/seo/favicon-192x192.png", sizes: "192x192" },
+      { url: "/icons/favicon-32x32.png", sizes: "32x32" },
+      { url: "/icons/favicon-192x192.png", sizes: "192x192" },
     ],
-    apple: "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/seo/apple-touch-icon.png",
+    apple: "/icons/apple-touch-icon.png",
   },
 };
 

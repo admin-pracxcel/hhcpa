@@ -96,7 +96,7 @@ Eyebrow: `GET STARTED` · H2: `Access Healthcare Support In Four Simple Steps`
 3. `A person sits at a desk having a video call with another person.`
 4. `Older man with gray hair and beard smiling, holding his chest.`
 
-Image base path: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/`
+Image base path: `/images/`
 
 ## Responsive behaviour
 - **≥1200px:** 4 columns, gap 13.5px, hover reveal active

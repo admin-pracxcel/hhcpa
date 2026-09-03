@@ -37,8 +37,8 @@ Note this differs from the hero, which uses a vertical **gradient**; here it is 
 
 ### Video
 `autoPlay loop muted playsInline`, click toggles play/pause (source behaviour).
-- src: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/videos/cta-background.mp4`
-- poster: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/videos/cta-background-poster.png`
+- src: `/videos/cta-background.mp4`
+- poster: `/videos/cta-background-poster.png`
 
 ### Content container
 `.hhcp-container` with `position: relative` (stacks above the video) and

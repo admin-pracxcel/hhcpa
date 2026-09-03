@@ -37,7 +37,7 @@ import { visibleFooterColumns, FOOTER_BAR_LINKS } from "@/content/footer";
 import { CLINIC } from "@/content/clinic";
 
 const LOGO_SRC =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/logo-light-tagline.svg";
+  "/images/logo-light-tagline.svg";
 
 /**
  * Columns come from the route registry via `visibleFooterColumns()`, so a gated

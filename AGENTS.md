@@ -43,13 +43,19 @@ src/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/
   shared/icons.tsx          inline SVGs lifted from the target
   root-8a5edab2/*.tsx       one component per page section
   root-8a5edab2/bookingWizardData.ts   the wizard's config, ported verbatim
-public/sites/<site-key>/<page-key>/    images, videos, fonts, favicons
+public/images/  public/videos/  public/icons/  public/fonts/
 docs/research/<site-key>/<page-key>/   specs, captured CSS/HTML, QA results
 scripts/download-assets-*.mjs          re-fetches every asset from the target
 ```
 
-The `<site-key>/<page-key>` namespacing exists so a second cloned page can be added
-without collisions. Keep it if you add pages; don't flatten it.
+`public/` was namespaced `public/sites/<site-key>/<page-key>/` so a second cloned page
+could be added without collisions. That was flattened at request — a second clone would
+now have to namespace below `images/` rather than above it. Asset URLs are `/images/…`,
+`/videos/…`, `/icons/…`. `docs/research/` keeps its namespacing.
+
+`public/fonts/` is unused: the site loads its faces through `next/font/local` from
+`src/app/fonts/`, and nothing references the public copies. They were carried across
+rather than deleted.
 
 ## Conventions
 

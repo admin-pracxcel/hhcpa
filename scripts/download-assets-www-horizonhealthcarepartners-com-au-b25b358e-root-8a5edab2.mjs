@@ -3,10 +3,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const SITE = 'www-horizonhealthcarepartners-com-au-b25b358e';
-const PAGE = 'root-8a5edab2';
 const UP = 'https://www.horizonhealthcarepartners.com.au/wp-content/uploads/';
-const OUT = path.resolve('public/sites', SITE, PAGE);
+// Writes straight into public/. This used to be public/sites/<site-key>/<page-key>/,
+// which is why every dest below still begins images/ or videos/ — those folder
+// names are now the top level. `seo/` is the exception and lands in icons/.
+const OUT = path.resolve('public');
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
 /** @type {Array<{url:string,dest:string}>} */
@@ -47,9 +48,9 @@ const ASSETS = [
   ['DMSans-Medium.woff2', 'fonts/DMSans-Medium.woff2'],
   ['RobotoMono-Medium.woff2', 'fonts/RobotoMono-Medium.woff2'],
   // --- Favicons ---
-  ['cropped-HHCPA_favicon-512x512-1-32x32.png', 'seo/favicon-32x32.png'],
-  ['cropped-HHCPA_favicon-512x512-1-192x192.png', 'seo/favicon-192x192.png'],
-  ['cropped-HHCPA_favicon-512x512-1-180x180.png', 'seo/apple-touch-icon.png'],
+  ['cropped-HHCPA_favicon-512x512-1-32x32.png', 'icons/favicon-32x32.png'],
+  ['cropped-HHCPA_favicon-512x512-1-192x192.png', 'icons/favicon-192x192.png'],
+  ['cropped-HHCPA_favicon-512x512-1-180x180.png', 'icons/apple-touch-icon.png'],
 ].map(([f, dest]) => ({ url: UP + f, dest }));
 
 // Absolute (off-origin) assets: hero + CTA background videos and their posters.

@@ -53,7 +53,7 @@ The current step's element gets `.active` (styling in the scoped CSS). On load, 
 - `.hhp-services-grid` containing **12** `.hhp-service-card`s, each `data-service="<key>"`,
   each an icon + title + description + optional inline list + price line.
 
-Icon path base: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/`
+Icon path base: `/images/`
 
 | # | `data-service` | Icon file | Title | Description | Price line |
 |---|---|---|---|---|---|

@@ -70,7 +70,7 @@ Row children, in DOM order:
 ## Content (verbatim)
 Eyebrow: `Our Health & Wellness Blogs` · H2: `Our Knowledge Hub` · CTA: `Read All Blogs`
 
-Image base path: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/`
+Image base path: `/images/`
 
 | # | Topic | Read time | Date | Title | href | Image | Alt |
 |---|---|---|---|---|---|---|---|

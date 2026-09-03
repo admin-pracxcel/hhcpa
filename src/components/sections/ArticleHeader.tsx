@@ -131,7 +131,7 @@ const STYLES = `
  * screen reader announcing the mark as well would only repeat it.
  */
 const AVATAR =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/seo/favicon-192x192.png";
+  "/icons/favicon-192x192.png";
 
 interface ArticleHeaderProps {
   className?: string;

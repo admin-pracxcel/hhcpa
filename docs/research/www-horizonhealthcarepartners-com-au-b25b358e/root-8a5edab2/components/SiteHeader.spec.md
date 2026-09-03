@@ -81,7 +81,7 @@ Content container (1340px / `padding-inline: 20px`)
 `.header-15__logo` and its `img`: `height: 30px`; `img { border-radius: 0 }`; width auto.
 - `@media (max-width: 991px)`: `height: 28px`, and `order: 1`
 - `@media (max-width: 478px)`: `height: 22px`
-Asset: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/logo-colour.svg`, alt `"HHCPA"`
+Asset: `/images/logo-colour.svg`, alt `"HHCPA"`
 
 ### Nav list `ul.bricks-nav-menu`
 `display: flex; flex-direction: row; gap: 32px; list-style: none; margin: 0; padding: 0`

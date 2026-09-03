@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
 import { StepNumberIcon } from "../shared/icons";
 
 const IMAGE_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images";
+  "/images";
 
 interface Step {
   /** 1-4; also selects the numeral drawn inside StepNumberIcon. */

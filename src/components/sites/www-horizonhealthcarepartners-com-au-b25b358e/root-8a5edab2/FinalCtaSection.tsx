@@ -27,7 +27,7 @@ import type { FormEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const ASSET_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/videos";
+  "/videos";
 const VIDEO_SRC = `${ASSET_BASE}/cta-background.mp4`;
 const POSTER_SRC = `${ASSET_BASE}/cta-background-poster.png`;
 

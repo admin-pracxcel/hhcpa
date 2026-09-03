@@ -46,8 +46,8 @@ background-blend-mode: overlay
 
 ### `video` (inside `.gumlet--video`, which is `height: 100%; width: 100%`)
 `autoplay loop muted playsInline`, `object-fit: cover`, full width/height.
-- src: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/videos/hero-background.mp4`
-- poster: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/videos/hero-background-poster.png`
+- src: `/videos/hero-background.mp4`
+- poster: `/videos/hero-background-poster.png`
 - The source also wires `onclick="this.paused ? this.play() : this.pause()"` — click-to-toggle playback.
 
 ### `div.section-bg-overlay`

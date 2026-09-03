@@ -72,7 +72,7 @@ flex: none; transition: all 0.3s linear`.
 
 ### Right-hand image
 `align-self: stretch; width: 100%; object-fit: cover`
-`/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/our-story.jpg`
+`/images/our-story.jpg`
 alt: `A person stands on a rocky outcrop overlooking a vast, sunlit landscape of green hills and distant forests under a hazy sky.`
 Natural size 768x771.
 

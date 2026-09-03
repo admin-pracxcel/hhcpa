@@ -65,7 +65,7 @@ const ITEMS: readonly AccordionItem[] = [
 ] as const;
 
 const IMAGE_SRC =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/approach-to-care.jpg";
+  "/images/approach-to-care.jpg";
 const IMAGE_ALT =
   "Two older adults with gray hair, wearing sweaters and jeans, embrace and smile at each other outdoors in a green, natural setting.";
 

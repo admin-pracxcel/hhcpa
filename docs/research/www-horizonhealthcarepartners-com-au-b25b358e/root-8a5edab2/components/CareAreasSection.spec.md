@@ -76,7 +76,7 @@ The outer block wrapping slider + controls has `gap: 32px`.
 ## Content (verbatim, in order)
 Eyebrow: `How We Support You` · H2: `Professional Medical Consultations`
 
-Image base path: `/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/`
+Image base path: `/images/`
 
 | # | Heading | Image | Alt |
 |---|---|---|---|

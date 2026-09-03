@@ -54,7 +54,7 @@ export const HALAXY_BOOKING_EMBED = {
 
 /** Icons downloaded from the target into `public/`. */
 const ICON_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+  "/images/";
 
 /* ------------------------------------------------------------------ *
  * Service keys                                                        *

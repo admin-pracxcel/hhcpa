@@ -26,7 +26,7 @@ import { visibleNavItems, type NavItem } from "@/content/nav";
 import { CLINIC } from "@/content/clinic";
 
 const LOGO_SRC =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/logo-colour.svg";
+  "/images/logo-colour.svg";
 
 /**
  * Navigation comes from the route registry rather than being declared here, so

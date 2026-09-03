@@ -61,7 +61,7 @@ export const HOME_INTRO = {
 } as const;
 
 const ICON_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+  "/images/";
 
 export interface FocusCard {
   readonly title: string;

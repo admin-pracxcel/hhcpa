@@ -16,7 +16,7 @@
 import { CALL_CTA } from "./clinic";
 
 const IMAGE_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+  "/images/";
 
 export const WLI_META = {
   title: "Weight Loss Injections Australia | Online Medical Assessment",

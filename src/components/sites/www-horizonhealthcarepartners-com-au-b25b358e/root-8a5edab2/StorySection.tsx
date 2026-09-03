@@ -38,7 +38,7 @@ const POINTS: readonly string[] = [
 ] as const;
 
 const IMAGE_SRC =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/our-story.jpg";
+  "/images/our-story.jpg";
 const IMAGE_ALT =
   "A person stands on a rocky outcrop overlooking a vast, sunlit landscape of green hills and distant forests under a hazy sky.";
 

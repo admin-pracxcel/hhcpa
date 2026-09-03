@@ -35,7 +35,7 @@ const HEADING = "Our Knowledge Hub";
  */
 const TOPIC_HREF = "/articles/";
 const IMAGE_BASE =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+  "/images/";
 
 /**
  * One card. Exported because two pages feed it their own: the homepage and the

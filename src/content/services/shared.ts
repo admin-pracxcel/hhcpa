@@ -9,7 +9,7 @@
  */
 
 const IMAGES =
-  "/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/images/";
+  "/images/";
 
 export const IMAGE = {
   approach: `${IMAGES}approach-to-care.jpg`,
