@@ -175,8 +175,17 @@ describe("triage", () => {
     ).toBe("amber");
   });
 
+  it("is amber for someone already under a GP or specialist", () => {
+    /*
+     * Reads ho_under_specialist, which is the field the step writes — its id is
+     * ho_specialist, and triage() checked the id for a while, so this rule
+     * silently never fired.
+     */
+    expect(triage({ ho_under_specialist: "Yes" }).level).toBe("amber");
+  });
+
   it("lets red win over amber", () => {
-    const result = triage({ ho_specialist: "Yes", ho_pregnancy: "Yes" });
+    const result = triage({ ho_under_specialist: "Yes", ho_pregnancy: "Yes" });
     expect(result.level).toBe("red");
   });
 

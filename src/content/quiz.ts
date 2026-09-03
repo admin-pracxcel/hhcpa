@@ -840,7 +840,15 @@ export function triage(
   if (is("ho_organ_controlled", "Yes")) {
     amber.push("Controlled liver, kidney or heart condition");
   }
-  if (is("ho_specialist", "Yes")) amber.push("Under GP or specialist care");
+  /*
+   * ho_under_specialist, not ho_specialist. The step's id is ho_specialist but
+   * the field it writes is ho_under_specialist, and this read had the id — so
+   * "under the care of a GP or specialist" never triaged amber. The field name
+   * is the canonical one: it is what goes to n8n in the payload.
+   */
+  if (is("ho_under_specialist", "Yes")) {
+    amber.push("Under GP or specialist care");
+  }
   if (is("ho_medications", "Yes")) amber.push("On prescription medications");
   if (is("ho_injectable_allergies", "Yes")) {
     amber.push("Reported allergy to injectable medications");

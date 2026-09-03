@@ -206,11 +206,11 @@ describe("quiz form", () => {
     expect(sentBody().outcome).toBe("red");
 
     /*
-     * The thank-you page shows one message for every outcome, so what matters
-     * here is that a red submission reaches n8n and the patient reaches the
-     * page — not what either of them then says.
+     * Red is the one outcome that must not be offered a booking: the whole
+     * point of it is that a person reviews the answers first.
      */
     await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-thank-you/"));
+    expect(push).not.toHaveBeenCalledWith("/quiz-book/");
   });
 
   it("triages a clean run green", async () => {
@@ -228,7 +228,30 @@ describe("quiz form", () => {
     fillContactAndSubmit();
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(sentBody().outcome).toBe("green");
-    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-thank-you/"));
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-book/"));
+  });
+
+  it("offers amber a booking too, and leaves the review to n8n", async () => {
+    render(<QuizForm />);
+    start("Complete Wellness");
+    choose("Healthy Ageing & Longevity");
+    choose("No"); // prior therapy
+    choose("Yes"); // under a specialist → amber
+    choose("No"); // pregnancy
+    choose("No"); // cancer
+    choose("No"); // organ condition
+    choose("No"); // prescription medications
+    choose("No"); // injectable allergies
+
+    fillContactAndSubmit();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(sentBody().outcome).toBe("amber");
+    /*
+     * Same destination as green. The patient's experience of the two is
+     * identical; what separates them is an email the clinic gets, and that is
+     * n8n's branch on the outcome above rather than anything the site does.
+     */
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-book/"));
   });
 
   it("asks whether a cancer diagnosis is in active treatment", () => {
