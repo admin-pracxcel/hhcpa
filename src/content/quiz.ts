@@ -994,10 +994,19 @@ export const CONSENT_VERSION = "2026-09-03";
 /**
  * What a patient reads after submitting, by triage level.
  *
- * `unknown` is for someone who opens `/quiz-thank-you/` without having just
- * submitted — a bookmark, a back button, a shared link. It cannot claim to have
- * their answers, and it must not tell them their situation needs review, so it
- * says only what is true for anyone standing there.
+ * `unknown` is the fallback for a page load that cannot see the level — a
+ * bookmark, a shared link, a tab without the stored value. It is written for the
+ * person who did just finish the quiz, because that is who is almost always
+ * reading it: the page is noindex and linked from nowhere, so the only ordinary
+ * way to reach it is by submitting.
+ *
+ * An earlier version hedged — "if you have just completed the quiz" — which
+ * told the reader we did not know whether they had, when of course they had.
+ *
+ * What it must not do is promise an outcome. Green offers to book; this only
+ * confirms receipt and says a person will be in touch, which is true whichever
+ * way the answers were triaged. So a red submission that somehow lost its level
+ * is understated here rather than told the wrong thing.
  */
 /**
  * Where the quiz leaves the triage level for `/quiz-thank-you/` to read.
@@ -1011,8 +1020,8 @@ export const TRIAGE_STORAGE_KEY = "hhcp-quiz-outcome";
 
 export const QUIZ_SUCCESS = {
   unknown: {
-    heading: "Thank you",
-    body: "If you have just completed the pre-screening quiz, we have your answers and a member of our team will be in touch. Nothing is prescribed from the quiz itself, and any care plan comes from a consultation with an AHPRA-registered practitioner.",
+    heading: "Thank you — we have your answers",
+    body: "A member of our team will review them and be in touch about your next step. Nothing has been prescribed from this quiz, and any care plan comes from a consultation with an AHPRA-registered practitioner.",
   },
   green: {
     heading: "Thank you — we have your answers",
