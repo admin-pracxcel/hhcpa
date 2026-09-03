@@ -102,7 +102,9 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(12px, 2vh, 20px);
+  /* 10px more than the rest of the column's rhythm: Back sat too close to the
+     logo and read as part of it rather than as its own control. */
+  gap: clamp(22px, calc(2vh + 10px), 30px);
 }
 
 .hhcp-ql-back {
