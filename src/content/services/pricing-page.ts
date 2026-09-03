@@ -5,10 +5,12 @@
  * prices in their pricing cues and FAQ answers, and all of them read the same
  * record, so this table and those pages cannot disagree.
  *
- * The source's two tables are reproduced as two tables. The module map asks for
- * "text block with supporting image" three times here, which does not fit a
- * price list: the copy is tabular, and a table is what a reader scanning for a
- * number needs.
+ * The module map asks for "text block with supporting image" three times here,
+ * which does not fit a price list. The source reproduced its two tables as two
+ * tables; both are now cards at request — the three consultations in the
+ * homepage's pricing columns, the ten other services as tiles. The pairing a
+ * table carried in its columns is kept in the markup: the tiles are a
+ * description list, so a price is never read adrift from its service.
  *
  * Thirteen of the fourteen prices are still `provisional: true` in pricing.ts.
  * The content document carries two WAITING ON RANJEETA blocks against this
@@ -19,6 +21,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
+import { CONSULTATION_PLANS } from "../consultation-plans";
 import { STANDARD_CLOSING } from "./shared";
 
 export const PRICING_PAGE: ServicePageData = {
@@ -39,18 +42,24 @@ export const PRICING_PAGE: ServicePageData = {
     "Pricing at Horizon Health Care Partners is clear and upfront. The pre-screening quiz is free, consultation fees are shown before you book, and there are no hidden costs. You only pay when you decide to go ahead. The prices below are consultation fees. Any medicine dispensed by a pharmacy is separate.",
   modules: [
     {
-      kind: "priceTable",
+      kind: "priceCards",
       eyebrow: "Core consultation fees",
       heading: "Consultation fees",
-      valueHeading: "Fee",
-      rows: ["quiz", "firstConsult", "followUpConsult", "transferConsult"],
+      /* The quiz is on this list and costs nothing, but it is not a
+         consultation — a fourth column beside the three would say it was. */
+      feature: {
+        key: "quiz",
+        title: "Start with the free pre-screening quiz",
+        body: "Two minutes, no diagnosis, and no commitment. It tells you whether we are likely to be able to help before you pay for anything.",
+        cta: { label: "Start the free quiz", href: "/quiz/" },
+      },
+      plans: CONSULTATION_PLANS,
     },
     {
-      kind: "priceTable",
+      kind: "priceTiles",
       tinted: true,
       eyebrow: "Other services",
       heading: "Other services",
-      valueHeading: "From",
       rows: [
         "generalConsult",
         "afterHoursConsult",
@@ -64,7 +73,6 @@ export const PRICING_PAGE: ServicePageData = {
         "healthProgram",
       ],
       labels: { priorityConsult: "Priority consult (limited daily)" },
-      stripFrom: true,
       note: "Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.",
     },
     {

@@ -16,6 +16,7 @@
  * the flag in one file brings the card back.
  */
 
+import { CONSULTATION_PLANS } from "./consultation-plans";
 import { PRICES } from "./pricing";
 
 export const HOME_META = {
@@ -142,44 +143,7 @@ export const HOME_FOCUS = {
 export const HOME_PRICING = {
   eyebrow: "Consultation pricing at a glance",
   heading: "Simple, upfront consultation pricing",
-  plans: [
-    {
-      label: "First consultation",
-      price: `$${PRICES.firstConsult.amount}`,
-      caption: "Start your care with a practitioner",
-      features: [
-        "Consult with an AHPRA-registered practitioner",
-        "Review of your history and current treatments",
-        "A clear discussion of suitable options",
-      ],
-      cta: { text: "Get started", href: "/quiz/" },
-      variant: "mint",
-    },
-    {
-      label: "Follow-up consultation",
-      price: `$${PRICES.followUpConsult.amount}`,
-      caption: "Continued medical guidance",
-      features: [
-        "Ongoing care with your practitioner",
-        "Progress review and plan adjustments",
-        "Renewals and medication management, where appropriate",
-      ],
-      cta: { text: "Book a follow-up", href: "/quiz/" },
-      variant: "dark",
-    },
-    {
-      label: "Transfer consultation",
-      price: `$${PRICES.transferConsult.amount}`,
-      caption: "Move your care across without a gap",
-      features: [
-        "Quick onboarding from another provider",
-        "Review of your current treatment and records",
-        "Continuity of care with no disruption",
-      ],
-      cta: { text: "Transfer your care", href: "/discharge/" },
-      variant: "mint",
-    },
-  ],
+  plans: CONSULTATION_PLANS,
   footnote:
     "The pre-screening quiz is always free. Any medicine dispensed by a pharmacy is a separate cost.",
   footnoteCta: { label: "See full pricing", href: "/pricing/" },

@@ -17,6 +17,8 @@
  * downstream, and the different transition timings on each variant.
  */
 
+import type { ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 import { CheckCircleIcon } from "../shared/icons";
 
@@ -312,6 +314,13 @@ interface PricingSectionProps {
   eyebrow?: string;
   heading?: string;
   plans?: readonly PricingPlan[];
+  /**
+   * Full-width band between the heading and the columns. `/pricing/` puts the
+   * free pre-screening quiz there: it is a price on the same list, but it is
+   * not a consultation and giving it a fourth column would say it was. Nothing
+   * renders here by default, so the cloned homepage is untouched.
+   */
+  feature?: ReactNode;
   /** Small print under the grid. The cloned homepage has none. */
   footnote?: string;
   footnoteCta?: { label: string; href: string };
@@ -322,6 +331,7 @@ export function PricingSection({
   eyebrow = EYEBROW,
   heading = HEADING,
   plans = PLANS,
+  feature,
   footnote,
   footnoteCta,
 }: PricingSectionProps) {
@@ -338,6 +348,8 @@ export function PricingSection({
           </div>
           <h2 className="hhcp-pr-title font-dm-sans">{heading}</h2>
         </div>
+
+        {feature}
 
         <div className="hhcp-pr-grid">
           {plans.map((plan) => (

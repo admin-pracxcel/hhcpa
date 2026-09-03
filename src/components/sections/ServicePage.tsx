@@ -32,7 +32,10 @@ import type { PriceKey } from "@/content/pricing";
 
 import { ChecklistSection } from "./ChecklistSection";
 import { InlineCtaBand } from "./InlineCtaBand";
-import { PriceTable } from "./PriceTable";
+import { PriceCards } from "./PriceCards";
+import type { PriceFeature } from "./PriceCards";
+import { PriceTiles } from "./PriceTiles";
+import type { ConsultationPlan } from "@/content/consultation-plans";
 import { PricingCueBand } from "./PricingCueBand";
 import { RelatedCards } from "./RelatedCards";
 import { ScrollRevealParagraph } from "./ScrollRevealParagraph";
@@ -121,14 +124,23 @@ export type ServiceModule =
       readonly footnoteLinks: readonly LinkRef[];
     }
   | {
-      readonly kind: "priceTable";
+      /** Three consultation cards, with one free item banded above them. */
+      readonly kind: "priceCards";
       readonly tinted?: boolean;
       readonly eyebrow: string;
       readonly heading: string;
-      readonly valueHeading: string;
+      readonly feature: PriceFeature;
+      readonly plans: readonly ConsultationPlan[];
+      readonly footnote?: string;
+    }
+  | {
+      /** A longer price list, as tiles rather than columns. */
+      readonly kind: "priceTiles";
+      readonly tinted?: boolean;
+      readonly eyebrow: string;
+      readonly heading: string;
       readonly rows: readonly PriceKey[];
       readonly labels?: Partial<Record<PriceKey, string>>;
-      readonly stripFrom?: boolean;
       readonly note?: string;
     }
   | {
@@ -346,16 +358,25 @@ function Module({ module }: { module: ServiceModule }) {
           footnoteLinks={module.footnoteLinks}
         />
       );
-    case "priceTable":
+    case "priceCards":
       return (
-        <PriceTable
+        <PriceCards
           className={cn(module.tinted === true && TINT)}
           eyebrow={module.eyebrow}
           heading={module.heading}
-          valueHeading={module.valueHeading}
+          feature={module.feature}
+          plans={module.plans}
+          footnote={module.footnote}
+        />
+      );
+    case "priceTiles":
+      return (
+        <PriceTiles
+          className={cn(module.tinted === true && TINT)}
+          eyebrow={module.eyebrow}
+          heading={module.heading}
           rows={module.rows}
           labels={module.labels}
-          stripFrom={module.stripFrom}
           note={module.note}
         />
       );
