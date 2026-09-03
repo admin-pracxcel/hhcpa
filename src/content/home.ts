@@ -1,9 +1,9 @@
 /**
- * Copy for the rebuilt homepage (`/home-v2/`).
+ * Copy for the homepage (`/`).
  *
  * Every string here is transcribed from HHCPA_Website_Content_UPDATED.md,
- * "PAGE 1: HOME" (the BUILD BLOCK plus its twelve-module map). The cloned
- * homepage at `/` keeps the WordPress copy; this file is the replacement set.
+ * "PAGE 1: HOME" (the BUILD BLOCK plus its twelve-module map). The WordPress
+ * copy it replaced is still readable on the archived clone at `/home-v2/`.
  *
  * Prices are read from `pricing.ts` rather than written out, so the badges and
  * the pricing cards cannot drift from the single source. Thirteen of the

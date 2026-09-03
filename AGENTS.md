@@ -8,10 +8,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Horizon Health Care Partners — site clone
+# Horizon Health Care Partners
 
-A pixel-perfect clone of `https://www.horizonhealthcarepartners.com.au/`, served at `/`.
 Next.js 16 (App Router, Turbopack) · React 19 · TypeScript strict · Tailwind CSS v4.
+
+`/` serves the rebuilt site, written to `HHCPA_Website_Content_UPDATED.md`. It is
+built in the design language of a pixel-perfect clone of
+`https://www.horizonhealthcarepartners.com.au/`, which is kept at `/home-v2/` — noindex
+and absent from `ROUTES` — as the reference the measurements below were taken against.
 
 Measured against the live original at matched 1534px viewports: **10 of 11 sections are
 pixel-exact; the whole document is within 4px (0.03%)**. Treat that as the bar — if you
@@ -31,7 +35,9 @@ npm run check    # lint + typecheck + build — run before calling anything done
 src/app/
   globals.css     design tokens + base typography (see the layering warning below)
   layout.tsx      next/font/local wiring for DM Sans + Roboto Mono, page metadata
-  page.tsx        assembles the 13 sections in order
+  (site)/page.tsx        the homepage — twelve modules from the content document
+  (site)/home-v2/page.tsx  the archived clone — 13 sections, the pixel benchmark
+  (site)/*/page.tsx      one directory per route; `ROUTES` in src/content/routes.ts is canonical
   fonts/          the exact woff2 files the target serves
 src/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/
   shared/icons.tsx          inline SVGs lifted from the target

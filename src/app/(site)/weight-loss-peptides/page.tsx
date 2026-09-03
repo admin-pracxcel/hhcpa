@@ -6,7 +6,7 @@
  *
  *    1. Hero                        ServiceHero            (new)
  *    2. Value-proposition strip     FeatureMarquee         (clone)
- *    3. Intro paragraph             ScrollRevealParagraph  (shared with /home-v2/)
+ *    3. Intro paragraph             ScrollRevealParagraph  (shared with `/`)
  *    4. What are peptides           SplitFeature           (new)
  *    5. Who it may suit             ChecklistSection       (new)
  *    6. How it works                StepsSection           (clone)
@@ -20,8 +20,8 @@
  * FaqSection from the same items it renders, so the markup and the structured
  * data cannot drift; the other three are declared here.
  *
- * This page is indexable, unlike /home-v2/: it owns "peptides for weight loss"
- * and there is nothing for it to compete with.
+ * It owns "peptides for weight loss" and competes with nothing else on the
+ * site for it.
  */
 
 import type { Metadata } from "next";

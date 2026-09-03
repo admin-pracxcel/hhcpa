@@ -1,6 +1,6 @@
 /**
  * Lead paragraph, scroll-revealed — a variant of `LeadParagraph` for trying a
- * larger, animated treatment of the same copy. Both are on `/home-v2/`; this
+ * larger, animated treatment of the same copy. Both are on the homepage; this
  * one does not replace the other.
  *
  * Words rest at 0.2 opacity and come up to 1, one after another, as the section

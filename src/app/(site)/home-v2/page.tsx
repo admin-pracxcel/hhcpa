@@ -1,184 +1,68 @@
 /**
- * The rebuilt homepage — the content document's copy in the cloned homepage's
- * design language.
+ * `/home-v2/` — the WordPress clone of https://www.horizonhealthcarepartners.com.au/,
+ * kept as the design reference after the rebuilt homepage was promoted to `/`.
  *
- * `/` still serves the WordPress clone. This route is the replacement built to
- * HHCPA_Website_Content_UPDATED.md "PAGE 1: HOME", so the two can be compared
- * side by side before one is promoted.
+ * The route name is a leftover: `/home-v2/` was where the rebuild was previewed,
+ * and the two swapped places rather than the archive taking a new URL. So the
+ * page here is the *older* build, despite the "v2".
  *
- * Section order is the content document's twelve-module map, top to bottom:
+ * Assembly order and layering follow
+ * `docs/research/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/PAGE_TOPOLOGY.md`.
+ * It is the pixel-accuracy benchmark AGENTS.md measures against — 10 of 11
+ * sections exact at 1534px — so changing anything in it invalidates that claim.
  *
- *    1. Hero                          HeroSection      (clone, new copy + CTAs)
- *    2. Value-proposition strip       FeatureMarquee   (clone, new items)
- *    3. Intro paragraph               ScrollRevealParagraph (new)
- *    4. Choose your focus             FocusGrid        (new)
- *    5. Consultation pricing          PricingSection   (clone, new plans)
- *    6. How it works                  StepsSection     (clone, new copy)
- *    7. Why patients choose Horizon   ValueTiles       (new)
- *    8. Our approach to care          ApproachSection  (clone, new items)
- *    9. Built for the way …           StorySection     (clone, new copy)
- *   10. Knowledge hub teaser          BlogSection      (clone, new headings)
- *   11. Home FAQ                      FaqSection       (clone, new items)
- *   12. Closing CTA band              FinalCtaSection  (clone, new copy + CTAs)
+ * The header, footer, disclaimer and sticky mobile CTA come from
+ * `(site)/layout.tsx` — this file renders page sections only.
  *
- * Two things are deliberately absent, because the content document does not
- * include them on this page: the BookingWizard (booking lives at `/quiz/` and
- * `/services/`) and the care-areas carousel.
+ * ⚠️ This is the only page that renders the BookingWizard, whose final step
+ * embeds the live Halaxy widget. It takes real bookings from anyone who reaches
+ * this URL, and `noindex` does not stop that — it only keeps the page out of
+ * search. Rehome the wizard or remove this route if that matters.
  *
- * `noindex` while this is a preview: it is a near-duplicate of `/`, and two
- * indexable copies of the homepage would split the ranking signal for the terms
- * this page is built to win. Drop the robots block when it is promoted.
+ * One thing about this page is load-bearing: there is no smooth-scroll library,
+ * no scroll-snap, and no scroll-driven animation anywhere on it. Scrolling is
+ * native. Do not add any.
+ *
+ * `noindex`: it is a near-duplicate of `/`, and two indexable copies of the
+ * homepage would split the ranking signal. It is absent from `ROUTES` too, so
+ * it appears in no sitemap, nav or breadcrumb.
  */
-
 import type { Metadata } from "next";
 
-import { CLINIC } from "@/content/clinic";
-import {
-  HOME_APPROACH,
-  HOME_CLOSING,
-  HOME_FAQ,
-  HOME_FOCUS,
-  HOME_HERO,
-  HOME_INTRO,
-  HOME_KNOWLEDGE,
-  HOME_META,
-  HOME_PRICING,
-  HOME_SEARCH,
-  HOME_STEPS,
-  HOME_VALUE_STRIP,
-  HOME_WHY,
-} from "@/content/home";
-
-import { FocusGrid } from "@/components/sections/FocusGrid";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
-import { ValueTiles } from "@/components/sections/ValueTiles";
-
-import { ApproachSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
-import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
-import { FaqSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FaqSection";
-import { FeatureMarquee } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FeatureMarquee";
-import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
 import { HeroSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/HeroSection";
+import { FeatureMarquee } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FeatureMarquee";
+import { SupportSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SupportSection";
+import { BookingWizard } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BookingWizard";
 import { PricingSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/PricingSection";
 import { StepsSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/StepsSection";
 import { StorySection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/StorySection";
+import { CareAreasSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/CareAreasSection";
+import { ApproachSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
+import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
+import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
+import { FaqSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FaqSection";
 
 export const metadata: Metadata = {
-  title: HOME_META.title,
-  description: HOME_META.description,
+  title: "Reference build | Horizon Health Care Partners",
   robots: { index: false, follow: false },
 };
 
-export default function HomeV2() {
+export default function CloneHome() {
   return (
     <>
-      <HeroSection
-        heading={HOME_HERO.heading}
-        body={HOME_HERO.body}
-        /* Half the container rather than the clone's fixed 536px, so the
-           longer headline sets in fewer lines, and full width once the
-           columns collapse.
-
-           The step down at 991 and 767 is not only taste: the hero is
-           100dvh (less the CTA bar) with its content bottom-anchored, so an
-           over-large headline eats the space from the top. At 44px the block
-           ran 517-734px tall on phones and pushed itself under the header at
-           360x780, then clipped 287px off at 320x568. */
-        headingClassName="max-w-[50%] text-[52px] max-[991px]:max-w-full max-[991px]:text-[36px] max-[767px]:text-[28px] max-[478px]:text-[24px]"
-        actions={
-          <div className="flex flex-row flex-wrap items-center gap-[16px]">
-            <a className="hhcp-btn" href={HOME_HERO.primary.href}>
-              {HOME_HERO.primary.label}
-            </a>
-            {/* Outlined in white rather than the shared --outline variant,
-                whose dark border and text vanish against the hero video. */}
-            <a
-              className="font-roboto-mono rounded-[var(--hhcp-radius-pill)] border border-white px-[19.2px] py-[12.132px] text-[12px] leading-none font-medium uppercase text-white transition-all duration-300 hover:bg-white hover:text-[color:var(--hhcp-primary)]"
-              href={HOME_HERO.secondary.href}
-            >
-              {HOME_HERO.secondary.label}
-            </a>
-          </div>
-        }
-      />
-
-      <FeatureMarquee items={HOME_VALUE_STRIP} />
-
-      <ScrollRevealParagraph text={HOME_INTRO.text} cta={HOME_INTRO.cta} />
-
-      {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into
-          bands instead of one continuous white scroll. */}
-      <FocusGrid
-        className="bg-[color:var(--hhcp-accent)]"
-        eyebrow={HOME_FOCUS.eyebrow}
-        heading={HOME_FOCUS.heading}
-        intro={HOME_FOCUS.intro}
-        cards={HOME_FOCUS.cards}
-      />
-
-      <PricingSection
-        eyebrow={HOME_PRICING.eyebrow}
-        heading={HOME_PRICING.heading}
-        plans={HOME_PRICING.plans}
-        footnote={HOME_PRICING.footnote}
-        footnoteCta={HOME_PRICING.footnoteCta}
-      />
-
-      <StepsSection
-        className="bg-[color:var(--hhcp-accent)]"
-        eyebrow={HOME_STEPS.eyebrow}
-        heading={HOME_STEPS.heading}
-        steps={HOME_STEPS.steps}
-        cta={HOME_STEPS.cta}
-      />
-
-      <ValueTiles
-        eyebrow={HOME_WHY.eyebrow}
-        heading={HOME_WHY.heading}
-        tiles={HOME_WHY.tiles}
-      />
-
-      <ApproachSection
-        eyebrow={HOME_APPROACH.eyebrow}
-        heading={HOME_APPROACH.heading}
-        paragraph=""
-        items={HOME_APPROACH.items}
-      />
-
-      <StorySection
-        eyebrow={HOME_SEARCH.eyebrow}
-        heading={HOME_SEARCH.heading}
-        paragraphs={HOME_SEARCH.paragraphs}
-        points={HOME_SEARCH.points}
-        cta={HOME_SEARCH.cta}
-      />
-
-      <BlogSection
-        className="bg-[color:var(--hhcp-accent)]"
-        eyebrow={HOME_KNOWLEDGE.eyebrow}
-        heading={HOME_KNOWLEDGE.heading}
-        cta={HOME_KNOWLEDGE.cta}
-      />
-
-      <FaqSection heading={HOME_FAQ.heading} items={HOME_FAQ.items} />
-
-      <FinalCtaSection
-        heading={HOME_CLOSING.heading}
-        body={HOME_CLOSING.body}
-        actions={
-          <div className="flex flex-row flex-wrap items-center justify-center gap-[16px]">
-            <a className="hhcp-btn" href={HOME_CLOSING.primary.href}>
-              {HOME_CLOSING.primary.label}
-            </a>
-            <a
-              className="font-roboto-mono rounded-[var(--hhcp-radius-pill)] border border-white px-[19.2px] py-[12.132px] text-[12px] leading-none font-medium uppercase text-white transition-all duration-300 hover:bg-white hover:text-[color:var(--hhcp-primary)]"
-              href={CLINIC.phoneHref}
-            >
-              {`Call ${CLINIC.phone}`}
-            </a>
-          </div>
-        }
-      />
+      <HeroSection />
+      <FeatureMarquee />
+      <SupportSection>
+        <BookingWizard />
+      </SupportSection>
+      <PricingSection />
+      <StepsSection />
+      <StorySection />
+      <CareAreasSection />
+      <ApproachSection />
+      <BlogSection />
+      <FinalCtaSection />
+      <FaqSection />
     </>
   );
 }

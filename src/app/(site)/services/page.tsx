@@ -10,9 +10,10 @@
  * ⚠️ This page used to host the BookingWizard, per spec decision D8. The grid
  * replaced it at request. Two consequences worth knowing:
  *
- *   1. The wizard now renders only on the cloned homepage at `/`. `/home-v2/`,
- *      which is meant to replace `/`, does not include it — so promoting
- *      home-v2 without rehoming the wizard removes it from the site.
+ *   1. The wizard now renders only on the archived clone at `/home-v2/`, which
+ *      is noindex and absent from every nav and sitemap. So no page a patient
+ *      can reach through the site books an appointment; rehome the wizard if
+ *      live booking is wanted back.
  *   2. Nothing on this page can take a booking any more. The live Halaxy widget
  *      that could (CUSTOMISATIONS.md, deviation 2) sat in the wizard's final
  *      step.

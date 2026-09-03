@@ -17,9 +17,8 @@
  *
  * ⚠️ The BookingWizard used to live on this page, per spec decision D8. It was
  * replaced at request with the homepage's service grid. The wizard now renders
- * only on the cloned homepage at `/` — and `/home-v2/`, which is slated to
- * replace `/`, does not include it. Promoting home-v2 without rehoming the
- * wizard would remove it from the site entirely.
+ * only on the archived clone at `/home-v2/`, which is noindex and unlinked — so
+ * it is effectively off the site. Rehome it here if live booking is wanted back.
  */
 
 export const SERVICES_META = {
