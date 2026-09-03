@@ -23,6 +23,13 @@ export interface NavColumn {
   title: string;
   href: string;
   links: readonly NavChild[];
+  /**
+   * Further silos stacked beneath this one in the same column, each keeping its
+   * own heading. A mega-menu column is a stack of silos, not a single one — the
+   * menu has four columns but five silos, because Medicinal Cannabis has no
+   * sub-pages and a column to itself left a heading with nothing under it.
+   */
+  below?: readonly NavColumn[];
 }
 
 export interface NavItem {
@@ -45,14 +52,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
         links: [
           { label: "Weight Loss Injections", href: "/weight-loss-peptides/weight-loss-injections/" },
           { label: "Medical Weight Loss Program", href: "/weight-loss-peptides/medical-weight-loss-program/" },
-          /*
-           * Medicinal Cannabis sits here rather than as a column of its own. It
-           * has no sub-pages, so as a column it was a heading with nothing under
-           * it — which read as a silo that had lost its contents rather than as
-           * a page. As a link it takes the same styling as its siblings.
-           */
-          { label: "Medicinal Cannabis", href: "/medicinal-cannabis/" },
         ],
+        /*
+         * Medicinal Cannabis keeps its own heading — it is a silo, not a weight
+         * loss sub-page — and sits below Medical Weight Loss Program in the
+         * first column rather than opening a fifth one.
+         */
+        below: [{ title: "Medicinal Cannabis", href: "/medicinal-cannabis/", links: [] }],
       },
       {
         title: "Men's Health",
@@ -111,6 +117,13 @@ export function visibleNavItems(): NavItem[] {
       .map((column) => ({
         ...column,
         links: column.links.filter((link) => !isGated(link.href)),
+        // A stacked silo is gated on its own hub, exactly as a column is.
+        below: column.below
+          ?.filter((silo) => !isGated(silo.href))
+          .map((silo) => ({
+            ...silo,
+            links: silo.links.filter((link) => !isGated(link.href)),
+          })),
       })),
   }));
 }

@@ -44,11 +44,12 @@ describe("NAV_ITEMS", () => {
 });
 
 describe("visibleNavItems", () => {
-  it("keeps Medicinal Cannabis as a link under Weight Loss, not a column", () => {
+  it("stacks Medicinal Cannabis under Weight Loss as its own silo", () => {
     /*
-     * It has no sub-pages, so a column of its own was a heading with nothing
-     * beneath it. Moved at request to sit directly below Medical Weight Loss
-     * Program, where it renders with the same styling as its siblings.
+     * Four columns, five silos. It has no sub-pages, so a column of its own was
+     * a heading with nothing beneath it; it sits below Medical Weight Loss
+     * Program instead, and keeps its own heading rather than becoming a weight
+     * loss sub-page — which is what `below` exists to express.
      */
     const services = visibleNavItems()[0];
     expect(services.columns).toHaveLength(4);
@@ -59,18 +60,20 @@ describe("visibleNavItems", () => {
     expect(weightLoss?.links.map((l) => l.href)).toEqual([
       "/weight-loss-peptides/weight-loss-injections/",
       "/weight-loss-peptides/medical-weight-loss-program/",
-      "/medicinal-cannabis/",
     ]);
+    expect(weightLoss?.below?.map((s) => s.href)).toEqual(["/medicinal-cannabis/"]);
+
+    // No other column stacks anything — this is the only one.
+    expect(services.columns?.slice(1).flatMap((c) => c.below ?? [])).toEqual([]);
   });
 
   it("shows the two formerly gated destinations", () => {
     const hrefs = visibleNavItems().flatMap((item) => [
       item.href,
       ...(item.children ?? []).map((child) => child.href),
-      ...(item.columns ?? []).flatMap((column) => [
-        column.href,
-        ...column.links.map((link) => link.href),
-      ]),
+      ...(item.columns ?? [])
+        .flatMap((column) => [column, ...(column.below ?? [])])
+        .flatMap((silo) => [silo.href, ...silo.links.map((link) => link.href)]),
     ]);
     expect(hrefs).toContain("/medicinal-cannabis/");
     expect(hrefs).toContain("/our-practitioners/");

@@ -17,13 +17,22 @@
  * scroll-driven animation, the same mechanism ScrollRevealParagraph uses.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import type { FocusEvent } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "../shared/icons";
-import { visibleNavItems, type NavItem } from "@/content/nav";
+import { visibleNavItems, type NavColumn, type NavItem } from "@/content/nav";
 import { CLINIC } from "@/content/clinic";
+
+/**
+ * A mega-menu column flattened into the silos it stacks, the column's own first.
+ * Most columns are a single silo; Medicinal Cannabis rides below Weight Loss &
+ * Peptides because it has no sub-pages of its own.
+ */
+function silos(column: NavColumn): NavColumn[] {
+  return [column, ...(column.below ?? [])];
+}
 
 const LOGO_SRC =
   "/images/logo-colour.svg";
@@ -430,6 +439,12 @@ const HEADER_CSS = `
   transition: all 0.3s linear;
 }
 .hhcp-hdr__mega-title:hover { color: var(--hhcp-action-dark); }
+/*
+ * A silo stacked under another one needs a little more air above it than the
+ * column's 10px rhythm, or its heading reads as one more link in the list above
+ * rather than as the start of something new. Nothing else about it changes.
+ */
+.hhcp-hdr__mega-title[data-stacked="true"] { margin-top: 12px; }
 .hhcp-hdr__mega-list {
   display: flex;
   flex-direction: column;
@@ -826,18 +841,27 @@ export function SiteHeader() {
                           >
                             {item.columns.map((column) => (
                               <div key={column.title} className="hhcp-hdr__mega-col">
-                                <a className="hhcp-hdr__mega-title" href={column.href}>
-                                  {column.title}
-                                </a>
-                                {column.links.length > 0 ? (
-                                  <ul className="hhcp-hdr__mega-list">
-                                    {column.links.map((link) => (
-                                      <li key={link.href}>
-                                        <a href={link.href}>{link.label}</a>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                ) : null}
+                                {/* A column is a stack of silos, usually one. */}
+                                {silos(column).map((silo, index) => (
+                                  <Fragment key={silo.href}>
+                                    <a
+                                      className="hhcp-hdr__mega-title"
+                                      href={silo.href}
+                                      data-stacked={index > 0 ? "true" : undefined}
+                                    >
+                                      {silo.title}
+                                    </a>
+                                    {silo.links.length > 0 ? (
+                                      <ul className="hhcp-hdr__mega-list">
+                                        {silo.links.map((link) => (
+                                          <li key={link.href}>
+                                            <a href={link.href}>{link.label}</a>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    ) : null}
+                                  </Fragment>
+                                ))}
                               </div>
                             ))}
                           </div>
@@ -936,16 +960,16 @@ export function SiteHeader() {
                       heading link followed by its sub-pages. */}
                   {openDrawerMenu === item.label && item.columns ? (
                     <ul className="hhcp-hdr__drawer-sublist">
-                      {item.columns.map((column) => (
-                        <li key={column.href}>
+                      {item.columns.flatMap(silos).map((silo) => (
+                        <li key={silo.href}>
                           <a
                             className="hhcp-hdr__drawer-subheading"
-                            href={column.href}
+                            href={silo.href}
                             onClick={closeMenu}
                           >
-                            {column.title}
+                            {silo.title}
                           </a>
-                          {column.links.map((link) => (
+                          {silo.links.map((link) => (
                             <a
                               key={link.href}
                               className="hhcp-hdr__drawer-subitem"
