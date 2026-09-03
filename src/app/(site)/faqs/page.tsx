@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   alternates: { canonical: FAQS_META.path },
 };
 
+/** Tinted, then untinted, then tinted — indexed by position in the run. */
+const TINT = ["bg-[color:var(--hhcp-accent)]", undefined] as const;
+
 /* One FAQPage for the page, built from every group's questions. */
 const ALL_QUESTIONS = FAQS_PAGE.groups.flatMap((group) =>
   group.items.map((item) => ({ q: item.question, a: item.answer })),
@@ -54,10 +57,16 @@ export default function Page() {
         cta={{ label: "Contact our team", href: "/contact/" }}
       />
 
+      {/*
+        The bands alternate from the first group down, tinted first. The intro
+        above them is untinted, so starting the groups untinted ran the intro and
+        "Getting started" together as one white stretch with nothing marking
+        where the questions began.
+      */}
       {FAQS_PAGE.groups.map((group, index) => (
         <FaqSection
           key={group.heading}
-          className={index % 2 === 1 ? "bg-[color:var(--hhcp-accent)]" : undefined}
+          className={TINT[index % 2]}
           heading={group.heading}
           items={group.items}
           emitSchema={false}
@@ -66,7 +75,12 @@ export default function Page() {
         />
       ))}
 
+      {/* Carries the alternation on past the last group rather than restarting
+          it, which is why this is derived: with an even number of groups the
+          last one is untinted and this has to be tinted, and adding a fifth
+          group has to flip it. */}
       <RelatedCards
+        className={TINT[FAQS_PAGE.groups.length % 2]}
         eyebrow="Where to next"
         heading="Explore your options"
         cards={[
