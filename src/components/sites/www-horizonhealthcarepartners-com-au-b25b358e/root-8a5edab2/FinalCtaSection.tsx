@@ -108,10 +108,19 @@ export function FinalCtaSection({
 
       <div className="hhcp-container relative flex flex-col gap-[var(--hhcp-space-l)]">
         <div className="flex flex-col items-center gap-[32px]">
-          {/* Source computes text-align: start on this h2 (the paragraph below it is
-              the one carrying text--center). The flex parent centres the box, so a
-              single line still reads centred. */}
-          <h2 className="font-dm-sans text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-start text-white">
+          {/*
+            The source computes text-align: start here — only the paragraph below
+            carries text--center. The flex parent centres the box, so a heading
+            that fits on one line still reads centred and the target never shows
+            otherwise. A heading that wraps does: "Questions about whether
+            telehealth suits you?" on /patient-safety/ set two ragged-right lines
+            in the middle of a centred band.
+
+            Centred, and given the same 880px cap the body copy has in spirit, so
+            a long heading breaks into balanced lines instead of running the full
+            1340px container. See CUSTOMISATIONS.md deviation 8.
+          */}
+          <h2 className="font-dm-sans max-w-[880px] text-[length:var(--hhcp-h1)] leading-[var(--hhcp-heading-lh)] font-normal tracking-[-0.6px] text-center text-white">
             {heading}
           </h2>
           <p className="max-w-[536px] text-[16px] leading-[24px] font-normal text-center text-white">

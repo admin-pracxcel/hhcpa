@@ -252,3 +252,50 @@ Measured — every computed property on a link in each panel, at 1534px:
 |---|---|---|---|---|---|
 | mega ("Weight Loss Injections") | dmSans | 16px | 400 | 22.4px | rgba(1, 49, 38, 0.8) |
 | About ("About Us") | dmSans | 16px | 400 | 22.4px | rgba(1, 49, 38, 0.8) |
+
+## 8. The closing CTA band's heading is centred
+
+**Requested:** the CTA section's title should be centre aligned. Spotted on
+`/patient-safety/`, where "Questions about whether telehealth suits you?" set two
+ragged-right lines in the middle of an otherwise centred band.
+
+**Target behaviour:** the `h2` in `.cta--section` computes `text-align: start`; only the
+paragraph below it carries `text--center`. The flex parent centres the *box*, so a
+heading short enough to fit one line still reads centred — the target's own heading does,
+which is why this never showed there.
+
+**Change** — `FinalCtaSection.tsx`, on the `h2`:
+
+| | Target | Here |
+|---|---|---|
+| `text-align` | `start` | `center` |
+| `max-width` | none | `880px` |
+
+The width cap comes with it. Centred but uncapped, a long heading sets across the full
+1340px container in lines too long to read; 880px breaks it into balanced ones. The body
+paragraph below is already capped at 536px for the same reason.
+
+Every page uses this one component for its closing band, so all of them move together.
+
+Measured — the last `h2` on eleven pages at 1534px, and on `/patient-safety/` down the
+breakpoints:
+
+| page | computed `text-align` |
+|---|---|
+| `/`, `/pricing/`, `/faqs/`, `/how-it-works/`, `/contact/`, `/discharge/`, `/about-us/`, `/complaints/` | center |
+| `/quiz/`, `/weight-loss-peptides/`, `/patient-safety/` | center |
+
+At 1200 / 991 / 767 / 390px the `/patient-safety/` heading is `center` at every width,
+and its box caps at 880px on the two widest.
+
+**Not changed, and why.** Three other sections carry a heading in a band and were checked
+at the same time:
+
+- `InlineCtaBand` — a row, text block left and button right. Centring its title would
+  break the layout, and it is a mid-page prompt rather than the closing CTA.
+- `StatementBand` — heading starts at x=485 in an indented column, not a centred block.
+  It is a statement ("This quiz is not for emergencies"), not a call to action.
+- `PricingCueBand` — left-aligned across the full container.
+
+Those three are left as they are. If they should match, it is a separate decision about
+the statement sections rather than about the CTA.
