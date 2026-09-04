@@ -19,26 +19,22 @@ export interface RouteEntry {
 export const ROUTES: readonly RouteEntry[] = [
   { path: "/", title: "Home" },
 
-  // Weight Loss & Peptides
-  { path: "/weight-loss-peptides/", title: "Weight Loss & Peptides" },
-  { path: "/weight-loss-peptides/weight-loss-injections/", title: "Weight Loss Injections" },
-  { path: "/weight-loss-peptides/medical-weight-loss-program/", title: "Medical Weight Loss Program" },
+  // Weight Management
+  { path: "/weight-management/", title: "Weight Management" },
+  { path: "/weight-management/medical-weight-loss-program/", title: "Medical Weight Loss Program" },
 
   // Men's Health
   { path: "/mens-health/", title: "Men's Health" },
-  { path: "/mens-health/erectile-dysfunction-treatment/", title: "Erectile Dysfunction Treatment" },
-  { path: "/mens-health/testosterone-replacement-therapy/", title: "Testosterone Replacement Therapy" },
-  { path: "/mens-health/premature-ejaculation-treatment/", title: "Premature Ejaculation Treatment" },
-  { path: "/mens-health/hair-loss-treatment/", title: "Hair Loss Treatment" },
+  { path: "/mens-health/erectile-dysfunction/", title: "Erectile Dysfunction" },
+  { path: "/mens-health/low-testosterone/", title: "Low Testosterone" },
+  { path: "/mens-health/premature-ejaculation/", title: "Premature Ejaculation" },
+  { path: "/mens-health/hair-loss/", title: "Hair Loss" },
 
   // Women's Health
   { path: "/womens-health/", title: "Women's Health" },
-  { path: "/womens-health/menopause-treatment/", title: "Menopause Treatment" },
+  { path: "/womens-health/menopause/", title: "Menopause & Perimenopause" },
   { path: "/womens-health/pcos-management/", title: "PCOS Management" },
   { path: "/womens-health/contraception/", title: "Contraception & Sexual Health" },
-
-  // Medicinal Cannabis — withheld pending compliance sign-off
-  { path: "/medicinal-cannabis/", title: "Medicinal Cannabis" },
 
   // Online Doctor
   { path: "/online-doctor/", title: "Online Doctor" },
@@ -52,7 +48,6 @@ export const ROUTES: readonly RouteEntry[] = [
   { path: "/how-it-works/", title: "How It Works" },
   { path: "/pricing/", title: "Pricing" },
   { path: "/about-us/", title: "About Us" },
-  // Withheld: only one named practitioner, no AHPRA number, no headshot on file.
   { path: "/our-practitioners/", title: "Our Practitioners" },
   { path: "/contact/", title: "Contact" },
   { path: "/faqs/", title: "FAQs" },

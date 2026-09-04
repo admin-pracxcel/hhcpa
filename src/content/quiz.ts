@@ -555,8 +555,19 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     id: "ho_prior_therapy",
     field: "ho_prior_therapy",
     clinical: true,
+    /*
+     * DECISION (compliance remediation, 2026-09-04): the client's migrated
+     * wording was "Have you previously used peptide therapy or prescription
+     * weight management medications?". "Peptide" names a restricted prescription
+     * class, and HHCPA_Remediation_Change_Spec.md §A6 bars it from all public
+     * copy — the quiz is rendered to patients, so it is public copy. Only the
+     * naming changed: the question still screens for prior use of prescription
+     * weight-management therapy, the branch, the field and the triage flag are
+     * untouched. The quiz as a whole still needs its own compliance review
+     * under §B23; this edit does not constitute that review.
+     */
     question:
-      "Have you previously used peptide therapy or prescription weight management medications?",
+      "Have you previously used prescription weight management medications or therapies?",
     options: ["Yes", "No"],
     followUp: {
       when: "Yes",
@@ -854,7 +865,7 @@ export function triage(
     amber.push("Reported allergy to injectable medications");
   }
   if (is("ho_prior_therapy", "Yes")) {
-    amber.push("Previous peptide or weight-management medication");
+    amber.push("Previous weight-management medication or therapy");
   }
 
   const weightLossMeds = answers.wl_medications ?? "";

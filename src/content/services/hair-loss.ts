@@ -12,14 +12,14 @@ import { CALL_CTA } from "../clinic";
 
 export const HAIR_LOSS: ServicePageData = {
   meta: {
-    title: "Hair Loss Treatment for Men | Online | Australia",
+    title: "Hair Loss in Men, Assessed Online | Australia",
     description:
-      "Talk to an AHPRA-registered practitioner about male hair loss treatment options online. Australia-wide telehealth. Free pre-screening.",
-    path: "/mens-health/hair-loss-treatment/",
+      "Talk to an AHPRA-registered practitioner about male hair loss online. Australia-wide telehealth. Free pre-screening.",
+    path: "/mens-health/hair-loss/",
   },
   hero: {
-    eyebrow: "Hair loss treatment",
-    heading: "Hair loss treatment for men, assessed online",
+    eyebrow: "Hair loss",
+    heading: "Hair loss in men, assessed online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

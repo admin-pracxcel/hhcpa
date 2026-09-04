@@ -67,8 +67,8 @@ export const ARTICLES: readonly Article[] = [
     image: `${IMAGE_BASE}blog-weight-loss.jpeg`,
     imageAlt: "A person preparing a fresh meal at home.",
     moneyPage: {
-      label: "Weight loss & peptides",
-      href: "/weight-loss-peptides/",
+      label: "Weight management",
+      href: "/weight-management/",
     },
     blocks: [
       {

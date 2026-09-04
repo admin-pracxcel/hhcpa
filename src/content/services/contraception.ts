@@ -75,12 +75,12 @@ export const CONTRACEPTION: ServicePageData = {
           links: [{ label: "Women's health", href: "/womens-health/" }],
         },
         {
-          title: "Menopause treatment",
-          body: "Symptom assessment and options, including hormone therapy where appropriate.",
+          title: "Menopause & perimenopause",
+          body: "Symptom assessment, and the options your practitioner discusses with you.",
           links: [
             {
-              label: "Menopause treatment",
-              href: "/womens-health/menopause-treatment/",
+              label: "Menopause & perimenopause",
+              href: "/womens-health/menopause/",
             },
           ],
         },

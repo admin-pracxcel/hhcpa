@@ -32,10 +32,27 @@ describe("sitemap", () => {
     }
   });
 
-  it("lists the formerly gated routes now that they are published", async () => {
+  it("lists the published pages and none the remediation retired", async () => {
+    /*
+     * A sitemap entry for a URL that 301s is an invitation to index the old
+     * address, and two of the retired paths named a restricted prescription
+     * class in the URL string itself (HHCPA_Remediation_Change_Spec.md §C).
+     */
     const urls = (await sitemapWith(true)).map((entry) => entry.url);
-    expect(urls).toContain(`${SITE_URL}/medicinal-cannabis/`);
     expect(urls).toContain(`${SITE_URL}/our-practitioners/`);
+    expect(urls).toContain(`${SITE_URL}/weight-management/`);
+    expect(urls).toContain(`${SITE_URL}/mens-health/low-testosterone/`);
+
+    for (const retired of [
+      "/medicinal-cannabis/",
+      "/weight-loss-peptides/",
+      "/weight-loss-peptides/weight-loss-injections/",
+      "/mens-health/testosterone-replacement-therapy/",
+      "/mens-health/hair-loss-treatment/",
+      "/womens-health/menopause-treatment/",
+    ]) {
+      expect(urls).not.toContain(`${SITE_URL}${retired}`);
+    }
   });
 
   it("gives the homepage the highest priority", async () => {

@@ -1,15 +1,15 @@
 /**
- * "Choose your focus" — the six service cards that route into the silos.
+ * "Choose your focus" — the service cards that route into the silos.
  *
  * Authored for the rebuilt homepage in the clone's idiom: 1340px container,
  * eyebrow dot + h2 over a hairline, 10px card radius, and the target's own
  * 1199 / 767 breakpoints rather than Tailwind's.
  *
  * Gated destinations are filtered out here rather than commented out of the
- * content file. `/medicinal-cannabis/` is gated pending compliance sign-off
- * (Service Agreement clause 6.2(b)), so its card does not render and the grid
- * closes up around it — the same mechanism the navigation uses. Ungating is one
- * flag in `routes.ts`.
+ * content file, the same mechanism the navigation uses: a card whose
+ * destination is withheld pending the client's written sign-off (Service
+ * Agreement clause 6.2(b)) does not render, and the grid closes up around it.
+ * Nothing is gated today — five cards, all published.
  */
 
 import { cn } from "@/lib/utils";
@@ -86,9 +86,9 @@ const STYLES = `
  */
 /*
  * Flex rather than grid, so a row that is not full centres its cards instead
- * of leaving a hole on the right. Five cards across three columns is the usual
- * case here, and the gated sixth returning would make it six -- both look
- * right this way. The card widths reproduce a three-column grid exactly:
+ * of leaving a hole on the right. Five cards across three columns leaves the
+ * last row short, and a sixth card would fill it -- both look right this way.
+ * The card widths reproduce a three-column grid exactly:
  * a third of the row, less its share of the two gaps.
  */
 .hhcp-fo-grid {

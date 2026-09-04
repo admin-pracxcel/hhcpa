@@ -58,10 +58,10 @@ export const PCOS: ServicePageData = {
       heading: "Explore your options",
       cards: [
         {
-          title: "Weight loss & peptides",
+          title: "Weight management",
           body: "Weight and hormones often overlap with PCOS.",
           links: [
-            { label: "Weight loss & peptides", href: "/weight-loss-peptides/" },
+            { label: "Weight management", href: "/weight-management/" },
           ],
         },
         {

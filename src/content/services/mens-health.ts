@@ -11,12 +11,12 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
+import { MEDICARE_ANSWER, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MENS_HEALTH: ServicePageData = {
   meta: {
-    title: "Men's Health Clinic Online | ED, TRT & More | AU",
+    title: "Men's Health Consultations Online | Australia",
     description:
       "Discreet men's health consultations online. Talk to an AHPRA-registered practitioner about ED, low testosterone, hair loss and more. Australia-wide telehealth.",
     path: "/mens-health/",
@@ -49,17 +49,17 @@ export const MENS_HEALTH: ServicePageData = {
           links: [
             {
               label: "Erectile dysfunction",
-              href: "/mens-health/erectile-dysfunction-treatment/",
+              href: "/mens-health/erectile-dysfunction/",
             },
           ],
         },
         {
-          title: "Low testosterone and TRT",
+          title: "Low testosterone",
           body: "Symptoms like low energy, low mood, poor recovery and reduced libido, assessed properly with pathology where needed.",
           links: [
             {
-              label: "Testosterone replacement",
-              href: "/mens-health/testosterone-replacement-therapy/",
+              label: "Low testosterone",
+              href: "/mens-health/low-testosterone/",
             },
           ],
         },
@@ -69,7 +69,7 @@ export const MENS_HEALTH: ServicePageData = {
           links: [
             {
               label: "Premature ejaculation",
-              href: "/mens-health/premature-ejaculation-treatment/",
+              href: "/mens-health/premature-ejaculation/",
             },
           ],
         },
@@ -77,7 +77,7 @@ export const MENS_HEALTH: ServicePageData = {
           title: "Hair loss",
           body: "Options for male pattern hair loss, discussed honestly.",
           links: [
-            { label: "Hair loss", href: "/mens-health/hair-loss-treatment/" },
+            { label: "Hair loss", href: "/mens-health/hair-loss/" },
           ],
         },
       ],
@@ -139,9 +139,8 @@ export const MENS_HEALTH: ServicePageData = {
       },
       {
         id: "medicare",
-        question: "Do you bulk bill or offer Medicare rebates?",
-        answer:
-          "Some telehealth consultations may attract a Medicare rebate in certain circumstances. Check with Medicare, and we can provide documentation to support a claim.",
+        question: "Do you offer Medicare rebates?",
+        answer: MEDICARE_ANSWER,
       },
     ],
   },

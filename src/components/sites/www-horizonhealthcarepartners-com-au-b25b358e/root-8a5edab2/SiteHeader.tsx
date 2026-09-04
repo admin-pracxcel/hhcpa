@@ -27,8 +27,9 @@ import { CLINIC } from "@/content/clinic";
 
 /**
  * A mega-menu column flattened into the silos it stacks, the column's own first.
- * Most columns are a single silo; Medicinal Cannabis rides below Weight Loss &
- * Peptides because it has no sub-pages of its own.
+ * Most columns are a single silo. A column can stack more than one, each keeping
+ * its own heading, for a silo with no sub-pages of its own; nothing uses that
+ * today.
  */
 function silos(column: NavColumn): NavColumn[] {
   return [column, ...(column.below ?? [])];

@@ -11,9 +11,9 @@
  * written confirmation — the content document flags the same thing in three
  * places on this page alone.
  *
- * The Medicinal Cannabis focus card is gated in `routes.ts`, so it is filtered
- * out at render rather than deleted here: when compliance signs off, flipping
- * the flag in one file brings the card back.
+ * The Medicinal Cannabis focus card is gone, not gated: advertising medicinal
+ * cannabis to the public is prohibited outright, so the page and every route to
+ * it were removed in the compliance remediation. The grid is five cards.
  */
 
 import { CONSULTATION_PLANS } from "./consultation-plans";
@@ -23,7 +23,7 @@ import { CALL_CTA } from "./clinic";
 export const HOME_META = {
   title: "Online Telehealth Clinic Australia | Weight Loss & More",
   description:
-    "AHPRA-registered telehealth clinic. Consult online for peptides for weight loss, men's and women's health and everyday care. Free pre-screening, Australia-wide.",
+    "AHPRA-registered telehealth clinic. Online consultations for weight management, men's and women's health, and everyday care. Free pre-screening, Australia-wide.",
 } as const;
 
 export const HOME_HERO = {
@@ -44,10 +44,10 @@ export const HOME_VALUE_STRIP: readonly string[] = [
 ] as const;
 
 /**
- * First on-page text under the hero. "Peptides for weight loss" is the site's
- * primary money keyword and belongs to the Weight Loss & Peptides page; the
- * homepage supports it in the first paragraph without taking it as an H1, so
- * the two pages do not compete.
+ * First on-page text under the hero. "Medical weight loss" is the site's primary
+ * money keyword and belongs to the Weight Management page; the homepage supports
+ * it in the first paragraph without taking it as an H1, so the two pages do not
+ * compete.
  *
  * `text` is verbatim from the content document. The eyebrow and the link are
  * not in it — they were added because the paragraph was a 136-character-wide
@@ -56,7 +56,7 @@ export const HOME_VALUE_STRIP: readonly string[] = [
  */
 export const HOME_INTRO = {
   eyebrow: "Who we are",
-  text: "Horizon Health Care Partners helps Australians get practical medical support without the waiting room. Our practitioners consult on peptides for weight loss, men's and women's health, and a wide range of everyday health needs. You tell us what is going on through a short pre-screening quiz, you book a time that suits you, and you speak with a registered practitioner who reviews your history and talks through your options. A prescription is never guaranteed. Any treatment comes from a real consultation, where it is clinically appropriate.",
+  text: "Horizon Health Care Partners helps Australians get practical medical support without the waiting room. Our practitioners consult on weight management, men's and women's health, and a wide range of everyday health needs. You tell us what is going on through a short pre-screening quiz, you book a time that suits you, and you speak with a registered practitioner who reviews your history and talks through your options. A prescription is never guaranteed. Any treatment comes from a real consultation, where it is clinically appropriate.",
   cta: { label: "More about Horizon", href: "/about-us/" },
 } as const;
 
@@ -65,11 +65,7 @@ const ICON_BASE =
 
 export interface FocusCard {
   readonly title: string;
-  /**
-   * Square 500px icons supplied for this page. The gated Medicinal Cannabis
-   * card still points at one of the clone's service icons — no bespoke icon was
-   * supplied for it, since it does not render until compliance signs off.
-   */
+  /** Square 500px icons supplied for this page. */
   readonly icon: string;
   readonly iconAlt: string;
   readonly badge: string;
@@ -85,13 +81,13 @@ export const HOME_FOCUS = {
     "Pick a starting point. Each service is delivered online by AHPRA-registered practitioners, Australia-wide.",
   cards: [
     {
-      title: "Weight Loss & Peptides",
+      title: "Weight Management",
       icon: `${ICON_BASE}weight-management.webp`,
       iconAlt: "Weight management",
       badge: `From $${PRICES.firstConsult.amount} · programs from $${PRICES.healthProgram.amount}`,
-      body: "Peptides for weight loss, weight-loss injections, and medically supervised programs, assessed by a practitioner and reviewed over time.",
+      body: "Medically supervised weight-loss consultations and programs, assessed by a practitioner and reviewed over time.",
       cta: "Explore weight loss",
-      href: "/weight-loss-peptides/",
+      href: "/weight-management/",
     },
     {
       title: "Men's Health",
@@ -110,15 +106,6 @@ export const HOME_FOCUS = {
       body: "Menopause and perimenopause support, hormones, PCOS and contraception, on your schedule.",
       cta: "Explore women's health",
       href: "/womens-health/",
-    },
-    {
-      title: "Medicinal Cannabis",
-      icon: `${ICON_BASE}icon-holistic-care.png`,
-      iconAlt: "Holistic care",
-      badge: "Free eligibility check",
-      body: "Find out if you may be eligible for a medicinal cannabis prescription, assessed under TGA pathways by registered practitioners.",
-      cta: "Check eligibility",
-      href: "/medicinal-cannabis/",
     },
     {
       title: "Online Doctor",

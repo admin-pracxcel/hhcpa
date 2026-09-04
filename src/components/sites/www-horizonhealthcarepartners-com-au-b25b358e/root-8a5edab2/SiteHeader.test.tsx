@@ -34,12 +34,12 @@ describe("SiteHeader", () => {
       a.getAttribute("href"),
     );
     for (const href of [
-      "/weight-loss-peptides/",
+      "/weight-management/",
       "/mens-health/",
       "/womens-health/",
       "/online-doctor/",
-      "/weight-loss-peptides/weight-loss-injections/",
-      "/mens-health/hair-loss-treatment/",
+      "/weight-management/medical-weight-loss-program/",
+      "/mens-health/hair-loss/",
       "/womens-health/pcos-management/",
       "/online-doctor/mental-health/",
     ]) {
@@ -52,23 +52,26 @@ describe("SiteHeader", () => {
     const hrefs = new Set(
       Array.from(container.querySelectorAll("a[href]")).map((a) => a.getAttribute("href")),
     );
-    // 5 hubs + their sub-pages, with nothing gated.
+    // The 4 mega-menu hubs and their 13 sub-pages, with nothing gated. Was 18
+    // before the compliance remediation folded the weight-loss-injections page
+    // into its parent.
     const servicePaths = publicRoutes()
       .map((r) => r.path)
       .filter((p) =>
-        /^\/(weight-loss-peptides|mens-health|womens-health|online-doctor)\//.test(p),
+        /^\/(weight-management|mens-health|womens-health|online-doctor)\//.test(p),
       );
-    expect(servicePaths).toHaveLength(18);
+    expect(servicePaths).toHaveLength(17);
     for (const path of servicePaths) expect(hrefs).toContain(path);
   });
 
-  it("links the formerly gated destinations", () => {
+  it("links Our Practitioners and nothing the remediation removed", () => {
     const { container } = render(<SiteHeader />);
     const hrefs = Array.from(container.querySelectorAll("a[href]")).map((a) =>
       a.getAttribute("href"),
     );
-    expect(hrefs).toContain("/medicinal-cannabis/");
     expect(hrefs).toContain("/our-practitioners/");
+    expect(hrefs).not.toContain("/medicinal-cannabis/");
+    expect(hrefs).not.toContain("/weight-loss-peptides/");
   });
 
   it("carries the CTA as the drawer's last item", () => {

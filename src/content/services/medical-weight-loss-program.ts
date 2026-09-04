@@ -22,7 +22,7 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
     title: "Medical Weight Loss Program | Practitioner-Led Online",
     description:
       "A medically supervised weight-loss program with ongoing practitioner review. Assessment, plan and follow-up, delivered by telehealth across Australia.",
-    path: "/weight-loss-peptides/medical-weight-loss-program/",
+    path: "/weight-management/medical-weight-loss-program/",
   },
   hero: {
     eyebrow: "Medical weight loss program",
@@ -32,7 +32,7 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
   },
   crumbs: [
     { label: "Home", href: "/" },
-    { label: "Weight Loss & Peptides", href: "/weight-loss-peptides/" },
+    { label: "Weight Management", href: "/weight-management/" },
   ],
   intro:
     "Medical weight loss works because someone is watching the whole picture with you. Our program pairs you with an AHPRA-registered practitioner who assesses your health, agrees a plan, and reviews it as your body responds. This is the difference between a one-off script and a supervised program. It is designed for people who want structure, accountability and a practitioner in their corner, delivered entirely online.",
@@ -83,20 +83,18 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
       heading: "Explore your options",
       cards: [
         {
-          title: "Weight loss & peptides",
-          body: "How peptides for weight loss fit into a supervised program.",
+          title: "Weight management",
+          body: "How medically supervised weight loss is assessed.",
           links: [
-            { label: "Weight loss & peptides", href: "/weight-loss-peptides/" },
+            { label: "Weight management", href: "/weight-management/" },
           ],
         },
         {
-          title: "Weight loss injections",
-          body: "How injectable options are assessed.",
+          title: "Men's and women's health",
+          body: "Because weight, hormones and energy are often connected.",
           links: [
-            {
-              label: "Weight loss injections",
-              href: "/weight-loss-peptides/weight-loss-injections/",
-            },
+            { label: "Men's health", href: "/mens-health/" },
+            { label: "Women's health", href: "/womens-health/" },
           ],
         },
       ],

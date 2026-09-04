@@ -25,9 +25,11 @@ export interface NavColumn {
   links: readonly NavChild[];
   /**
    * Further silos stacked beneath this one in the same column, each keeping its
-   * own heading. A mega-menu column is a stack of silos, not a single one — the
-   * menu has four columns but five silos, because Medicinal Cannabis has no
-   * sub-pages and a column to itself left a heading with nothing under it.
+   * own heading — a mega-menu column is a stack of silos, not a single one.
+   * Currently unused: the one silo that needed it (Medicinal Cannabis, which had
+   * no sub-pages of its own) was removed from the public site in the compliance
+   * remediation. The header and the gating filter still honour it, so the next
+   * childless silo does not have to reinvent the shape.
    */
   below?: readonly NavColumn[];
 }
@@ -47,34 +49,27 @@ export const NAV_ITEMS: readonly NavItem[] = [
     href: "/services/",
     columns: [
       {
-        title: "Weight Loss & Peptides",
-        href: "/weight-loss-peptides/",
+        title: "Weight Management",
+        href: "/weight-management/",
         links: [
-          { label: "Weight Loss Injections", href: "/weight-loss-peptides/weight-loss-injections/" },
-          { label: "Medical Weight Loss Program", href: "/weight-loss-peptides/medical-weight-loss-program/" },
+          { label: "Medical Weight Loss Program", href: "/weight-management/medical-weight-loss-program/" },
         ],
-        /*
-         * Medicinal Cannabis keeps its own heading — it is a silo, not a weight
-         * loss sub-page — and sits below Medical Weight Loss Program in the
-         * first column rather than opening a fifth one.
-         */
-        below: [{ title: "Medicinal Cannabis", href: "/medicinal-cannabis/", links: [] }],
       },
       {
         title: "Men's Health",
         href: "/mens-health/",
         links: [
-          { label: "Erectile Dysfunction", href: "/mens-health/erectile-dysfunction-treatment/" },
-          { label: "Testosterone Replacement", href: "/mens-health/testosterone-replacement-therapy/" },
-          { label: "Premature Ejaculation", href: "/mens-health/premature-ejaculation-treatment/" },
-          { label: "Hair Loss Treatment", href: "/mens-health/hair-loss-treatment/" },
+          { label: "Erectile Dysfunction", href: "/mens-health/erectile-dysfunction/" },
+          { label: "Low Testosterone", href: "/mens-health/low-testosterone/" },
+          { label: "Premature Ejaculation", href: "/mens-health/premature-ejaculation/" },
+          { label: "Hair Loss", href: "/mens-health/hair-loss/" },
         ],
       },
       {
         title: "Women's Health",
         href: "/womens-health/",
         links: [
-          { label: "Menopause Treatment", href: "/womens-health/menopause-treatment/" },
+          { label: "Menopause & Perimenopause", href: "/womens-health/menopause/" },
           { label: "PCOS Management", href: "/womens-health/pcos-management/" },
           { label: "Contraception & Sexual Health", href: "/womens-health/contraception/" },
         ],

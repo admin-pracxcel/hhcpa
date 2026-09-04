@@ -28,13 +28,14 @@ describe("SiteFooter", () => {
     );
   });
 
-  it("links the formerly gated destinations", () => {
+  it("links Our Practitioners and nothing the remediation removed", () => {
     const { container } = render(<SiteFooter />);
     const hrefs = Array.from(container.querySelectorAll("a[href]")).map((a) =>
       a.getAttribute("href"),
     );
-    expect(hrefs).toContain("/medicinal-cannabis/");
     expect(hrefs).toContain("/our-practitioners/");
+    expect(hrefs).toContain("/weight-management/");
+    expect(hrefs).not.toContain("/medicinal-cannabis/");
   });
 
   it("does not repeat the site-wide disclaimer, which the layout owns", () => {

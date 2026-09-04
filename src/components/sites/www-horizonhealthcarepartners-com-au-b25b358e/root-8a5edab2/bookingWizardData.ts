@@ -9,6 +9,14 @@
  * Every string and number here is the target's own copy — do not "improve" it.
  * Rendering lives in `BookingWizard.tsx`; this file only holds the data so the
  * component stays readable.
+ *
+ * ⚠️ TWO EXCEPTIONS, both marked DECISION below. The compliance remediation
+ * (HHCPA_Remediation_Change_Spec.md §A6) bars restricted prescription terms from
+ * all public copy, and this wizard is public copy: `/home-v2/` is `noindex` and
+ * unlinked, but it is still served and its final step takes real bookings, so a
+ * regulator reading the domain reaches it. Two of the target's strings named
+ * "GLP-1" and "peptide therapy". Only those two words changed; no layout value,
+ * no branch and no field id moved, so the page is still the pixel benchmark.
  */
 
 /**
@@ -398,7 +406,13 @@ export const SUB_MENUS: Readonly<Record<ServiceKey, SubMenu>> = {
     type: "options",
     price: "From $99",
     categoryNote:
-      "Weight management medications may be discussed where clinically appropriate. No prescription is guaranteed. Ongoing follow-up appointments are required. Compounded GLP-1 medications are not available. All medicines are TGA-approved.",
+      /*
+       * DECISION (compliance remediation, 2026-09-04): the target's own string
+       * reads "Compounded GLP-1 medications are not available". GLP-1 names a
+       * restricted prescription class. The sentence still says the same thing to
+       * a patient — compounded medicines are not supplied.
+       */
+      "Weight management medications may be discussed where clinically appropriate. No prescription is guaranteed. Ongoing follow-up appointments are required. Compounded medications are not available. All medicines are TGA-approved.",
     items: [
       {
         id: "wm-initial",
@@ -1056,14 +1070,25 @@ export const HEALTH_OPT_STEPS: readonly HealthOptStep[] = [
     subtitle: "Help us understand your medical background.",
     questions: [
       {
-        id: "usedPeptide",
+        id: "usedWeightMedication",
+        /*
+         * DECISION (compliance remediation, 2026-09-04): the target's own label
+         * reads "Have you previously used peptide therapy or prescription weight
+         * management medications?". "Peptide" names a restricted prescription
+         * class. The question screens for the same thing, and the branch is
+         * untouched. The two field ids changed with it (usedPeptide ->
+         * usedWeightMedication, peptideDetails -> weightMedicationDetails):
+         * they are never shown to a patient, but they do survive minification
+         * into the shipped bundle, and §F1 is checked by reading page source.
+         * The wizard posts nowhere, so no consumer depends on the old keys.
+         */
         label:
-          "Have you previously used peptide therapy or prescription weight management medications?",
+          "Have you previously used prescription weight management medications or therapies?",
         type: "single",
         required: true,
         options: ["Yes", "No"],
         detailIf: "Yes",
-        detailId: "peptideDetails",
+        detailId: "weightMedicationDetails",
         detailLabel: "If yes, please provide details.",
       },
       {

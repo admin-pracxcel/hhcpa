@@ -44,11 +44,11 @@ export const WOMENS_HEALTH: ServicePageData = {
       cards: [
         {
           title: "Menopause and perimenopause",
-          body: "Symptom assessment and options, including menopausal hormone therapy where appropriate.",
+          body: "Symptom assessment, and the options your practitioner discusses with you.",
           links: [
             {
-              label: "Menopause treatment",
-              href: "/womens-health/menopause-treatment/",
+              label: "Menopause & perimenopause",
+              href: "/womens-health/menopause/",
             },
           ],
         },
@@ -139,7 +139,7 @@ export const WOMENS_HEALTH: ServicePageData = {
         id: "menopause",
         question: "Can I discuss menopause through telehealth?",
         answer:
-          "Yes. Menopause and perimenopause are well suited to telehealth assessment, including discussion of hormone therapy where appropriate.",
+          "Yes. Menopause and perimenopause are well suited to telehealth assessment, including a discussion of the options open to you.",
       },
       {
         id: "contraception",

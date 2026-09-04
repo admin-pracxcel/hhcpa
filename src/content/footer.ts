@@ -21,10 +21,9 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
   {
     title: "Our Services",
     links: [
-      { label: "Weight Loss & Peptides", href: "/weight-loss-peptides/" },
+      { label: "Weight Management", href: "/weight-management/" },
       { label: "Men's Health", href: "/mens-health/" },
       { label: "Women's Health", href: "/womens-health/" },
-      { label: "Medicinal Cannabis", href: "/medicinal-cannabis/" },
       { label: "Online Doctor", href: "/online-doctor/" },
       { label: "Mental Health Support", href: "/online-doctor/mental-health/" },
     ],

@@ -29,6 +29,25 @@ export function sectionImage(name: string): string {
   return `${IMAGES}${name}.webp`;
 }
 
+/**
+ * The Medicare answer, in one place because it says the same thing on three
+ * pages and an inconsistency between them is itself the risk.
+ *
+ * HHCPA_Remediation_Change_Spec.md §B7 replaced the original wording ("Some
+ * telehealth consultations may attract a Medicare rebate in certain
+ * circumstances. Check with Medicare, and we can provide documentation to
+ * support a claim."). That overstated rebate availability for a private weight,
+ * hormone and men's-health service, and offering documentation "to support a
+ * claim" implied an entitlement that will usually not exist — a
+ * false-or-misleading representation risk under the AHPRA advertising
+ * guidelines.
+ *
+ * ⚠️ The accurate position for the clinic's actual service mix is Part D item 2:
+ * it still needs Ranjeeta's written confirmation before publication.
+ */
+export const MEDICARE_ANSWER =
+  "Most of our consultations are private and are not bulk billed. A Medicare rebate applies only in limited circumstances, and only where you have an eligible relationship with the practitioner. We suggest confirming your eligibility with Medicare before you book.";
+
 /** Used wherever the source says "use standard closing CTA band". */
 export const STANDARD_CLOSING = {
   heading: "Your health, handled from home",

@@ -22,7 +22,7 @@
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { CONSULTATION_PLANS } from "../consultation-plans";
-import { STANDARD_CLOSING } from "./shared";
+import { MEDICARE_ANSWER, STANDARD_CLOSING } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PRICING_PAGE: ServicePageData = {
@@ -124,8 +124,7 @@ export const PRICING_PAGE: ServicePageData = {
       {
         id: "medicare",
         question: "Can I claim a Medicare rebate?",
-        answer:
-          "Some telehealth consultations may attract a Medicare rebate in certain circumstances. Check with Medicare, and we can provide documentation to support a claim.",
+        answer: MEDICARE_ANSWER,
       },
       {
         id: "payment-plans",

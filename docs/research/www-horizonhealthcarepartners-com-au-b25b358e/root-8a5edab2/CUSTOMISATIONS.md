@@ -105,8 +105,12 @@ Two structural details:
   Services `<li>` (`position: static` via `[data-mega]`). Anchored to the `<li>`,
   its right edge would spill past the container at 1340px viewport.
 - A gated silo takes its whole column with it, so the sub-pages of a withheld
-  service are unreachable from the menu — not just its hub link. Medicinal
-  Cannabis is the fifth column and appears on compliance sign-off.
+  service are unreachable from the menu — not just its hub link.
+
+The first column was `WEIGHT LOSS & PEPTIDES` when the widths above were measured.
+The compliance remediation renamed it to `WEIGHT MANAGEMENT` (12 characters shorter)
+and removed the Medicinal Cannabis silo entirely, so the header has more slack now,
+not less — the budget assertion in `nav.test.ts` still holds with room to spare.
 
 `src/content/nav.test.ts` carries a width budget asserting the rendered top row
 stays under the available row, so this regression cannot return silently.
@@ -342,3 +346,39 @@ Measured with `:hover` forced through CDP, so these are the real hovered values:
 
 No test: jsdom does not simulate `:hover`, so there is nothing to assert against. The
 measurements above are the check.
+
+---
+
+## 10. Compliance remediation (2026-09-04)
+
+Not a deviation from the target so much as a departure from it: the target site is
+where several of these problems came from, so the rebuild can no longer match it
+everywhere.
+
+`HHCPA_Remediation_Change_Spec.md` at the repo root is the authority. The short
+version: a health *service* may be advertised to the public; a prescription
+*medicine* may not be named, implied, or presented as the thing the service
+obtains. Conditions may be named — low testosterone, erectile dysfunction,
+menopause, PCOS, hair loss — and so may weight loss as a goal.
+
+Consequences for this build:
+
+- Two pages are gone: `/medicinal-cannabis/` and the weight-loss-injections child.
+  Both are 301s now (`next.config.ts`), and both are gone from the nav, the footer,
+  the home focus grid, the services overview and the sitemap.
+- Six URLs moved. Every internal link was updated to the new path rather than left
+  to the redirect, and a crawl of all 38 pages confirms none links to a
+  redirecting URL.
+- `src/content/restricted-terms.test.ts` is the standing guard. It scans every
+  non-test source file with comments stripped, so the files that explain *why* a
+  term was removed can still quote it. Adding a restricted term now fails the
+  build.
+- The archived clone at `/home-v2/` had two of the target's own strings scrubbed in
+  `bookingWizardData.ts` — the only two exceptions to that file's
+  ported-verbatim rule, both marked `DECISION`. It is `noindex` and unlinked but
+  still served, and §F1 is checked by reading page source.
+
+**Still open, and blocking publication** — see Part D and Part F of the spec:
+the quiz's question logic needs its own compliance review; Medicare wording,
+pricing figures and the pharmacy relationship need the client's written
+confirmation; and nothing may be indexed until she signs off in writing.

@@ -1,18 +1,23 @@
 /**
- * Copy for `/weight-loss-peptides/`.
+ * Copy for `/weight-management/`.
  *
  * Transcribed from HHCPA_Website_Content_UPDATED.md, "PAGE 2: WEIGHT LOSS &
- * PEPTIDES ★ PRIMARY MONEY PAGE", including its eleven-module map.
+ * PEPTIDES ★ PRIMARY MONEY PAGE", including its eleven-module map, then
+ * reframed by HHCPA_Remediation_Change_Spec.md §B3.
  *
- * This page owns the site's primary money keyword, "peptides for weight loss",
- * exact-matched in the meta title, the H1, the first paragraph and the URL. The
- * homepage only supports it, so the two do not compete.
+ * The source copy targeted "peptides for weight loss" as the site's primary
+ * money keyword, exact-matched in the meta title, the H1, the first paragraph
+ * and the URL. That keyword cannot be used: peptides are a restricted
+ * prescription class under the TGA advertising restrictions, so naming them is
+ * advertising a prescription medicine to the public. The page now targets the
+ * compliant cluster instead — "medical weight loss", "weight loss clinic
+ * online" — and the URL moved from `/weight-loss-peptides/` with a 301.
  *
  * Compliance notes carried over from the source copy, which are load-bearing
  * rather than stylistic — Service Agreement clauses 2.6 and 6.5:
- *   - No product or brand names anywhere on the page, and the copy says so out
- *     loud ("We do not name specific products on this page, and we do not sell
- *     them").
+ *   - No product, brand or class names anywhere on the page, and the copy says
+ *     so out loud ("We do not name or promote specific medicines on this page,
+ *     and we do not sell them").
  *   - No outcome guarantees. The prescription answer says no explicitly.
  *   - Pregnancy and breastfeeding are addressed rather than left out.
  *
@@ -26,16 +31,15 @@ import { CALL_CTA } from "./clinic";
 import { sectionImage } from "./services/shared";
 
 export const WLP_META = {
-  title: "Peptides for Weight Loss | Medical Weight Loss Clinic AU",
+  title: "Medical Weight Loss Clinic Online | Australia",
   description:
-    "Explore peptides for weight loss with AHPRA-registered practitioners. Medical weight-loss consults online, Australia-wide. Free pre-screening, no obligation.",
-  path: "/weight-loss-peptides/",
+    "Medically supervised weight loss with AHPRA-registered practitioners. Online weight-loss consultations, Australia-wide. Free pre-screening, no obligation.",
+  path: "/weight-management/",
 } as const;
 
 export const WLP_HERO = {
-  eyebrow: "Weight loss & peptides",
-  heading:
-    "Peptides for weight loss, guided by AHPRA-registered practitioners",
+  eyebrow: "Weight management",
+  heading: "Medical weight loss, guided by AHPRA-registered practitioners",
   primary: { label: "Check your eligibility", href: "/quiz/" },
   secondary: CALL_CTA,
 } as const;
@@ -50,17 +54,16 @@ export const WLP_TRUST: readonly string[] = [
 
 /** First on-page text. The exact-match keyword opens the first sentence. */
 export const WLP_INTRO =
-  "Peptides for weight loss have become one of the most searched-for treatments in Australia, and also one of the most misunderstood. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses whether a peptide-based or other medical weight-loss approach is clinically appropriate for you, then supports you through it with proper review. This is medical weight loss, delivered online. It starts with understanding your health, not with handing out a product.";
+  "Medical weight loss has become one of the most sought-after areas of care in Australia, and one of the most misunderstood. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses whether a medically supervised weight-loss approach is clinically appropriate for you, then supports you through it with proper review. This is medical weight loss, delivered online. It starts with understanding your health, not with handing out a product.";
 
 export const WLP_EXPLAINER = {
-  eyebrow: "What are peptides for weight loss?",
-  heading: 'What "peptides for weight loss" actually means',
+  eyebrow: "How it works",
+  heading: "How medically supervised weight loss works",
   paragraphs: [
-    "Peptides are short chains of amino acids that act as signalling molecules in the body. Several prescription treatments used in medical weight management fall into this broader category, and they work by influencing appetite, fullness and how the body regulates weight. In practice, patients ask us about them because they have heard that a weekly treatment can make sustained weight loss more achievable when diet and exercise alone have stalled.",
-    "Here is the honest version. These are prescription treatments, not supplements, and they are not right for everyone. Whether any of them suits you depends on your health history, your current medications, your goals and your safety. That is a clinical decision, and it is exactly what the consultation is for. We do not name specific products on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
+    "Medically supervised weight loss means a registered practitioner assesses your health, agrees a plan with you, and reviews it over time, rather than you buying something without advice. Where a prescription is clinically appropriate, that decision is made in your consultation, based on your history, your other medications, your goals and your safety. We do not name or promote specific medicines on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
   ],
   cta: { label: "Book a consultation", href: "/quiz/" },
-  image: sectionImage("weight-loss-peptides-what-peptides-are"),
+  image: sectionImage("weight-management-how-it-works"),
   imageAlt:
     "A woman at a kitchen table listens during a video consultation, a notebook open beside her.",
 } as const;
@@ -100,7 +103,7 @@ export const WLP_STEPS = {
       pill: "Talk it through",
       title: "Talk it through with a practitioner",
       description:
-        "Your practitioner reviews your history, your goals and any current medications, and discusses whether a peptide-based or other medical weight-loss option is appropriate. Where useful, they may arrange pathology so decisions are based on real data.",
+        "Your practitioner reviews your history, your goals and any current medications, and discusses whether a medically supervised weight-loss option is appropriate. Where useful, they may arrange pathology so decisions are based on real data.",
     },
     {
       pill: "Ongoing review",
@@ -143,22 +146,12 @@ export const WLP_RELATED = {
   heading: "Explore your options",
   cards: [
     {
-      title: "Weight loss injections",
-      body: "How injectable options are assessed.",
-      links: [
-        {
-          label: "Weight loss injections",
-          href: "/weight-loss-peptides/weight-loss-injections/",
-        },
-      ],
-    },
-    {
       title: "Medical weight loss program",
       body: "The supervised, review-based path.",
       links: [
         {
           label: "Medical weight loss program",
-          href: "/weight-loss-peptides/medical-weight-loss-program/",
+          href: "/weight-management/medical-weight-loss-program/",
         },
       ],
     },
@@ -179,13 +172,13 @@ export const WLP_RELATED = {
 } as const;
 
 export const WLP_FAQ = {
-  heading: "Common questions about peptides for weight loss",
+  heading: "Common questions about medical weight loss",
   items: [
     {
       id: "availability",
-      question: "Are peptides for weight loss available in Australia?",
+      question: "Is medical weight loss available online in Australia?",
       answer:
-        "Some peptide-based treatments used in weight management are prescription-only in Australia. Whether any is appropriate for you is a clinical decision made by a practitioner after a consultation. We do not supply or promote specific products.",
+        "Yes. An AHPRA-registered practitioner can assess you by video or phone anywhere in Australia, review your health history and goals, agree a plan with you and review it over time. What that plan involves is a clinical decision made in your consultation. We do not supply or promote specific medicines.",
     },
     {
       id: "prescription",
@@ -209,7 +202,7 @@ export const WLP_FAQ = {
       id: "pregnancy",
       question: "Is this suitable during pregnancy?",
       answer:
-        "Medical weight-loss treatments are generally not appropriate during pregnancy or breastfeeding. Tell your practitioner, and they will advise a safe path.",
+        "Medical weight-loss care is generally not appropriate during pregnancy or breastfeeding. Tell your practitioner, and they will advise a safe path.",
     },
   ],
 } as const;

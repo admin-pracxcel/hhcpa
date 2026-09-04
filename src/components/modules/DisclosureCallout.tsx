@@ -3,8 +3,12 @@ import type { LinkRef } from "./types";
 
 /**
  * Callout box linking to the conflict-of-interest / pharmacy disclosure page.
- * One instance, on the Medicinal Cannabis page, where the disclosure is a
- * regulatory expectation rather than a nicety.
+ *
+ * Its one instance was the Medicinal Cannabis page, where the disclosure was a
+ * regulatory expectation rather than a nicety. That page was removed in the
+ * compliance remediation, so nothing renders this today — it is kept because
+ * the disclosure expectation itself has not gone away, and any future page
+ * touching a dispensing relationship needs exactly this box.
  */
 export function DisclosureCallout({
   heading,

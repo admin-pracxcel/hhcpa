@@ -1,6 +1,18 @@
 import { describe, it, expect } from "vitest";
 import { NAV_ITEMS, visibleNavItems } from "./nav";
 import { FOOTER_COLUMNS, visibleFooterColumns } from "./footer";
+import { ROUTES } from "./routes";
+
+/** Every href the menu offers, columns and stacked silos included. */
+function navHrefs(): string[] {
+  return visibleNavItems().flatMap((item) => [
+    item.href,
+    ...(item.children ?? []).map((child) => child.href),
+    ...(item.columns ?? [])
+      .flatMap((column) => [column, ...(column.below ?? [])])
+      .flatMap((silo) => [silo.href, ...silo.links.map((link) => link.href)]),
+  ]);
+}
 
 describe("NAV_ITEMS", () => {
   it("keeps the top row to four items so the header cannot overflow", () => {
@@ -44,39 +56,64 @@ describe("NAV_ITEMS", () => {
 });
 
 describe("visibleNavItems", () => {
-  it("stacks Medicinal Cannabis under Weight Loss as its own silo", () => {
+  it("carries the remediated Weight Management silo", () => {
     /*
-     * Four columns, five silos. It has no sub-pages, so a column of its own was
-     * a heading with nothing beneath it; it sits below Medical Weight Loss
-     * Program instead, and keeps its own heading rather than becoming a weight
-     * loss sub-page — which is what `below` exists to express.
+     * HHCPA_Remediation_Change_Spec.md §A1. "Weight Loss & Peptides" named a
+     * restricted prescription class, "Weight Loss Injections" was a page whose
+     * whole identity was an injectable prescription, and Medicinal Cannabis
+     * cannot be advertised at all. What is left is one hub and one child.
      */
     const services = visibleNavItems()[0];
     expect(services.columns).toHaveLength(4);
-    expect(services.columns?.map((c) => c.href)).not.toContain("/medicinal-cannabis/");
 
-    const weightLoss = services.columns?.[0];
-    expect(weightLoss?.href).toBe("/weight-loss-peptides/");
-    expect(weightLoss?.links.map((l) => l.href)).toEqual([
-      "/weight-loss-peptides/weight-loss-injections/",
-      "/weight-loss-peptides/medical-weight-loss-program/",
+    const weight = services.columns?.[0];
+    expect(weight?.title).toBe("Weight Management");
+    expect(weight?.href).toBe("/weight-management/");
+    expect(weight?.links.map((l) => l.href)).toEqual([
+      "/weight-management/medical-weight-loss-program/",
     ]);
-    expect(weightLoss?.below?.map((s) => s.href)).toEqual(["/medicinal-cannabis/"]);
 
-    // No other column stacks anything — this is the only one.
-    expect(services.columns?.slice(1).flatMap((c) => c.below ?? [])).toEqual([]);
+    // Nothing stacks a second silo today; `below` is kept for the next one.
+    expect(services.columns?.flatMap((c) => c.below ?? [])).toEqual([]);
   });
 
-  it("shows the two formerly gated destinations", () => {
-    const hrefs = visibleNavItems().flatMap((item) => [
-      item.href,
-      ...(item.children ?? []).map((child) => child.href),
+  it("shows Our Practitioners and no removed destination", () => {
+    const hrefs = navHrefs();
+    expect(hrefs).toContain("/our-practitioners/");
+    expect(hrefs).not.toContain("/medicinal-cannabis/");
+  });
+
+  it("names no restricted prescription term in any label", () => {
+    /*
+     * §A6: the restricted terms are barred from every public surface, and a
+     * menu label is about as public as copy gets. This is the structural half of
+     * that rule — the sitewide sweep in restricted-terms.test.ts is the other.
+     */
+    const labels = visibleNavItems().flatMap((item) => [
+      item.label,
+      ...(item.children ?? []).map((child) => child.label),
       ...(item.columns ?? [])
         .flatMap((column) => [column, ...(column.below ?? [])])
-        .flatMap((silo) => [silo.href, ...silo.links.map((link) => link.href)]),
+        .flatMap((silo) => [silo.title, ...silo.links.map((link) => link.label)]),
     ]);
-    expect(hrefs).toContain("/medicinal-cannabis/");
-    expect(hrefs).toContain("/our-practitioners/");
+    for (const label of labels) {
+      expect(label).not.toMatch(
+        /\b(peptides?|GLP-?1|semaglutide|tirzepatide|ozempic|wegovy|mounjaro|cannabis|THC|CBD|TRT|MHT|HRT)\b|testosterone replacement|weight[- ]loss injection/i,
+      );
+    }
+  });
+
+  it("points only at paths the route registry knows", () => {
+    /*
+     * The remediation moved six URLs. A menu link left on an old path would
+     * still resolve — the 301s see to that — which is exactly why it would go
+     * unnoticed. Nothing should link to a redirecting URL (§C).
+     */
+    const known = new Set(ROUTES.map((route) => route.path));
+    for (const href of navHrefs()) {
+      if (href.startsWith("http") || href.startsWith("#")) continue;
+      expect(known).toContain(href);
+    }
   });
 });
 
@@ -94,11 +131,23 @@ describe("FOOTER_COLUMNS", () => {
 });
 
 describe("visibleFooterColumns", () => {
-  it("keeps every column and carries the formerly gated links", () => {
+  it("keeps every column and drops the removed service links", () => {
     const columns = visibleFooterColumns();
     expect(columns).toHaveLength(5);
     const hrefs = columns.flatMap((column) => column.links.map((link) => link.href));
-    expect(hrefs).toContain("/medicinal-cannabis/");
     expect(hrefs).toContain("/our-practitioners/");
+    expect(hrefs).toContain("/weight-management/");
+    expect(hrefs).not.toContain("/medicinal-cannabis/");
+    expect(hrefs).not.toContain("/weight-loss-peptides/");
+  });
+
+  it("points only at paths the route registry knows", () => {
+    const known = new Set(ROUTES.map((route) => route.path));
+    for (const column of visibleFooterColumns()) {
+      for (const link of column.links) {
+        if (link.href.startsWith("http") || link.href.startsWith("#")) continue;
+        expect(known).toContain(link.href);
+      }
+    }
   });
 });

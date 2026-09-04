@@ -12,7 +12,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 Next.js 16 (App Router, Turbopack) · React 19 · TypeScript strict · Tailwind CSS v4.
 
-`/` serves the rebuilt site, written to `HHCPA_Website_Content_UPDATED.md`. It is
+`/` serves the rebuilt site, written to `HHCPA_Website_Content_UPDATED.md` and then
+reframed by `HHCPA_Remediation_Change_Spec.md` — where the two disagree, the
+remediation spec wins, because the content document predates the compliance
+review. It is
 built in the design language of a pixel-perfect clone of
 `https://www.horizonhealthcarepartners.com.au/`, which is kept at `/home-v2/` — noindex
 and absent from `ROUTES` — as the reference the measurements below were taken against.
@@ -68,6 +71,22 @@ rather than deleted.
 - Breakpoints are the target's own: **991 / 767 / 478px**. Not Tailwind defaults. Use
   arbitrary variants (`max-[991px]:`).
 - Content is modelled as typed `readonly` const arrays and mapped once.
+
+## Compliance is a build constraint, not a review step
+
+Read `HHCPA_Remediation_Change_Spec.md` at the repo root before writing any public
+copy. AHPRA and the TGA let you advertise a health **service** and name a
+**condition**; they do not let you name, imply, or promise a prescription
+**medicine**. A disclaimer does not cure a breach.
+
+`src/content/restricted-terms.test.ts` enforces the term list and fails the build if
+one reappears. It strips comments first, so a file may explain why a term was
+removed. Do not add a *condition* to that list — low testosterone, erectile
+dysfunction, menopause, PCOS, hair loss and weight loss are all sayable, and
+narrowing the page to avoid them makes the copy worse for no compliance gain.
+
+The full remediation is recorded as deviation 10 in CUSTOMISATIONS.md, including
+what is still blocking publication.
 
 ## Search indexing
 

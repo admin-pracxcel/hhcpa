@@ -13,6 +13,7 @@
 
 import { PRICES } from "./pricing";
 import { CALL_CTA } from "./clinic";
+import { MEDICARE_ANSWER } from "./services/shared";
 
 export const FAQS_META = {
   title: "FAQs | Telehealth, Prescriptions & Consultations | HHCPA",
@@ -86,9 +87,8 @@ export const FAQS_PAGE = {
         },
         {
           id: "medicare",
-          question: "Can I claim through Medicare or private health?",
-          answer:
-            "Some telehealth consultations may be eligible for a Medicare rebate in certain circumstances. Check with Medicare or your insurer, and we can provide documentation.",
+          question: "Can I claim a Medicare rebate?",
+          answer: MEDICARE_ANSWER,
         },
       ],
     },

@@ -1,13 +1,14 @@
 /**
- * `/weight-loss-peptides/` — the primary money page.
+ * `/weight-management/` — the primary money page.
  *
  * Built to HHCPA_Website_Content_UPDATED.md "PAGE 2: WEIGHT LOSS & PEPTIDES",
- * following its eleven-module map top to bottom:
+ * following its eleven-module map top to bottom, then reframed by
+ * HHCPA_Remediation_Change_Spec.md §B3 and moved off `/weight-loss-peptides/`:
  *
  *    1. Hero                        ServiceHero            (new)
  *    2. Value-proposition strip     FeatureMarquee         (clone)
  *    3. Intro paragraph             ScrollRevealParagraph  (shared with `/`)
- *    4. What are peptides           SplitFeature           (new)
+ *    4. How supervised care works   SplitFeature           (new)
  *    5. Who it may suit             ChecklistSection       (new)
  *    6. How it works                StepsSection           (clone)
  *    7. Why supervision matters     StatementBand          (new)
@@ -20,8 +21,10 @@
  * FaqSection from the same items it renders, so the markup and the structured
  * data cannot drift; the other three are declared here.
  *
- * It owns "peptides for weight loss" and competes with nothing else on the
- * site for it.
+ * It owns "medical weight loss" and competes with nothing else on the site for
+ * it. The keyword it was built around, "peptides for weight loss", names a
+ * restricted prescription class and cannot be used — see the header of
+ * `weight-management.ts`.
  */
 
 import type { Metadata } from "next";
@@ -46,7 +49,7 @@ import {
   WLP_SUITS,
   WLP_SUPERVISION,
   WLP_TRUST,
-} from "@/content/weight-loss-peptides";
+} from "@/content/weight-management";
 
 import { ChecklistSection } from "@/components/sections/ChecklistSection";
 import { PricingCueBand } from "@/components/sections/PricingCueBand";
@@ -67,7 +70,7 @@ export const metadata: Metadata = {
   alternates: { canonical: WLP_META.path },
 };
 
-export default function WeightLossPeptides() {
+export default function WeightManagement() {
   return (
     <>
       <JsonLd
@@ -79,7 +82,7 @@ export default function WeightLossPeptides() {
       />
       <JsonLd
         data={buildService({
-          name: "Medical weight loss and peptide consultations",
+          name: "Medical weight loss consultations",
           description: WLP_META.description,
           path: WLP_META.path,
         })}

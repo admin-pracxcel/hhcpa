@@ -1,5 +1,11 @@
 /**
- * PAGE 6: ERECTILE DYSFUNCTION TREATMENT.
+ * PAGE 6: ERECTILE DYSFUNCTION.
+ *
+ * Reframed from "erectile dysfunction treatment" to the condition and the
+ * consultation by HHCPA_Remediation_Change_Spec.md §B8, and moved off
+ * `/mens-health/erectile-dysfunction-treatment/` with a 301. ED medicines are a
+ * named restricted category, so the page advertises the assessment, not the
+ * medicine. The body was already condition-led and stands as written.
  *
  * Modules 4 and 5 are both continuous prose in the source, so one takes the
  * image and the other the dark band rather than repeating a layout. Module 6
@@ -12,14 +18,14 @@ import { CALL_CTA } from "../clinic";
 
 export const ERECTILE_DYSFUNCTION: ServicePageData = {
   meta: {
-    title: "Erectile Dysfunction Treatment Online | Australia",
+    title: "Erectile Dysfunction Consultations Online | Australia",
     description:
-      "Erectile dysfunction treatment assessed online by AHPRA-registered practitioners. Private, judgement-free consultations Australia-wide. Free pre-screening.",
-    path: "/mens-health/erectile-dysfunction-treatment/",
+      "Erectile dysfunction assessed online by AHPRA-registered practitioners. Private, judgement-free consultations Australia-wide. Free pre-screening.",
+    path: "/mens-health/erectile-dysfunction/",
   },
   hero: {
     eyebrow: "Erectile dysfunction",
-    heading: "Erectile dysfunction treatment, assessed privately online",
+    heading: "Erectile dysfunction, assessed privately online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
@@ -28,7 +34,7 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
     { label: "Men's Health", href: "/mens-health/" },
   ],
   intro:
-    "Erectile dysfunction treatment starts with a conversation you can have from home. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses what might be behind the problem and, where it is clinically appropriate, discusses treatment options with you in private. Erectile dysfunction is common, it becomes more common with age, and it is often very treatable. It can also be an early signal of something worth checking, which is exactly why a proper assessment beats guessing.",
+    "Erectile dysfunction starts with a conversation you can have from home. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses what might be behind the problem and, where it is clinically appropriate, discusses treatment options with you in private. Erectile dysfunction is common, it becomes more common with age, and it is often very treatable. It can also be an early signal of something worth checking, which is exactly why a proper assessment beats guessing.",
   modules: [
     {
       kind: "split",
@@ -82,12 +88,12 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
       heading: "Explore your options",
       cards: [
         {
-          title: "Testosterone replacement therapy",
+          title: "Low testosterone",
           body: "Low energy and low libido can overlap with hormones.",
           links: [
             {
-              label: "Testosterone replacement",
-              href: "/mens-health/testosterone-replacement-therapy/",
+              label: "Low testosterone",
+              href: "/mens-health/low-testosterone/",
             },
           ],
         },

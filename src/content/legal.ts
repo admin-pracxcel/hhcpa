@@ -302,7 +302,14 @@ export const TERMS_AND_CONDITIONS: LegalDocument = {
         "Provide accurate, complete, and up-to-date medical and personal information.",
         "Attend scheduled consultations and notify us in advance if you are unable to do so.",
         "Authorise us to share necessary prescription details with pharmacies and other partners to facilitate your treatment.",
-        "Comply with all applicable laws and regulations, including those related to the use of medicinal cannabis.",
+        /*
+         * HHCPA_Remediation_Change_Spec.md §B29: the original named medicinal
+         * cannabis here. Terms are contractual rather than promotional, so the
+         * risk is lower than on a service page, but the term is gone from the
+         * rest of the public site and a regulator reads the whole domain.
+         * Flagged for the client's legal reviewer to confirm.
+         */
+        "Comply with all applicable laws and regulations relating to prescription medicines, where clinically appropriate.",
         "Follow the prescribed treatment plans.",
         "Promptly report any adverse reactions to Medicine to us.",
       ],

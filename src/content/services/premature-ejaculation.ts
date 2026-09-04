@@ -12,14 +12,14 @@ import { CALL_CTA } from "../clinic";
 
 export const PREMATURE_EJACULATION: ServicePageData = {
   meta: {
-    title: "Premature Ejaculation Treatment Online | Australia | HHCPA",
+    title: "Premature Ejaculation Consultations Online | Australia | HHCPA",
     description:
       "Discreet online consultations for premature ejaculation with AHPRA-registered practitioners. Australia-wide telehealth. Free pre-screening quiz.",
-    path: "/mens-health/premature-ejaculation-treatment/",
+    path: "/mens-health/premature-ejaculation/",
   },
   hero: {
     eyebrow: "Premature ejaculation",
-    heading: "Premature ejaculation treatment, assessed discreetly online",
+    heading: "Premature ejaculation, assessed discreetly online",
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
@@ -62,7 +62,7 @@ export const PREMATURE_EJACULATION: ServicePageData = {
           links: [
             {
               label: "Erectile dysfunction",
-              href: "/mens-health/erectile-dysfunction-treatment/",
+              href: "/mens-health/erectile-dysfunction/",
             },
           ],
         },

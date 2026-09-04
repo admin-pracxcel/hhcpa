@@ -655,7 +655,7 @@ function triage(answers: AnswerMap): TriageLevel {
     answers.organCondition === "Yes" ||
     answers.underCare === "Yes" ||
     answers.onMeds === "Yes" ||
-    answers.usedPeptide === "Yes" ||
+    answers.usedWeightMedication === "Yes" ||
     answers.injectableAllergy === "Yes"
   ) {
     return "amber";
