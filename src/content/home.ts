@@ -86,7 +86,7 @@ export const HOME_FOCUS = {
       iconAlt: "Weight management",
       badge: `From $${PRICES.firstConsult.amount} · programs from $${PRICES.healthProgram.amount}`,
       body: "Medically supervised weight-loss consultations and programs, assessed by a practitioner and reviewed over time.",
-      cta: "Explore weight loss",
+      cta: "Explore weight management",
       href: "/weight-management/",
     },
     {

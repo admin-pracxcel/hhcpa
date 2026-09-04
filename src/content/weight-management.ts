@@ -60,7 +60,8 @@ export const WLP_EXPLAINER = {
   eyebrow: "How it works",
   heading: "How medically supervised weight loss works",
   paragraphs: [
-    "Medically supervised weight loss means a registered practitioner assesses your health, agrees a plan with you, and reviews it over time, rather than you buying something without advice. Where a prescription is clinically appropriate, that decision is made in your consultation, based on your history, your other medications, your goals and your safety. We do not name or promote specific medicines on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
+    "Medically supervised weight loss means a registered practitioner assesses your health, agrees a plan with you, and reviews it over time, rather than you buying something without advice. It looks at the whole picture: your history, your other medications, your goals and your safety. When diet and exercise alone have stalled, a supervised approach can help you understand why, and what is realistic for you.",
+    "Here is the honest version. Where a prescription is clinically appropriate, that is a decision your practitioner makes with you in the consultation, based on your individual circumstances. We do not name or promote specific medicines on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
   ],
   cta: { label: "Book a consultation", href: "/quiz/" },
   image: sectionImage("weight-management-how-it-works"),
@@ -178,37 +179,36 @@ export const WLP_FAQ = {
       id: "availability",
       question: "Is medical weight loss available online in Australia?",
       answer:
-        "Yes. An AHPRA-registered practitioner can assess you by video or phone anywhere in Australia, review your health history and goals, agree a plan with you and review it over time. What that plan involves is a clinical decision made in your consultation. We do not supply or promote specific medicines.",
+        "Yes. You can consult an AHPRA-registered practitioner by video or phone, anywhere in Australia. The practitioner assesses whether a medically supervised approach suits you and, where appropriate, manages it with proper review.",
     },
     {
       id: "prescription",
       question: "Will I definitely get a prescription?",
       answer:
-        "No. Your practitioner prescribes only where it is clinically appropriate and safe for you. The consultation may lead to a prescription, a different plan, further tests, or a recommendation that this is not the right option.",
+        "No. A prescription is only ever provided where it is clinically appropriate and safe, after a real consultation. Many enquiries do not lead to one, and that is the assessment doing its job.",
     },
     {
       id: "referral",
       question: "Do I need a referral?",
-      answer:
-        "No referral is needed to book a consultation. Start with the free pre-screening quiz.",
+      answer: "No referral is needed to book a consultation.",
     },
     {
       id: "wait",
       question: "How quickly can I be seen?",
       answer:
-        "You can usually book a consultation within a short time of completing the quiz. Availability is shown when you book.",
+        "Appointments are usually available within a few days. Start with the free pre-screening quiz and choose a time that suits you.",
     },
     {
       id: "pregnancy",
       question: "Is this suitable during pregnancy?",
       answer:
-        "Medical weight-loss care is generally not appropriate during pregnancy or breastfeeding. Tell your practitioner, and they will advise a safe path.",
+        "Medically supervised weight-loss treatment is generally not used during pregnancy or breastfeeding. Tell your practitioner if this applies to you, and they will guide you on what is safe.",
     },
   ],
 } as const;
 
 export const WLP_CLOSING = {
   heading: "Ready to see whether this suits you?",
-  body: "Start with the free pre-screening quiz. Two minutes, no diagnosis, no commitment. If a medical weight-loss approach is right for you, your practitioner will guide it from there.",
+  body: "Start with the free pre-screening quiz. Two minutes, no diagnosis, no commitment. If a medically supervised weight-loss approach is right for you, your practitioner will guide it from there.",
   primary: { label: "Start the free quiz", href: "/quiz/" },
 } as const;
