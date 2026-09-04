@@ -46,14 +46,14 @@ describe("RelatedServices", () => {
       <RelatedServices
         heading="Explore your options"
         links={[
-          { label: "Weight loss injections", href: "/weight-loss-peptides/weight-loss-injections/", body: "How injectables are assessed." },
+          { label: "Medical weight loss program", href: "/weight-management/medical-weight-loss-program/", body: "The supervised, review-based path." },
         ]}
       />,
     );
-    const link = screen.getByRole("link", { name: /Weight loss injections/ });
+    const link = screen.getByRole("link", { name: /Medical weight loss program/ });
     expect(link).toHaveAttribute(
       "href",
-      "/weight-loss-peptides/weight-loss-injections/",
+      "/weight-management/medical-weight-loss-program/",
     );
   });
 

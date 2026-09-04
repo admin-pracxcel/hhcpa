@@ -35,7 +35,7 @@ describe("buildService", () => {
     const schema = buildService({
       name: "Medical weight loss",
       description: "Practitioner-led weight management",
-      path: "/weight-loss-peptides/",
+      path: "/weight-management/",
     });
     expect(schema["@type"]).toBe("Service");
     expect(schema.provider["@type"]).toBe("MedicalClinic");
