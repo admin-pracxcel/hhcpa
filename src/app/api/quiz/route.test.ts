@@ -90,7 +90,8 @@ describe("POST /api/quiz", () => {
     expect(body.clinical).toMatchObject({ mn_concern: "Low energy" });
     expect(body.service).toBe("Men's Health");
 
-    const { clinical: _clinical, ...rest } = body;
+    const rest = { ...body };
+    delete rest.clinical;
     expect(JSON.stringify(rest)).not.toContain("Low energy");
   });
 });

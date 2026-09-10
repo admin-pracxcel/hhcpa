@@ -85,10 +85,17 @@ describe("quiz form", () => {
   beforeEach(() => {
     push.mockClear();
     close.mockClear();
-    fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ ok: true }),
-    });
+    /* A real Response, not a shape that happens to satisfy today's callers.
+       The hand-rolled double had no clone() and no second read, which made a
+       submission look like a network failure the moment the code read its
+       body differently. */
+    fetchMock = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ ok: true, submissionId: "sub-test" }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+    );
     vi.stubGlobal("fetch", fetchMock);
   });
 

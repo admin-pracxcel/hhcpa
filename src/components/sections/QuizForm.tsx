@@ -916,13 +916,45 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
         }),
       });
 
+      /*
+       * Read once. The error path below used to call `response.json()` too,
+       * and a body can only be read once — clone() worked in the browser and
+       * threw against a test double, which is a poor reason for a submission
+       * to look like a network failure.
+       */
+      const body = (await response.json().catch(() => ({}))) as {
+        error?: string;
+        submissionId?: string;
+      };
+
       if (!response.ok) {
-        const detail = (await response.json().catch(() => ({}))) as {
-          error?: string;
-        };
-        setProblem(detail.error ?? "Something went wrong. Please try again.");
+        setProblem(body.error ?? "Something went wrong. Please try again.");
         setStatus("idle");
         return;
+      }
+
+      /*
+       * The submission id links stage two, the clinical intake form, to this
+       * one. Stashed rather than put in the URL: /quiz-book/ already leaks
+       * which side of the triage someone landed on, and an identifier in the
+       * address bar would survive being shared or pasted into a support
+       * ticket.
+       *
+       * sessionStorage, so it dies with the tab. Q35 bars persisting intake
+       * answers or the signature; an opaque id is neither.
+       */
+      if (typeof body.submissionId === "string") {
+        try {
+          window.sessionStorage.setItem(
+            "hhcpa:intake",
+            JSON.stringify({
+              submissionId: body.submissionId,
+              service: allAnswers.service_selection ?? "",
+            }),
+          );
+        } catch {
+          /* Private browsing can refuse. The booking page copes without it. */
+        }
       }
 
       /*

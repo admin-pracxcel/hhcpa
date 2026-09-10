@@ -37,6 +37,32 @@ const FILES = globSync("src/**/*.{ts,tsx}").filter(
   (file) => !/\.test\.tsx?$/.test(file),
 );
 
+/**
+ * The one hole in the net, and it is deliberate.
+ *
+ * HHCPA-FRM-007 asks "have you previously used peptide therapy or other health
+ * optimisation treatment?" and its declaration says "health optimisation or
+ * peptide treatment is not guaranteed". Both are Ranjeeta's wording.
+ *
+ * The build spec asked twice for that wording to be replaced, and the second
+ * time (v2.4 Q29) preferred a neutral question publicly with her wording kept
+ * for the post-booking record. Bilal directed on 2026-09-10 that her exact
+ * wording ships as written and the risk is flagged to her at review instead.
+ * That is his call to make and it is recorded, not silently absorbed.
+ *
+ * The exemption is scoped as narrowly as it can be: one file, one word, and
+ * only inside the intake form definitions. Every other restricted term still
+ * fails the build in that file, and "peptide" still fails the build
+ * everywhere else — including in page copy, metadata, schema and the public
+ * Step 4 screening, which is where the original incident happened.
+ *
+ * REMOVE THIS the moment she asks for the neutral wording, or if the intake
+ * form ever moves somewhere a member of the public can reach without booking.
+ */
+const EXEMPT = new Map<string, RegExp>([
+  ["src/content/intake-forms.ts", /^peptides?$/i],
+]);
+
 describe("restricted prescription terms", () => {
   it("has a file list to scan at all", () => {
     // A broken glob would make every assertion below vacuously true.
@@ -46,13 +72,42 @@ describe("restricted prescription terms", () => {
   it("appear nowhere outside comments", () => {
     const offenders: string[] = [];
     for (const file of FILES) {
+      const allowed = EXEMPT.get(file);
       const lines = stripComments(readFileSync(file, "utf8")).split("\n");
       lines.forEach((line, index) => {
         const hit = RESTRICTED.exec(line);
-        if (hit !== null) offenders.push(`${file}:${index + 1}  ${hit[0]}`);
+        if (hit === null) return;
+        if (allowed !== undefined && allowed.test(hit[0])) return;
+        offenders.push(`${file}:${index + 1}  ${hit[0]}`);
       });
     }
     expect(offenders).toEqual([]);
+  });
+
+  it("keeps the exemption to one file and one word", () => {
+    /*
+     * An exemption that quietly widens is worse than no rule. This pins it:
+     * one entry, and the pattern it allows matches "peptide" and nothing else
+     * on the register.
+     */
+    expect([...EXEMPT.keys()]).toEqual(["src/content/intake-forms.ts"]);
+    const allowed = EXEMPT.get("src/content/intake-forms.ts");
+    expect(allowed?.test("peptide")).toBe(true);
+    expect(allowed?.test("peptides")).toBe(true);
+    for (const term of ["cannabis", "GLP-1", "semaglutide", "TRT", "MHT"]) {
+      expect(allowed?.test(term)).toBe(false);
+    }
+  });
+
+  it("still fails the build on a restricted term in the exempt file", () => {
+    // The exemption covers one word, not the file.
+    const source = readFileSync("src/content/intake-forms.ts", "utf8");
+    const allowed = EXEMPT.get("src/content/intake-forms.ts");
+    for (const line of stripComments(source).split("\n")) {
+      const hit = RESTRICTED.exec(line);
+      if (hit === null) continue;
+      expect(allowed?.test(hit[0])).toBe(true);
+    }
   });
 
   it("still catches a term when one is reintroduced", () => {

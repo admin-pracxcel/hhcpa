@@ -218,9 +218,6 @@ export function bmiMessage(bmi: number): string {
    Flow
    ------------------------------------------------------------------------- */
 
-const NOT_ELIGIBLE_HOLISTIC =
-  "Based on your response, you may not be eligible for holistic/alternative care treatment at this time. Please consult with your GP for appropriate care options.";
-
 /** Offered on every multi-select, so "none" is answerable without skipping. */
 export const NONE_OF_THESE = "None of these";
 

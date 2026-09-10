@@ -8,6 +8,10 @@
  *
  * Absent from `ROUTES` and `noindex`, like the other post-submission pages.
  *
+ * It renders two steps, not one: the clinical intake form for the patient's
+ * service, then the booking widget. See `BookingFlow` for what happens when
+ * there is no form, or when the patient arrived here some other way.
+ *
  * ⚠️ Which URL a patient lands on still says something about their answers:
  * here means they were offered a booking, `/quiz-thank-you/` means they were
  * not. That is far weaker than a URL naming the triage level, but it is not
@@ -18,7 +22,7 @@
 
 import type { Metadata } from "next";
 
-import { BookingPanel } from "@/components/sections/BookingPanel";
+import { BookingFlow } from "@/components/sections/BookingFlow";
 
 export const metadata: Metadata = {
   title: "Book your consultation | Horizon Health Care Partners",
@@ -26,5 +30,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <BookingPanel />;
+  return <BookingFlow />;
 }

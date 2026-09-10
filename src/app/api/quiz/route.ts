@@ -88,6 +88,43 @@ export async function POST(request: Request) {
     return Response.json({ ok: true });
   }
 
+  /*
+   * Stage two: the clinical intake form.
+   *
+   * A separate POST, carrying the submission id the triage stage returned, so
+   * n8n can attach it to the person already in the queue (v2.4 Q36). It has no
+   * contact block and no consents — those were taken and validated at stage
+   * one, and asking for them again would mean holding a second copy.
+   *
+   * Everything in `intake` is clinical, including the signature and the
+   * declaration it signs, so the whole object travels under the segregated
+   * key rather than beside it.
+   */
+  if (clean(payload.stage) === "intake") {
+    const intake = record(payload.intake);
+    const priorId = clean(payload.submissionId);
+    if (priorId === "" || Object.keys(intake).length === 0) {
+      return Response.json(
+        { error: "That form could not be matched to your earlier answers." },
+        { status: 400 },
+      );
+    }
+    return forward(
+      JSON.stringify({
+        submissionId: priorId,
+        formType: "quiz",
+        stage: "intake",
+        submittedAt: new Date().toISOString(),
+        /* Counted once, at stage one. This is detail on an existing patient. */
+        countsTowardPatientQuota: false,
+        service: clean(payload.service),
+        safetyFlag: payload.safetyFlag === true,
+        clinical: { intake: payload.intake },
+      }),
+      priorId,
+    );
+  }
+
   const contact = record(payload.contact);
   const missing = [
     !contact.firstName && "first name",
@@ -193,6 +230,17 @@ export async function POST(request: Request) {
     clinical: record(payload.clinical),
   });
 
+  return forward(body, submissionId);
+}
+
+/**
+ * Deliver to n8n, with the retry, the signature and the fallback.
+ *
+ * Extracted so both stages use the same path. The intake stage was written as
+ * a second copy of this loop first, which is one of those duplications that
+ * stays right up until the retry policy changes on only one of them.
+ */
+async function forward(body: string, submissionId: string) {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     /* Lets n8n discard a duplicate rather than count one patient twice. */
