@@ -29,10 +29,11 @@
  * signature is a signature of what was on screen. v2.2's answer to Q26 asks
  * for all of it.
  *
- * ⚠️ NOTHING HERE DURABLY STORES THAT SIGNATURE. It posts to n8n like every
- * other submission, and n8n's storage is the client's to arrange (Q17). A
- * signed declaration is a record that may need producing years later; this
- * should not go live until that destination exists.
+ * Where it ends up: n8n, like every other submission. Bilal settled this on
+ * 2026-09-10 — the site posts to the webhook and the workflow owns storage and
+ * retention from there. So this file's job is to send the whole record in one
+ * piece: the answers, the signature, when it was signed, which form and
+ * version, and the questions as shown. Nothing on this side is the archive.
  *
  * ─── SAFETY ────────────────────────────────────────────────────────────────
  *
