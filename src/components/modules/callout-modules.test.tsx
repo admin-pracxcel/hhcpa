@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { PRICES } from "@/content/pricing";
 import { render, screen } from "@testing-library/react";
 import { InlineCta } from "./InlineCta";
 import { PricingCue } from "./PricingCue";
@@ -29,7 +30,7 @@ describe("PricingCue", () => {
         priceKey="firstConsult"
       />,
     );
-    expect(screen.getByText("$59")).toBeInTheDocument();
+    expect(screen.getByText(`$${PRICES.firstConsult.amount}`)).toBeInTheDocument();
   });
 
   it("marks provisional prices so unconfirmed figures cannot ship silently", () => {

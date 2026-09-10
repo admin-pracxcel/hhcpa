@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { PRICES } from "@/content/pricing";
 import { render, screen } from "@testing-library/react";
 import { ModuleRenderer } from "./ModuleRenderer";
 import type { ModuleSpec } from "./types";
@@ -23,7 +24,7 @@ describe("ModuleRenderer", () => {
     ];
     render(<ModuleRenderer modules={modules} />);
     expect(screen.getByRole("heading", { level: 3, name: "Step one" })).toBeInTheDocument();
-    expect(screen.getByText("$59")).toBeInTheDocument();
+    expect(screen.getByText(`$${PRICES.firstConsult.amount}`)).toBeInTheDocument();
   });
 
   it("renders nothing for an empty list", () => {

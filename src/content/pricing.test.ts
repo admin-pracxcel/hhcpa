@@ -3,7 +3,9 @@ import { PRICES, formatPrice, PROVISIONAL_PRICE_KEYS } from "./pricing";
 
 describe("formatPrice", () => {
   it("renders a plain fee without a 'from' prefix", () => {
-    expect(formatPrice("firstConsult")).toBe("$59");
+    // Derived, not literal: the fee has changed twice and a literal here
+    // fails the build for a reason that has nothing to do with formatting.
+    expect(formatPrice("firstConsult")).toBe(`$${PRICES.firstConsult.amount}`);
   });
 
   it("prefixes 'from' where the fee is a starting price", () => {

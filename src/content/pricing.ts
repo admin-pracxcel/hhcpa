@@ -12,9 +12,19 @@
  *   From $89     Men's & Women's Health        From $98  Priority Consult
  *   From $99     Weight Management             from $299 Health Optimisation
  *
- * and the page copy carries the three consultation fees: "The online
+ * and the page copy carried the three consultation fees: "The online
  * pre-screening quiz is free. Your first medical consultation is $59. Follow-up
  * consultations are $59. Transfer consultations are $54."
+ *
+ * Those three have since been superseded. Her live site prices the same block
+ * three different ways — the homepage at $69/$49, the About page at $59/$49,
+ * the pricing page at $59/$59 with a $54 transfer — and her instruction of
+ * 9 September gives a fourth. Build spec v2.3 §10 settles it at **$69 first,
+ * $59 follow-up, $59 transfer**, and says to ignore the live figures because
+ * the two sites are never live together. That is what is built.
+ *
+ * The prescriptions row drops from $49 to $19 under §5.1, which is the entry
+ * price of the conditional ladder on the prescriptions page.
  *
  * The content document then quotes Ranjeeta's own onboarding replies against
  * those same figures — "Wants to change - from $99 but holistic from $59" and
@@ -67,14 +77,14 @@ export type PriceKey =
 
 export const PRICES: Record<PriceKey, Price> = {
   quiz:               { label: "Pre-screening quiz",               amount: 0,    from: false, provisional: false },
-  firstConsult:       { label: "First medical consultation",       amount: 59,   from: false, provisional: true },
+  firstConsult:       { label: "First medical consultation",       amount: 69,   from: false, provisional: true },
   followUpConsult:    { label: "Follow-up consultation",           amount: 59,   from: false, provisional: true },
-  transferConsult:    { label: "Transfer consultation",            amount: 54,   from: false, provisional: true },
+  transferConsult:    { label: "Transfer consultation",            amount: 59,   from: false, provisional: true },
   generalConsult:     { label: "General consult and referrals",    amount: 49,   from: true,  provisional: true },
   afterHoursConsult:  { label: "After-hours consult",              amount: 69,   from: true,  provisional: true },
   priorityConsult:    { label: "Priority consult",                 amount: 98,   from: true,  provisional: true },
   medicalCertificate: { label: "Medical certificates",             amount: 19.9, from: true,  provisional: true },
-  prescriptions:      { label: "Prescriptions and repeat scripts", amount: 49,   from: true,  provisional: true },
+  prescriptions:      { label: "Prescriptions and repeat scripts", amount: 19,   from: true,  provisional: true },
   pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 49,   from: true,  provisional: true },
   mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
   mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },

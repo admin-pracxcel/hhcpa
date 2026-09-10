@@ -21,6 +21,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
+import { PRICES } from "../pricing";
 import { SCREENING_MINUTES, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage, standardClosing } from "./shared";
 import { CALL_CTA } from "../clinic";
 
@@ -154,7 +155,7 @@ export const LOW_TESTOSTERONE: ServicePageData = {
         id: "cost",
         question: "What does it cost?",
         answer:
-          "The pre-screening quiz is free and consultations start from $59. Pathology and any medication may involve separate costs.",
+          `The pre-screening quiz is free and consultations start from $${PRICES.mensWomensHealth.amount}. Pathology and any medication may involve separate costs.`,
       },
     ],
   },

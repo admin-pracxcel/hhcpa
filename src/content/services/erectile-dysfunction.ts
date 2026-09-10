@@ -13,6 +13,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
+import { PRICES } from "../pricing";
 import { SCREENING_MINUTES, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage, standardClosing } from "./shared";
 import { CALL_CTA } from "../clinic";
 
@@ -138,7 +139,7 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
         id: "cost",
         question: "What will it cost?",
         answer:
-          "The pre-screening quiz is free and consultations start from $59. Any medication from a pharmacy is separate.",
+          `The pre-screening quiz is free and consultations start from $${PRICES.mensWomensHealth.amount}. Any medication from a pharmacy is separate.`,
       },
     ],
   },

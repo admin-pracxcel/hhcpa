@@ -170,8 +170,13 @@ export const HOME_FOCUS = {
 } as const;
 
 export const HOME_PRICING = {
-  eyebrow: "Consultation pricing at a glance",
-  heading: "Simple, upfront consultation pricing",
+  /*
+   * §4.1.5 retitles this block to name the service its three fees apply to.
+   * The eight per-service floor prices are on the cards above, so the homepage
+   * still shows what every service costs; these three are holistic care's.
+   */
+  eyebrow: "Our fees",
+  heading: "Our Fees: Holistic Care / Alternative Medicine",
   plans: CONSULTATION_PLANS,
   footnote:
     "The pre-screening quiz is always free. Any medicine dispensed by a pharmacy is a separate cost.",

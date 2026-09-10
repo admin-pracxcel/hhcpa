@@ -24,6 +24,7 @@
 "use client";
 
 import { useState } from "react";
+import { PRICES } from "@/content/pricing";
 
 import { cn } from "@/lib/utils";
 import { JsonLd } from "@/components/JsonLd";
@@ -44,9 +45,17 @@ interface FaqItem {
 }
 
 /*
- * Verbatim source copy. The consultation fees quoted in item 3 ($59/$59/$54)
- * disagree with the pricing cards elsewhere on the page ($69/$59/$59); that
- * inconsistency exists on the live site and is reproduced as-is.
+ * Verbatim source copy, with one exception.
+ *
+ * Item 3 quoted $59/$59/$54, which disagreed with the pricing cards elsewhere
+ * on the same page ($69/$59/$59). That inconsistency is on her live site and
+ * was reproduced faithfully — until build spec v2.3 §10 settled the fees at
+ * $69/$59/$59 and §9 required zero instances of $54 site-wide. `/home-v2/` is
+ * noindex and unlinked but it is still served, and a served page quoting
+ * superseded prices is a pricing misstatement rather than an archival detail.
+ * So item 3 now reads from `pricing.ts` like every other fee on the site, and
+ * cannot drift again. Nothing else in this file changed, and no layout value
+ * moved, so the page is still the pixel benchmark.
  */
 const ITEMS: readonly FaqItem[] = [
   {
@@ -65,7 +74,7 @@ const ITEMS: readonly FaqItem[] = [
     id: "cost",
     question: "How much does it cost?",
     answer:
-      "The online pre-screening quiz is free. Your first medical consultation is $59. Follow-up consultations are $59. Transfer consultations are $54. There is no commitment until you are ready to book a consultation.",
+      `The online pre-screening quiz is free. Your first medical consultation is $${PRICES.firstConsult.amount}. Follow-up consultations are $${PRICES.followUpConsult.amount}. Transfer consultations are $${PRICES.transferConsult.amount}. There is no commitment until you are ready to book a consultation.`,
   },
   {
     id: "topics",

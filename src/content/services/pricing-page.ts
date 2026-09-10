@@ -21,6 +21,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
+import { PRICES } from "../pricing";
 import { CONSULTATION_PLANS } from "../consultation-plans";
 import { MEDICARE_ANSWER, STANDARD_CLOSING } from "./shared";
 import { CALL_CTA } from "../clinic";
@@ -29,7 +30,7 @@ export const PRICING_PAGE: ServicePageData = {
   meta: {
     title: "Pricing | Transparent Telehealth Consultation Fees | HHCPA",
     description:
-      "Clear, upfront telehealth pricing. Free pre-screening quiz. Consultations from $59 with AHPRA-registered practitioners. No commitment until you book.",
+      `Clear, upfront telehealth pricing. Free pre-screening quiz. Consultations from $${PRICES.generalConsult.amount} with AHPRA-registered practitioners. No commitment until you book.`,
     path: "/pricing/",
   },
   hero: {
@@ -43,24 +44,9 @@ export const PRICING_PAGE: ServicePageData = {
     "Pricing at Horizon Health Care Partners is clear and upfront. The pre-screening quiz is free, consultation fees are shown before you book, and there are no hidden costs. You only pay when you decide to go ahead. The prices below are consultation fees. Any medicine dispensed by a pharmacy is separate.",
   modules: [
     {
-      kind: "priceCards",
-      eyebrow: "Core consultation fees",
-      heading: "Consultation fees",
-      /* The quiz is on this list and costs nothing, but it is not a
-         consultation — a fourth column beside the three would say it was. */
-      feature: {
-        key: "quiz",
-        title: "Start with the free pre-screening quiz",
-        body: "A few minutes, no diagnosis, and no commitment. It tells you whether we are likely to be able to help before you pay for anything.",
-        cta: { label: "Start the free quiz", href: "/quiz/" },
-      },
-      plans: CONSULTATION_PLANS,
-    },
-    {
       kind: "priceTiles",
-      tinted: true,
-      eyebrow: "Other services",
-      heading: "Other services",
+      eyebrow: "All services and fees",
+      heading: "All services and fees",
       rows: [
         "generalConsult",
         "afterHoursConsult",
@@ -78,6 +64,29 @@ export const PRICING_PAGE: ServicePageData = {
       ],
       labels: { priorityConsult: "Priority consult (limited daily)" },
       note: "Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.",
+    },
+    {
+      kind: "priceCards",
+      tinted: true,
+      /*
+       * §5.2 retitles this block. It is her own instruction, ticked, and it
+       * matches her live site, which carries the identical heading above the
+       * same three boxes: these three fees are the holistic and alternative
+       * medicine fees, not the site-wide ones. The per-service floor prices
+       * sit in the table above, so the page no longer prices one service and
+       * ignores seven.
+       */
+      eyebrow: "Our fees",
+      heading: "Our Fees: Holistic Care / Alternative Medicine",
+      /* The quiz is on this list and costs nothing, but it is not a
+         consultation — a fourth column beside the three would say it was. */
+      feature: {
+        key: "quiz",
+        title: "Start with the free pre-screening quiz",
+        body: "A few minutes, no diagnosis, and no commitment. It tells you whether we are likely to be able to help before you pay for anything.",
+        cta: { label: "Start the free quiz", href: "/quiz/" },
+      },
+      plans: CONSULTATION_PLANS,
     },
     {
       kind: "statement",
