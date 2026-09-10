@@ -55,8 +55,8 @@ export default function Page() {
       />
 
       <FinalCtaSection
-        heading="Your health, handled from home"
-        body="Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book."
+        heading="Professional Healthcare, Wherever You Are"
+        body="Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book."
         actions={
           <div className="flex flex-row flex-wrap items-center justify-center gap-[16px]">
             <a className="hhcp-btn" href="/quiz/">

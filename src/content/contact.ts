@@ -10,7 +10,7 @@
  * reading and this page shows it.
  */
 
-import { CALL_CTA, CLINIC } from "./clinic";
+import { CALL_CTA, CLINIC, EMERGENCY_LINE } from "./clinic";
 
 export const CONTACT_META = {
   title: "Contact Us | Horizon Health Care Partners Australia",
@@ -41,11 +41,11 @@ export const CONTACT_PAGE = {
   emergency: {
     eyebrow: "Emergencies",
     heading: "In an emergency",
-    body: "This form and inbox are not monitored around the clock and are not for emergencies. If this is a medical emergency, call 000. If you are in crisis, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636.",
+    body: `This form and inbox are not monitored around the clock and are not for emergencies. ${EMERGENCY_LINE}`,
   },
   closing: {
-    heading: "Your health, handled from home",
-    body: "Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
+    heading: "Professional Healthcare, Wherever You Are",
+    body: "Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
     primary: { label: "Start the free quiz", href: "/quiz/" },
   },
 } as const;

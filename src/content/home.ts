@@ -18,7 +18,7 @@
 
 import { CONSULTATION_PLANS } from "./consultation-plans";
 import { PRICES } from "./pricing";
-import { CALL_CTA } from "./clinic";
+import { CALL_CTA, EMERGENCY_LINE } from "./clinic";
 
 export const HOME_META = {
   title: "Online Telehealth Clinic Australia | Weight Loss & More",
@@ -29,7 +29,7 @@ export const HOME_META = {
 export const HOME_HERO = {
   heading:
     "Australia's practitioner-led telehealth clinic for weight loss, hormones and everyday care",
-  body: "See an AHPRA-registered practitioner from home, anywhere in Australia. Start with a free two-minute pre-screening quiz, then book a real consultation by video or phone. Care is private, transparent, and centred on you.",
+  body: "See an AHPRA-registered practitioner from home, anywhere in Australia. Start with a free pre-screening quiz, then book a real consultation by video or phone. Care is private, transparent, and centred on you.",
   primary: { label: "Check your eligibility", href: "/quiz/" },
   secondary: CALL_CTA,
 } as const;
@@ -274,13 +274,13 @@ export const HOME_FAQ = {
       id: "emergency",
       question: "What if it is an emergency?",
       answer:
-        "Telehealth is not for emergencies. If this is a medical emergency, call 000. If you are in crisis, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636.",
+        `Telehealth is not for emergencies. ${EMERGENCY_LINE}`,
     },
   ],
 } as const;
 
 export const HOME_CLOSING = {
-  heading: "Your health, handled from home",
-  body: "Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
+  heading: "Professional Healthcare, Wherever You Are",
+  body: "Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
   primary: { label: "Start the free quiz", href: "/quiz/" },
 } as const;

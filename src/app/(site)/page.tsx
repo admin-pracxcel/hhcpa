@@ -10,7 +10,7 @@
  *
  *    1. Hero                          HeroSection      (clone, new copy + CTAs)
  *    2. Value-proposition strip       FeatureMarquee   (clone, new items)
- *    3. Intro paragraph               ScrollRevealParagraph (new)
+ *    3. Intro paragraph               LeadParagraph (new)
  *    4. Choose your focus             FocusGrid        (new)
  *    5. Consultation pricing          PricingSection   (clone, new plans)
  *    6. How it works                  StepsSection     (clone, new copy)
@@ -33,7 +33,7 @@
  * — it is not lost, just unrouted.
  *
  * There is no smooth-scroll library, no scroll-snap and no scroll listener on
- * this page. `ScrollRevealParagraph` animates from CSS `animation-timeline`.
+ * this page. `LeadParagraph` animates from CSS `animation-timeline`.
  * Do not add any.
  */
 
@@ -58,7 +58,7 @@ import {
 } from "@/content/home";
 
 import { FocusGrid } from "@/components/sections/FocusGrid";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ValueTiles } from "@/components/sections/ValueTiles";
 
 import { ApproachSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
@@ -112,7 +112,7 @@ export default function Home() {
 
       <FeatureMarquee items={HOME_VALUE_STRIP} />
 
-      <ScrollRevealParagraph text={HOME_INTRO.text} cta={HOME_INTRO.cta} />
+      <LeadParagraph text={HOME_INTRO.text} cta={HOME_INTRO.cta} />
 
       {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into
           bands instead of one continuous white scroll. */}

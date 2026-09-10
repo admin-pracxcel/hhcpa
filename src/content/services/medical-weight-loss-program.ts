@@ -14,7 +14,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage } from "./shared";
+import { SCREENING_MINUTES, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage, standardClosing } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
@@ -149,5 +149,5 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
       },
     ],
   },
-  closing: STANDARD_CLOSING,
+  closing: standardClosing(SCREENING_MINUTES.weightManagement),
 };

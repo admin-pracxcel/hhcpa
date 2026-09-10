@@ -899,10 +899,10 @@ export const TRIAGE_MESSAGES = {
   weightLoss: {
     green: {
       heading: "Well done! Our Weight Loss Program might work for you!",
-      body: "Based on your answers we can create a treatment program that suits you the most. You are only a few steps away — leave your details and we will be in touch to arrange your consultation.",
+      body: "Based on your answers we can create a treatment program that suits you the most. You are only a few steps away, so leave your details and we will be in touch to arrange your consultation.",
     },
     amber: {
-      heading: "Thanks — your answers are with us",
+      heading: "Thanks, your answers are with us",
       body: "There are a few things in your answers a practitioner will want to look at before recommending anything. Leave your details and we will arrange a consultation.",
     },
     red: {
@@ -912,11 +912,11 @@ export const TRIAGE_MESSAGES = {
   },
   general: {
     green: {
-      heading: "Good news — it looks like we can help",
+      heading: "Good news, it looks like we can help",
       body: "Leave your details and we will be in touch to arrange a consultation with an AHPRA-registered practitioner.",
     },
     amber: {
-      heading: "Thanks — your answers are with us",
+      heading: "Thanks, your answers are with us",
       body: "There are a few things in your answers a practitioner will want to look at first. Leave your details and we will arrange a consultation.",
     },
     red: {
@@ -1027,7 +1027,7 @@ export const CONSENT_VERSION = "2026-09-03";
  * submission. Only the on-page message stopped depending on it.
  */
 export const QUIZ_SUCCESS = {
-  heading: "Thanks — we’ve got your details",
+  heading: "Thanks, we’ve got your details",
   body: "Your pre-screening answers have been received. Our clinical team will review them and be in touch shortly with your results and the next steps.",
   note: "If your enquiry is urgent, please call 000 or contact your GP.",
 } as const;

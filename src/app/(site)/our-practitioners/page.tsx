@@ -28,7 +28,7 @@ import {
 } from "@/content/practitioners";
 
 import { PractitionerCards } from "@/components/sections/PractitionerCards";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 import { ValueTiles } from "@/components/sections/ValueTiles";
 
@@ -68,7 +68,7 @@ export default function Page() {
 
       <FeatureMarquee />
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text={PRACTITIONERS_PAGE.intro}
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />

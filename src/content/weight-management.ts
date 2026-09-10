@@ -92,7 +92,7 @@ export const WLP_STEPS = {
       pill: "Free pre-screening quiz",
       title: "Free pre-screening quiz",
       description:
-        "A few short questions help us understand your situation and whether we are likely to be able to help. It takes about two minutes and it is not a diagnosis.",
+        "A few short questions help us understand your situation and whether we are likely to be able to help. It takes about seven minutes and it is not a diagnosis.",
     },
     {
       pill: "Book your consultation",
@@ -209,6 +209,14 @@ export const WLP_FAQ = {
 
 export const WLP_CLOSING = {
   heading: "Ready to see whether this suits you?",
-  body: "Start with the free pre-screening quiz. Two minutes, no diagnosis, no commitment. If a medically supervised weight-loss approach is right for you, your practitioner will guide it from there.",
+  /*
+   * "Two minutes" here is from HHCPA_Dropin_Copy.md, so this is a deliberate
+   * departure from her approved wording. Build spec v2.1 §2.6 retires the claim
+   * sitewide because it is no longer true: HHCPA-FRM-002 states seven minutes on
+   * its own face. Correcting a duration she has since contradicted in her own
+   * document is not a rewrite of her copy; leaving it would publish a number the
+   * form disproves.
+   */
+  body: "Start with the free pre-screening quiz. Seven minutes, no diagnosis, no commitment. If a medically supervised weight-loss approach is right for you, your practitioner will guide it from there.",
   primary: { label: "Start the free quiz", href: "/quiz/" },
 } as const;

@@ -17,7 +17,7 @@ import { CLINIC } from "@/content/clinic";
 import { CONTACT_META, CONTACT_PAGE } from "@/content/contact";
 
 import { ContactSection } from "@/components/sections/ContactSection";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 import { StatementBand } from "@/components/sections/StatementBand";
 
@@ -54,7 +54,7 @@ export default function Page() {
         secondary={CONTACT_PAGE.hero.secondary}
       />
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text={CONTACT_PAGE.intro}
         cta={{ label: "Take the free quiz", href: "/quiz/" }}
       />

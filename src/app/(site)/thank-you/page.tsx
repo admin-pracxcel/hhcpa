@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThankYouPanel
-      heading="Thank you — your message has been sent"
+      heading="Thank you, your message has been sent"
       body="Our team will get back to you as soon as we can. If your message needs a practitioner, we will let you know what happens next before anything is booked."
       primary={{ label: "Back to home", href: "/" }}
       secondary={{ label: "Read the knowledge hub", href: "/articles/" }}

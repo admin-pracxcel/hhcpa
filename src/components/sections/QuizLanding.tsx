@@ -305,7 +305,7 @@ export function QuizLanding() {
               Back
             </Link>
 
-            <Link href="/" aria-label="Horizon Health Care Partners — home">
+            <Link href="/" aria-label="Horizon Health Care Partners, home">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="hhcp-ql-logo"

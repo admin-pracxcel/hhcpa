@@ -921,7 +921,7 @@ export const CERT_STEPS: readonly CertStep[] = [
   },
   {
     title: "Additional Information",
-    subtitle: "Optional — anything else the practitioner should know.",
+    subtitle: "Optional, anything else the practitioner should know.",
     questions: [
       {
         id: "additionalInfo",

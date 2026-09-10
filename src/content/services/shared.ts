@@ -48,12 +48,52 @@ export function sectionImage(name: string): string {
 export const MEDICARE_ANSWER =
   "Most of our consultations are private and are not bulk billed. A Medicare rebate applies only in limited circumstances, and only where you have an eligible relationship with the practitioner. We suggest confirming your eligibility with Medicare before you book.";
 
-/** Used wherever the source says "use standard closing CTA band". */
-export const STANDARD_CLOSING = {
-  heading: "Your health, handled from home",
-  body: "Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
-  primary: { label: "Start the free quiz", href: "/quiz/" },
+/**
+ * How long each service's pre-screening actually takes, in minutes, as stated
+ * on the assessment form itself (HHCPA-FRM-002 to 007, Version 1.1).
+ *
+ * The site said "about two minutes" on 33 pages. That was true of the old
+ * four-branch quiz and is not true of these forms, so build spec v2.1 §2.6
+ * removes the claim everywhere: a service page states its own time, and
+ * everything else says "a few minutes".
+ *
+ * Online Doctor and Continuity & Preventative Health are absent on purpose.
+ * Neither has a form, so neither advertises a pre-screening step at all — see
+ * the v2.4 answer to Q30.
+ */
+export const SCREENING_MINUTES = {
+  weightManagement: 7,
+  healthOptimisation: 7,
+  mensHealth: 5,
+  womensHealth: 6,
+  mentalHealth: 6,
+  holisticCare: 6,
 } as const;
+
+const MINUTE_WORD = ["", "one", "two", "three", "four", "five", "six", "seven"] as const;
+
+/**
+ * The closing CTA band, used wherever the source says "use standard closing
+ * CTA band".
+ *
+ * Pass the service's screening time to state it; omit it for pages that are not
+ * a service, which say "a few minutes" rather than naming a number they cannot
+ * stand behind.
+ */
+export function standardClosing(minutes?: number) {
+  const duration =
+    minutes === undefined
+      ? "a few minutes"
+      : `about ${MINUTE_WORD[minutes] ?? minutes} minutes`;
+  return {
+    heading: "Professional Healthcare, Wherever You Are",
+    body: `Start with the free pre-screening quiz. It takes ${duration}, it is not a diagnosis, and there is no commitment until you choose to book.`,
+    primary: { label: "Start the free quiz", href: "/quiz/" },
+  } as const;
+}
+
+/** The non-service default. Service pages call `standardClosing(n)` instead. */
+export const STANDARD_CLOSING = standardClosing();
 
 export const STANDARD_FOOTNOTE = "New here? See the full patient journey on";
 

@@ -13,7 +13,7 @@ import { CLINIC } from "@/content/clinic";
 import { FAQS_META, FAQS_PAGE } from "@/content/faqs";
 
 import { RelatedCards } from "@/components/sections/RelatedCards";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 
 import { FaqSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FaqSection";
@@ -52,7 +52,7 @@ export default function Page() {
         secondary={FAQS_PAGE.hero.secondary}
       />
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text={FAQS_PAGE.intro}
         cta={{ label: "Contact our team", href: "/contact/" }}
       />

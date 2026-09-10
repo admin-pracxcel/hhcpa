@@ -107,7 +107,9 @@ remembering to exclude it. `.env.example` carries the same note.
    scroll and the white pill stays, floating one `--hhcp-space-s` clear of the top edge.
    That furl, the gap opening, and the pill's shadow are three CSS scroll-driven
    animations on `scroll(root block)` — the
-   same mechanism `ScrollRevealParagraph` uses. There are no scroll listeners and no
+   only scroll-driven animation left in the codebase — `ScrollRevealParagraph`
+   shared it until the lead paragraph was flattened to plain text (build spec
+   v2.1 §2.1) and became `LeadParagraph`. There are no scroll listeners and no
    IntersectionObservers anywhere in this codebase, by design. Don't add any. See
    CUSTOMISATIONS.md deviation 6; `--hhcp-header-pinned-h` is the pinned footprint that
    `scroll-padding-top` reads so anchor jumps clear the pill.

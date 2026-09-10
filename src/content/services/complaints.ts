@@ -96,7 +96,7 @@ export const COMPLAINTS: ServicePageData = {
       eyebrow: "External options",
       heading: "Independent bodies you can contact",
       paragraphs: [
-        "You are always free to contact an independent body, at any stage. AHPRA handles concerns about a registered practitioner, on 1300 419 495 or at ahpra.gov.au. Your state or territory health complaints commissioner handles service complaints — for example the Health Ombudsman in Queensland, or the Health Care Complaints Commission in New South Wales. The Office of the Australian Information Commissioner handles privacy concerns, at oaic.gov.au.",
+        "You are always free to contact an independent body, at any stage. AHPRA handles concerns about a registered practitioner, on 1300 419 495 or at ahpra.gov.au. Your state or territory health complaints commissioner handles service complaints, for example the Health Ombudsman in Queensland, or the Health Care Complaints Commission in New South Wales. The Office of the Australian Information Commissioner handles privacy concerns, at oaic.gov.au.",
       ],
       image: sectionImage("complaints-external-options"),
       imageAlt:
@@ -105,8 +105,8 @@ export const COMPLAINTS: ServicePageData = {
     },
   ],
   closing: {
-    heading: "Your health, handled from home",
-    body: "Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
+    heading: "Professional Healthcare, Wherever You Are",
+    body: "Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
     primary: { label: "Start the free quiz", href: "/quiz/" },
   },
 };

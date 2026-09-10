@@ -7,13 +7,16 @@
  */
 
 export const QUIZ_LANDING = {
-  eyebrow: "Takes just 2 minutes to complete",
+  /* §2.6: was "Takes just 2 minutes to complete". The assessment forms
+     state 5 to 7 minutes depending on the service, so the landing page cannot
+     promise a figure before the service has been chosen. */
+  eyebrow: "Takes just a few minutes to complete",
   heading: "Start Your Pre-Screening Quiz",
   /* The live page has a double space after "will"; corrected here. */
   intro:
     "Tell us about your health through a few straightforward questions. Based on your responses, we will see if our services could be suitable for your situation.",
   points: [
-    "Takes only 2 minutes",
+    "Takes only a few minutes",
     "Confidential & secure",
     "Directly book a consultation after this quiz",
   ],

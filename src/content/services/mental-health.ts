@@ -9,7 +9,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage } from "./shared";
+import { SCREENING_MINUTES, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage, standardClosing } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MENTAL_HEALTH: ServicePageData = {
@@ -156,5 +156,5 @@ export const MENTAL_HEALTH: ServicePageData = {
       },
     ],
   },
-  closing: STANDARD_CLOSING,
+  closing: standardClosing(SCREENING_MINUTES.mentalHealth),
 };

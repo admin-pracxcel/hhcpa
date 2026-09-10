@@ -137,7 +137,7 @@ const LINKS = [
   },
   {
     title: "Free pre-screening quiz",
-    body: "Two minutes, no commitment.",
+    body: "A few minutes, no commitment.",
     href: "/quiz/",
   },
   {
@@ -190,7 +190,7 @@ export function NotFoundPanel({ className }: { className?: string }) {
         <p className="hhcp-nf-note font-dm-sans">
           {"Still stuck? Call "}
           <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
-          {` — ${CLINIC.hours}. In an emergency, call 000.`}
+          {`, ${CLINIC.hours}. In an emergency, call 000.`}
         </p>
       </div>
     </section>

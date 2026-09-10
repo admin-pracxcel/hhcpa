@@ -38,7 +38,7 @@ import { PriceTiles } from "./PriceTiles";
 import type { ConsultationPlan } from "@/content/consultation-plans";
 import { PricingCueBand } from "./PricingCueBand";
 import { RelatedCards } from "./RelatedCards";
-import { ScrollRevealParagraph } from "./ScrollRevealParagraph";
+import { LeadParagraph } from "./LeadParagraph";
 import { ServiceHero } from "./ServiceHero";
 import type { Crumb } from "./ServiceHero";
 import { SplitFeature } from "./SplitFeature";
@@ -246,7 +246,7 @@ export function ServicePage({ data }: { data: ServicePageData }) {
         <FeatureMarquee items={data.trust ?? TRUST_BAR_DEFAULT} />
       )}
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text={data.intro}
         cta={data.introCta ?? { label: "Check your eligibility", href: "/quiz/" }}
       />

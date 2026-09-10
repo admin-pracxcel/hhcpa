@@ -7,7 +7,7 @@
  *
  *    1. Hero                        ServiceHero            (new)
  *    2. Value-proposition strip     FeatureMarquee         (clone)
- *    3. Intro paragraph             ScrollRevealParagraph  (shared with `/`)
+ *    3. Intro paragraph             LeadParagraph  (shared with `/`)
  *    4. How supervised care works   SplitFeature           (new)
  *    5. Who it may suit             ChecklistSection       (new)
  *    6. How it works                StepsSection           (clone)
@@ -54,7 +54,7 @@ import {
 import { ChecklistSection } from "@/components/sections/ChecklistSection";
 import { PricingCueBand } from "@/components/sections/PricingCueBand";
 import { RelatedCards } from "@/components/sections/RelatedCards";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 import { SplitFeature } from "@/components/sections/SplitFeature";
 import { StatementBand } from "@/components/sections/StatementBand";
@@ -104,7 +104,7 @@ export default function WeightManagement() {
 
       <FeatureMarquee items={WLP_TRUST} />
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text={WLP_INTRO}
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />

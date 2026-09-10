@@ -193,7 +193,9 @@ that gap, and a card caught half out of the viewport shows there. The shadow is 
 keeps that reading as the page continuing underneath rather than as a fault.
 
 **No scroll listener and no IntersectionObserver.** All three are CSS scroll-driven
-animations on `scroll(root block)`, the same mechanism `ScrollRevealParagraph` uses. The
+animations on `scroll(root block)`. `ScrollRevealParagraph` shared that mechanism until
+the client asked for the per-word reveal to be removed (build spec v2.1 §2.1); it is now
+`LeadParagraph` and renders plain text, leaving the header as the only user. The
 AGENTS.md rule stands.
 
 Two ways it degrades, both to a header that is pinned with the strip still showing:

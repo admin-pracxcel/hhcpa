@@ -11,7 +11,7 @@
 
 import { PRICES } from "../pricing";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { MEDICARE_ANSWER, STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
+import { MEDICARE_ANSWER, SCREENING_MINUTES, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage, standardClosing } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const MENS_HEALTH: ServicePageData = {
@@ -144,5 +144,5 @@ export const MENS_HEALTH: ServicePageData = {
       },
     ],
   },
-  closing: STANDARD_CLOSING,
+  closing: standardClosing(SCREENING_MINUTES.mensHealth),
 };

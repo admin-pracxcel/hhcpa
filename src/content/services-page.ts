@@ -55,7 +55,7 @@ export const SERVICES_PAGE = {
       },
       {
         title: "Not sure what you need?",
-        body: "The free pre-screening quiz takes about two minutes.",
+        body: "The free pre-screening quiz takes a few minutes.",
         links: [{ label: "Start the free quiz", href: "/quiz/" }],
       },
     ],
@@ -66,7 +66,7 @@ export const SERVICES_PAGE = {
     ],
   },
   closing: {
-    heading: "Your health, handled from home",
+    heading: "Professional Healthcare, Wherever You Are",
     body: "Choose a service above, or start with the free pre-screening quiz if you would rather we helped you work out where to begin.",
     primary: { label: "Start the free quiz", href: "/quiz/" },
   },

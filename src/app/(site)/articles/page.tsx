@@ -17,7 +17,7 @@ import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
 import { CALL_CTA, CLINIC } from "@/content/clinic";
 import { articleCards } from "@/content/articles";
 
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 
 import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
@@ -61,7 +61,7 @@ export default function Page() {
         secondary={CALL_CTA}
       />
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text="Short, practical articles from our team on weight, sleep, hormones and chronic conditions. Everything here is general information rather than medical advice, and anything that applies to you personally is a conversation for a consultation."
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />
@@ -82,8 +82,8 @@ export default function Page() {
       />
 
       <FinalCtaSection
-        heading="Your health, handled from home"
-        body="Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book."
+        heading="Professional Healthcare, Wherever You Are"
+        body="Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book."
         actions={
           <div className="flex flex-row flex-wrap items-center justify-center gap-[16px]">
             <a className="hhcp-btn" href="/quiz/">

@@ -20,7 +20,7 @@
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import { STANDARD_CLOSING } from "./shared";
-import { CALL_CTA } from "../clinic";
+import { CALL_CTA, EMERGENCY_LINE } from "../clinic";
 
 export const HOW_IT_WORKS: ServicePageData = {
   meta: {
@@ -48,7 +48,7 @@ export const HOW_IT_WORKS: ServicePageData = {
           pill: "Step 1",
           title: "Take the free pre-screening quiz",
           description:
-            "Answer a few short questions about what is going on. This helps us understand your situation and see whether we are likely to be able to help. The quiz takes about two minutes, it is free, and it is not a diagnosis. Nothing is decided from the quiz alone.",
+            "Answer a few short questions about what is going on. This helps us understand your situation and see whether we are likely to be able to help. The quiz takes a few minutes, it is free, and it is not a diagnosis. Nothing is decided from the quiz alone.",
         },
         {
           pill: "Step 2",
@@ -96,7 +96,7 @@ export const HOW_IT_WORKS: ServicePageData = {
       eyebrow: "Safety",
       heading: "When telehealth is not the right option",
       paragraphs: [
-        "Telehealth suits many everyday needs. Some situations need an in-person examination or emergency care, and your practitioner will tell you clearly when that applies. If this is a medical emergency, call 000. If you are in crisis, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636.",
+        `Telehealth suits many everyday needs. Some situations need an in-person examination or emergency care, and your practitioner will tell you clearly when that applies. ${EMERGENCY_LINE}`,
       ],
     },
     {
@@ -106,7 +106,7 @@ export const HOW_IT_WORKS: ServicePageData = {
       cards: [
         {
           title: "Free pre-screening quiz",
-          body: "Two minutes, no diagnosis, no commitment.",
+          body: "A few minutes, no diagnosis, no commitment.",
           links: [{ label: "Start the free quiz", href: "/quiz/" }],
         },
         {

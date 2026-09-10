@@ -51,7 +51,7 @@ export const PRICING_PAGE: ServicePageData = {
       feature: {
         key: "quiz",
         title: "Start with the free pre-screening quiz",
-        body: "Two minutes, no diagnosis, and no commitment. It tells you whether we are likely to be able to help before you pay for anything.",
+        body: "A few minutes, no diagnosis, and no commitment. It tells you whether we are likely to be able to help before you pay for anything.",
         cta: { label: "Start the free quiz", href: "/quiz/" },
       },
       plans: CONSULTATION_PLANS,
@@ -96,7 +96,7 @@ export const PRICING_PAGE: ServicePageData = {
         },
         {
           title: "Free pre-screening quiz",
-          body: "Two minutes, no diagnosis, no commitment.",
+          body: "A few minutes, no diagnosis, no commitment.",
           links: [{ label: "Start the free quiz", href: "/quiz/" }],
         },
         {

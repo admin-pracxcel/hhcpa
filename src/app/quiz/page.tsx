@@ -6,6 +6,10 @@
  * shape for it: on a page whose only job is to start the quiz, every other link
  * is a way to not start it.
  *
+ * Two pieces of chrome are kept. `SiteDisclaimer` carries the compulsory
+ * emergency line, which §2.3 of the build spec requires on every page without
+ * exception, and this page was the only one missing it.
+ *
  * `AttributionCapture` is kept even though the rest of the site chrome is not.
  * This is the only lead-capturing page here, so it is the one page that most
  * needs the utm_source stored before anything is submitted.
@@ -29,6 +33,7 @@ import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
 import { QUIZ_META } from "@/content/quiz";
 
 import { QuizLanding } from "@/components/sections/QuizLanding";
+import { SiteDisclaimer } from "@/components/layout/SiteDisclaimer";
 
 export const metadata: Metadata = {
   title: QUIZ_META.title,
@@ -62,6 +67,16 @@ export default function Page() {
       <main id="brx-content">
         <QuizLanding />
       </main>
+
+      {/*
+        Build spec v2.1 §2.3: the emergency line is compulsory on every page,
+        and this was the only page without it. It renders from `(site)/layout`
+        everywhere else, which this page deliberately sits outside of, so it is
+        mounted here directly rather than by pulling the page back under a
+        layout whose header and nav would give someone a dozen ways to leave
+        mid-quiz.
+      */}
+      <SiteDisclaimer />
     </>
   );
 }

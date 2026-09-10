@@ -35,7 +35,7 @@ import { SERVICES_META, SERVICES_PAGE } from "@/content/services-page";
 
 import { FocusGrid } from "@/components/sections/FocusGrid";
 import { RelatedCards } from "@/components/sections/RelatedCards";
-import { ScrollRevealParagraph } from "@/components/sections/ScrollRevealParagraph";
+import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
 
 import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
@@ -71,7 +71,7 @@ export default function Page() {
         secondary={SERVICES_PAGE.hero.secondary}
       />
 
-      <ScrollRevealParagraph
+      <LeadParagraph
         text={SERVICES_PAGE.intro}
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />

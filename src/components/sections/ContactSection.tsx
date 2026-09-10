@@ -484,7 +484,7 @@ export function ContactSection({
 
           {status === "failed" && (
             <p className="hhcp-form-status font-dm-sans" role="alert">
-              Sorry — we could not send your message just now. Please call{" "}
+              Sorry, we could not send your message just now. Please call{" "}
               <a href={CLINIC.phoneHref}>{CLINIC.phone}</a> or email{" "}
               <a href={CLINIC.emailHref}>{CLINIC.email}</a> and our team will
               help you.

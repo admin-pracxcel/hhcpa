@@ -258,7 +258,7 @@ export const TERMS_AND_CONDITIONS: LegalDocument = {
     },
     {
       kind: "p",
-      text: "If you are experiencing a medical emergency — including, but not limited to, chest pain, difficulty breathing, severe bleeding, loss of consciousness, or thoughts of self-harm — you should immediately call 000 or attend your nearest emergency department.",
+      text: "If you are experiencing a medical emergency, including, but not limited to, chest pain, difficulty breathing, severe bleeding, loss of consciousness, or thoughts of self-harm, you should immediately call 000 or attend your nearest emergency department.",
     },
     {
       kind: "p",

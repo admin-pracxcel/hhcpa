@@ -149,7 +149,7 @@ export function BookingPanel({ className }: { className?: string }) {
           </svg>
 
           <h1 className="hhcp-bk-heading font-dm-sans">
-            Thanks — we’ve got your details
+            Thanks, we’ve got your details
           </h1>
           <p className="hhcp-bk-body font-dm-sans">
             Your pre-screening answers have been received. You can book your
@@ -159,7 +159,7 @@ export function BookingPanel({ className }: { className?: string }) {
 
         <div className="hhcp-bk-slot">
           <p className="hhcp-bk-slot-label font-roboto-mono">
-            Booking portal — placeholder
+            Booking portal, placeholder
           </p>
           <p className="hhcp-bk-slot-text font-dm-sans">
             Online booking is being finalised. To book your consultation now,

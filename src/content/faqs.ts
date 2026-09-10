@@ -117,8 +117,8 @@ export const FAQS_PAGE = {
     },
   ],
   closing: {
-    heading: "Your health, handled from home",
-    body: "Start with the free pre-screening quiz. It takes about two minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
+    heading: "Professional Healthcare, Wherever You Are",
+    body: "Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
     primary: { label: "Start the free quiz", href: "/quiz/" },
   },
 } as const;

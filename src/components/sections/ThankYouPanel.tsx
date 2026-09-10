@@ -162,7 +162,7 @@ export function ThankYouPanel({
             <>
               {"Need us sooner? Call "}
               <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
-              {` — ${CLINIC.hours}. In an emergency, call 000.`}
+              {`, ${CLINIC.hours}. In an emergency, call 000.`}
             </>
           )}
         </p>

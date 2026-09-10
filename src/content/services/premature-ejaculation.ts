@@ -7,7 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
+import { SCREENING_MINUTES, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage, standardClosing } from "./shared";
 import { CALL_CTA } from "../clinic";
 
 export const PREMATURE_EJACULATION: ServicePageData = {
@@ -118,5 +118,5 @@ export const PREMATURE_EJACULATION: ServicePageData = {
       },
     ],
   },
-  closing: STANDARD_CLOSING,
+  closing: standardClosing(SCREENING_MINUTES.mensHealth),
 };

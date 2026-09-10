@@ -14,7 +14,8 @@
  * ~110px of the pair.
  *
  * Still no scroll listeners and no IntersectionObserver: the furl is a CSS
- * scroll-driven animation, the same mechanism ScrollRevealParagraph uses.
+ * scroll-driven animation. It used to share that mechanism with the lead
+ * paragraph; the header is now the only place in the codebase that uses it.
  */
 
 import { Fragment, useCallback, useEffect, useState } from "react";

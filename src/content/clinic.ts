@@ -58,13 +58,30 @@ export const CALL_CTA = {
   href: CLINIC.phoneHref,
 } as const;
 
+/**
+ * The emergency line, in Ranjeeta's own words.
+ *
+ * Build spec v2.1 §2.3 marks this compulsory on every page and supplies the
+ * exact text; her instruction reads "Every page needs the following:
+ * Compulsory". It replaced a differently-worded equivalent that had been
+ * deployed site-wide — hers is more direct and carries the 24/7 detail, and two
+ * near-identical crisis lines on one domain is worse than one.
+ *
+ * Split out from SITE_DISCLAIMER because /quiz sits outside the (site) layout
+ * and so never rendered the disclaimer. §2.3 records /quiz as the one page
+ * missing the line; it can now carry this constant on its own.
+ */
+export const EMERGENCY_LINE =
+  "Medical emergency? Call 000 immediately. If you are in crisis, call " +
+  "Lifeline 13 11 14 (24/7) or Beyond Blue 1300 22 4636.";
+
 export const SITE_DISCLAIMER =
   "Individual results may vary and no treatment outcomes are guaranteed. " +
   "Prescriptions are provided only where clinically appropriate following a " +
   "real-time consultation, at the treating practitioner's discretion. " +
   "Information on this site is general and is not a substitute for personal " +
-  "medical advice. If this is a medical emergency, call 000. If you are in " +
-  "crisis, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636.";
+  "medical advice. " +
+  EMERGENCY_LINE;
 
 export const EMERGENCY_CONTACTS: readonly EmergencyContact[] = [
   { label: "Emergency", number: "000", href: "tel:000" },
