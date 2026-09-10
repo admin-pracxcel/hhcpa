@@ -131,6 +131,20 @@ export type QuizStep =
       readonly heading: string;
       readonly body: string;
     }
+  | {
+      /**
+       * Her twelve-step medical certificate assessment, rendered from
+       * CERT_STEPS rather than transcribed into this model.
+       *
+       * §4.9 says keep her screening questions as they are, and forty-four
+       * clinical questions copied into a second shape is forty-four chances
+       * to drift silently. `CertificateAssessment` owns the inside of this
+       * step; the graph only needs to know it exists and where it goes.
+       */
+      readonly kind: "certificate";
+      readonly id: string;
+      readonly next: string;
+    }
   | { readonly kind: "contact"; readonly id: string };
 
 /* -------------------------------------------------------------------------
@@ -353,9 +367,22 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
      */
     next: {
       "A prescription or repeat script": "rx_count",
+      "A medical certificate": "cert_assessment",
       "*": "contact",
     },
   },
+
+  /* ---------- medical certificates (§4.9) ----------
+     Her assessment, unchanged, rendered from the ported CERT_STEPS. The rule
+     it implements is hers too: a single-day certificate is issued on the
+     questionnaire alone, multi-day requires a consultation. She was given the
+     Medical Board guidance point in writing on 9 September and answered with
+     this direction; the spec says not to raise it again.
+
+     Nothing on the certificates page or in this flow may say a consultation
+     is always required (§4.9, §7.3). The homepage FAQ's "not on a
+     questionnaire alone" line is about prescriptions and stays about them. */
+  { kind: "certificate", id: "cert_assessment", next: "contact" },
 
   /* ---------- online prescriptions, the conditional ladder (§4.8) ----------
      Her three questions, in her order. She modelled them on a competitor's
@@ -1451,6 +1478,7 @@ export function nextStepId(step: QuizStep, answer: string): string {
     case "input":
     case "bmi":
     case "summary":
+    case "certificate":
       return step.next;
     case "exit":
     case "contact":

@@ -45,6 +45,7 @@ import type { QuizStep, TriageLevel } from "@/content/quiz";
 import { findCountry, guessCountry } from "@/content/countries";
 import { getAttribution, getLeadSource } from "@/lib/attribution";
 import { cn } from "@/lib/utils";
+import { CertificateAssessment } from "./CertificateAssessment";
 import { PhoneField } from "./PhoneField";
 
 const STYLES = `
@@ -684,7 +685,9 @@ const CLINICAL_FIELDS: ReadonlyMap<string, boolean> = new Map(
     ) {
       return [];
     }
-    const clinical = step.clinical === true;
+    /* The certificate step carries no answers of its own — its component owns
+       them and hands them back on completion — so it has no `clinical` flag. */
+    const clinical = "clinical" in step && step.clinical === true;
     const names: string[] = [];
     if (step.kind === "choice" || step.kind === "multi") names.push(step.field);
     if (step.kind === "choice" && step.followUp !== undefined) {
@@ -1144,6 +1147,8 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
         return <SummaryStep {...props} step={step} />;
       case "exit":
         return <ExitStep step={step} />;
+      case "certificate":
+        return <CertificateStep {...props} step={step} />;
       case "contact":
         return <ContactStep {...props} />;
       default: {
@@ -1489,6 +1494,47 @@ function SummaryStep({
         Confirm answers
       </button>
     </>
+  );
+}
+
+/**
+ * Her certificate assessment, inside the quiz.
+ *
+ * A thin seam: the component owns twelve steps of her questions and hands
+ * back the day count, the route and the answers. Those land in the quiz's
+ * answer map under `cert_*`, so they travel in the segregated clinical key
+ * with everything else and the closing step behaves as it does on any other
+ * branch.
+ *
+ * A hard stop — a safety flag, or not being in Australia — records the reason
+ * and moves on to the closing step rather than ending the flow. Same reasoning
+ * as the crisis disclosure: someone who has told us something that matters
+ * should reach a human, not a dead end.
+ */
+function CertificateStep({
+  step,
+  set,
+  go,
+}: StepBodyProps & { step: Extract<QuizStep, { kind: "certificate" }> }) {
+  return (
+    <CertificateAssessment
+      onDone={(result) => {
+        set("cert_days", result.days);
+        set("cert_route", result.route);
+        for (const [id, value] of Object.entries(result.answers)) {
+          if (value === undefined) continue;
+          set(
+            `cert_${id}`,
+            Array.isArray(value) ? value.join("; ") : String(value),
+          );
+        }
+        go(step, "");
+      }}
+      onStop={(reason) => {
+        set("cert_stopped", reason);
+        go(step, "");
+      }}
+    />
   );
 }
 

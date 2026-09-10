@@ -29,6 +29,7 @@ function targetsOf(step: QuizStep): readonly string[] {
     case "input":
     case "bmi":
     case "summary":
+    case "certificate":
       return [step.next];
     case "exit":
     case "contact":
