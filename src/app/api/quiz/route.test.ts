@@ -95,3 +95,66 @@ describe("POST /api/quiz", () => {
     expect(JSON.stringify(rest)).not.toContain("Low energy");
   });
 });
+
+describe("second-stage submissions", () => {
+  beforeEach(() => {
+    process.env.QUIZ_WEBHOOK_URL = "http://webhook.test/quiz";
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 200 })));
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    delete process.env.QUIZ_WEBHOOK_URL;
+  });
+
+  const sent = () =>
+    JSON.parse(
+      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+    ) as Record<string, unknown>;
+
+  it("accepts the clinical intake without a contact block", async () => {
+    const response = await POST(
+      request({
+        stage: "intake",
+        submissionId: "sub-1",
+        intake: { formId: "HHCPA-FRM-005", signature: "Jane Citizen" },
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(sent().stage).toBe("intake");
+    // Detail on someone already counted at stage one.
+    expect(sent().countsTowardPatientQuota).toBe(false);
+  });
+
+  it("accepts the discharge letter form and counts it", async () => {
+    // No stage one behind it, so it is its own enquiry.
+    const response = await POST(
+      request({
+        stage: "discharge",
+        submissionId: "sub-2",
+        intake: { formId: "HHCPA-DISCHARGE", answers: { email: "a@b.co" } },
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(sent().stage).toBe("discharge");
+    expect(sent().countsTowardPatientQuota).toBe(true);
+  });
+
+  it("keeps a second-stage payload entirely inside the clinical key", async () => {
+    await POST(
+      request({
+        stage: "discharge",
+        submissionId: "sub-3",
+        intake: { answers: { previousDoctor: "Dr Example" } },
+      }),
+    );
+    const body = sent();
+    const rest = { ...body };
+    delete rest.clinical;
+    expect(JSON.stringify(rest)).not.toContain("Dr Example");
+  });
+
+  it("rejects a second stage with nothing to attach it to", async () => {
+    const response = await POST(request({ stage: "intake", intake: { a: 1 } }));
+    expect(response.status).toBe(400);
+  });
+});

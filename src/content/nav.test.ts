@@ -167,7 +167,10 @@ describe("visibleFooterColumns", () => {
     for (const column of visibleFooterColumns()) {
       for (const link of column.links) {
         if (link.href.startsWith("http") || link.href.startsWith("#")) continue;
-        expect(known).toContain(link.href);
+        /* Two footer links reach the same page: Transfer Your Care at its top
+           and Discharge Letter at its form. Compare the path, not the anchor. */
+        const [path] = link.href.split("#");
+        expect(known).toContain(path);
       }
     }
   });

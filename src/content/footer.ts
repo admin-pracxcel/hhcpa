@@ -45,7 +45,7 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
        * "Discharge Letter" and is the same page as Transfer Your Care, which
        * the v2.3 §8 answer confirmed after v2.2 Q11 assumed otherwise.
        */
-      { label: "Discharge Letter", href: "/discharge/" },
+      { label: "Discharge Letter", href: "/discharge/#discharge-letter" },
       { label: "Patient Portal", href: "https://escript.link/" },
       { label: "FAQs", href: "/faqs/" },
     ],

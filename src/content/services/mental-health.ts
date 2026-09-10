@@ -25,6 +25,14 @@ export const MENTAL_HEALTH: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  /*
+   * §9 requires Service schema on all eight hubs, and this is one of them now:
+   * build spec v2 §6.1 promotes Mental Health Support out of the Online Doctor
+   * group to a silo of its own. It keeps the nested URL (§1.4), so its
+   * breadcrumb still reads through Online Doctor — nav position and URL depth
+   * are allowed to disagree, and the schema follows the service, not the path.
+   */
+  serviceSchemaName: "Mental health support consultations",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Online Doctor", href: "/online-doctor/" },

@@ -24,6 +24,30 @@ import type { ServicePageData } from "@/components/sections/ServicePage";
 import { STANDARD_CLOSING, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
+/**
+ * The Discharge Letter form's own copy (build spec v2.3 §8).
+ *
+ * Her live page ties the 15% to "a valid discharge letter from your current
+ * prescribing doctor or clinic". The v2.4 answer to Q32 retied it to
+ * transferring care instead: eligibility conditional on holding a
+ * prescription, on the transfer path for the holistic service, edges from a
+ * discount toward an inducement connected to a prescription-only medicine.
+ * The terms below are stated on the page because under the National Law a
+ * discount may be advertised provided its terms are.
+ *
+ * ⚠️ Both the retie and this terms text are ours and need her approval. It is
+ * her offer and her margin.
+ */
+export const DISCHARGE_FORM = {
+  heading: "Discharge Letter Form",
+  helpLabel:
+    "If you need support with acquiring a discharge letter, or have any questions, please let us know",
+  offer:
+    "Receive 15% off your first consultation when you transfer your care to Horizon Health Care Partners.",
+  terms:
+    "Offer terms: 15% applies to the first consultation fee for new patients transferring their care from another provider. One use per patient. The discount applies to the consultation fee only and does not apply to medicines, pathology, imaging or any third-party cost. Not available in conjunction with any other offer. A consultation with an AHPRA-registered practitioner is required, and no treatment or prescription is guaranteed. Horizon Health Care Partners may vary or withdraw this offer at any time.",
+} as const;
+
 export const DISCHARGE: ServicePageData = {
   meta: {
     title: "Transfer Your Care | Discharge & Continuity | HHCPA",
@@ -85,6 +109,32 @@ export const DISCHARGE: ServicePageData = {
       image: sectionImage("discharge-what-to-bring"),
       imageAlt:
         "A woman gathers a few pages into a folder at a kitchen table.",
+    },
+    {
+      /* §8: her four points, verbatim from the live page. */
+      kind: "tiles",
+      tinted: true,
+      eyebrow: "Make the switch",
+      heading: "Why patients choose Horizon Health Care Partners",
+      columns: 2,
+      tiles: [
+        {
+          title: "Care from home",
+          body: "Speak with AHPRA-registered practitioners via video or phone, no travel required. Discuss your health concerns from the comfort of your home.",
+        },
+        {
+          title: "A plan built around you",
+          body: "Work with practitioners to develop care plans that may address your individual health needs, lifestyle, and wellness goals.",
+        },
+        {
+          title: "Clear pricing, flexible booking",
+          body: "Clear pricing and flexible online booking designed to fit healthcare around your schedule, not the other way around.",
+        },
+        {
+          title: "Anywhere in Australia",
+          body: "Access care from anywhere in Australia. Continue your consultations whether you are travelling, working remotely, or relocating.",
+        },
+      ],
     },
     {
       kind: "related",

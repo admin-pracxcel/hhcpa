@@ -100,10 +100,31 @@ export async function POST(request: Request) {
    * declaration it signs, so the whole object travels under the segregated
    * key rather than beside it.
    */
-  if (clean(payload.stage) === "intake") {
-    const intake = record(payload.intake);
+  /*
+   * Two stages share this shape: the clinical intake form after triage, and
+   * the discharge letter form on /discharge/. Both carry a `submissionId` and
+   * an `intake` object, both are entirely clinical, and neither has a contact
+   * block or consents of its own — so both take the same path rather than the
+   * discharge form growing a third branch that drifts from this one.
+   */
+  const stage = clean(payload.stage);
+  if (stage === "intake" || stage === "discharge") {
+    /*
+     * Checked on the raw object, not through `record()`.
+     *
+     * `record()` flattens to string values and drops everything else, so an
+     * intake carrying only nested objects — `{ answers: {...} }`, which is
+     * exactly what the discharge form sends — came out empty and was rejected
+     * as unmatched. The payload is forwarded whole under `clinical` anyway;
+     * this only needs to know something is there.
+     */
+    const intake = payload.intake;
+    const hasIntake =
+      typeof intake === "object" &&
+      intake !== null &&
+      Object.keys(intake as Record<string, unknown>).length > 0;
     const priorId = clean(payload.submissionId);
-    if (priorId === "" || Object.keys(intake).length === 0) {
+    if (priorId === "" || !hasIntake) {
       return Response.json(
         { error: "That form could not be matched to your earlier answers." },
         { status: 400 },
@@ -113,10 +134,14 @@ export async function POST(request: Request) {
       JSON.stringify({
         submissionId: priorId,
         formType: "quiz",
-        stage: "intake",
+        stage,
         submittedAt: new Date().toISOString(),
-        /* Counted once, at stage one. This is detail on an existing patient. */
-        countsTowardPatientQuota: false,
+        /*
+         * An intake is detail on a patient already counted at stage one. A
+         * discharge submission is its own enquiry with no stage one behind
+         * it, so it counts.
+         */
+        countsTowardPatientQuota: stage === "discharge",
         service: clean(payload.service),
         safetyFlag: payload.safetyFlag === true,
         clinical: { intake: payload.intake },

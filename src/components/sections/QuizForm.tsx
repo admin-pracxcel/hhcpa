@@ -595,6 +595,18 @@ const STYLES = `
   text-underline-offset: 3px;
 }
 
+.hhcp-qz-footnote {
+  margin-top: var(--hhcp-space-s, 20px);
+  font-size: var(--hhcp-text-xs, 12px);
+}
+
+.hhcp-qz-footnote a {
+  color: var(--hhcp-base-80, #34524a);
+  text-decoration: underline;
+}
+
+.hhcp-qz-footnote a:hover { color: var(--hhcp-action-dark, #0c7340); }
+
 .hhcp-qz-privacy {
   margin-top: var(--hhcp-space-s, 20px);
   font-size: 14px;
@@ -1103,6 +1115,18 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
                   ← Back
                 </button>
               )}
+
+              {/*
+                §4.7.4: a privacy policy link on every step, not only the one
+                that asks for consent. These forms collect health information
+                from the first question, so the step where someone can read
+                what happens to it should be the step they are on.
+              */}
+              <p className="hhcp-qz-footnote font-dm-sans">
+                <a href="/privacy/" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </a>
+              </p>
             </div>
           </div>
         </section>

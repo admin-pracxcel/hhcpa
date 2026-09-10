@@ -371,6 +371,17 @@ export function QuizLanding() {
               <p className="hhcp-ql-footnote font-dm-sans">
                 {QUIZ_LANDING.footnote}
               </p>
+              {/*
+                §4.7.4 asks for a privacy link on every quiz step, and the
+                overlay carries one. This is the screen where someone decides
+                whether to start, which is the point at which being able to
+                read what happens to their answers is worth most.
+              */}
+              <p className="hhcp-ql-footnote font-dm-sans">
+                <a href="/privacy/" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </a>
+              </p>
             </div>
           </div>
         </div>

@@ -73,6 +73,12 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
   },
   crumbs: [{ label: "Home", href: "/" }],
   serviceSchemaName: "Holistic and alternative care consultations",
+  /*
+   * §3.3 bars eligibility framing on this page, and `LeadParagraph` defaults
+   * its call to action to "Check your eligibility" — which is how that exact
+   * phrase reached a page whose header warns against it. Set explicitly.
+   */
+  introCta: { label: "Book a consultation", href: "/quiz/" },
   intro:
     "A personalised approach supporting chronic conditions, pain, sleep and overall wellbeing through evidence-based treatment options. Holistic care means your practitioner considers the whole picture rather than one complaint in isolation, and coordinates with the rest of your medical care rather than working around it.",
   modules: [

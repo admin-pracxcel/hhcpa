@@ -151,7 +151,7 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
       cards: [
         {
           title: "Weight management",
-          body: "Medically supervised weight loss, assessed and reviewed on its own pathway.",
+          body: "Medically supervised weight management, assessed and reviewed on its own pathway.",
           links: [{ label: "Weight management", href: "/weight-management/" }],
         },
         {
