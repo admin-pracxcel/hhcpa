@@ -4,13 +4,17 @@ import {
   BMI_BANDS,
   NONE_OF_THESE,
   QUIZ_CONSENTS,
+  QUIZ_ENTRY_STEP,
   QUIZ_STEPS,
   REQUIRED_CONSENT_IDS,
+  SERVICES_WITHOUT_SCREENING,
+  TRIAGE_MESSAGES,
   bmiMessage,
   calculateBmi,
   findStep,
   nextStepId,
   triage,
+  triageMessagesFor,
 } from "./quiz";
 import type { QuizStep } from "./quiz";
 
@@ -61,7 +65,7 @@ describe("quiz flow", () => {
 
   it("reaches every step from the first question", () => {
     const seen = new Set<string>();
-    const queue = ["age"];
+    const queue = [QUIZ_ENTRY_STEP];
     while (queue.length > 0) {
       const id = queue.pop() as string;
       if (seen.has(id)) continue;
@@ -83,7 +87,7 @@ describe("quiz flow", () => {
       if (step.kind === "exit" || step.kind === "contact") return;
       for (const target of targetsOf(step)) walk(target, depth + 1);
     };
-    walk("age", 0);
+    walk(QUIZ_ENTRY_STEP, 0);
   });
 
   it("offers a way to answer 'none' on every multi-select", () => {
@@ -222,6 +226,51 @@ describe("consents", () => {
       for (const link of consent.links ?? []) {
         expect(consent.label, consent.id).toContain(link.text);
       }
+    }
+  });
+});
+
+describe("closing messages", () => {
+  it("does not claim an assessment for the services that run none", () => {
+    /*
+     * Online Doctor and Continuity reach the closing step having answered the
+     * three gates and nothing else. "Good news, it looks like we can help" is
+     * a triage outcome, and showing it to someone who was never triaged claims
+     * an assessment that did not happen.
+     */
+    for (const service of SERVICES_WITHOUT_SCREENING) {
+      expect(triageMessagesFor(service)).toBe(TRIAGE_MESSAGES.noScreening);
+      expect(triageMessagesFor(service).green.heading).not.toMatch(/we can help/i);
+    }
+  });
+
+  it("keeps her own wording on the weight branch", () => {
+    // Matched on the service name, which changed once already. If the match
+    // breaks again, the branch silently falls back to the general set.
+    expect(triageMessagesFor("Weight Management")).toBe(
+      TRIAGE_MESSAGES.weightLoss,
+    );
+  });
+
+  it("gives every other service the general set", () => {
+    for (const service of ["Men's Health", "Women's Health", "Mental Health Support"]) {
+      expect(triageMessagesFor(service)).toBe(TRIAGE_MESSAGES.general);
+    }
+  });
+
+  it("names a real service for every option the selector offers", () => {
+    /*
+     * The selector, the routing table and the message picker all key off the
+     * same strings. A rename that misses one of them is invisible until a
+     * patient hits it.
+     */
+    const selector = QUIZ_STEPS.find((step) => step.id === "service");
+    const options = selector !== undefined && "options" in selector ? selector.options : [];
+    expect(options).toHaveLength(8);
+    for (const option of options) {
+      expect(triageMessagesFor(option)).toBeDefined();
+      const next = selector !== undefined && "next" in selector ? selector.next : {};
+      expect(Object.keys(next)).toContain(option);
     }
   });
 });

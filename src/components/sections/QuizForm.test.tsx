@@ -43,16 +43,17 @@ describe("quiz form", () => {
   const type = (label: string | RegExp, value: string) =>
     fireEvent.change(screen.getByLabelText(label), { target: { value } });
 
-  /** Age gate, location gate, then a service. */
+  /** Emergency gate, age gate, location gate, then a service. */
   const start = (service: string) => {
-    choose("Yes");
-    choose("Yes");
+    choose("No"); // not an emergency
+    choose("Yes"); // 18 or over
+    choose("Yes"); // in Australia
     choose(service);
   };
 
-  /** Through the gates and the first two weight-loss questions. */
+  /** Through the gates and the first two weight-management questions. */
   const startWeightLoss = () => {
-    start("Weight Loss");
+    start("Weight Management");
     type("Date of birth", "1985-04-12");
     cont();
     choose("Female");
@@ -108,9 +109,29 @@ describe("quiz form", () => {
     expect(close).toHaveBeenCalledTimes(1);
   });
 
+  it("sends an emergency straight to 000, before collecting anything", () => {
+    /*
+     * Step 0. It used to sit inside the holistic branch, so someone in crisis
+     * who picked any other service was never asked. Now it is the first
+     * question every patient sees, and it runs before a single field.
+     */
+    render(<QuizForm onClose={close} />);
+    choose("Yes");
+
+    // "Emergency" is also the label on the 000 contact tile, hence the heading.
+    expect(
+      screen.getByRole("heading", { name: "Emergency" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByText(/call 000 or attend your nearest emergency department/i),
+    ).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("blocks under-18s without submitting anything", () => {
     render(<QuizForm onClose={close} />);
-    choose("No");
+    choose("No"); // not an emergency
+    choose("No"); // under 18
 
     expect(screen.getByText("Unable to Proceed")).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
@@ -118,7 +139,7 @@ describe("quiz form", () => {
 
   it("shows crisis numbers and does not submit", () => {
     render(<QuizForm onClose={close} />);
-    start("Mental Health");
+    start("Mental Health Support");
     choose("Yes"); // diagnosed
     choose("Yes"); // on treatment
     choose("Yes"); // severe symptoms or crisis
@@ -132,8 +153,9 @@ describe("quiz form", () => {
 
   it("walks back through the answers actually given", () => {
     render(<QuizForm onClose={close} />);
-    choose("Yes");
-    choose("Yes");
+    choose("No"); // not an emergency
+    choose("Yes"); // 18 or over
+    choose("Yes"); // in Australia
     expect(screen.getByText("What service are you interested in?")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: /back/i }));
@@ -203,7 +225,7 @@ describe("quiz form", () => {
 
   it("submits a red triage rather than dead-ending it", async () => {
     render(<QuizForm onClose={close} />);
-    start("Complete Wellness");
+    start("Health Optimisation & Complete Wellness");
     choose("Healthy Ageing & Longevity");
     choose("No"); // prior therapy
     choose("No"); // under specialist
@@ -231,7 +253,7 @@ describe("quiz form", () => {
 
   it("triages a clean run green", async () => {
     render(<QuizForm onClose={close} />);
-    start("Complete Wellness");
+    start("Health Optimisation & Complete Wellness");
     choose("Mental Clarity & Focus");
     choose("No");
     choose("No");
@@ -249,7 +271,7 @@ describe("quiz form", () => {
 
   it("offers amber a booking too, and leaves the review to n8n", async () => {
     render(<QuizForm onClose={close} />);
-    start("Complete Wellness");
+    start("Health Optimisation & Complete Wellness");
     choose("Healthy Ageing & Longevity");
     choose("No"); // prior therapy
     choose("Yes"); // under a specialist → amber
@@ -272,7 +294,7 @@ describe("quiz form", () => {
 
   it("asks whether a cancer diagnosis is in active treatment", () => {
     render(<QuizForm onClose={close} />);
-    start("Complete Wellness");
+    start("Health Optimisation & Complete Wellness");
     choose("General Wellness Optimisation");
     choose("No");
     choose("No");
@@ -288,7 +310,7 @@ describe("quiz form", () => {
 
   it("segregates clinical answers and keeps the goal in the open payload", async () => {
     render(<QuizForm onClose={close} />);
-    start("Complete Wellness");
+    start("Health Optimisation & Complete Wellness");
     choose("Energy, Vitality & Wellness");
     choose("No");
     choose("No");
@@ -309,15 +331,15 @@ describe("quiz form", () => {
     expect(body.answers.ho_pregnancy).toBeUndefined();
     /* A goal is a marketing-safe answer; the health questions are not. */
     expect(body.answers.ho_primary_goal).toBe("Energy, Vitality & Wellness");
-    expect(body.answers.service_selection).toBe("Complete Wellness");
-    expect(body.service).toBe("Complete Wellness");
+    expect(body.answers.service_selection).toBe("Health Optimisation & Complete Wellness");
+    expect(body.service).toBe("Health Optimisation & Complete Wellness");
     expect(body.consents.terms).toBe(true);
     expect(body.consents.marketing).toBe(true);
   });
 
   it("refuses to submit without the required consents", () => {
     render(<QuizForm onClose={close} />);
-    start("Mental Health");
+    start("Mental Health Support");
     choose("No");
     choose("No");
     choose("No");

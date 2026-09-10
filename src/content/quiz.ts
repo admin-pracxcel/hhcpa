@@ -212,12 +212,49 @@ const NOT_ELIGIBLE_HOLISTIC =
 /** Offered on every multi-select, so "none" is answerable without skipping. */
 export const NONE_OF_THESE = "None of these";
 
+/**
+ * Where the flow starts.
+ *
+ * Exported rather than hardcoded in the form, because the reachability test
+ * walks from here too — and when the emergency gate was promoted ahead of the
+ * age gate, a literal "age" in two files meant the new first step was
+ * unreachable in one of them and the test found it in the other.
+ */
+export const QUIZ_ENTRY_STEP = "emergency";
+
 export const QUIZ_STEPS: readonly QuizStep[] = [
   /* ---------- gates ----------
+     Build spec v2.3 §1 puts three gates ahead of everything: emergency, age,
+     residency. Age and residency were already here and already applied to
+     every service; the emergency question was not — it sat inside the holistic
+     branch, so someone in crisis picking any other service was never asked.
+     It is Step 0 now, for all eight.
+
+     Two reasons it runs before anything else, both from the v2.2 answer to
+     Q23: someone in an emergency should not complete seven minutes of intake
+     before being told to call 000, and collecting a name, date of birth and
+     address from them would be a data-minimisation failure on top of a safety
+     one.
+
      DECISION: the age gate stays a yes/no rather than becoming the weight-loss
      branch's date of birth. Nothing identifying is collected until the closing
      step, so abandoning the quiz early leaves no partial record of a person. A
      date of birth at question one would end that property. */
+  {
+    kind: "choice",
+    id: "emergency",
+    field: "emergency_check",
+    question: "Are you experiencing a medical emergency?",
+    options: ["Yes", "No"],
+    next: { Yes: "exit-emergency", No: "age" },
+  },
+  {
+    kind: "exit",
+    id: "exit-emergency",
+    variant: "emergency",
+    heading: "Emergency",
+    body: "Please call 000 or attend your nearest emergency department immediately.",
+  },
   {
     kind: "choice",
     id: "age",
@@ -249,24 +286,61 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     body: "Our services are only available to patients currently located in Australia.",
   },
 
-  /* ---------- branch selection ---------- */
+  /* ---------- branch selection ----------
+     Eight services, matching the site's navigation (build spec v2 §1.1). It
+     was four, which is why her instruction said the screening questions are
+     currently the same for every service even where they do not suit.
+
+     Three of the eight run no screening at all and go straight to the closing
+     step. Online Doctor's general care, its referral branches and Continuity &
+     Preventative Health are everyday GP work: the consultation is the
+     screening, and there is no assessment form for any of them (v2.4 answer to
+     Q30). Advertising a questionnaire with no questions behind it is worse
+     than not having one. */
   {
     kind: "choice",
     id: "service",
     field: "service_selection",
     question: "What service are you interested in?",
     options: [
-      "Mental Health",
-      "Weight Loss",
-      "Complete Wellness",
-      "Holistic / Alternative Care",
+      "Weight Management",
+      "Health Optimisation & Complete Wellness",
+      "Men's Health",
+      "Women's Health",
+      "Mental Health Support",
+      "Online Doctor",
+      "Continuity & Preventative Health",
+      "Holistic Care / Alternative Medicine",
     ],
     next: {
-      "Mental Health": "mh_diagnosed",
-      "Weight Loss": "wl_dob",
-      "Complete Wellness": "ho_goal",
-      "Holistic / Alternative Care": "hl_emergency",
+      "Weight Management": "wl_dob",
+      "Health Optimisation & Complete Wellness": "ho_goal",
+      "Men's Health": "mn_concern",
+      "Women's Health": "wh_concern",
+      "Mental Health Support": "mh_diagnosed",
+      "Online Doctor": "od_kind",
+      "Continuity & Preventative Health": "contact",
+      "Holistic Care / Alternative Medicine": "hl_concern",
     },
+  },
+  {
+    kind: "choice",
+    id: "od_kind",
+    field: "online_doctor_kind",
+    question: "What do you need from the online doctor?",
+    options: [
+      "A prescription or repeat script",
+      "A medical certificate",
+      "A pathology, imaging or specialist referral",
+      "General or everyday care",
+    ],
+    /*
+     * Prescriptions and certificates have their own flows to come (§4.8 and
+     * §4.9). Until those are built every branch lands on the closing step,
+     * which books a consultation — the safe default, and the same thing the
+     * referral and general-care branches do permanently.
+     */
+    next: { "*": "contact" },
   },
 
   /* ---------- mental health (migrated, unchanged) ---------- */
@@ -673,113 +747,253 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     next: { "*": "contact" },
   },
 
-  /* ---------- holistic / alternative care (migrated, see the header) ------- */
+  /* ---------- men's health (HHCPA-FRM-005) ----------
+     New. Men's Health had no screening of its own — it ran whatever branch
+     the four-way selector happened to send it to. These are the reason-for-
+     consultation and health-background questions from her assessment form,
+     which name conditions only and no medicine.
+
+     §1.1 of the addendum sets the rule for the four services with a form but
+     no separate screening set: the form's own tick-list drives the outcome,
+     any contraindication produces amber, and nothing auto-excludes except the
+     three gates. So there are no exits in this branch. */
   {
     kind: "choice",
-    id: "hl_emergency",
-    field: "hl_emergency",
+    id: "mn_concern",
+    field: "mn_concern",
     clinical: true,
-    question: "Are you experiencing a medical emergency?",
-    options: ["Yes", "No"],
-    next: { Yes: "exit-emergency", No: "hl_chronic_condition" },
-  },
-  {
-    kind: "exit",
-    id: "exit-emergency",
-    variant: "emergency",
-    heading: "Emergency",
-    body: "Please call 000 or attend your nearest emergency department immediately.",
-  },
-  {
-    kind: "choice",
-    id: "hl_chronic_condition",
-    field: "hl_chronic_condition",
-    clinical: true,
-    question:
-      "Do you have a chronic condition lasting more than 3 months that has been diagnosed by a doctor?",
-    options: ["Yes", "No"],
-    next: { Yes: "hl_conventional_meds", No: "exit-hl-chronic" },
-  },
-  {
-    kind: "exit",
-    id: "exit-hl-chronic",
-    variant: "blocked",
-    heading: "Unable to Proceed",
-    body: "Based on your response, you may not meet the eligibility criteria for this service. Our Holistic / Alternative Care consultations require a diagnosed chronic condition. Please consider our other services.",
-  },
-  {
-    kind: "choice",
-    id: "hl_conventional_meds",
-    field: "hl_conventional_meds",
-    clinical: true,
-    question:
-      "Have you tried conventional prescription medication for your condition?",
-    options: ["Yes", "No"],
-    next: { Yes: "hl_meds_unsuccessful", No: "exit-hl-meds" },
-  },
-  {
-    kind: "exit",
-    id: "exit-hl-meds",
-    variant: "blocked",
-    heading: "Unable to Proceed",
-    body: "Based on your response, you may not meet the eligibility criteria at this time. You need to have tried conventional prescription medication before accessing this service. Please consult with your regular doctor.",
-  },
-  {
-    kind: "choice",
-    id: "hl_meds_unsuccessful",
-    field: "hl_meds_unsuccessful",
-    clinical: true,
-    question:
-      "Has the medication been unsuccessful in fully treating your symptoms, or does it cause adverse side effects?",
-    options: ["Yes", "No"],
-    next: { Yes: "hl_disqualifying_conditions", No: "exit-hl-unsuccessful" },
-  },
-  {
-    kind: "exit",
-    id: "exit-hl-unsuccessful",
-    variant: "blocked",
-    heading: "Unable to Proceed",
-    body: "Based on your response, you may not meet the eligibility criteria at this time. This service is designed for patients whose conventional medications have been unsuccessful or cause adverse side effects.",
-  },
-  {
-    kind: "choice",
-    id: "hl_disqualifying_conditions",
-    field: "hl_disqualifying_conditions",
-    clinical: true,
-    question: "Do you have any of the following conditions?",
+    question: "What is your main concern?",
     options: [
-      "Active psychosis",
-      "Drug dependence or substance abuse",
-      "Cardio pulmonary disease",
-      "Pregnant or breastfeeding",
-      "Liver disease",
-      "None of the above",
+      "General health check",
+      "Sexual health",
+      "Erectile concerns",
+      "Low energy",
+      "Hormonal concerns",
+      "Urinary symptoms",
+      "Fertility",
+      "Weight management",
+      "Mental wellbeing",
+      "Other",
     ],
-    next: { "None of the above": "hl_psych_history", "*": "exit-hl-conditions" },
+    next: { "*": "mn_background" },
   },
   {
-    kind: "exit",
-    id: "exit-hl-conditions",
-    variant: "blocked",
-    heading: "Unable to Proceed",
-    body: NOT_ELIGIBLE_HOLISTIC,
+    kind: "multi",
+    id: "mn_background",
+    field: "mn_background",
+    clinical: true,
+    question: "Please tick any that apply to your health background.",
+    options: [
+      "High blood pressure",
+      "Heart disease",
+      "Diabetes",
+      "High cholesterol",
+      "Prostate condition",
+      "Sleep apnoea",
+      "Mental health condition",
+      "Liver or kidney disease",
+      NONE_OF_THESE,
+    ],
+    next: "mn_medications",
   },
   {
     kind: "choice",
-    id: "hl_psych_history",
-    field: "hl_psych_history",
+    id: "mn_medications",
+    field: "mn_medications",
     clinical: true,
-    question:
-      "Do you have a history of schizophrenia, bipolar type 1 and 2 disorder or have experienced psychosis?",
+    question: "Are you currently taking any medications or supplements?",
     options: ["Yes", "No"],
-    next: { No: "contact", Yes: "exit-hl-psych" },
+    followUp: {
+      when: "Yes",
+      name: "mn_medications_detail",
+      label: "Please list them",
+    },
+    next: { "*": "contact" },
+  },
+
+  /* ---------- women's health (HHCPA-FRM-006) ----------
+     New, on the same basis as men's health above. */
+  {
+    kind: "choice",
+    id: "wh_concern",
+    field: "wh_concern",
+    clinical: true,
+    question: "What is your main concern?",
+    options: [
+      "Menstrual concerns",
+      "Menopause or perimenopause",
+      "PCOS",
+      "Endometriosis",
+      "Contraception",
+      "Sexual health",
+      "Fertility",
+      "Weight management",
+      "Breast health",
+      "Other",
+    ],
+    next: { "*": "wh_stage" },
   },
   {
-    kind: "exit",
-    id: "exit-hl-psych",
-    variant: "blocked",
-    heading: "Unable to Proceed",
-    body: "Based on your psychiatric history, holistic/alternative care treatment may not be suitable. Please speak with your treating psychiatrist or GP for guidance.",
+    kind: "choice",
+    id: "wh_stage",
+    field: "wh_reproductive_stage",
+    clinical: true,
+    question: "Which best describes your current reproductive stage?",
+    options: [
+      "Regular periods",
+      "Irregular periods",
+      "No periods",
+      "Perimenopause",
+      "Post-menopause",
+      "Not applicable",
+    ],
+    next: { "*": "wh_history" },
+  },
+  {
+    kind: "multi",
+    id: "wh_history",
+    field: "wh_history",
+    clinical: true,
+    question: "Please tick any that apply.",
+    options: [
+      "Pregnant",
+      "Planning pregnancy",
+      "Breastfeeding",
+      "History of blood clots",
+      "Migraine with aura",
+      "Breast or ovarian cancer history",
+      "PCOS",
+      "Endometriosis",
+      NONE_OF_THESE,
+    ],
+    next: "wh_medications",
+  },
+  {
+    kind: "choice",
+    id: "wh_medications",
+    field: "wh_medications",
+    clinical: true,
+    question: "Are you currently taking any medications or supplements?",
+    options: ["Yes", "No"],
+    followUp: {
+      when: "Yes",
+      name: "wh_medications_detail",
+      label: "Please list them",
+    },
+    next: { "*": "contact" },
+  },
+
+  /* ---------- holistic / alternative care (HHCPA-FRM-003) ----------
+     ⚠️ THIS BRANCH WAS REPLACED. Read this before restoring anything from it.
+
+     What was here was the migrated live-site flow, and it was a medicinal
+     cannabis SAS-B eligibility gate under a wellness label: chronic condition
+     lasting over three months, then conventional medication tried, then that
+     medication unsuccessful or causing adverse effects, then a disqualifying
+     conditions list, then psychiatric history. Five hard exits, and each one
+     told the patient which answer had disqualified them — "our consultations
+     require a diagnosed chronic condition", "you need to have tried
+     conventional prescription medication". A patient who read that could go
+     back and change the answer, and pass.
+
+     That is the pattern AHPRA names when it warns about online questionnaires
+     that coach patients to say the right thing, and it was flagged in this
+     file's header from the day it was migrated. The v2.4 answer to Q34 settled
+     it: exits must not name the disqualifying answer, and §1.1 settled the
+     rest by removing the exits entirely — nothing auto-excludes except the
+     three gates.
+
+     What replaces it is her own HHCPA-FRM-003, which names conditions only and
+     no medicine at all. Its contraindication tick-list feeds the triage as
+     amber rather than as a door closing. Nobody is turned away; a practitioner
+     reviews instead, which is where that judgement belonged. */
+  {
+    kind: "choice",
+    id: "hl_concern",
+    field: "hl_concern",
+    clinical: true,
+    question: "What would you like support with?",
+    options: [
+      "Chronic pain",
+      "Sleep difficulties",
+      "Anxiety or stress",
+      "PTSD symptoms",
+      "Fibromyalgia",
+      "Arthritis",
+      "Neuropathy",
+      "Other",
+    ],
+    next: { "*": "hl_duration" },
+  },
+  {
+    kind: "input",
+    id: "hl_duration",
+    clinical: true,
+    question: "How long have your symptoms been present, and how severe are they?",
+    fields: [
+      {
+        name: "hl_duration",
+        label: "How long have symptoms been present?",
+        type: "text",
+        placeholder: "For example, eighteen months",
+      },
+      {
+        name: "hl_severity",
+        label: "Current severity",
+        type: "number",
+        min: 0,
+        max: 10,
+        unit: "out of 10",
+      },
+    ],
+    next: "hl_previous_care",
+  },
+  {
+    kind: "choice",
+    id: "hl_previous_care",
+    field: "hl_previous_care",
+    clinical: true,
+    question:
+      "Have you tried any treatments or medicines for this before?",
+    options: ["Yes", "No"],
+    followUp: {
+      when: "Yes",
+      name: "hl_previous_care_detail",
+      label: "What did you try, and what was the outcome?",
+    },
+    next: { "*": "hl_conditions" },
+  },
+  {
+    kind: "multi",
+    id: "hl_conditions",
+    field: "hl_conditions",
+    clinical: true,
+    question: "Please tick any that apply.",
+    options: [
+      "Psychosis or schizophrenia",
+      "Bipolar disorder",
+      "Pregnant or breastfeeding",
+      "Heart condition",
+      "Liver disease",
+      "Kidney disease",
+      "Substance dependence",
+      NONE_OF_THESE,
+    ],
+    next: "hl_medications",
+  },
+  {
+    kind: "choice",
+    id: "hl_medications",
+    field: "hl_medications",
+    clinical: true,
+    question: "Are you currently taking any medications or supplements?",
+    options: ["Yes", "No"],
+    followUp: {
+      when: "Yes",
+      name: "hl_medications_detail",
+      label: "Please list them",
+    },
+    next: { "*": "contact" },
   },
 
   /* ---------- closing ---------- */
@@ -883,6 +1097,39 @@ export function triage(
     if (has("wl_conditions", condition)) amber.push(condition);
   }
 
+  /* --- the four services whose form drives the outcome (addendum §1.1) ---
+     Her men's, women's and holistic forms have no screening set of their own,
+     so their contraindication tick-lists do the work. The rule is conservative
+     until she signs off thresholds: any tick is amber, a practitioner reviews,
+     and nothing here excludes anyone.
+
+     Pregnancy is the one exception, and it is red rather than amber for the
+     same reason it already is in the weight and health-optimisation branches:
+     it changes what can safely be considered, so it should reach a human
+     before a booking is confirmed rather than after. */
+  for (const [field, label] of [
+    ["mn_background", "Men's health background"],
+    ["wh_history", "Women's health history"],
+    ["hl_conditions", "Holistic care contraindication"],
+  ] as const) {
+    const ticked = answers[field] ?? "";
+    if (ticked !== "" && ticked !== NONE_OF_THESE) {
+      amber.push(`${label}: ${ticked}`);
+    }
+  }
+  for (const field of ["wh_history", "hl_conditions"] as const) {
+    if (has(field, "Pregnant") || has(field, "breastfeeding")) {
+      red.push("Pregnant, planning pregnancy or breastfeeding");
+    }
+  }
+  for (const [field, label] of [
+    ["mn_medications", "On medications or supplements"],
+    ["wh_medications", "On medications or supplements"],
+    ["hl_medications", "On medications or supplements"],
+  ] as const) {
+    if (is(field, "Yes")) amber.push(label);
+  }
+
   if (red.length > 0) return { level: "red", reasons: red };
   if (amber.length > 0) return { level: "amber", reasons: amber };
   return { level: "green", reasons: [] };
@@ -924,7 +1171,58 @@ export const TRIAGE_MESSAGES = {
       body: "Based on your responses, your situation requires further review before booking. A member of our team will contact you.",
     },
   },
+  /*
+   * For the services that run no screening at all. They reach this step having
+   * answered the three gates and nothing else, so "good news, it looks like we
+   * can help" would be claiming an assessment that never happened. All three
+   * levels read the same here because there is nothing to have triaged.
+   */
+  noScreening: {
+    green: {
+      heading: "Let's get you booked in",
+      body: "Leave your details and we will be in touch to arrange a consultation with an AHPRA-registered practitioner.",
+    },
+    amber: {
+      heading: "Let's get you booked in",
+      body: "Leave your details and we will be in touch to arrange a consultation with an AHPRA-registered practitioner.",
+    },
+    red: {
+      heading: "We need to review your answers first",
+      body: "Based on your responses, your situation requires further review before booking. A member of our team will contact you.",
+    },
+  },
 } as const;
+
+/**
+ * The services that reach the closing step without any screening behind them.
+ *
+ * Everyday GP work and chronic disease review: the consultation is the
+ * screening, and neither has an assessment form (v2.4 answer to Q30). Kept
+ * here rather than inferred from the step graph, because the closing message
+ * has to know and the graph does not say.
+ */
+export const SERVICES_WITHOUT_SCREENING: readonly string[] = [
+  "Online Doctor",
+  "Continuity & Preventative Health",
+] as const;
+
+/** Which set of closing messages a service's outcome should be read from. */
+export function triageMessagesFor(
+  service: string,
+): (typeof TRIAGE_MESSAGES)[keyof typeof TRIAGE_MESSAGES] {
+  if (SERVICES_WITHOUT_SCREENING.includes(service)) {
+    return TRIAGE_MESSAGES.noScreening;
+  }
+  /*
+   * Her wording for the weight branch specifically. Matched on the service
+   * name, which is why this is a function and not a ternary at the call site:
+   * the name changed from "Weight Loss" to "Weight Management" when the menu
+   * went to eight services, and the ternary went on silently returning the
+   * general set for the one branch that has its own approved copy.
+   */
+  if (service === "Weight Management") return TRIAGE_MESSAGES.weightLoss;
+  return TRIAGE_MESSAGES.general;
+}
 
 /* -------------------------------------------------------------------------
    Closing step

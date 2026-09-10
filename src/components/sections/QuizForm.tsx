@@ -30,8 +30,9 @@ import {
   NONE_OF_THESE,
   QUIZ_CONSENTS,
   QUIZ_CONTACT,
+  QUIZ_ENTRY_STEP,
   QUIZ_STEPS,
-  TRIAGE_MESSAGES,
+  triageMessagesFor,
   bmiMessage,
   calculateBmi,
   findStep,
@@ -732,7 +733,7 @@ interface QuizFormProps {
 }
 
 export function QuizForm({ className, onClose }: QuizFormProps) {
-  const [history, setHistory] = useState<string[]>(["age"]);
+  const [history, setHistory] = useState<string[]>([QUIZ_ENTRY_STEP]);
   /** Single-value answers: choices, follow-up text, numbers, dates. */
   const [answers, setAnswers] = useState<Record<string, string>>({});
   /** Multi-select answers, kept as arrays for the checkbox UI. */
@@ -1412,10 +1413,7 @@ function ContactStep({
   setConsents,
   onSubmit,
 }: StepBodyProps) {
-  const messages =
-    allAnswers.service_selection === "Weight Loss"
-      ? TRIAGE_MESSAGES.weightLoss
-      : TRIAGE_MESSAGES.general;
+  const messages = triageMessagesFor(allAnswers.service_selection ?? "");
   const message = messages[outcome.level];
 
   return (
