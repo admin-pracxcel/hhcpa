@@ -13,9 +13,11 @@ import {
   calculateBmi,
   findStep,
   nextStepId,
+  prescriptionFee,
   triage,
   triageMessagesFor,
 } from "./quiz";
+import { PRICES } from "./pricing";
 import type { QuizStep } from "./quiz";
 
 /** Every step id a step can lead to. */
@@ -271,6 +273,56 @@ describe("closing messages", () => {
       expect(triageMessagesFor(option)).toBeDefined();
       const next = selector !== undefined && "next" in selector ? selector.next : {};
       expect(Object.keys(next)).toContain(option);
+    }
+  });
+});
+
+describe("prescription ladder", () => {
+  /*
+   * Her ladder maps each of three questions to a price independently, which
+   * defines two of the eight combinations and leaves six open. The v2.2 answer
+   * to Q8 settled it as "any trigger lifts the fee", which is the reading that
+   * never charges the lower price for more than the simple case.
+   */
+  const answers = (count: string, repeats: string, current: string) => ({
+    rx_count: count,
+    rx_repeats: repeats,
+    rx_current: current,
+  });
+
+  it("is null for every service that is not the prescriptions branch", () => {
+    expect(prescriptionFee({})).toBeNull();
+    expect(prescriptionFee({ service_selection: "Men's Health" })).toBeNull();
+  });
+
+  it("charges the lower tier only for the simple case", () => {
+    expect(prescriptionFee(answers("One", "No", "Yes"))).toBe(
+      PRICES.prescriptions.amount,
+    );
+  });
+
+  it("lifts to the upper tier on any single trigger", () => {
+    for (const combination of [
+      answers("More than one", "No", "Yes"),
+      answers("One", "Yes", "Yes"),
+      answers("One", "No", "No"),
+    ]) {
+      expect(prescriptionFee(combination)).toBe(
+        PRICES.prescriptionsComplex.amount,
+      );
+    }
+  });
+
+  it("covers all eight combinations without a gap", () => {
+    // No combination may return null once the branch has been entered: an
+    // unpriced request is one somebody has to price by hand.
+    for (const count of ["One", "More than one"]) {
+      for (const repeats of ["No", "Yes"]) {
+        for (const current of ["Yes", "No"]) {
+          const fee = prescriptionFee(answers(count, repeats, current));
+          expect(fee).not.toBeNull();
+        }
+      }
     }
   });
 });

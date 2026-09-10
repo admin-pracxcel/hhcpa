@@ -32,6 +32,7 @@ import {
   QUIZ_CONTACT,
   QUIZ_ENTRY_STEP,
   QUIZ_STEPS,
+  prescriptionFee,
   triageMessagesFor,
   bmiMessage,
   calculateBmi,
@@ -404,6 +405,22 @@ const STYLES = `
  * into an alarm: a red rule down the left, the brand green ground, and the
  * numbers in the primary colour at full contrast.
  */
+.hhcp-qz-fee {
+  margin-bottom: var(--hhcp-space-s, 20px);
+  padding: 14px 16px;
+  border-radius: var(--hhcp-radius-s, 6.667px);
+  background: var(--hhcp-accent, #f5fff9);
+  border: 1px solid var(--hhcp-neutral-ultra-light, #d6e8e1);
+  font-size: var(--hhcp-text-s, 14px);
+  color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-qz-fee strong {
+  display: block;
+  font-size: var(--hhcp-text-m, 16px);
+  margin-bottom: 4px;
+}
+
 .hhcp-qz-urgent--inline {
   margin-top: var(--hhcp-space-s, 20px);
   padding: 14px 16px 16px;
@@ -898,6 +915,12 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
            * one needs somebody paged. n8n branches on it (v2.4 Q31).
            */
           safetyFlag: outcome.safetyFlag,
+          /*
+           * Only set on the prescriptions branch. Sent so the fee the patient
+           * was shown is the fee on the record, rather than something n8n
+           * recomputes from the answers and might drift from.
+           */
+          prescriptionFee: prescriptionFee(allAnswers),
           consents: Object.fromEntries(
             QUIZ_CONSENTS.map((consent) => [
               consent.id,
@@ -1498,10 +1521,18 @@ function ContactStep({
   onSubmit,
 }: StepBodyProps) {
   const messages = triageMessagesFor(allAnswers.service_selection ?? "");
+  const fee = prescriptionFee(allAnswers);
   const message = messages[outcome.level];
 
   return (
     <form onSubmit={onSubmit}>
+      {fee !== null && (
+        <p className="hhcp-qz-fee font-dm-sans">
+          <strong>{`Your request: $${fee}`}</strong> Shown before you pay.
+          Prescriptions and repeats are not guaranteed and are issued only where
+          clinically appropriate and safe for you.
+        </p>
+      )}
       <div className="hhcp-qz-banner" data-level={outcome.level}>
         <h3 className="font-dm-sans">{message.heading}</h3>
         <p className="font-dm-sans">{message.body}</p>

@@ -67,6 +67,7 @@ export type PriceKey =
   | "priorityConsult"
   | "medicalCertificate"
   | "prescriptions"
+  | "prescriptionsComplex"
   | "pathologyReferral"
   | "mentalHealth"
   | "mensWomensHealth"
@@ -85,6 +86,14 @@ export const PRICES: Record<PriceKey, Price> = {
   priorityConsult:    { label: "Priority consult",                 amount: 98,   from: true,  provisional: true },
   medicalCertificate: { label: "Medical certificates",             amount: 19.9, from: true,  provisional: true },
   prescriptions:      { label: "Prescriptions and repeat scripts", amount: 19,   from: true,  provisional: true },
+  /*
+   * The upper tier of the same service, not a separate one. §4.8's ladder
+   * charges $19 for the simple case and $49 for anything else; the pricing
+   * table advertises "from $19", which is that ladder's floor, so this key is
+   * deliberately absent from the Other services rows.
+   */
+  prescriptionsComplex:
+                      { label: "Prescriptions, multiple or new", amount: 49,   from: false, provisional: true },
   pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 49,   from: true,  provisional: true },
   mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
   mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },

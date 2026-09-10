@@ -37,6 +37,8 @@
  *      answer accurately for every body.
  */
 
+import { PRICES } from "./pricing";
+
 /* -------------------------------------------------------------------------
    Step model
    ------------------------------------------------------------------------- */
@@ -349,6 +351,53 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
      * which books a consultation — the safe default, and the same thing the
      * referral and general-care branches do permanently.
      */
+    next: {
+      "A prescription or repeat script": "rx_count",
+      "*": "contact",
+    },
+  },
+
+  /* ---------- online prescriptions, the conditional ladder (§4.8) ----------
+     Her three questions, in her order. She modelled them on a competitor's
+     flow and asked for the wording changed rather than copied, so these are
+     rewritten; the branching and the two prices are hers.
+
+     Every answer that is not the simple case takes the fee to the upper tier —
+     one medication, no repeats, already taking it, or $49. That is the v2.2
+     answer to Q8: the ladder as she wrote it maps each question independently
+     to a price, which leaves six of the eight combinations undefined, and "any
+     trigger lifts it" is the only reading consistent with the flow she
+     screenshotted. Going to her as a one-line confirmation because it is money.
+
+     ⚠️ BLOCKED, and built around: whether the $19 tier includes a real-time
+     consultation is Section 8 item 2. Nothing here asserts either way — the
+     fee is shown, the routing is the same as every other branch, and the
+     answer only changes what n8n does with it. */
+  {
+    kind: "choice",
+    id: "rx_count",
+    field: "rx_count",
+    clinical: true,
+    question: "How many medications are you requesting?",
+    options: ["One", "More than one"],
+    next: { "*": "rx_repeats" },
+  },
+  {
+    kind: "choice",
+    id: "rx_repeats",
+    field: "rx_repeats",
+    clinical: true,
+    question: "Would you like to request repeats?",
+    options: ["No", "Yes"],
+    next: { "*": "rx_current" },
+  },
+  {
+    kind: "choice",
+    id: "rx_current",
+    field: "rx_current",
+    clinical: true,
+    question: "Are you currently taking this medication?",
+    options: ["Yes", "No"],
     next: { "*": "contact" },
   },
 
@@ -1015,6 +1064,31 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
 /* -------------------------------------------------------------------------
    Triage
    ------------------------------------------------------------------------- */
+
+/**
+ * What the prescriptions branch costs, from the three answers.
+ *
+ * `null` when the patient is not on that branch, which is every other service.
+ *
+ * The rule is "any trigger lifts it": $19 covers one medication, no repeats,
+ * already being taken. Anything else is $49. Her ladder assigns a price to
+ * each answer independently, which says nothing about the six mixed
+ * combinations; this is the reading the v2.2 answer to Q8 settled on, and it
+ * is the conservative one — it never charges the lower fee for a request that
+ * is more than the simple case.
+ */
+export function prescriptionFee(
+  answers: Readonly<Record<string, string>>,
+): number | null {
+  if (answers.rx_count === undefined) return null;
+  const simple =
+    answers.rx_count === "One" &&
+    answers.rx_repeats === "No" &&
+    answers.rx_current === "Yes";
+  return simple
+    ? PRICES.prescriptions.amount
+    : PRICES.prescriptionsComplex.amount;
+}
 
 export type TriageLevel = "green" | "amber" | "red";
 

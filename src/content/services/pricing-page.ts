@@ -63,7 +63,13 @@ export const PRICING_PAGE: ServicePageData = {
         "healthProgram",
       ],
       labels: { priorityConsult: "Priority consult (limited daily)" },
-      note: "Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.",
+      /*
+       * The prescriptions row reads "from $19", which is the floor of the
+       * ladder in §4.8, not the only price. A fee a patient can be charged
+       * has to be one they can look up, so the ceiling is stated here rather
+       * than discovered at the end of the flow.
+       */
+      note: `Prescription requests are $${PRICES.prescriptions.amount} for a single medication you are already taking with no repeats, and $${PRICES.prescriptionsComplex.amount} otherwise. Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.`,
     },
     {
       kind: "priceCards",

@@ -7,6 +7,7 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
+import { PRICES } from "../pricing";
 import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, howToBegin, sectionImage } from "./shared";
 import { CALL_CTA } from "../clinic";
 
@@ -70,6 +71,28 @@ export const ONLINE_PRESCRIPTIONS: ServicePageData = {
       paragraphs: [
         "Many everyday medications and renewals are well suited to telehealth. Some medications are restricted and cannot be prescribed at a first telehealth consultation, or at all by telehealth, for safety and regulatory reasons. If your request falls into that category, your practitioner will explain the safe alternative rather than leave you guessing.",
       ],
+    },
+    {
+      /*
+       * §4.8's pricing ladder, disclosed before the patient starts it rather
+       * than at the end. Her instruction was to model the flow on a
+       * competitor's and reword the disclaimer rather than copy it; this is
+       * the rewrite, and it is subject to her approval like any other copy.
+       */
+      kind: "pricingCue",
+      tinted: true,
+      eyebrow: "What a request costs",
+      heading: "Two prices, and you see yours before you pay",
+      headline: `$${PRICES.prescriptions.amount}`,
+      headlineLabel: "One medication you already take, no repeats",
+      rows: [
+        {
+          label: "More than one, or a repeat, or something new to you",
+          value: `$${PRICES.prescriptionsComplex.amount}`,
+        },
+      ],
+      note: "Our practitioners work to the same clinical standards as your local GP. Prescriptions and repeats are not guaranteed and are issued only where clinically appropriate and safe for you. Consultation fees are non-refundable except where required by law.",
+      cta: { label: "See full pricing", href: "/pricing/" },
     },
     {
       kind: "related",
