@@ -81,6 +81,18 @@ export type QuizStep =
       readonly options: readonly string[];
       /** Advisory shown when a given option is chosen. Does not end the flow. */
       readonly optionNotes?: Readonly<Record<string, string>>;
+      /**
+       * Options that must surface crisis support on screen the moment they are
+       * chosen, before anything else, and set the safety flag on the
+       * submission.
+       *
+       * Not an exit. The v2.4 answer to Q31: a hard exit turns away someone
+       * who has just disclosed, and leaves nobody to follow up. Red plus the
+       * contact step means they see the numbers immediately, they are not
+       * blocked from continuing or from leaving, they are not auto-booked, and
+       * a human is told.
+       */
+      readonly optionCrisis?: readonly string[];
       readonly followUp?: FollowUp;
       /** Answer → next step id. `*` is the fallback for any other answer. */
       readonly next: Readonly<Record<string, string>>;
@@ -370,16 +382,19 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     clinical: true,
     question: "Are you experiencing severe symptoms or crisis?",
     options: ["Yes", "No"],
-    next: { Yes: "exit-crisis", No: "contact" },
-  },
-  {
-    /* Stays a hard exit, not a triage outcome. Someone in crisis needs a phone
-       number now, not a callback from an intake queue. */
-    kind: "exit",
-    id: "exit-crisis",
-    variant: "crisis",
-    heading: "Crisis Support",
-    body: "If you are in crisis or experiencing thoughts of self-harm, please reach out immediately: Lifeline: 13 11 14 (24/7). Beyond Blue: 1300 22 4636. Emergency: 000. Our telehealth service is not suitable for crisis situations. Please contact the services above for immediate support.",
+    /*
+     * Was `Yes: "exit-crisis"`, a hard exit. The v2.4 answer to Q31 replaced
+     * it: the numbers appear immediately and inline, the person can carry on
+     * or leave as they choose, the outcome is red so nothing auto-books, and
+     * the submission carries `safetyFlag` so a human is actually told. The old
+     * exit did the first part and none of the rest — it showed the numbers and
+     * then dropped the person, with no record that anyone had disclosed.
+     */
+    optionCrisis: ["Yes"],
+    optionNotes: {
+      Yes: "If you are in crisis or thinking about harming yourself, please contact one of the services above now. You can still continue if you would like us to arrange a consultation, and someone from our team will be in touch.",
+    },
+    next: { "*": "contact" },
   },
 
   /* ---------- weight loss (the 14-question instrument) ---------- */
@@ -1010,6 +1025,15 @@ export interface TriageResult {
   readonly level: TriageLevel;
   /** Why, for whoever works the queue. Never shown to the patient. */
   readonly reasons: readonly string[];
+  /**
+   * Set when the patient disclosed crisis or self-harm.
+   *
+   * Separate from `level` on purpose. Red covers several situations —
+   * pregnancy, active cancer treatment, uncontrolled cardiac disease — and
+   * only one of them needs somebody paged. A single boolean is something n8n
+   * can branch on without parsing reasons.
+   */
+  readonly safetyFlag: boolean;
 }
 
 /**
@@ -1130,9 +1154,18 @@ export function triage(
     if (is(field, "Yes")) amber.push(label);
   }
 
-  if (red.length > 0) return { level: "red", reasons: red };
-  if (amber.length > 0) return { level: "amber", reasons: amber };
-  return { level: "green", reasons: [] };
+  /*
+   * A crisis disclosure is red and is flagged separately from the colour.
+   * v2.4 Q31: "the submission carries a dedicated flag, not just the triage
+   * colour", because a colour code someone has to notice is not a safety
+   * mechanism. n8n branches on `safetyFlag` to raise the alert.
+   */
+  const safety = is("mh_severe_crisis", "Yes");
+  if (safety) red.push("Disclosed severe symptoms or crisis");
+
+  if (red.length > 0) return { level: "red", reasons: red, safetyFlag: safety };
+  if (amber.length > 0) return { level: "amber", reasons: amber, safetyFlag: false };
+  return { level: "green", reasons: [], safetyFlag: false };
 }
 
 /**

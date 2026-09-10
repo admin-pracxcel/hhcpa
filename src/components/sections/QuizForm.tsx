@@ -396,6 +396,32 @@ const STYLES = `
   font-weight: 500;
 }
 
+/*
+ * The same panel, on a light question card rather than the dark crisis card.
+ * The exit variants paint the whole card dark and the white-on-translucent
+ * treatment above works there; inline it would be white on near-white. This
+ * keeps the numbers the loudest thing on the step without turning a question
+ * into an alarm: a red rule down the left, the brand green ground, and the
+ * numbers in the primary colour at full contrast.
+ */
+.hhcp-qz-urgent--inline {
+  margin-top: var(--hhcp-space-s, 20px);
+  padding: 14px 16px 16px;
+  border-left: 3px solid #b3261e;
+  border-radius: var(--hhcp-radius-s, 6.667px);
+  background: var(--hhcp-accent, #f5fff9);
+}
+
+.hhcp-qz-urgent--inline a {
+  padding: 10px 14px;
+  background: rgba(1, 49, 38, 0.06);
+  color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-qz-urgent--inline a:hover {
+  background: rgba(1, 49, 38, 0.12);
+}
+
 /* ---------- inputs ---------- */
 .hhcp-qz-pair {
   display: grid;
@@ -866,6 +892,12 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
           },
           service: allAnswers.service_selection ?? "",
           outcome: outcome.level,
+          /*
+           * Its own field, not a shade of the triage colour. Red covers
+           * pregnancy and active cancer treatment as well as this; only this
+           * one needs somebody paged. n8n branches on it (v2.4 Q31).
+           */
+          safetyFlag: outcome.safetyFlag,
           consents: Object.fromEntries(
             QUIZ_CONSENTS.map((consent) => [
               consent.id,
@@ -1092,6 +1124,7 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
     const chosen = answers[step.field] ?? "";
     const followUp = step.followUp;
     const advisory = step.optionNotes?.[chosen];
+    const inCrisis = step.optionCrisis?.includes(chosen) === true;
     const needsFollowUp = followUp !== undefined && followUp.when === chosen;
 
     /* An answer carrying an advisory or a follow-up has something more to show,
@@ -1102,6 +1135,7 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
       set(step.field, option);
       const stops =
         step.optionNotes?.[option] !== undefined ||
+        step.optionCrisis?.includes(option) === true ||
         (followUp !== undefined && followUp.when === option);
       if (!stops) go(step, option);
     };
@@ -1123,6 +1157,24 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
             </button>
           ))}
         </div>
+
+        {/*
+          Crisis support goes above the advisory, not below it, because the
+          numbers are the thing that matters the instant someone discloses —
+          v2.4 Q31, "crisis resources render immediately and inline, before
+          anything else". The advisory that follows explains they can carry on
+          if they want to; it does not gate anything either way.
+        */}
+        {inCrisis && (
+          <div className="hhcp-qz-urgent hhcp-qz-urgent--inline font-dm-sans">
+            {URGENT.map((line) => (
+              <a key={line.label} href={line.href}>
+                <span>{line.label}</span>
+                <strong>{line.number}</strong>
+              </a>
+            ))}
+          </div>
+        )}
 
         {advisory !== undefined && (
           <p className="hhcp-qz-advisory font-dm-sans">{advisory}</p>

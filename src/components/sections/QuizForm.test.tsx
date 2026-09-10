@@ -76,6 +76,7 @@ describe("quiz form", () => {
       service: string;
       outcome: string;
       consents: Record<string, boolean>;
+      safetyFlag: boolean;
     };
   };
 
@@ -137,18 +138,59 @@ describe("quiz form", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("shows crisis numbers and does not submit", () => {
+  it("surfaces crisis numbers immediately, and does not dead-end", () => {
+    /*
+     * This used to be a hard exit: numbers on screen, flow over, nobody told.
+     * v2.4 Q31 replaced it — a hard exit turns away someone who has just
+     * disclosed and leaves no follow-up. The numbers still appear the instant
+     * the answer is given, but the person can carry on if they want a
+     * consultation arranged.
+     */
     render(<QuizForm onClose={close} />);
     start("Mental Health Support");
     choose("Yes"); // diagnosed
     choose("Yes"); // on treatment
     choose("Yes"); // severe symptoms or crisis
 
-    expect(screen.getByText("Crisis Support")).toBeTruthy();
     expect(screen.getByText("13 11 14")).toBeTruthy();
-    expect(fetchMock).not.toHaveBeenCalled();
-    /* And no thank-you page either: nothing was submitted to thank them for. */
-    expect(push).not.toHaveBeenCalled();
+    expect(screen.getByText("1300 22 4636")).toBeTruthy();
+    expect(screen.getByText("000")).toBeTruthy();
+
+    // Not a dead end: Continue is offered, and it leads to the contact step.
+    cont();
+    expect(screen.getByLabelText(/first name/i)).toBeTruthy();
+  });
+
+  it("triages a crisis disclosure red and flags it separately", async () => {
+    /*
+     * The colour alone is not the safety mechanism — red also covers
+     * pregnancy and active cancer treatment. `safetyFlag` is what n8n pages
+     * on, so it has to be its own field in the payload.
+     */
+    render(<QuizForm onClose={close} />);
+    start("Mental Health Support");
+    choose("Yes");
+    choose("Yes");
+    choose("Yes");
+    cont();
+    fillContactAndSubmit();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    const body = sentBody();
+    expect(body.outcome).toBe("red");
+    expect(body.safetyFlag).toBe(true);
+    expect(body.clinical.triage_reasons).toMatch(/crisis/i);
+  });
+
+  it("leaves the safety flag off when nothing was disclosed", async () => {
+    render(<QuizForm onClose={close} />);
+    start("Mental Health Support");
+    choose("No");
+    choose("No");
+    choose("No");
+    fillContactAndSubmit();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    const body = sentBody();
+    expect(body.safetyFlag).toBe(false);
   });
 
   it("walks back through the answers actually given", () => {

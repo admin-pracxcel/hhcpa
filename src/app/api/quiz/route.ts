@@ -156,6 +156,18 @@ export async function POST(request: Request) {
      * human has to make contact. See `triage` in content/quiz.ts.
      */
      outcome: clean(payload.outcome) || "green",
+    /*
+     * Set when the patient disclosed crisis or self-harm. Its own field, not a
+     * shade of `outcome`: red also covers pregnancy and active cancer
+     * treatment, and only this one needs somebody paged.
+     *
+     * ⚠️ Nothing on this side raises the alert. n8n has to branch on this and
+     * notify a monitored channel with a named recipient — v2.4 makes that a
+     * launch blocker, because the red exit message promises the patient that
+     * a member of the team will contact them. Shipping the promise without
+     * the alert is worse than the hard exit it replaced.
+     */
+    safetyFlag: payload.safetyFlag === true,
 
     consents: Object.fromEntries(
       QUIZ_CONSENTS.map((consent) => [
