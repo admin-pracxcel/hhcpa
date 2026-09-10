@@ -1,0 +1,444 @@
+HHCPA BUILD SPEC — OPEN QUESTIONS, ROUND 3
+===========================================
+
+Raised by: build team (Pracxcel)
+Date: 10 September 2026
+Against: HHCPA_Build_Spec_v2.md (v2.1) as amended by HHCPA_Build_Spec_v2.3_Addendum.md
+Six assessment forms (HHCPA-FRM-002 to 007, Version 1.1): received, extracted, verified.
+
+Status: nothing built yet. Codebase read, compiled and crawled only.
+Numbering is continuous across all three rounds. Answer by number.
+Section F (Q33-Q46) is new: build and implementation decisions, most with a recommendation
+attached, so they can be answered with a yes.
+
+SCORE AFTER v2.3:  8 closed  |  4 partial  |  14 untouched  |  5 new  |  14 build questions
+
+
+-----------------------------------------------------------------------------------
+SECTION A — CLOSED BY v2.3 (no action needed)
+-----------------------------------------------------------------------------------
+
+Q1   Holistic Care page vs the cannabis eligibility screen. Closed by v2.3 s1.1: the
+     FRM-003 contraindication tick-list becomes the Step 4 triage input, replacing the
+     old hl_* SAS-B branch.
+Q11  Discharge Letter. Closed by v2.3 s8: same page as /discharge, not a new one. Add
+     the form and the four points; relabel the footer link.
+Q15  The six assessment PDFs. Received and verified.
+Q16  Fate of the existing /quiz. Closed by the 7-step architecture in v2.3 s1, which
+     supersedes it.
+Q21  Triage. Closed by v2.3 s1 and s2.
+Q22  Age gate. Closed: Step 1, her verbatim wording, applied to all services.
+     Build note: the existing quiz ALREADY runs age -> Australian residency -> service
+     selection as its first three steps, applied to every service. v2.3 Steps 1 to 3
+     are therefore largely built; only the wording needs aligning to hers.
+Q23  Emergency gate. Closed: Step 0, before any data collection.
+     Build note: an emergency question exists today but only inside the holistic
+     branch. Promoting it to Step 0 for all services is the actual change.
+Q25  BMI. Closed by v2.3 s3: build the second banding, no medication message, compute
+     and store BMI, display band outcome only.
+Q26  Form ID and version stored with the signature. Confirmed by v2.3 s9.
+
+Also resolved: v2.2 blocked item 6 (follow-up fee). v2.3 s10 confirms $69 / $59 / $59
+and instructs that the live-site figures be ignored.
+
+
+-----------------------------------------------------------------------------------
+SECTION B — NEW QUESTIONS ARISING FROM v2.3
+-----------------------------------------------------------------------------------
+
+Q28. A RED OUTCOME PROMISES CONTACT, BUT NO CONTACT DETAILS HAVE BEEN COLLECTED.
+     *** This is a build hole, not a preference, and it is a REGRESSION. ***
+     Note first: the current quiz collects contact details from EVERYONE, as the last
+     step before submission, after the branches and before triage is computed. Red
+     patients therefore reach the team today. The v2.3 architecture removes that by
+     making the only contact capture part of the Step 6 intake, green and amber only.
+     The v2.3 s1 architecture is:
+        Step 0-2  gates          (no contact details)
+        Step 3    service select (no contact details)
+        Step 4    eligibility    (her question sets - no contact details)
+        Step 5    triage computed
+        Step 6    intake form    - explicitly "green and amber only"
+        Step 7    booking, or red exit
+     Her red exit message is: "Based on your responses, your situation requires further
+     review before booking. A member of our team will contact you."
+     Nothing in Steps 0 to 5 captures a name, email or phone. On a red outcome the site
+     promises a callback it has no way to make, and v2.3 s9 assigns someone to own that
+     queue - a queue that would be empty.
+     Deliberately staging the intake form after triage is the right call (v2.3 s1 is
+     correct that a red patient should not have handed over a residential address
+     first). The fix is a minimal capture on the red exit only: name, and one of email
+     or phone, with consent to be contacted. Confirm that is wanted, and confirm the
+     exact consent wording.
+
+Q29. THE PEPTIDE DECISION REVERSES v2.1, AND WILL FAIL THE BUILD AS IT STANDS.
+     v2.1 s4.7.1 said FRM-007's two peptide lines "must not ship as written" and gave
+     replacement wording. v2.1 s7.2 extended the prohibited-terms register to quiz
+     questions. v2.1 s9 added the check "No quiz question, option, label or declaration
+     contains a prohibited term."
+     v2.3 s7 now says to run the Step 4 screening publicly with her history question as
+     written: "Have you previously used peptide therapy or prescription weight
+     management medications?"
+     Three things follow:
+     (a) v2.3 s7 opens with "You have instructed that her exact wording be used." The
+         build team has not seen that instruction. Please confirm who gave it and put it
+         on the record, exactly as v2.3 s7 itself asks.
+     (b) The automated guard test added in the last compliance pass fails the build the
+         moment that string is committed - verified. If the question ships as written,
+         the guard needs a single, explicitly commented exemption for that one string.
+         That is a deliberate, auditable hole in the compliance net; confirm it is
+         wanted before it is cut.
+     (c) A caution on the s5 reasoning. The screen-for versus prescribe distinction is
+         sound, and it clears the weight-management question (mirtazapine, lithium,
+         gabapentin - medicines the clinic does not supply). It is weaker here, because
+         this question sits on the Health Optimisation flow where the clinic IS the
+         provider. A patient reading "have you previously used peptide therapy" on
+         HHCPA's own health optimisation screen reasonably infers HHCPA provides it.
+         That is the inference the TGA guidance is aimed at. v2.3 s7's own preferred
+         option - her wording verbatim, at Step 6, after booking, not public - avoids
+         this entirely at no cost. The build team recommends that option.
+     Which is it: her wording public at Step 4, or her wording at Step 6 post-booking?
+
+Q30. STEP 3 OFFERS EIGHT SERVICES; ONLY SIX HAVE FORMS AND ONLY TWO HAVE SCREENING SETS.
+     v2.3 s1 Step 3 is "Service selection (8 services)". But:
+       - Health Optimisation and Weight Management have both a Step 4 screening set
+         (1 Sept email) and a Step 6 intake form.
+       - Men's Health, Women's Health, Mental Health and Holistic Care have a Step 6
+         form only; v2.3 s1.1 derives Step 4 triage from the form's tick-lists.
+       - Online Doctor and Continuity & Preventative Health have NEITHER.
+     What happens when someone selects one of those two at Step 3? Options: omit them
+     from Step 3 until forms exist; run Steps 0-2 then send them straight to booking; or
+     collect a minimal intake. This also settles Q19 (what quiz duration those two pages
+     advertise).
+
+Q31. DOES A "YES" ON THE FRM-004 SAFETY QUESTION PRODUCE AMBER, RED, OR A HARD EXIT?
+     v2.3 s1.1 sets a conservative default for the four services without screening sets:
+     "any contraindication tick produces amber and nothing auto-excludes except Steps 0
+     to 2." Applied literally, a disclosure of thoughts of self-harm produces AMBER and
+     proceeds to booking.
+     The current quiz treats crisis as a hard exit, not a triage outcome, on the
+     reasoning recorded in the code that someone in crisis needs a phone number rather
+     than a booking flow.
+     Confirm the intended behaviour. The build team's recommendation is: surface crisis
+     resources immediately (already agreed in v2.1 s4.7.2), do not block the person from
+     continuing or leaving, and treat the outcome as red rather than amber so it does
+     not auto-book. This interacts with Q28, because a red outcome needs contact details
+     and with Q20, because someone must be alerted.
+
+Q32. THE 15% DISCHARGE DISCOUNT NEEDS A DECISION, NOT JUST A CAUTION.
+     v2.3 s8 offers two fixes - state the terms and conditions plainly, and tie
+     eligibility to transferring care rather than to holding a prescription - or drop
+     the offer. It does not say which to build.
+     Which? And if it stays, supply the terms and conditions text, since it is the
+     stated terms that make the discount advertisable under the National Law.
+
+Q27. "WEIGHT MANAGEMENT" APPEARS AS A CONCERN IN THREE FORMS. (carried over, unanswered)
+     FRM-005 and FRM-006 both offer "Weight management" as a main concern, and FRM-007
+     offers "Body composition". Does selecting it route the patient to the
+     weight-management service, or does that consultation handle it? Determines whether
+     the option is a router or just a note on the form.
+
+
+-----------------------------------------------------------------------------------
+SECTION C — PARTIALLY ANSWERED, RESIDUAL DECISIONS
+-----------------------------------------------------------------------------------
+
+Q17. SIGNED DECLARATION STORAGE. v2.3 s9 defers this to the Get Scripted integration
+     call and says build can proceed. Agreed. Two residuals:
+       - If launch precedes Get Scripted, where does an interim signed declaration live?
+         There is no backend; persistFallback() only logs.
+       - QUIZ_WEBHOOK_SECRET being unset is acknowledged as a defect to fix now. Confirm
+         the build team should fix it in this pass rather than waiting.
+
+Q18. PRIVACY POLICY. v2.3 s6 and s9 confirm the gaps (ethnicity, DOB, residential
+     address, emergency contact, file upload, signed declaration, some collected
+     pre-payment) and say review before go-live. Not answered: WHO drafts the revised
+     policy, where the data is stored and in which jurisdiction, and the retention
+     period. The build team can add the per-step privacy link and the ethnicity
+     explanation; it cannot write the policy that makes the collection lawful.
+
+Q20. CRISIS NOTIFICATION CHANNEL. v2.3 s9 confirms display is handled and notification
+     is not, and says decide before launch. Still needed: who is notified, through what
+     channel. See also Q31.
+
+Q24. WHICH INTAKE FIELDS ARE MANDATORY? v2.3 s1 resolves the staging concern by moving
+     the form to Step 6, which is the right fix. It does not answer the original
+     question: of the ~25 fields, only three are marked optional in her documents.
+     Are residential address, date of birth and emergency contact required to submit?
+
+
+-----------------------------------------------------------------------------------
+SECTION D — UNTOUCHED BY v2.3 (14 items)
+-----------------------------------------------------------------------------------
+
+These block the most work:
+
+Q12. AM I AUTHORISED TO DRAFT THE THREE NEW HUB PAGES?
+     v2.1 s3.1-3.3 give title, H1, price, schema, section names and content rules, but
+     no body copy beyond one-line card descriptions for two of three. Health Optimisation
+     needs seven sub-sections written from scratch. v2.3 s7 refers to "whoever drafts the
+     Health Optimisation copy" without saying who that is.
+     Build team drafts it (new regulated copy, needs her written sign-off), or she
+     supplies it and the shell is built with empty slots?
+
+Q9.  LIVE-SITE IMAGE ASSETS. v2.1 s2.4 requires replacing inner-page heroes with the
+     live-site heroes; s4.1.8 requires restoring the "How we support you" image slider.
+     Neither set is in the repo. Export them, or authorise the build team to crawl and
+     download from horizonhealthcarepartners.com.au directly?
+
+Q10. SECTIONS 10.2 AND 10.3 ARE INCOMPLETE. "Pull the remaining entries from the live
+     page in the same order" and "continue from the live page for the final paragraph on
+     clinical excellence". Regulated copy cannot be paraphrased. Supply, or authorise
+     retrieval?
+
+Pricing contradictions inside v2.1 (note: v2.3 s10 settles the three consultation fees,
+but not these):
+
+Q5.  Men's and Women's Health is priced twice, differently. s4.1.4 says "From $59";
+     s5.1 says "Men's and women's health, from $89, no change". Which?
+
+Q6.  "FROM $59" STOPS MATCHING ANYTHING AFTER THE FEE CHANGE. Every service card renders
+     the first-consultation fee, which s5.2 raises to $69. After that, "From $59" matches
+     no first-consult price - $59 becomes the follow-up. Should cards show per-service
+     floor prices from the Other services table, or are s4.1.4's numbers literal
+     hard-coded values independent of the fee table?
+
+Q7.  IS "OUR FEES: HOLISTIC CARE / ALTERNATIVE MEDICINE" REALLY THE HOMEPAGE HEADING?
+     s4.1.5 and s5.2 retitle the general three-box consultation fee block to name one of
+     eight services, leaving the other seven priced only in the Other services table. It
+     also puts that label beside a $59 transfer fee the client's own note ties to the
+     cannabis service, cutting against s3.3.
+     (a) fees genuinely apply only to holistic care, (b) site-wide and the title stays
+     general, or (c) split into two blocks?
+
+Q8.  THE PRESCRIPTION PRICING LADDER DOES NOT DEFINE HOW ANSWERS COMBINE. s4.8 maps three
+     questions independently to $19 or $49; the six mixed combinations are undefined. Is
+     the rule "any $49 trigger makes it $49"? And is this a mini-flow on the prescriptions
+     page, or does it feed the main quiz - which now has a defined 7-step architecture it
+     would need to fit into?
+
+Where v2.1's stated CURRENT does not match the build (its own convention says to stop):
+
+Q2.  s2.3 - THE EMERGENCY TARGET STRING IS ON ZERO PAGES, NOT 35.
+     Target: "Medical emergency? Call 000 immediately. If you are in crisis, call Lifeline
+     13 11 14 (24/7) or Beyond Blue 1300 22 4636."
+     Deployed site-wide via the layout disclaimer: "...If this is a medical emergency,
+     call 000. If you are in crisis, call Lifeline on 13 11 14 or Beyond Blue on
+     1300 22 4636."
+     Confirmed separately that /quiz genuinely has no visible emergency line, so the
+     substance of the instruction is right.
+     Roll the exact new wording out to all 36 pages, or keep the existing equivalent and
+     only fix /quiz?
+
+Q3.  s2.2 - THE HOMEPAGE IS NOT EXEMPT FROM THE TAGLINE. It carries "Your health, handled
+     from home" as its closing CTA heading. Actual total is 32 pages, not 33, and the
+     three without it are /weight-management, /patient-safety and /quiz.
+     Since s9 requires zero instances site-wide the homepage is replaced either way. The
+     question: should those three GAIN "Professional Healthcare, Wherever You Are", or
+     keep their own more specific headings ("Ready to see whether this suits you?",
+     "Questions about whether telehealth suits you?")?
+
+Q4.  s2.4 - THE /pricing HERO STRING IS NOT ON THE PAGE. The spec says keep "Pre-screening
+     is free. No commitment until you're ready." The H1 is "Transparent pricing, no
+     surprises"; the nearest match is in the meta description. Keep the H1, or add her line?
+
+Smaller:
+
+Q13. THE "EMPTY SITEMAP BUG" IS NOT A BUG. s9 Technical calls it an independent bug two
+     lines below s9 Compliance requiring every page stay noindex. Same switch: the sitemap
+     is empty because staging has no SITE_INDEXABLE, the deliberate gate from the previous
+     compliance remediation. Setting it populates all 33 URLs immediately - verified.
+     Leave the gate as designed and note it, or decouple?
+
+Q14. EM-DASH SCOPE. s9 says "no em dashes anywhere in the copy". Eight in rendered copy:
+     /complaints (1), /terms-and-conditions (2), /thank-you (2), /quiz-book (2),
+     /quiz-thank-you (1). Those will be cleared. Confirming this does not extend to code
+     comments and internal documentation.
+
+Q19. Folded into Q30.
+
+
+-----------------------------------------------------------------------------------
+SECTION E — NOTED, NO QUESTION
+-----------------------------------------------------------------------------------
+
+E1. v2.3 s5's carve-out (naming a medicine you SCREEN FOR is intake; naming one you might
+    PRESCRIBE is advertising) needs writing into the v2.1 s7.2 register, which currently
+    bans "any medicine brand name" outright. The weight screening's medicine list
+    (corticosteroids, anti-psychotics, mirtazapine, lithium, valproate, carbamazepine,
+    gabapentin) passes the automated guard as-is - verified - so no code change is needed
+    for that list. Only the peptide string in Q29 collides.
+
+E2. v2.3 s7's final paragraph - the "Peptides may assist in accelerated healing and
+    recovery..." service description from the 1 September email - is recorded as
+    must-never-publish. Understood, and the automated guard would catch it anyway.
+
+E3. v2.2 blocked item 6 is resolved by v2.3 s10: $69 / $59 / $59 everywhere, live-site
+    figures ignored.
+
+
+-----------------------------------------------------------------------------------
+SECTION F — BUILD AND IMPLEMENTATION QUESTIONS
+-----------------------------------------------------------------------------------
+
+These are not compliance or copy questions. They are decisions the build has to make
+that the spec does not cover, where guessing wrong is expensive to undo. Grouped by
+area. Where the build team has a recommendation it is stated, so several of these can
+be answered with a yes.
+
+--- The quiz engine ---
+
+Q33. ONE /quiz, OR EIGHT PER-SERVICE ENTRY POINTS?
+     v2.3 s1 shows a single flow with service selection at Step 3. But v2.1 s4.1.4 says
+     the homepage box goes to the service page and "the service page prompts the
+     pre-screening questions before booking", which implies each service page deep-links
+     into the quiz with Step 3 already answered.
+     Build as one flow at /quiz that accepts a pre-selected service (for example
+     /quiz?service=mens-health), so the eight service pages can link straight in and
+     skip Step 3? That is the build team's recommendation - one engine, eight doors.
+     If instead you want eight separate quiz URLs, say so now; it changes the routing,
+     the analytics and the sitemap.
+
+Q34. CAN A PATIENT GO BACK AND CHANGE A TRIAGE-DETERMINING ANSWER?
+     The current quiz has a real Back button with a step history stack, so a patient who
+     hits an exit can reverse out and change the answer that caused it. That is already
+     on record as a compliance flag: the existing "Unable to Proceed" exits name the
+     answer that disqualified the patient, so a second run-through passes, and AHPRA
+     warns specifically about questionnaires that coach patients to say the right thing.
+     With triage now formalised into green/amber/red, this matters more, not less.
+     Options: (a) keep Back fully free; (b) keep Back but lock answers once triage is
+     computed at Step 5; (c) keep Back but stop exit screens from naming the
+     disqualifying answer. The build team recommends (b) and (c) together.
+
+Q35. SHOULD PARTIAL PROGRESS SURVIVE A REFRESH?
+     The flow becomes 7 steps plus a ~25-field intake form, 5 to 7 minutes. Nothing is
+     persisted today; a refresh loses everything. Persisting means writing partial
+     health information, and after Step 6 a residential address, into browser storage.
+     Build team recommendation: persist the pre-triage steps only (gates, service, and
+     screening answers) in sessionStorage so a refresh is not fatal, and never persist
+     the Step 6 intake fields or the signature. Confirm, or say no persistence at all.
+
+Q36. WHAT IS THE SUBMISSION PAYLOAD CONTRACT FOR n8n?
+     Today one webhook receives a payload with clinical answers segregated under a
+     dedicated `clinical` key, so n8n can route them to the clinical destination and
+     strip them before anything else sees them. The new flow adds: gate answers, the
+     Step 4 screening set, the computed triage outcome, a ~25-field intake form
+     including residential address and emergency contact, plus signature, timestamp and
+     form ID/version.
+     Questions: does the `clinical` segregation still apply, and should the intake PII
+     go under its own separate key rather than being merged into `contact`? Is it one
+     webhook or one per stage (a light triage submission, then a heavier intake
+     submission)? The build team recommends keeping `clinical` segregation, adding an
+     `intake` key for the FRM fields with the signature block inside it, and keeping
+     one webhook.
+
+Q37. ONE n8n OUTCOME FLOW, OR ONE PER SERVICE?
+     Eight services times three outcomes is 24 combinations. This decides what the site
+     emits: a single `{service, outcome}` pair for n8n to branch on, or a resolved
+     routing key per combination.
+     Build team recommendation: emit `{service, outcome}` and let n8n branch, so adding
+     a ninth service never needs a site deploy. Confirm.
+
+--- File upload ---
+
+Q38. WHERE DOES THE DISCHARGE LETTER FILE ACTUALLY GO?
+     v2.3 s8 requires a file upload and correctly lists virus scanning, size and type
+     limits, encrypted storage and privacy coverage. None of that infrastructure exists.
+     There is no backend and no object storage; the site posts to n8n webhooks.
+     Which of these: (a) post the file to n8n as base64 and let the workflow handle
+     scanning and storage; (b) stand up object storage (S3, R2 or similar) with a
+     signed-upload flow; (c) use a third-party form/upload service; (d) ship the page
+     without the upload for now, with the "help me obtain one" free-text field only,
+     and add upload when a destination exists?
+     This is the largest new piece of infrastructure in the whole brief and it needs a
+     decision before the page is built. Note (d) still delivers the page and the
+     discount.
+
+--- Page architecture ---
+
+Q39. DO THE THREE NEW HUBS USE THE EXISTING SERVICE PAGE TEMPLATE?
+     Every service page renders through one data-driven template with a fixed module
+     vocabulary (hero, trust bar, intro, split, tiles, statement, checklist, steps,
+     pricing cue, related cards, inline CTA, FAQ, closing band). Building the new hubs
+     the same way means they inherit the schema, breadcrumbs, gating and compliance
+     guards automatically.
+     Confirm the new hubs use it, rather than bespoke layouts. Recommendation: yes.
+
+Q40. ARE THE THREE NEW HUBS GATED AT LAUNCH?
+     The route registry has a `gated` flag built for exactly this: one flag hides a page
+     from nav, footer, related cards, focus grid, sitemap and robots at once. It was
+     used for the previous regulated pages until she signed off in writing, and s7.4
+     requires her express written approval before any regulated page publishes.
+     Do the three new hubs ship gated until she approves them, or ungated on the
+     staging build so she can review them in place? Recommendation: build ungated on
+     staging (which is noindex anyway) and gate at production until sign-off.
+
+Q41. HEALTH OPTIMISATION'S SEVEN SUB-AREAS - SECTIONS NOW, PAGES LATER?
+     v2.1 s3.1 says "rendered as on-page sections at launch". "At launch" implies they
+     become child pages later.
+     Should the URL structure be reserved now (/health-optimisation/metabolic-health/
+     and so on), or built purely as on-page anchors with no child routes? Reserving
+     later costs a round of redirects. Recommendation: on-page anchors only for now,
+     since seven thin child pages would compete with the hub.
+
+Q42. MENTAL HEALTH SUPPORT - WHICH BREADCRUMB?
+     It is promoted to a top-level nav group but keeps /online-doctor/mental-health.
+     Its breadcrumb and BreadcrumbList schema currently read Home > Online Doctor >
+     Mental Health Support, matching the URL.
+     Does the breadcrumb follow the new nav position (Home > Mental Health Support) or
+     stay with the URL? Recommendation: stay with the URL, because Google cross-checks
+     BreadcrumbList against the path and a mismatch is a structured-data warning.
+
+Q43. LAYOUT OF EIGHT BOXES AND EIGHT MEGA-MENU SILOS.
+     (a) The homepage and /services grid goes from five boxes to eight. The grid centres
+     a short final row, so eight lands as 3 + 3 + 2. Acceptable, or do you want 4 + 4?
+     (b) The mega-menu goes from four silos to eight. It is a four-column panel, so
+     eight silos means two rows. Three of the new silos have no child pages (Health
+     Optimisation, Continuity, Holistic Care) and neither does Mental Health Support.
+     The existing stacking mechanism lets a childless silo sit beneath another one in
+     the same column while keeping its own heading, which avoids four headings with
+     nothing under them. Confirm that is the shape you want, and confirm the pairing:
+     recommendation is Weight Management + Health Optimisation, Men's Health, Women's
+     Health, Online Doctor + Mental Health Support, with Continuity and Holistic Care
+     stacked under Men's and Women's respectively.
+
+--- Delivery ---
+
+Q44. FEATURE BRANCH, OR STRAIGHT TO MAIN?
+     Previous rounds went straight to main because they were small and self-contained.
+     This is three new pages, a rebuilt quiz engine, a new data-collection capability
+     and a global copy sweep. Recommendation: a feature branch with the work broken into
+     reviewable commits, merged when Section 9 QA passes.
+
+Q45. ONE RELEASE TO STAGING, OR INCREMENTAL?
+     v2.1 s11 gives a build order. The global changes (s2) and the nav and footer (s6)
+     could go to staging within a day and let her see the shape early, with the new hubs
+     and the quiz following. Or everything lands at once when QA passes.
+     Recommendation: incremental, so the parts that need her eye get it soonest.
+     Also: who triggers the staging rebuild? The three compliance commits already on
+     main do not appear to be live on hhcpa.pracxcel.com yet, and none of this work will
+     be visible there until someone rebuilds.
+
+Q46. EM DASHES INSIDE HER VERBATIM COPY.
+     s9 bans em dashes in copy; v2.1 s4.1.2 already notes one in her homepage intro was
+     converted to a comma. If any of the further verbatim copy still to come contains an
+     em dash, is the standing instruction to convert to a comma and note it, or to keep
+     her punctuation exactly and let the em-dash check pass over her copy?
+     Recommendation: convert, and record each conversion, as already done once.
+
+
+-----------------------------------------------------------------------------------
+WHAT CAN START WITHOUT ANY OF THESE ANSWERS
+-----------------------------------------------------------------------------------
+
+v2.1 Section 2 global changes: tagline swap, per-word animation removal, the "two
+minutes" sweep (39 instances across 33 pages, not the 42/35 the spec states), em dashes.
+
+v2.1 Section 6 navigation and footer: promote Mental Health Support to a top-level nav
+group and add the three new hubs to the menu and footer. The mega-menu goes from four
+silos to eight; the existing stacking mechanism already supports a four-column by
+two-row layout, and the width budget has slack since "Weight Loss & Peptides" was
+shortened to "Weight Management".
+
+Also: extend the prohibited-terms guard to cover quiz question text, options, field
+labels and declaration wording, per v2.1 s7.2 - pending the Q29 decision on whether one
+explicit exemption is cut into it.
