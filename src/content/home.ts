@@ -328,43 +328,64 @@ export const HOME_KNOWLEDGE = {
   cta: { label: "Read the knowledge hub", href: "/articles/" },
 } as const;
 
+/*
+ * §4.1.10: replaced with her live homepage FAQ, verbatim, titled as she titles
+ * it. Ours was a paraphrase.
+ *
+ * The prescription answer is the reason this matters beyond copy fidelity. It
+ * states that prescriptions are not issued solely on the basis of completing
+ * an online questionnaire, which is strong compliance copy in her own words.
+ * §7.3: that statement is about prescriptions, not certificates, and the two
+ * must not be blurred. Do not extend it to the certificates page, and do not
+ * add anything to that page claiming a consultation is always required.
+ *
+ * The fourth answer lists the services she names publicly. It still reads as
+ * her five; updating it to the eight is a change to her wording and needs her
+ * approval, so it is left as she wrote it and flagged.
+ */
 export const HOME_FAQ = {
-  heading: "Your questions, answered",
+  heading: "Your Questions Answered",
   items: [
     {
       id: "how-it-works",
       question: "How does Horizon Health Care Partners work?",
       answer:
-        "You start with a free online pre-screening quiz. If it looks like we can help, you book a consultation by video or phone with an AHPRA-registered practitioner. The practitioner reviews your health and talks through your options. Any care plan comes from that consultation, not from the quiz.",
+        "You start with a free online pre-screening quiz. The quiz is not a diagnosis. If you look suitable, you book a real-time consultation with one of our practitioners by video or phone. The practitioner reviews your health and talks through your options with you. Any care plan comes from that consultation, not the quiz on its own.",
     },
     {
       id: "prescription",
-      question: "Will I be given a prescription?",
+      question: "Will I receive a prescription?",
       answer:
-        "A prescription is not guaranteed. Our practitioners prescribe only where it is clinically appropriate, after a real-time consultation. Depending on your situation, the outcome might be advice, a referral, monitoring, lifestyle guidance, or no treatment.",
+        "If clinically appropriate, your treating practitioner may issue a prescription following a comprehensive telehealth consultation. Every prescription is based on an individual clinical assessment, your medical history, current health needs, and the practitioner's professional judgement. Prescriptions are not issued solely on the basis of completing an online questionnaire or request form. Our practitioners are committed to providing safe, evidence-based care and will only prescribe medications when they believe it is clinically appropriate and in your best interests. If a prescription is not considered suitable, your practitioner will discuss alternative treatment options or recommend the most appropriate next steps.",
     },
     {
       id: "cost",
-      question: "How much does it cost?",
-      answer: `The pre-screening quiz is free. Consultation fees are shown on our pricing page and start from $${PRICES.firstConsult.amount}. You only pay when you choose to book.`,
+      question: "How much does a consultation cost?",
+      answer:
+        "Consultation fees vary depending on the healthcare service, appointment type and consultation length. Any online pre-screening questionnaire is free, and there is no obligation to proceed. The full consultation fee will be displayed before you confirm and pay for your booking. Any additional costs, such as follow-up consultations, pathology tests, medications or external services, will be discussed with you where applicable.",
     },
     {
-      id: "coverage",
-      question: "Where in Australia do you operate?",
+      id: "topics",
+      question: "What can I speak to a practitioner about?",
       answer:
-        "Everywhere. We are a national telehealth clinic, so you can consult with us from any state or territory.",
+        "Our practitioners consult on a range of everyday health concerns. These include weight management, mental health support, menopause support, smoking cessation, and ongoing support for chronic conditions. Each consultation is tailored to you. Individual results vary, and assessment findings do not guarantee a particular outcome.",
     },
     {
       id: "emergency",
-      question: "What if it is an emergency?",
-      answer:
-        `Telehealth is not for emergencies. ${EMERGENCY_LINE}`,
+      question: "Is telehealth right for me, and what if it is an emergency?",
+      answer: `Telehealth suits many common health needs, but not all of them. Your practitioner may recommend an in-person assessment, a GP review, a specialist referral, further tests, or no treatment, depending on your circumstances. ${EMERGENCY_LINE}`,
     },
   ],
 } as const;
 
+/*
+ * §4.1.11: her "Easy Access, Professional Care" band, verbatim, and it moves
+ * above the FAQ rather than closing the page. The homepage is the one page
+ * that does not end on the site-wide tagline — §2.2 already exempted it from
+ * carrying that line, and this is what she wants in its place.
+ */
 export const HOME_CLOSING = {
-  heading: "Professional Healthcare, Wherever You Are",
-  body: "Start with the free pre-screening quiz. It takes a few minutes, it is not a diagnosis, and there is no commitment until you choose to book.",
+  heading: "Easy Access, Professional Care",
+  body: "Book online consultations with AHPRA-registered medical practitioners. Our streamlined telehealth process is simple and confidential.",
   primary: { label: "Start the free quiz", href: "/quiz/" },
 } as const;

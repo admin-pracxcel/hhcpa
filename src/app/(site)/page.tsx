@@ -62,6 +62,7 @@ import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ValueTiles } from "@/components/sections/ValueTiles";
 
 import { ApproachSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
+import { CareAreasSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/CareAreasSection";
 import { BlogSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/BlogSection";
 import { FaqSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FaqSection";
 import { FeatureMarquee } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FeatureMarquee";
@@ -146,6 +147,19 @@ export default function Home() {
         tiles={HOME_WHY.tiles}
       />
 
+      {/*
+        §4.1.8: her "How we support you" slider, back on the homepage. It was
+        already built — CareAreasSection is a faithful port of her Splide
+        auto-scroll carousel, complete with its five slides and their images —
+        but it only ever rendered on the archived clone. Nothing new to write;
+        it just needed putting back.
+
+        Note the spec's §10.1 lists six slider categories, the first being
+        "Professional Medical Consultations". Checked against her live DOM:
+        that string is the section's own h2, not a slide. There are five.
+      */}
+      <CareAreasSection />
+
       <ApproachSection
         eyebrow={HOME_APPROACH.eyebrow}
         heading={HOME_APPROACH.heading}
@@ -172,8 +186,6 @@ export default function Home() {
         cta={HOME_KNOWLEDGE.cta}
       />
 
-      <FaqSection heading={HOME_FAQ.heading} items={HOME_FAQ.items} />
-
       <FinalCtaSection
         heading={HOME_CLOSING.heading}
         body={HOME_CLOSING.body}
@@ -191,6 +203,13 @@ export default function Home() {
           </div>
         }
       />
+
+      {/*
+        §4.1.11: the FAQ closes the homepage, with "Easy Access, Professional
+        Care" above it rather than below. Every other page still ends on the
+        closing band; this one ends on her questions.
+      */}
+      <FaqSection heading={HOME_FAQ.heading} items={HOME_FAQ.items} />
     </>
   );
 }
