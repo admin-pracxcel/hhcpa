@@ -79,6 +79,15 @@ const STYLES = `
   color: #ffffff;
 }
 
+.hhcp-sv-subtitle {
+  margin-top: var(--hhcp-space-xs);
+  max-width: 640px;
+  font-size: var(--hhcp-text-m);
+  line-height: var(--hhcp-text-lh);
+  font-weight: 400;
+  color: rgba(245, 255, 249, 0.85);
+}
+
 .hhcp-sv-actions {
   display: flex;
   flex-direction: row;
@@ -138,6 +147,16 @@ interface ServiceHeroProps {
   className?: string;
   eyebrow: string;
   heading: string;
+  /**
+   * Optional line under the H1, smaller than it.
+   *
+   * About Us is the one page that asked for one (build spec v2.1 §4.4.1). It
+   * cannot go in `eyebrow`: that string is also the final breadcrumb and the
+   * last name in the page's BreadcrumbList schema, so a sentence there reads
+   * as "Home / Medical Consultations with Registered Healthcare Professionals"
+   * and tells Google the same.
+   */
+  subheading?: string;
   crumbs: readonly Crumb[];
   primary: { label: string; href: string };
   secondary: { label: string; href: string };
@@ -147,6 +166,7 @@ export function ServiceHero({
   className,
   eyebrow,
   heading,
+  subheading,
   crumbs,
   primary,
   secondary,
@@ -168,6 +188,9 @@ export function ServiceHero({
         </nav>
 
         <h1 className="hhcp-sv-title font-dm-sans">{heading}</h1>
+        {subheading !== undefined && (
+          <p className="hhcp-sv-subtitle font-dm-sans">{subheading}</p>
+        )}
 
         <div className="hhcp-sv-actions">
           <a className="hhcp-btn" href={primary.href}>

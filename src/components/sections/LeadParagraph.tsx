@@ -50,6 +50,21 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
+/*
+ * A multi-paragraph intro steps down a size.
+ *
+ * 40px was chosen for a single short paragraph, where it reads as a statement.
+ * The homepage intro is now four paragraphs of her copy and About Us is four
+ * more, and at 40px that is roughly 900px of text between the trust bar and
+ * the first real section — a wall rather than an opening. 28px keeps it
+ * clearly above body copy and ahead of every heading below it, and lets the
+ * whole intro land in about half the height.
+ */
+.hhcp-lp-text[data-paragraphs="many"] {
+  font-size: 28px;
+  letter-spacing: -0.3px;
+}
+
 .hhcp-lp-link {
   display: flex;
   flex-direction: row-reverse;
@@ -77,12 +92,18 @@ const STYLES = `
   .hhcp-lp-text {
     font-size: 30px;
   }
+  .hhcp-lp-text[data-paragraphs="many"] {
+    font-size: 22px;
+  }
 }
 
 /* Phone. */
 @media (max-width: 767px) {
   .hhcp-lp-text {
     font-size: 20px;
+  }
+  .hhcp-lp-text[data-paragraphs="many"] {
+    font-size: 18px;
   }
 }
 `;
@@ -102,7 +123,10 @@ export function LeadParagraph({ className, text, cta }: LeadParagraphProps) {
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-lp-container">
         <div className="hhcp-lp-body">
-          <div className="hhcp-lp-text font-dm-sans">
+          <div
+            className="hhcp-lp-text font-dm-sans"
+            data-paragraphs={paragraphs.length > 1 ? "many" : undefined}
+          >
             {paragraphs.map((paragraph, index) => (
               <p key={`${index}-${paragraph.slice(0, 24)}`}>{paragraph}</p>
             ))}

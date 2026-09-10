@@ -29,7 +29,7 @@
 
 import { isGated } from "../routes";
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { CALL_CTA, CLINIC } from "../clinic";
+import { CALL_CTA } from "../clinic";
 import { STANDARD_CLOSING, STANDARD_FOOTNOTE, STANDARD_FOOTNOTE_LINKS, sectionImage } from "./shared";
 
 const PRACTITIONERS = "/our-practitioners/";
@@ -53,22 +53,53 @@ export const ABOUT_US: ServicePageData = {
   },
   pageSchema: "AboutPage",
   hero: {
+    /*
+     * §4.4.1. The eyebrow is also the final breadcrumb and the last name in
+     * this page's BreadcrumbList schema, so the descriptor she asked for under
+     * the title is a `subheading`, not an eyebrow.
+     */
     eyebrow: "About us",
-    heading: "About Horizon Health Care Partners",
+    heading: "Your Health Journey Begins",
+    subheading: "Medical Consultations with Registered Healthcare Professionals",
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
-  intro: `Horizon Health Care Partners is an Australian telehealth clinic, based in ${CLINIC.addressRegion}, serving patients across the country. We were founded on a straightforward belief: every Australian deserves accessible, practitioner-led healthcare, wherever they live. We are an Australian entity focused on Australian patients, and everything we do runs through AHPRA-registered practitioners.`,
+  /*
+   * §4.4.2, her copy, verbatim. It replaces the whole paragraph and supersedes
+   * the individual edits she had asked for about West End, "across the
+   * country" and "wherever they live" — she asked for the lot replaced rather
+   * than patched. Neither "West End" nor "across the country" survives
+   * anywhere on the page, which §9 checks.
+   */
+  intro: [
+    "Horizon Health Care Partners Australia is an Australian telehealth clinic providing professional healthcare to patients across Australia.",
+    "We were founded on a simple belief: every Australian should have access to quality, practitioner-led healthcare, wherever they live.",
+    "Our care is delivered by AHPRA-registered healthcare practitioners, with a focus on accessibility, professionalism, personalised care and genuine patient support. Through convenient telehealth consultations, we make it easier for Australians to access the healthcare they need from the comfort and privacy of home.",
+    "Australian healthcare. Australian practitioners. Care centred around you.",
+  ],
   modules: [
     {
       kind: "split",
       tinted: true,
       eyebrow: "Our story",
       heading: "Our story",
+      /*
+       * §4.4.3, her original, verbatim. The staging version was a rewrite and
+       * she asked for hers back.
+       *
+       * "Healthcare Practitioner Ranjeeta Roshan" is her own title and stays
+       * exactly as written. Do not upgrade it to "Dr" anywhere on this site:
+       * her separate live site does, and that is a live-site problem, not a
+       * licence to repeat it here.
+       */
       paragraphs: [
-        "Horizon Health Care Partners was founded by Ranjeeta Roshan, who saw the same gap again and again. Patients with ongoing or complex needs struggled to get consistent, unhurried care, especially in regional and remote areas, and especially for the concerns people find hardest to raise. Many felt rushed, dismissed, or lost in a fragmented system.",
-        "We built Horizon to change that. Through a secure telehealth platform, patients connect with qualified, AHPRA-registered practitioners from home. The mission is simple to say and demanding to deliver: accessible, professional consultations that help people take control of their health with confidence and dignity.",
+        "Horizon Health Care Partners was founded by Healthcare Practitioner Ranjeeta Roshan on a simple but powerful belief: every Australian deserves access to compassionate, evidence-based healthcare, no matter where they live. She recognised a significant gap in our healthcare system. Patients with complex, chronic conditions often struggle to access good practitioners, particularly those in regional areas or with limited mobility. Many felt unheard, dismissed, or overwhelmed by a fragmented system.",
+        "We established Horizon Health Care Partners to change that narrative. Through our secure telehealth platform, patients can now connect with qualified AHPRA-registered practitioners from the comfort of their own homes. Our mission is clear: provide accessible, professional medical consultations that empower patients to take control of their health journey with confidence and dignity.",
+        "At Horizon Health Care Partners, we understand that seeking medical support can feel daunting. That's why we've built our practice on transparency, education, and compassion. Every consultation is conducted with care and respect, ensuring you feel heard, supported, and fully informed. Our experienced practitioners take time to understand your unique medical history, current symptoms, and personal goals.",
+        "We work collaboratively with you to develop a personalised care plan that aligns with your needs. We believe in caring for the whole person, not just the condition. Whether you're exploring care options for the first time or seeking continuity of care, we're here to guide you every step of the way without judgment.",
+        "What sets us apart is our unwavering commitment to clinical excellence and patient-centred care. We operate with full compliance to Australian medical regulations, ensuring every consultation and recommendation meets the highest standards of safety and professionalism. Our telehealth platform makes accessing quality healthcare simple and convenient, with flexible appointment times including after-hours and same-day consultations.",
+        "We serve patients across Australia, from metropolitan cities to remote regional communities, because geography should never be a barrier to expert medical care. At Horizon Health Care Partners, you're not just a patient number. You're a valued individual deserving of respect, compassion, and the very best healthcare Australia has to offer.",
       ],
       image: sectionImage("about-us-our-story"),
       imageAlt:
@@ -79,7 +110,8 @@ export const ABOUT_US: ServicePageData = {
       eyebrow: "Clinical standards",
       heading: "Every consultation, by a registered practitioner",
       paragraphs: [
-        "Every consultation at Horizon Health Care Partners is delivered by an AHPRA-registered practitioner, and every recommendation is made in line with Australian medical regulation. As the practice brings additional practitioners on board across weight management, men's and women's health, and everyday medical needs, each clinician's registration will be published on their profile before they begin consulting under our name.",
+        /* §4.4.5: the service list widened from three areas to the eight. */
+        "Every consultation at Horizon Health Care Partners is delivered by an AHPRA-registered practitioner, and every recommendation is made in line with Australian medical regulation. As the practice brings additional practitioners on board across weight management, health optimisation, men's and women's health, mental health, everyday medical needs, continuity and preventative health, and holistic care, each clinician's registration will be published on their profile before they begin consulting under our name.",
       ],
     },
     {
@@ -157,7 +189,15 @@ export const ABOUT_US: ServicePageData = {
       {
         id: "based",
         question: "Where are you based?",
-        answer: `We are an Australian telehealth clinic based in ${CLINIC.addressRegion}, serving patients nationwide.`,
+        /*
+         * §4.4.2 and §9: "West End" must not survive anywhere on this page.
+         * Her replacement copy drops the locality entirely and says the clinic
+         * is Australian and serves Australia, so this answer says the same.
+         * CLINIC.addressRegion is still the registered address and is kept in
+         * clinic.ts for the entity record; it is simply not advertised.
+         */
+        answer:
+          "We are an Australian telehealth clinic serving patients nationwide, from metropolitan cities to remote regional communities.",
       },
       {
         id: "registered",

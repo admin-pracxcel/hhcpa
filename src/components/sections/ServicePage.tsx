@@ -162,6 +162,8 @@ export interface ServicePageData {
   readonly hero: {
     readonly eyebrow: string;
     readonly heading: string;
+    /** Smaller line under the H1. About Us is the only page using one. */
+    readonly subheading?: string;
     readonly primary: LinkRef;
     readonly secondary: LinkRef;
   };
@@ -172,7 +174,11 @@ export interface ServicePageData {
    * without it.
    */
   readonly trust?: readonly string[] | null;
-  readonly intro: string;
+  /**
+   * One paragraph on most pages; an array where the approved copy is several,
+   * as on About Us. `LeadParagraph` renders either.
+   */
+  readonly intro: string | readonly string[];
   readonly introCta?: LinkRef;
   readonly modules: readonly ServiceModule[];
   /** Omit on pages whose module map has no FAQ; no FAQPage schema is emitted. */
@@ -237,6 +243,7 @@ export function ServicePage({ data }: { data: ServicePageData }) {
       <ServiceHero
         eyebrow={data.hero.eyebrow}
         heading={data.hero.heading}
+        subheading={data.hero.subheading}
         crumbs={data.crumbs}
         primary={data.hero.primary}
         secondary={data.hero.secondary}

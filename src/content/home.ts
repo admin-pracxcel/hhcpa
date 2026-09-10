@@ -24,14 +24,19 @@ import { CONTINUITY_CARD } from "./services/continuity-preventative-health";
 import { HOLISTIC_CARE_CARD } from "./services/holistic-alternative-care";
 
 export const HOME_META = {
-  title: "Online Telehealth Clinic Australia | Weight Loss & More",
+  /*
+   * §4.1.1. The old title led on weight loss, which under-represents seven of
+   * the eight service areas. Flagged to the client as a recommendation rather
+   * than treated as approved — it is not one of her instructions.
+   */
+  title: "Online Telehealth Clinic Australia | AHPRA-Registered Practitioners",
   description:
     "AHPRA-registered telehealth clinic. Online consultations for weight management, men's and women's health, and everyday care. Free pre-screening, Australia-wide.",
 } as const;
 
 export const HOME_HERO = {
   heading:
-    "Australia's practitioner-led telehealth clinic for weight loss, hormones and everyday care",
+    "Australia's practitioner-led telehealth clinic for everyday health, weight, hormones and health optimisation",
   body: "See an AHPRA-registered practitioner from home, anywhere in Australia. Start with a free pre-screening quiz, then book a real consultation by video or phone. Care is private, transparent, and centred on you.",
   primary: { label: "Check your eligibility", href: "/quiz/" },
   secondary: CALL_CTA,
@@ -59,7 +64,22 @@ export const HOME_VALUE_STRIP: readonly string[] = [
  */
 export const HOME_INTRO = {
   eyebrow: "Who we are",
-  text: "Horizon Health Care Partners helps Australians get practical medical support without the waiting room. Our practitioners consult on weight management, men's and women's health, and a wide range of everyday health needs. You tell us what is going on through a short pre-screening quiz, you book a time that suits you, and you speak with a registered practitioner who reviews your history and talks through your options. A prescription is never guaranteed. Any treatment comes from a real consultation, where it is clinically appropriate.",
+  /*
+   * §4.1.2, Ranjeeta's own copy, verbatim, replacing the previous single
+   * paragraph. It satisfies her instruction that the intro name every service
+   * including GP and everyday care.
+   *
+   * One change to her wording, recorded by the spec and again here: her first
+   * line used an em dash, which §9 bars from rendered copy, so it is a comma.
+   * Nothing else was altered. The fourth paragraph is hers and is load-bearing
+   * — it is the page's clearest statement that nothing is guaranteed.
+   */
+  text: [
+    "Healthcare designed around you, wherever you are in Australia.",
+    "Horizon Health Care Partners Australia makes it easier to access professional, personalised healthcare without the waiting room. Our AHPRA-registered practitioners provide Australia-wide telehealth care across everyday health, holistic and alternative care, mental health, weight and metabolic health, men's and women's health, hormone health, health optimisation, prescriptions, referrals and preventative care.",
+    "Getting started is simple. Complete a short pre-screening questionnaire where applicable, choose a consultation time that suits you, and speak directly with a registered healthcare practitioner who will review your health history, listen to your concerns and discuss appropriate options for your individual needs.",
+    "Every treatment decision is based on an appropriate clinical assessment. Prescriptions and specific treatments are not guaranteed and are only provided where clinically appropriate.",
+  ],
   cta: { label: "More about Horizon", href: "/about-us/" },
 } as const;
 
@@ -194,10 +214,11 @@ export const HOME_STEPS = {
         "Answer a few questions so we can see whether we are likely to help. The quiz is free and it is not a diagnosis.",
     },
     {
-      pill: "Book a consultation",
-      title: "Book your consultation",
+      /* §4.1.6: reverts to her live site's wording for this step. */
+      pill: "Book a Consultation",
+      title: "Schedule at Your Convenience",
       description:
-        "Choose a time that suits you and book online, by video or phone.",
+        "Choose a time that suits you and book your telehealth appointment online.",
     },
     {
       pill: "Attend your appointment",
@@ -274,7 +295,12 @@ export const HOME_SEARCH = {
   heading: "Everything in one place",
   paragraphs: [
     "Booking a specialist can take weeks. Repeat scripts run out at the worst time. Sensitive issues are hard to raise face to face.",
-    "Horizon brings the common threads of everyday healthcare into one online clinic, so you can deal with weight, hormones, sexual health, mental health and routine scripts through the same trusted practitioners.",
+    /*
+     * §4.1.7 (a) and (b): her live site's "compassionate, transparent and
+     * convenient" paragraph is folded in here, and the service list widened
+     * from five areas to the eight the site now offers.
+     */
+    "Horizon brings the common threads of everyday healthcare into one online clinic, so you can deal with weight and metabolic health, health optimisation, men's and women's health, mental health, holistic care, preventative health and routine scripts through the same trusted practitioners. We believe healthcare should be compassionate, transparent, and convenient. Our team is committed to providing medical guidance in a safe, stigma-free environment where every patient feels heard and respected.",
   ],
   points: [
     "One clinic for weight, hormones and everyday care",
