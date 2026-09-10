@@ -91,8 +91,42 @@ export const HOW_IT_WORKS: ServicePageData = {
         },
       ],
     },
+    /*
+     * §4.2 items 2 and 3 ask for "Our Approach to Care" and "How We Support
+     * You" from her live site. On her live how-it-works those are one section,
+     * not two: an h2 reading "How We Support You" over four items. The
+     * homepage carries the same four under an "Our Approach to Care" heading
+     * with a fifth item, which is what made the spec read them as separate.
+     * Her four, verbatim.
+     */
+    {
+      kind: "tiles",
+      tinted: true,
+      eyebrow: "Our Approach to Care",
+      heading: "How We Support You",
+      columns: 2,
+      tiles: [
+        {
+          title: "Medical Guidance",
+          body: "Navigate your healthcare journey with confidence. Our AHPRA-registered medical practitioners provide ongoing support throughout your consultations, helping you understand your options and ensuring you receive the professional guidance you need at every stage of your care.",
+        },
+        {
+          title: "Judgement-Free Care",
+          body: "Your health concerns deserve a supportive, confidential environment. We create a safe space where you can openly discuss your healthcare needs with qualified medical professionals who listen without judgement and respect your individual circumstances throughout the process.",
+        },
+        {
+          title: "Clinical Standards",
+          body: "All consultations are conducted by AHPRA-registered medical practitioners who maintain rigorous clinical standards. Our practitioners bring extensive medical experience and stay current with healthcare guidelines to provide informed, professional consultations.",
+        },
+        {
+          title: "Informed Approach",
+          body: "Our consultation process follows established medical protocols and professional healthcare standards. Our AHPRA-registered practitioners will review your medical history and discuss your health concerns to determine the most appropriate pathway for your individual circumstances.",
+        },
+      ],
+    },
     {
       kind: "statement",
+      /* §4.2 item 5: solid background, no image. Her explicit answer. Leave it. */
       eyebrow: "Safety",
       heading: "When telehealth is not the right option",
       paragraphs: [
@@ -127,26 +161,37 @@ export const HOW_IT_WORKS: ServicePageData = {
       ],
     },
   ],
+  /*
+   * §4.2 item 4: her live wording, verbatim. She named the first two as
+   * required; the other two are the rest of her set on the same page. Ours
+   * were three different questions and are replaced.
+   */
   faq: {
-    heading: "Common questions",
+    heading: "Your Questions Answered",
     items: [
-      {
-        id: "referral",
-        question: "Do I need a referral to book?",
-        answer:
-          "No. You can start straight away with the free pre-screening quiz.",
-      },
-      {
-        id: "not-suitable",
-        question: "What happens if I am not suitable for telehealth?",
-        answer:
-          "Your practitioner will explain the right pathway for you, whether that is in-person care, a referral, or a different service.",
-      },
       {
         id: "duration",
         question: "How long does a consultation take?",
         answer:
-          "It depends on your needs. Your practitioner gives your situation the time it requires.",
+          "Initial consultations typically take 30 minutes, allowing our practitioners time to thoroughly review your medical history and discuss your healthcare needs. Follow-up consultations are usually shorter, around 20 minutes.",
+      },
+      {
+        id: "first-consultation",
+        question: "What happens during my first consultation?",
+        answer:
+          "Your practitioner will review your medical history, current health concerns, and any previous medical care. They will conduct a professional assessment and discuss appropriate next steps based on your individual circumstances. You will have plenty of time to ask questions.",
+      },
+      {
+        id: "prepare",
+        question: "What do I need to prepare for my appointment?",
+        answer:
+          "Have your medical records, current medication list, and any relevant test results ready. Make sure you are in a private, quiet space with good internet connection. Having details about your medical history prepared helps make the consultation more efficient.",
+      },
+      {
+        id: "availability",
+        question: "How quickly can I get an appointment?",
+        answer:
+          "We offer same-day and after-hours appointments depending on availability. Many patients can book within 24 to 48 hours. Check our booking system for current appointment availability.",
       },
     ],
   },

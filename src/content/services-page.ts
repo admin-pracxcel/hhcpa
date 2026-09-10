@@ -37,8 +37,9 @@ export const SERVICES_PAGE = {
     secondary: { label: "Check your eligibility", href: "/quiz/" },
   },
   crumbs: [{ label: "Home", href: "/" }],
+  /* §4.6: eight service areas, not five. */
   intro:
-    "Pick the service that matches what you need and read what a consultation covers before you book. Every consultation is with an AHPRA-registered practitioner, by video or phone, anywhere in Australia. If you are not sure which service fits, start with the free pre-screening quiz instead and we will point you in the right direction.",
+    "Pick the service that matches what you need and read what a consultation covers before you book. There are eight areas to choose from, spanning weight management, health optimisation, men's and women's health, mental health, everyday care, continuity and preventative health, and holistic care. Every consultation is with an AHPRA-registered practitioner, by video or phone, anywhere in Australia. If you are not sure which service fits, start with the free pre-screening quiz instead and we will point you in the right direction.",
   related: {
     eyebrow: "Before you book",
     heading: "Worth knowing first",

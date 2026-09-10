@@ -187,33 +187,34 @@ export const ABOUT_US: ServicePageData = {
       footnoteLinks: STANDARD_FOOTNOTE_LINKS,
     },
   ],
+  /*
+   * §4.4.4: her live About FAQ, verbatim, titled as she titles it. Ours were
+   * three different questions.
+   *
+   * Note "Ranjeeta Roshan" without a title in her founder answer, matching
+   * Our Story's "Healthcare Practitioner Ranjeeta Roshan". Not "Dr".
+   */
   faq: {
-    heading: "Common questions",
+    heading: "Your Questions Answered",
     items: [
       {
         id: "founder",
-        question: "Who founded Horizon Health Care Partners?",
+        question: "Who founded Horizon Health Care Partners and why?",
         answer:
-          "The clinic was founded by Ranjeeta Roshan to improve access to quality, practitioner-led healthcare for Australians who face barriers to traditional services.",
+          "Horizon Health Care Partners was founded by Ranjeeta Roshan to improve access to quality healthcare for Australians who face barriers to traditional medical services. Our goal is to provide compassionate, professional medical consultations through a convenient telehealth platform.",
       },
       {
-        id: "based",
-        question: "Where are you based?",
-        /*
-         * §4.4.2 and §9: "West End" must not survive anywhere on this page.
-         * Her replacement copy drops the locality entirely and says the clinic
-         * is Australian and serves Australia, so this answer says the same.
-         * CLINIC.addressRegion is still the registered address and is kept in
-         * clinic.ts for the entity record; it is simply not advertised.
-         */
+        id: "different",
+        question:
+          "What makes Horizon Health Care Partners different from other clinics?",
         answer:
-          "We are an Australian telehealth clinic serving patients nationwide, from metropolitan cities to remote regional communities.",
+          "We focus on accessibility, transparency, and patient-centred care. We offer flexible appointment times including after-hours consultations, serve patients in regional and remote areas, and take time to truly understand your individual health needs in a supportive, non-judgemental environment.",
       },
       {
-        id: "registered",
-        question: "Are your practitioners registered?",
+        id: "values",
+        question: "What are your clinic's values?",
         answer:
-          "Yes. Every practitioner is AHPRA-registered, and registration details are shown on their profiles.",
+          "Our practice is built on compassion, clinical excellence, transparency, and respect. We believe in considering the whole person and empowering patients to make informed decisions about their healthcare with dignity and support.",
       },
     ],
   },
