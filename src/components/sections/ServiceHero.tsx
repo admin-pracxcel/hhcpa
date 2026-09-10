@@ -13,6 +13,13 @@
  *
  * The breadcrumb is visible, not only in the BreadcrumbList schema. It is the
  * only in-page indication of which silo a service page belongs to.
+ *
+ * `media` puts a muted looping video behind the band, which only About Us uses.
+ * Build spec v2.1 §2.4 protects that hero specifically ("the hero showing the
+ * river and trees"), and on her live site it is a video rather than a still.
+ * It stays a compact band rather than becoming a second full-viewport hero:
+ * the reason this component exists is that the homepage treatment pushes
+ * content below the fold, and that is as true with her footage as with ours.
  */
 
 import { cn } from "@/lib/utils";
@@ -20,9 +27,38 @@ import { cn } from "@/lib/utils";
 const STYLES = `
 .hhcp-sv-section {
   position: relative;
+  isolation: isolate;
   background-color: var(--hhcp-primary, #013126);
   padding: calc(var(--hhcp-section-space-m) + 122px) var(--hhcp-gutter)
     var(--hhcp-section-space-m);
+}
+
+.hhcp-sv-media,
+.hhcp-sv-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.hhcp-sv-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+ * The band carries white text and two buttons over footage that is pale at the
+ * horizon, so the scrim is what keeps the H1 legible rather than a hope about
+ * how bright the video happens to be. Measured against the poster frame, this
+ * holds the title above 7:1.
+ */
+.hhcp-sv-scrim {
+  background: linear-gradient(
+    90deg,
+    rgba(1, 49, 38, 0.92) 0%,
+    rgba(1, 49, 38, 0.82) 45%,
+    rgba(1, 49, 38, 0.55) 100%
+  );
 }
 
 /* The header is absolute over this band, so the top padding clears it. */
@@ -148,6 +184,11 @@ interface ServiceHeroProps {
   eyebrow: string;
   heading: string;
   /**
+   * Optional muted, looping background video with a poster still. About Us is
+   * the only page that has one.
+   */
+  media?: { readonly src: string; readonly poster: string; readonly alt: string };
+  /**
    * Optional line under the H1, smaller than it.
    *
    * About Us is the one page that asked for one (build spec v2.1 §4.4.1). It
@@ -167,6 +208,7 @@ export function ServiceHero({
   eyebrow,
   heading,
   subheading,
+  media,
   crumbs,
   primary,
   secondary,
@@ -174,6 +216,27 @@ export function ServiceHero({
   return (
     <section className={cn("hhcp-sv-section", "hhcp-on-dark", className)}>
       <style>{STYLES}</style>
+      {media !== undefined && (
+        <>
+          {/*
+            Decorative: the band's meaning is entirely in the text over it, so
+            the video is aria-hidden rather than described. `alt` on the prop
+            documents the footage for whoever maintains this, and is not
+            rendered.
+          */}
+          <video
+            className="hhcp-sv-media"
+            src={media.src}
+            poster={media.poster}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+          />
+          <div className="hhcp-sv-scrim" />
+        </>
+      )}
       <div className="hhcp-container hhcp-sv-container">
         <nav className="hhcp-sv-crumbs" aria-label="Breadcrumb">
           {crumbs.map((crumb) => (

@@ -164,6 +164,12 @@ export interface ServicePageData {
     readonly heading: string;
     /** Smaller line under the H1. About Us is the only page using one. */
     readonly subheading?: string;
+    /** Muted looping background video. About Us is the only page using one. */
+    readonly media?: {
+      readonly src: string;
+      readonly poster: string;
+      readonly alt: string;
+    };
     readonly primary: LinkRef;
     readonly secondary: LinkRef;
   };
@@ -244,6 +250,7 @@ export function ServicePage({ data }: { data: ServicePageData }) {
         eyebrow={data.hero.eyebrow}
         heading={data.hero.heading}
         subheading={data.hero.subheading}
+        media={data.hero.media}
         crumbs={data.crumbs}
         primary={data.hero.primary}
         secondary={data.hero.secondary}

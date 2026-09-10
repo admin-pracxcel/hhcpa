@@ -61,6 +61,16 @@ export const ABOUT_US: ServicePageData = {
     eyebrow: "About us",
     heading: "Your Health Journey Begins",
     subheading: "Medical Consultations with Registered Healthcare Professionals",
+    /*
+     * §2.4 protects this hero by name: "the hero showing the river and trees".
+     * It is a video on her live site, so it is one here. Retrieved from her
+     * site under the v2.2 authorisation in Q9.
+     */
+    media: {
+      src: "/videos/about-hero.mp4",
+      poster: "/images/about-hero-poster.webp",
+      alt: "An aerial view at dawn over forest and still water, low mist across the trees.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

@@ -263,29 +263,40 @@ export const HOME_WHY = {
   ],
 } as const;
 
+/*
+ * §4.1.9: replaced with her live site's version, verbatim, retrieved from
+ * horizonhealthcarepartners.com.au. Ours was a paraphrase of hers and one item
+ * short — she leads with "How We Support You", which the staging rewrite had
+ * promoted to the section heading and then dropped as an item.
+ */
 export const HOME_APPROACH = {
-  eyebrow: "Our approach to care",
-  heading: "How we support you",
+  eyebrow: "Our Approach to Care",
+  heading: "Our Approach to Care",
   items: [
     {
+      id: "how-we-support-you",
+      title: "How We Support You",
+      body: "Access practitioner-led consultations from anywhere in Australia. Our AHPRA-registered practitioners provide confidential telehealth appointments, guiding you through every step with professional support and transparent processes.",
+    },
+    {
       id: "medical-guidance",
-      title: "Medical guidance",
-      body: "Our AHPRA-registered practitioners support you through each step, helping you understand your options and the pathway that fits your circumstances.",
+      title: "Medical Guidance",
+      body: "Navigate your healthcare journey with confidence. Our AHPRA-registered medical practitioners provide ongoing support throughout your consultations, helping you understand your options and ensuring you receive the professional guidance you need at every stage of your care.",
     },
     {
       id: "judgement-free",
-      title: "Judgement-free care",
-      body: "Your concerns deserve a confidential, supportive setting. We listen without judgement and respect your individual situation.",
+      title: "Judgement-Free Care",
+      body: "Your health concerns deserve a supportive, confidential environment. We create a safe space where you can openly discuss your healthcare needs with qualified medical professionals who listen without judgement and respect your individual circumstances throughout the process.",
     },
     {
       id: "clinical-standards",
-      title: "Clinical standards",
-      body: "Every consultation follows established medical protocols, delivered by practitioners who maintain rigorous, current clinical standards.",
+      title: "Clinical Standards",
+      body: "All consultations are conducted by AHPRA-registered medical practitioners who maintain rigorous clinical standards. Our practitioners bring extensive medical experience and stay current with healthcare guidelines to provide informed, professional consultations.",
     },
     {
-      id: "informed-decisions",
-      title: "Informed decisions",
-      body: "Your practitioner reviews your history and discusses your concerns before recommending the most appropriate next step for you.",
+      id: "informed-approach",
+      title: "Informed Approach",
+      body: "Our consultation process follows established medical protocols and professional healthcare standards. Our AHPRA-registered practitioners will review your medical history and discuss your health concerns to determine the most appropriate pathway for your individual circumstances.",
     },
   ],
 } as const;
@@ -302,10 +313,11 @@ export const HOME_SEARCH = {
      */
     "Horizon brings the common threads of everyday healthcare into one online clinic, so you can deal with weight and metabolic health, health optimisation, men's and women's health, mental health, holistic care, preventative health and routine scripts through the same trusted practitioners. We believe healthcare should be compassionate, transparent, and convenient. Our team is committed to providing medical guidance in a safe, stigma-free environment where every patient feels heard and respected.",
   ],
+  /* §4.1.7(c): reverted to her live site's three points, verbatim. */
   points: [
-    "One clinic for weight, hormones and everyday care",
-    "The same practitioners across your concerns",
-    "No waiting room, no referral chase",
+    "Flexible appointment schedules",
+    "AHPRA-registered practitioners",
+    "Australia-wide support",
   ],
   cta: { label: "Book a consultation", href: "/quiz/" },
 } as const;
