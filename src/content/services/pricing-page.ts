@@ -71,6 +71,9 @@ export const PRICING_PAGE: ServicePageData = {
         "mentalHealth",
         "mensWomensHealth",
         "weightManagement",
+        /* §5.1 adds these two and renames the third; twelve rows in total. */
+        "continuityPreventative",
+        "holisticCare",
         "healthProgram",
       ],
       labels: { priorityConsult: "Priority consult (limited daily)" },

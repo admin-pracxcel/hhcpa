@@ -47,6 +47,18 @@ export const NAV_ITEMS: readonly NavItem[] = [
   {
     label: "Services",
     href: "/services/",
+    /*
+     * Eight silos in a four-column panel, so two rows. Build spec v2.1 §6.1
+     * expands the menu from four services to eight and promotes Mental Health
+     * Support out of the Online Doctor group to a silo of its own.
+     *
+     * The row split is not arbitrary: row one is every silo that has children,
+     * row two is every silo that does not. Stacking a childless silo under a
+     * populated one — which `below` exists to do, and which Medicinal Cannabis
+     * used to need — would have paired Continuity with Men's Health and
+     * Holistic Care with Women's Health, which reads as a claim about how they
+     * relate. Four columns of one heading each says nothing it does not mean.
+     */
     columns: [
       {
         title: "Weight Management",
@@ -82,8 +94,33 @@ export const NAV_ITEMS: readonly NavItem[] = [
           { label: "Medical Certificates", href: "/online-doctor/medical-certificates/" },
           { label: "Pathology & Imaging Referrals", href: "/online-doctor/pathology-imaging-referrals/" },
           { label: "Specialist Referrals", href: "/online-doctor/specialist-referrals/" },
-          { label: "Mental Health Support", href: "/online-doctor/mental-health/" },
         ],
+      },
+      /* Row two: the four silos with no sub-pages of their own. */
+      {
+        title: "Health Optimisation & Complete Wellness",
+        href: "/health-optimisation/",
+        links: [],
+      },
+      {
+        title: "Continuity & Preventative Health",
+        href: "/continuity-preventative-health/",
+        links: [],
+      },
+      {
+        title: "Holistic Care / Alternative Medicine",
+        href: "/holistic-alternative-care/",
+        links: [],
+      },
+      /*
+       * Promoted out of Online Doctor by §6.1 but keeps its URL: the page is
+       * built at that path and the blog programme already links to it, so nav
+       * position and URL depth are allowed to disagree (§1.4).
+       */
+      {
+        title: "Mental Health Support",
+        href: "/online-doctor/mental-health/",
+        links: [],
       },
     ],
   },

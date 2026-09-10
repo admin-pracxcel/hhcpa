@@ -23,6 +23,9 @@ export const ROUTES: readonly RouteEntry[] = [
   { path: "/weight-management/", title: "Weight Management" },
   { path: "/weight-management/medical-weight-loss-program/", title: "Medical Weight Loss Program" },
 
+  // Health Optimisation & Complete Wellness
+  { path: "/health-optimisation/", title: "Health Optimisation & Complete Wellness" },
+
   // Men's Health
   { path: "/mens-health/", title: "Men's Health" },
   { path: "/mens-health/erectile-dysfunction/", title: "Erectile Dysfunction" },
@@ -35,6 +38,12 @@ export const ROUTES: readonly RouteEntry[] = [
   { path: "/womens-health/menopause/", title: "Menopause & Perimenopause" },
   { path: "/womens-health/pcos-management/", title: "PCOS Management" },
   { path: "/womens-health/contraception/", title: "Contraception & Sexual Health" },
+
+  // Continuity & Preventative Health
+  { path: "/continuity-preventative-health/", title: "Continuity & Preventative Health" },
+
+  // Holistic Care / Alternative Medicine
+  { path: "/holistic-alternative-care/", title: "Holistic Care / Alternative Medicine" },
 
   // Online Doctor
   { path: "/online-doctor/", title: "Online Doctor" },

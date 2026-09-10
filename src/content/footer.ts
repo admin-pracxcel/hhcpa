@@ -21,11 +21,15 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
   {
     title: "Our Services",
     links: [
+      /* All eight service areas, hubs only. §6.2: "Do not list child pages." */
       { label: "Weight Management", href: "/weight-management/" },
+      { label: "Health Optimisation & Complete Wellness", href: "/health-optimisation/" },
       { label: "Men's Health", href: "/mens-health/" },
       { label: "Women's Health", href: "/womens-health/" },
-      { label: "Online Doctor", href: "/online-doctor/" },
       { label: "Mental Health Support", href: "/online-doctor/mental-health/" },
+      { label: "Online Doctor", href: "/online-doctor/" },
+      { label: "Continuity & Preventative Health", href: "/continuity-preventative-health/" },
+      { label: "Holistic Care / Alternative Medicine", href: "/holistic-alternative-care/" },
     ],
   },
   {
@@ -35,6 +39,13 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
       { label: "Pricing", href: "/pricing/" },
       { label: "Pre-Screening Quiz", href: "/quiz/" },
       { label: "Transfer Your Care", href: "/discharge/" },
+      /*
+       * §6.2 asks for a Discharge Letter link in this column. It points at
+       * /discharge/, not a new page: her live discharge page is titled
+       * "Discharge Letter" and is the same page as Transfer Your Care, which
+       * the v2.3 §8 answer confirmed after v2.2 Q11 assumed otherwise.
+       */
+      { label: "Discharge Letter", href: "/discharge/" },
       { label: "Patient Portal", href: "https://escript.link/" },
       { label: "FAQs", href: "/faqs/" },
     ],

@@ -3,13 +3,30 @@ import { ROUTES, publicRoutes, gatedRoutes, isGated } from "./routes";
 
 describe("ROUTES", () => {
   /*
-   * 35 in the design spec, less the three the compliance remediation removed:
-   * /medicinal-cannabis/, /weight-loss-peptides/weight-loss-injections/ and the
-   * old /weight-loss-peptides/ hub, which was renamed rather than dropped.
-   * See HHCPA_Remediation_Change_Spec.md §B4 and §B6.
+   * 35 in the original design spec. The compliance remediation removed two
+   * pages outright (HHCPA_Remediation_Change_Spec.md §B4 and §B6), taking it to
+   * 33, and build spec v2 §1.1 adds the three new service hubs, taking it to
+   * 36. Eight service areas, and the count is the cheapest way to notice a hub
+   * that was added to the nav but never registered.
    */
-  it("covers the design spec's routes, less the two the remediation removed", () => {
-    expect(ROUTES).toHaveLength(33);
+  it("covers every route in the current sitemap", () => {
+    expect(ROUTES).toHaveLength(36);
+  });
+
+  it("registers all eight service hubs", () => {
+    const paths = ROUTES.map((r) => r.path);
+    for (const hub of [
+      "/weight-management/",
+      "/health-optimisation/",
+      "/mens-health/",
+      "/womens-health/",
+      "/online-doctor/mental-health/",
+      "/online-doctor/",
+      "/continuity-preventative-health/",
+      "/holistic-alternative-care/",
+    ]) {
+      expect(paths).toContain(hub);
+    }
   });
 
   /*

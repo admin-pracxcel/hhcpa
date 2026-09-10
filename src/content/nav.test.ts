@@ -48,32 +48,53 @@ describe("NAV_ITEMS", () => {
 
   it("gives every mega-menu column a hub link of its own", () => {
     const services = NAV_ITEMS[0];
-    expect(services.columns?.length).toBe(4);
+    // Eight silos in a four-column grid, so two rows. See nav.ts.
+    expect(services.columns?.length).toBe(8);
     for (const column of services.columns ?? []) {
       expect(column.href.startsWith("/")).toBe(true);
     }
   });
+
+  it("puts the silos with children on the first row and the rest on the second", () => {
+    /*
+     * The 4x2 grid fills row by row, so the order of this array is the layout.
+     * Mixing a childless silo into row one would leave a heading floating over
+     * empty space beside three populated columns.
+     */
+    const columns = NAV_ITEMS[0].columns ?? [];
+    const firstRow = columns.slice(0, 4);
+    const secondRow = columns.slice(4);
+    for (const column of firstRow) expect(column.links.length).toBeGreaterThan(0);
+    for (const column of secondRow) expect(column.links).toHaveLength(0);
+  });
 });
 
 describe("visibleNavItems", () => {
-  it("carries the remediated Weight Management silo", () => {
+  it("offers all eight service areas", () => {
     /*
-     * HHCPA_Remediation_Change_Spec.md §A1. "Weight Loss & Peptides" named a
-     * restricted prescription class, "Weight Loss Injections" was a page whose
-     * whole identity was an injectable prescription, and Medicinal Cannabis
-     * cannot be advertised at all. What is left is one hub and one child.
+     * Build spec v2 §6.1. Mental Health Support is promoted out of the Online
+     * Doctor group to a silo of its own while keeping its nested URL — §1.4
+     * says nav position and URL depth do not have to agree.
      */
     const services = visibleNavItems()[0];
-    expect(services.columns).toHaveLength(4);
+    expect(services.columns?.map((c) => c.href)).toEqual([
+      "/weight-management/",
+      "/mens-health/",
+      "/womens-health/",
+      "/online-doctor/",
+      "/health-optimisation/",
+      "/continuity-preventative-health/",
+      "/holistic-alternative-care/",
+      "/online-doctor/mental-health/",
+    ]);
 
     const weight = services.columns?.[0];
     expect(weight?.title).toBe("Weight Management");
-    expect(weight?.href).toBe("/weight-management/");
     expect(weight?.links.map((l) => l.href)).toEqual([
       "/weight-management/medical-weight-loss-program/",
     ]);
 
-    // Nothing stacks a second silo today; `below` is kept for the next one.
+    // Nothing stacks a second silo; `below` is kept for the next one that needs it.
     expect(services.columns?.flatMap((c) => c.below ?? [])).toEqual([]);
   });
 

@@ -19,6 +19,9 @@
 import { CONSULTATION_PLANS } from "./consultation-plans";
 import { PRICES } from "./pricing";
 import { CALL_CTA, EMERGENCY_LINE } from "./clinic";
+import { HEALTH_OPTIMISATION_CARD } from "./services/health-optimisation";
+import { CONTINUITY_CARD } from "./services/continuity-preventative-health";
+import { HOLISTIC_CARE_CARD } from "./services/holistic-alternative-care";
 
 export const HOME_META = {
   title: "Online Telehealth Clinic Australia | Weight Loss & More",
@@ -79,21 +82,41 @@ export const HOME_FOCUS = {
   heading: "What we help with",
   intro:
     "Pick a starting point. Each service is delivered online by AHPRA-registered practitioners, Australia-wide.",
+  /*
+   * Eight cards, per build spec v2.1 §4.1.4 and §2.5. The descriptions are that
+   * section's own table, which is drawn from her live site.
+   *
+   * The badge on each card is that service's own floor price, not the
+   * first-consultation fee. Every card used to read "From $59" because they all
+   * rendered `firstConsult`; §5.2 raises that fee to $69, at which point "From
+   * $59" would have matched nothing at all. They now read from the same
+   * `PRICES` entries as the Other services table on /pricing, so the two cannot
+   * disagree — which is what the v2.2 answer to Q6 asked for.
+   */
   cards: [
     {
       title: "Weight Management",
       icon: `${ICON_BASE}weight-management.webp`,
       iconAlt: "Weight management",
-      badge: `From $${PRICES.firstConsult.amount} · programs from $${PRICES.healthProgram.amount}`,
-      body: "Medically supervised weight-loss consultations and programs, assessed by a practitioner and reviewed over time.",
+      badge: `From $${PRICES.weightManagement.amount}`,
+      body: "Medically supervised weight management programs tailored to your health goals.",
       cta: "Explore weight management",
       href: "/weight-management/",
+    },
+    {
+      title: "Health Optimisation & Complete Wellness",
+      icon: `${ICON_BASE}icon-health-optimisation.png`,
+      iconAlt: "Health optimisation",
+      badge: `Programs from $${PRICES.healthProgram.amount}`,
+      body: HEALTH_OPTIMISATION_CARD,
+      cta: "Explore health optimisation",
+      href: "/health-optimisation/",
     },
     {
       title: "Men's Health",
       icon: `${ICON_BASE}mens-health.webp`,
       iconAlt: "Men's health",
-      badge: `From $${PRICES.firstConsult.amount}`,
+      badge: `From $${PRICES.mensWomensHealth.amount}`,
       body: "Discreet online consultations for erectile dysfunction, low testosterone, hair loss and more.",
       cta: "Explore men's health",
       href: "/mens-health/",
@@ -102,10 +125,19 @@ export const HOME_FOCUS = {
       title: "Women's Health",
       icon: `${ICON_BASE}womens-health.webp`,
       iconAlt: "Women's health",
-      badge: `From $${PRICES.firstConsult.amount}`,
+      badge: `From $${PRICES.mensWomensHealth.amount}`,
       body: "Menopause and perimenopause support, hormones, PCOS and contraception, on your schedule.",
       cta: "Explore women's health",
       href: "/womens-health/",
+    },
+    {
+      title: "Mental Health Support",
+      icon: `${ICON_BASE}mental-health.webp`,
+      iconAlt: "Mental health",
+      badge: `From $${PRICES.mentalHealth.amount}`,
+      body: "Practitioner-led support for ADHD, anxiety, sleep and smoking cessation.",
+      cta: "Explore mental health",
+      href: "/online-doctor/mental-health/",
     },
     {
       title: "Online Doctor",
@@ -117,13 +149,22 @@ export const HOME_FOCUS = {
       href: "/online-doctor/",
     },
     {
-      title: "Mental Health Support",
-      icon: `${ICON_BASE}mental-health.webp`,
-      iconAlt: "Mental health",
-      badge: `From $${PRICES.mentalHealth.amount}`,
-      body: "Practitioner-led support for ADHD, anxiety, sleep and smoking cessation.",
-      cta: "Explore mental health",
-      href: "/online-doctor/mental-health/",
+      title: "Continuity & Preventative Health",
+      icon: `${ICON_BASE}icon-continuity-preventative.svg`,
+      iconAlt: "Continuity and preventative health",
+      badge: `From $${PRICES.continuityPreventative.amount}`,
+      body: CONTINUITY_CARD,
+      cta: "Explore continuity care",
+      href: "/continuity-preventative-health/",
+    },
+    {
+      title: "Holistic Care / Alternative Medicine",
+      icon: `${ICON_BASE}icon-holistic-care.png`,
+      iconAlt: "Holistic care",
+      badge: `From $${PRICES.holisticCare.amount}`,
+      body: HOLISTIC_CARE_CARD,
+      cta: "Explore holistic care",
+      href: "/holistic-alternative-care/",
     },
   ] as const satisfies readonly FocusCard[],
 } as const;

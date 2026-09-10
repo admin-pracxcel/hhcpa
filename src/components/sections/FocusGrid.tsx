@@ -86,10 +86,10 @@ const STYLES = `
  */
 /*
  * Flex rather than grid, so a row that is not full centres its cards instead
- * of leaving a hole on the right. Five cards across three columns leaves the
- * last row short, and a sixth card would fill it -- both look right this way.
- * The card widths reproduce a three-column grid exactly:
- * a third of the row, less its share of the two gaps.
+ * of leaving a hole on the right. Eight cards over four columns fills two rows
+ * exactly, and the narrower breakpoints leave short rows that centre rather
+ * than hang. The card widths reproduce a four-column grid exactly:
+ * a quarter of the row, less its share of the three gaps.
  */
 .hhcp-fo-grid {
   display: flex;
@@ -99,7 +99,14 @@ const STYLES = `
 }
 
 .hhcp-fo-card {
-  flex: 0 1 calc((100% - 40px) / 3);
+  /*
+   * Four across, so the eight services fill two complete rows. It was three
+   * across when there were five cards and the short last row centred neatly;
+   * eight over three columns leaves a two-card row that reads as unfinished.
+   * The v2.4 answer to Q43(a) prefers 4+4 and allows 3+3+2 as a fallback,
+   * which is what the 1199px step below falls back to.
+   */
+  flex: 0 1 calc((100% - 60px) / 4);
 }
 
 .hhcp-fo-card {
@@ -165,11 +172,16 @@ const STYLES = `
 
 /* Price chip and link share the card's last row. */
 .hhcp-fo-foot {
+  /*
+   * Stacked, not a wrapping row. Side by side, whether the badge and the link
+   * fit on one line depends on how long that card's link label happens to be,
+   * so at four columns "From $89 / Explore men's health" sat on one line while
+   * its three neighbours wrapped to two. Cards in a row should not disagree
+   * about their own shape over a few characters of label.
+   */
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
 }
 
@@ -194,6 +206,13 @@ const STYLES = `
   display: flex;
   flex: none;
   color: inherit;
+}
+
+/* Four cards need more room than three did, so the first step comes earlier. */
+@media (max-width: 1199px) {
+  .hhcp-fo-card {
+    flex-basis: calc((100% - 40px) / 3);
+  }
 }
 
 @media (max-width: 900px) {

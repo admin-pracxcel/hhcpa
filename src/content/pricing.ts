@@ -22,10 +22,11 @@
  * commented on it. What is missing is her written sign-off on the final list,
  * which is the only thing `provisional` claims.
  *
- * Two services priced on the live site are absent here because they are not in
- * the approved sitemap: Continuity & Preventative Health (from $69) and Holistic
- * Care / Alternative Medicine (from $49). The second matters to the open
- * question above — her "holistic from $59" reads against a live price of $49.
+ * The two services that were absent here because the approved sitemap had no
+ * page for them — Continuity & Preventative Health (from $69) and Holistic Care
+ * / Alternative Medicine (from $49) — now have both. The second still bears on
+ * the open question above: her "holistic from $59" reads against a live price
+ * of $49, and $49 is what is built until she confirms otherwise.
  *
  * Anything marked `provisional` is awaiting Ranjeeta's written confirmation per
  * onboarding items 21 and 25, and must not be presented as final until confirmed
@@ -60,6 +61,8 @@ export type PriceKey =
   | "mentalHealth"
   | "mensWomensHealth"
   | "weightManagement"
+  | "continuityPreventative"
+  | "holisticCare"
   | "healthProgram";
 
 export const PRICES: Record<PriceKey, Price> = {
@@ -76,7 +79,17 @@ export const PRICES: Record<PriceKey, Price> = {
   mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
   mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
   weightManagement:   { label: "Weight management",                amount: 99,   from: true,  provisional: true },
-  healthProgram:      { label: "Structured health programs",       amount: 299,  from: true,  provisional: true },
+  /*
+   * Both were priced on her live site and were missing from the rebuild only
+   * because the approved sitemap had no page for them. Build spec v2.1 §5.1
+   * adds the rows; §3.2 and §3.3 add the pages.
+   */
+  continuityPreventative:
+                      { label: "Continuity & Preventative Health", amount: 69,   from: true,  provisional: true },
+  holisticCare:       { label: "Holistic Care / Alternative Medicine", amount: 49, from: true, provisional: true },
+  /* Renamed from "Structured health programs" by §5.1: the row is the Health
+     Optimisation hub's price, so it should read as that service's name. */
+  healthProgram:      { label: "Health Optimisation & Complete Wellness", amount: 299, from: true, provisional: true },
 };
 
 export const PROVISIONAL_PRICE_KEYS: readonly PriceKey[] = (

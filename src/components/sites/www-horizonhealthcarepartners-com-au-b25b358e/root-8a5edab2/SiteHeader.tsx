@@ -379,9 +379,16 @@ const HEADER_CSS = `
   left: 0;
   right: 0;
   z-index: 998;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  /*
+   * Grid, not the wrapping flex row this was when the menu had four silos.
+   * Build spec v2.1 §6.1 takes it to eight, and wrapped flex sizes each row to
+   * its own content, so row two's headings would sit at a ragged offset under
+   * columns of differing height. A four-column grid puts every heading on one
+   * of two baselines, which is what the v2.4 answer to Q43(b) asked for.
+   */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
   justify-content: center;
   gap: var(--hhcp-space-l);
   padding: var(--hhcp-space-m);
@@ -424,10 +431,9 @@ const HEADER_CSS = `
   display: flex;
   flex-direction: column;
   gap: 10px;
-  /* Share the pill's width rather than dictating the panel's. */
-  flex: 1 1 170px;
-  min-width: 170px;
-  max-width: 260px;
+  /* The grid track sets the width now; this only stops a long heading from
+     forcing a track wider than its share. */
+  min-width: 0;
 }
 .hhcp-hdr__mega-title {
   font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
@@ -436,6 +442,15 @@ const HEADER_CSS = `
   letter-spacing: 0.36px;
   text-transform: uppercase;
   color: var(--hhcp-primary);
+  /*
+   * Two lines' worth of box whether the heading needs them or not, so every
+   * rule in a row sits on the same baseline. "Health Optimisation & Complete
+   * Wellness" wraps where its three neighbours do not, and without this its
+   * underline dropped 14px below theirs. Reserving the space costs a little
+   * air under the short headings and buys a straight line across the panel.
+   */
+  line-height: 1.2;
+  min-height: calc(2 * 1.2em);
   padding-bottom: 8px;
   border-bottom: 1px solid var(--hhcp-neutral-ultra-light);
   transition: all 0.3s linear;
@@ -467,7 +482,6 @@ const HEADER_CSS = `
 
 @media (max-width: 1184px) {
   .hhcp-hdr__mega { gap: var(--hhcp-space-m); }
-  .hhcp-hdr__mega-col { flex-basis: 150px; min-width: 150px; }
 }
 
 /* ---------- Services submenu ---------- */
