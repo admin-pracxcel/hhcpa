@@ -139,13 +139,6 @@ const STYLES = `
   color: var(--hhcp-base-80, #34524a);
 }
 
-.hhcp-dl-terms {
-  margin-top: 10px;
-  font-size: var(--hhcp-text-xs, 12px);
-  line-height: 17px;
-  color: var(--hhcp-base-60, #6b817b);
-}
-
 .hhcp-dl-problem {
   margin-top: var(--hhcp-space-s, 20px);
   color: #b3261e;
@@ -283,7 +276,12 @@ export function DischargeLetterForm() {
           </p>
         </div>
       ) : (
-        <form onSubmit={submit}>
+        /*
+         * aria-label, not visible text: her form carries a hidden <legend>
+         * reading "Discharge Letter Form", which is its accessible name. Same
+         * name here, nothing added to the page.
+         */
+        <form onSubmit={submit} aria-label="Discharge Letter Form">
           <div className="hhcp-dl-group">
             <h2 className="hhcp-dl-group-title font-dm-sans">
               {DISCHARGE_FORM.headings.details}
@@ -322,11 +320,16 @@ export function DischargeLetterForm() {
               <label className="hhcp-dl-file-button" htmlFor="dl-letter">
                 Choose file
               </label>
-              <p className="hhcp-dl-hint">
-                {fileName !== ""
-                  ? `Selected: ${fileName}`
-                  : "PDF, JPG or PNG, up to 4MB. Optional: if you do not have one yet, tell us below."}
-              </p>
+              {/*
+                Her page has no hint line, so there is none here. This renders
+                only once a file is picked, and is not an addition to her copy:
+                the native input is hidden behind the pill above, so without it
+                nothing on screen tells you the file attached. Oversized files
+                still get their own message from the submit handler.
+              */}
+              {fileName !== "" && (
+                <p className="hhcp-dl-hint">{`Selected: ${fileName}`}</p>
+              )}
             </div>
 
             <div className="hhcp-dl-field">
@@ -352,7 +355,6 @@ export function DischargeLetterForm() {
           </button>
 
           <p className="hhcp-dl-offer font-dm-sans">{DISCHARGE_FORM.offer}</p>
-          <p className="hhcp-dl-terms font-dm-sans">{DISCHARGE_FORM.terms}</p>
         </form>
       )}
     </div>

@@ -29,60 +29,59 @@ export const DISCHARGE_META = {
   path: "/discharge/",
 } as const;
 
-/** The left column, verbatim from her page. */
+/**
+ * The left column, verbatim from her page — including her spaced hyphens and
+ * her contraction. These had been tidied into commas and "you are", which is
+ * the kind of silent copy-editing that makes a replica stop being one.
+ */
 export const DISCHARGE_PAGE = {
   eyebrow: "Make the switch",
   heading:
     "Switch to Horizon Health Care Partners & Save 15% on Your First Consultation!",
   intro:
-    "Making the switch is simple. Fill out our quick online form, book a telehealth appointment that suits you, and we'll handle the secure transfer of your medical records so your care continues seamlessly.",
+    "Making the switch is simple. Fill out our quick online form, book a telehealth appointment that suits you, and we'll handle the secure transfer of your medical records - so your care continues seamlessly.",
   whyHeading: "Why patients choose Horizon Health Care Partners",
   /*
    * Four reasons, bodies verbatim. They carry no titles on her page and none
    * here — the titles that were here through the tile grid were ours.
    */
   reasons: [
-    "Speak with AHPRA-registered practitioners via video or phone, no travel required. Discuss your health concerns from the comfort of your home.",
+    "Speak with AHPRA-registered practitioners via video or phone - no travel required. Discuss your health concerns from the comfort of your home.",
     "Work with practitioners to develop care plans that may address your individual health needs, lifestyle, and wellness goals.",
-    "Clear pricing and flexible online booking designed to fit healthcare around your schedule, not the other way around.",
-    "Access care from anywhere in Australia. Continue your consultations whether you are travelling, working remotely, or relocating.",
+    "Clear pricing and flexible online booking designed to fit healthcare around your schedule - not the other way around.",
+    "Access care from anywhere in Australia. Continue your consultations whether you're travelling, working remotely, or relocating.",
   ],
 } as const;
 
 /**
- * The Discharge Letter form's own copy (build spec v2.3 §8).
+ * The Discharge Letter form's own copy — hers, all of it.
  *
- * ─── THE OFFER LINE IS HERS, VERBATIM, BY INSTRUCTION ──────────────────────
+ * ─── NOTHING HERE IS OURS, BY INSTRUCTION ──────────────────────────────────
  *
- * The v2.4 answer to Q32 had retied the 15% from "a valid discharge letter
- * from your current prescribing doctor or clinic" to transferring care,
- * reasoning that eligibility conditional on holding a prescription — on the
- * transfer path for the holistic service — edges from a discount toward an
- * inducement connected to a prescription-only medicine.
+ * Two additions used to sit on this page and both are gone, on Bilal's
+ * instruction of 2026-09-11: "No additions to the original stuff."
  *
- * That was raised with Bilal on 2026-09-11 and he asked for her wording back:
- * the page is to be a replica. So it is hers, character for character, and
- * this comment is the record of why it says what it says. Do not quietly
- * reword it again — it is her offer, and the decision to run it is Pracxcel's.
+ *   1. The offer line had been reworded by the v2.4 answer to Q32, which tied
+ *      the 15% to transferring care rather than to holding a prescription —
+ *      the reasoning being that eligibility conditional on a prescription, on
+ *      the transfer path for the holistic service, edges from a discount
+ *      toward an inducement connected to a prescription-only medicine.
  *
- * The terms below are still ours. They stay because the National Law lets you
- * advertise a discount provided its terms are stated, and her page states
- * none. They are the one addition to her copy on this page, and they too need
- * her approval — it is her margin.
+ *   2. A paragraph of offer terms had been added beneath it, on the basis
+ *      that the National Law lets you advertise a discount provided its terms
+ *      are stated, and her page states none.
  *
- * Their first sentence restates the eligibility basis, so it follows the offer
- * line rather than sitting beside it saying something different. It read
- * "new patients transferring their care from another provider" while the offer
- * above it named a discharge letter, which is the page contradicting itself
- * about who qualifies. Keep the two in step.
- */
-export const DISCHARGE_FORM = {
+ * Both were raised with him with that reasoning, and he asked for her page as
+ * it stands. The decision to run it this way is Pracxcel's, not hers, and it
+ * is the thing to put in front of her when the site goes back for review.
+ *
+ * This comment is the record. Do not quietly reinstate either one — and do
+ * not delete this note either, because without it the next person finds a
+ * discount advertised with no terms and assumes it was an oversight.
+ */export const DISCHARGE_FORM = {
   headings: { details: "Your Details", clinic: "Clinic Details" },
   helpLabel:
     "If you need support with acquiring a discharge letter or have any questions, please let us know below and we'll contact you shortly.",
-  /* Hers, verbatim. See the header before changing this. */
   offer:
     "Receive 15% off your Initial Consultation with a valid discharge letter from your current prescribing doctor or clinic.",
-  terms:
-    "Offer terms: 15% applies to the first consultation fee for new patients who provide a valid discharge letter from their current prescribing doctor or clinic. One use per patient. The discount applies to the consultation fee only and does not apply to medicines, pathology, imaging or any third-party cost. Not available in conjunction with any other offer. A consultation with an AHPRA-registered practitioner is required, and no treatment or prescription is guaranteed. Horizon Health Care Partners may vary or withdraw this offer at any time.",
 } as const;
