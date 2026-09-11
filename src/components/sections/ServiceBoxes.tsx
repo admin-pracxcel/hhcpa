@@ -67,9 +67,15 @@ const STYLES = `
 }
 
 /*
- * Flex, not grid, so a row that is not full centres rather than leaving a
- * hole. Thirteen boxes over four columns is three full rows and one of one,
- * and that last box sits in the middle where it reads as deliberate.
+ * Thirteen boxes as 3, 3, 3, 4.
+ *
+ * Flex rather than grid, because the wrapping does the work: the first nine
+ * boxes are a third of the row, so exactly three fit per line and rows one to
+ * three fill precisely. The last four are a quarter each, and because row
+ * three ended flush, box ten starts row four and the remaining four fill it.
+ * No explicit row breaks, and nothing to keep in sync if a box is added —
+ * though note that adding one shifts the split, since the counts below are
+ * the layout.
  */
 .hhcp-sb-grid {
   display: flex;
@@ -82,7 +88,6 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 0 1 calc((100% - 60px) / 4);
   min-height: 200px;
   padding: 24px;
   border-radius: 12px;
@@ -92,6 +97,16 @@ const STYLES = `
   text-decoration: none;
   color: inherit;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Rows one to three: three across. */
+.hhcp-sb-card:nth-child(-n + 9) {
+  flex: 0 1 calc((100% - 40px) / 3);
+}
+
+/* Row four: four across. */
+.hhcp-sb-card:nth-child(n + 10) {
+  flex: 0 1 calc((100% - 60px) / 4);
 }
 
 .hhcp-sb-card:hover {
@@ -155,16 +170,31 @@ const STYLES = `
 
 .hhcp-sb-card:hover .hhcp-sb-arrow { color: var(--hhcp-action-dark, #0c7340); }
 
+/*
+ * Below the widest breakpoint the 3/3/3/4 split stops being worth keeping —
+ * four narrow boxes in a row of their own read as cramped rather than as a
+ * deliberate final row. Every box takes the same width from here down, and
+ * the centred flex row handles whatever remainder that leaves.
+ */
 @media (max-width: 1199px) {
-  .hhcp-sb-card { flex-basis: calc((100% - 40px) / 3); }
+  .hhcp-sb-card:nth-child(-n + 9),
+  .hhcp-sb-card:nth-child(n + 10) {
+    flex-basis: calc((100% - 40px) / 3);
+  }
 }
 
 @media (max-width: 900px) {
-  .hhcp-sb-card { flex-basis: calc((100% - 20px) / 2); }
+  .hhcp-sb-card:nth-child(-n + 9),
+  .hhcp-sb-card:nth-child(n + 10) {
+    flex-basis: calc((100% - 20px) / 2);
+  }
 }
 
 @media (max-width: 600px) {
-  .hhcp-sb-card { flex-basis: 100%; }
+  .hhcp-sb-card:nth-child(-n + 9),
+  .hhcp-sb-card:nth-child(n + 10) {
+    flex-basis: 100%;
+  }
   .hhcp-sb-title { font-size: var(--hhcp-h3, 28px); }
 }
 `;
