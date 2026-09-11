@@ -448,9 +448,16 @@ const HEADER_CSS = `
    * Wellness" wraps where its three neighbours do not, and without this its
    * underline dropped 14px below theirs. Reserving the space costs a little
    * air under the short headings and buys a straight line across the panel.
+   *
+   * The padding and the border are part of the reservation because box-sizing
+   * is border-box here: at a bare 2 * 1.2em the two-line heading needed 9px
+   * more than the box allowed and pushed its own rule down by exactly that,
+   * which is most of what this rule exists to prevent. Both terms are needed —
+   * counting the padding alone still left it a pixel low. It only became
+   * obvious once that heading led the panel rather than sitting in row two.
    */
   line-height: 1.2;
-  min-height: calc(2 * 1.2em);
+  min-height: calc(2 * 1.2em + 8px + 1px);
   padding-bottom: 8px;
   border-bottom: 1px solid var(--hhcp-neutral-ultra-light);
   transition: all 0.3s linear;

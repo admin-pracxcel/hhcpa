@@ -55,17 +55,20 @@ describe("NAV_ITEMS", () => {
     }
   });
 
-  it("puts the silos with children on the first row and the rest on the second", () => {
+  it("puts the silos without children on the first row and the rest on the second", () => {
     /*
      * The 4x2 grid fills row by row, so the order of this array is the layout.
-     * Mixing a childless silo into row one would leave a heading floating over
-     * empty space beside three populated columns.
+     * The four childless services lead, per Bilal on 2026-09-11.
+     *
+     * What this guards is that the two kinds never mix: a childless silo in a
+     * row of populated ones leaves a lone heading floating over empty space.
+     * Which row leads is a preference; the split itself is the constraint.
      */
     const columns = NAV_ITEMS[0].columns ?? [];
     const firstRow = columns.slice(0, 4);
     const secondRow = columns.slice(4);
-    for (const column of firstRow) expect(column.links.length).toBeGreaterThan(0);
-    for (const column of secondRow) expect(column.links).toHaveLength(0);
+    for (const column of firstRow) expect(column.links).toHaveLength(0);
+    for (const column of secondRow) expect(column.links.length).toBeGreaterThan(0);
   });
 });
 
@@ -78,17 +81,17 @@ describe("visibleNavItems", () => {
      */
     const services = visibleNavItems()[0];
     expect(services.columns?.map((c) => c.href)).toEqual([
-      "/weight-management/",
-      "/mens-health/",
-      "/womens-health/",
-      "/online-doctor/",
       "/health-optimisation/",
       "/continuity-preventative-health/",
       "/holistic-alternative-care/",
       "/online-doctor/mental-health/",
+      "/weight-management/",
+      "/mens-health/",
+      "/womens-health/",
+      "/online-doctor/",
     ]);
 
-    const weight = services.columns?.[0];
+    const weight = services.columns?.[4];
     expect(weight?.title).toBe("Weight Management");
     expect(weight?.links.map((l) => l.href)).toEqual([
       "/weight-management/medical-weight-loss-program/",
