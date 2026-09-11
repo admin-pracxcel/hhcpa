@@ -15,7 +15,7 @@
  *    5. Consultation pricing          PricingSection   (clone, new plans)
  *    6. How it works                  StepsSection     (clone, new copy)
  *    7. Why patients choose Horizon   ValueTiles       (new)
- *    8. Our approach to care          ApproachSection  (clone, new items)
+ *    8. Our approach to care          ApproachSection  (clone, unchanged)
  *    9. Built for the way …            StorySection     (clone, new copy)
  *   10. Knowledge hub teaser          BlogSection      (clone, new headings)
  *   11. Home FAQ                      FaqSection       (clone, new items)
@@ -42,7 +42,6 @@ import type { Metadata } from "next";
 import { CLINIC } from "@/content/clinic";
 import { articleCards } from "@/content/articles";
 import {
-  HOME_APPROACH,
   HOME_CLOSING,
   HOME_FAQ,
   HOME_HERO,
@@ -165,12 +164,24 @@ export default function Home() {
       */}
       <CareAreasSection />
 
-      <ApproachSection
-        eyebrow={HOME_APPROACH.eyebrow}
-        heading={HOME_APPROACH.heading}
-        paragraph=""
-        items={HOME_APPROACH.items}
-      />
+      {/*
+        Her original section, unmodified — §4.1.9, "replace with the version
+        from her original website", with the copy in §10.1.
+
+        It had been rebuilt from that §10.1 list as five accordion items under
+        a "Our Approach to Care" heading. But the first of those five bolded
+        blocks, "How We Support You", is the section's own h2 and lead
+        paragraph on the live page, not an item in the accordion. Reading it
+        as one gave the section a heading that merely repeated its eyebrow,
+        no lead paragraph, and a first accordion panel that was really the
+        intro. Checked against her live DOM at 1534px: heading "How We Support
+        You", the paragraph, then four items.
+
+        Exactly the trap already noted for the slider above, in the same §10.1
+        list. The component's defaults are the clone's, so they are hers —
+        which is why this takes no props.
+      */}
+      <ApproachSection />
 
       <StorySection
         eyebrow={HOME_SEARCH.eyebrow}

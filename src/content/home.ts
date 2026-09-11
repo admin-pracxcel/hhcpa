@@ -269,38 +269,6 @@ export const HOME_WHY = {
  * short — she leads with "How We Support You", which the staging rewrite had
  * promoted to the section heading and then dropped as an item.
  */
-export const HOME_APPROACH = {
-  eyebrow: "Our Approach to Care",
-  heading: "Our Approach to Care",
-  items: [
-    {
-      id: "how-we-support-you",
-      title: "How We Support You",
-      body: "Access practitioner-led consultations from anywhere in Australia. Our AHPRA-registered practitioners provide confidential telehealth appointments, guiding you through every step with professional support and transparent processes.",
-    },
-    {
-      id: "medical-guidance",
-      title: "Medical Guidance",
-      body: "Navigate your healthcare journey with confidence. Our AHPRA-registered medical practitioners provide ongoing support throughout your consultations, helping you understand your options and ensuring you receive the professional guidance you need at every stage of your care.",
-    },
-    {
-      id: "judgement-free",
-      title: "Judgement-Free Care",
-      body: "Your health concerns deserve a supportive, confidential environment. We create a safe space where you can openly discuss your healthcare needs with qualified medical professionals who listen without judgement and respect your individual circumstances throughout the process.",
-    },
-    {
-      id: "clinical-standards",
-      title: "Clinical Standards",
-      body: "All consultations are conducted by AHPRA-registered medical practitioners who maintain rigorous clinical standards. Our practitioners bring extensive medical experience and stay current with healthcare guidelines to provide informed, professional consultations.",
-    },
-    {
-      id: "informed-approach",
-      title: "Informed Approach",
-      body: "Our consultation process follows established medical protocols and professional healthcare standards. Our AHPRA-registered practitioners will review your medical history and discuss your health concerns to determine the most appropriate pathway for your individual circumstances.",
-    },
-  ],
-} as const;
-
 export const HOME_SEARCH = {
   eyebrow: "Built for the way Australians search for care",
   heading: "Everything in one place",
