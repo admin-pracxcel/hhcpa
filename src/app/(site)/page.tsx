@@ -11,7 +11,7 @@
  *    1. Hero                          HeroSection      (clone, new copy + CTAs)
  *    2. Value-proposition strip       FeatureMarquee   (clone, new items)
  *    3. Intro paragraph               LeadParagraph (new)
- *    4. Choose your focus             FocusGrid        (new)
+ *    4. Choose your service           ServiceBoxes     (new)
  *    5. Consultation pricing          PricingSection   (clone, new plans)
  *    6. How it works                  StepsSection     (clone, new copy)
  *    7. Why patients choose Horizon   ValueTiles       (new)
@@ -45,7 +45,6 @@ import {
   HOME_APPROACH,
   HOME_CLOSING,
   HOME_FAQ,
-  HOME_FOCUS,
   HOME_HERO,
   HOME_INTRO,
   HOME_KNOWLEDGE,
@@ -57,7 +56,8 @@ import {
   HOME_WHY,
 } from "@/content/home";
 
-import { FocusGrid } from "@/components/sections/FocusGrid";
+import { ServiceBoxes } from "@/components/sections/ServiceBoxes";
+import { SERVICE_BOXES, SERVICE_BOXES_HEADING } from "@/content/service-boxes";
 import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ValueTiles } from "@/components/sections/ValueTiles";
 
@@ -117,12 +117,17 @@ export default function Home() {
 
       {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into
           bands instead of one continuous white scroll. */}
-      <FocusGrid
-        className="bg-[color:var(--hhcp-accent)]"
-        eyebrow={HOME_FOCUS.eyebrow}
-        heading={HOME_FOCUS.heading}
-        intro={HOME_FOCUS.intro}
-        cards={HOME_FOCUS.cards}
+      {/*
+        Her "Choose Your Service" boxes, replacing the eight-card focus grid.
+        Her 9 September instruction and the 11 September audit; see
+        content/service-boxes.ts for the three agreed departures.
+      */}
+      <ServiceBoxes
+        id="book"
+        eyebrow={SERVICE_BOXES_HEADING.eyebrow}
+        heading={SERVICE_BOXES_HEADING.heading}
+        intro={SERVICE_BOXES_HEADING.intro}
+        boxes={SERVICE_BOXES}
       />
 
       <PricingSection

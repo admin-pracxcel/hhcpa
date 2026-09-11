@@ -728,8 +728,19 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
      * untouched. The quiz as a whole still needs its own compliance review
      * under §B23; this edit does not constitute that review.
      */
+    /*
+     * Reworded twice. The client's migrated wording named peptides, and the
+     * first remediation replaced it with "prescription weight management
+     * medications or therapies" — which removed the restricted term and
+     * introduced a different problem: weight framing on the Health
+     * Optimisation flow, the one service whose whole purpose is to be
+     * separate from Weight Management. The 11 September audit caught it.
+     *
+     * This is the neutral wording from §4.7.1. It screens for the same
+     * history without naming a class or a competing service.
+     */
     question:
-      "Have you previously used prescription weight management medications or therapies?",
+      "Have you previously used any prescribed treatment for health optimisation, recovery or healthy ageing?",
     options: ["Yes", "No"],
     followUp: {
       when: "Yes",

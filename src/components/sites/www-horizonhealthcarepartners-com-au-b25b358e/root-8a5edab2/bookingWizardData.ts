@@ -1075,15 +1075,20 @@ export const HEALTH_OPT_STEPS: readonly HealthOptStep[] = [
          * DECISION (compliance remediation, 2026-09-04): the target's own label
          * reads "Have you previously used peptide therapy or prescription weight
          * management medications?". "Peptide" names a restricted prescription
-         * class. The question screens for the same thing, and the branch is
-         * untouched. The two field ids changed with it (usedPeptide ->
+         * class. The wording was then changed a second time, on 2026-09-11:
+         * "prescription weight management medications or therapies" removed
+         * the restricted term but put weight framing on the health
+         * optimisation flow, which is the one service whose whole purpose is
+         * to be separate from weight management. It now matches the neutral
+         * wording the live quiz uses. The question screens for the same
+         * thing, and the branch is untouched. The two field ids changed with it (usedPeptide ->
          * usedWeightMedication, peptideDetails -> weightMedicationDetails):
          * they are never shown to a patient, but they do survive minification
          * into the shipped bundle, and §F1 is checked by reading page source.
          * The wizard posts nowhere, so no consumer depends on the old keys.
          */
         label:
-          "Have you previously used prescription weight management medications or therapies?",
+          "Have you previously used any prescribed treatment for health optimisation, recovery or healthy ageing?",
         type: "single",
         required: true,
         options: ["Yes", "No"],

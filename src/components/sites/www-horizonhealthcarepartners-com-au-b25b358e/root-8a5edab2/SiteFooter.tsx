@@ -28,6 +28,7 @@
  */
 
 import Link from "next/link";
+import { SiteDisclaimer } from "@/components/layout/SiteDisclaimer";
 import { cn } from "@/lib/utils";
 import {
   LinkedInIcon,
@@ -580,6 +581,17 @@ export function SiteFooter({ className }: SiteFooterProps) {
           </div>
         </div>
       </div>
+
+      {/*
+        The site-wide disclaimer, inside the footer.
+
+        It used to render from `(site)/layout.tsx` as a sibling *after*
+        `</footer>`, which put the one legally required block on the page
+        outside the landmark a screen reader announces as the footer. Her
+        9 September reply asked for it in bold; the 11 September audit found
+        it small, low-contrast and outside the element entirely.
+      */}
+      <SiteDisclaimer />
     </footer>
   );
 }

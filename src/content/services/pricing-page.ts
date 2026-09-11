@@ -34,8 +34,25 @@ export const PRICING_PAGE: ServicePageData = {
     path: "/pricing/",
   },
   hero: {
-    eyebrow: "Pricing",
-    heading: "Transparent pricing, no surprises",
+    /*
+     * Hers, restored. Her 9 September annotation said "keep this hero page
+     * with its wording", which round 3 traced to the H1 on her live pricing
+     * page — staging's "Transparent pricing, no surprises" was a rewrite of
+     * her line, so "keep" meant hers, not ours.
+     */
+    eyebrow: "Transparent, Straightforward Pricing",
+    heading: "Pre-screening is free. No commitment until you're ready.",
+    /*
+     * §2.4 asks for her hero media on inner pages. Most of the pages it means
+     * do not exist on her site — she has eight pages and no service pages —
+     * but /pricing/ is one that does, and it carries a video hero like About.
+     * Same treatment, her footage.
+     */
+    media: {
+      src: "/videos/pricing-hero.mp4",
+      poster: "/images/pricing-hero-poster.webp",
+      alt: "A woman walks a gravel track past autumn grass, forest behind her.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

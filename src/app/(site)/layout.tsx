@@ -14,7 +14,6 @@ import type { ReactNode } from "react";
 import { AttributionCapture } from "@/components/AttributionCapture";
 import { SiteHeader } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteHeader";
 import { SiteFooter } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteFooter";
-import { SiteDisclaimer } from "@/components/layout/SiteDisclaimer";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
 import { JsonLd } from "@/components/JsonLd";
 import { buildMedicalClinic } from "@/lib/schema";
@@ -30,8 +29,8 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       </Suspense>
       <SiteHeader />
       <main id="brx-content">{children}</main>
+      {/* The disclaimer renders inside SiteFooter, not beside it. */}
       <SiteFooter />
-      <SiteDisclaimer />
       <StickyMobileCta />
     </>
   );

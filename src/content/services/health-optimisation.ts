@@ -120,18 +120,23 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
           body: "Persistent tiredness is one of the most common reasons people book, and one of the least specific. Your practitioner works through the possibilities properly, which is the part that a symptom-led approach usually skips.",
         },
         {
+          /*
+           * The seventh area, inside the list rather than beside it.
+           *
+           * It was a section of its own headed "Sexual health is handled on
+           * its own pages", which satisfied §3.1's no-duplication rule but
+           * left her list of seven reading as six. The 11 September audit
+           * caught that. It is three sentences and two links: the conditions
+           * belong to the men's and women's health pages, which cover them
+           * properly, so nothing is duplicated and nothing cannibalises.
+           */
+          title: "Sexual health and wellbeing",
+          body: "Sexual health sits within health optimisation for many people, and it is assessed properly rather than in passing. The conditions involved have their own assessment pathways, so they are covered on our men's health and women's health pages rather than repeated here. If that is your main concern, start there; if it is one part of a wider picture, your practitioner covers it within your program.",
+        },
+        {
           title: "General wellness optimisation",
           body: "For people who want structure and a practitioner in their corner rather than a particular problem solved. Assessment establishes a baseline, and review keeps the plan honest as things change.",
         },
-      ],
-    },
-    {
-      kind: "statement",
-      eyebrow: "Sexual health and wellbeing",
-      heading: "Sexual health is handled on its own pages",
-      paragraphs: [
-        "Sexual health sits within health optimisation for many people, and it is assessed properly rather than in passing. Because the conditions involved have their own assessment pathways, they are covered on our men's health and women's health pages rather than duplicated here.",
-        "If that is your main concern, start there. If it is one part of a wider picture, your practitioner will cover it within your program.",
       ],
     },
     {

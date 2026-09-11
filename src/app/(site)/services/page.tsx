@@ -2,7 +2,7 @@
  * `/services/` — the service directory.
  *
  * Explicit JSX rather than the ServicePage template: this page's middle is the
- * homepage's FocusGrid, and its hero CTA jumps to an anchor rather than leaving
+ * homepage's ServiceBoxes, and its hero CTA jumps to an anchor rather than leaving
  * the page. The spec's hybrid model (D4) allows for exactly this — a template
  * for the nineteen service pages, explicit pages for the twelve that do not fit
  * it.
@@ -30,10 +30,10 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
 import { CLINIC } from "@/content/clinic";
-import { HOME_FOCUS } from "@/content/home";
 import { SERVICES_META, SERVICES_PAGE } from "@/content/services-page";
 
-import { FocusGrid } from "@/components/sections/FocusGrid";
+import { ServiceBoxes } from "@/components/sections/ServiceBoxes";
+import { SERVICE_BOXES, SERVICE_BOXES_HEADING } from "@/content/service-boxes";
 import { RelatedCards } from "@/components/sections/RelatedCards";
 import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
@@ -76,13 +76,17 @@ export default function Page() {
         cta={{ label: "Check your eligibility", href: "/quiz/" }}
       />
 
-      <FocusGrid
-        className="bg-[color:var(--hhcp-accent)]"
+      {/*
+        Her "Choose Your Service" boxes, replacing the eight-card focus grid.
+        Her 9 September instruction and the 11 September audit; see
+        content/service-boxes.ts for the three agreed departures.
+      */}
+      <ServiceBoxes
         id="book"
-        eyebrow={HOME_FOCUS.eyebrow}
-        heading={HOME_FOCUS.heading}
-        intro={HOME_FOCUS.intro}
-        cards={HOME_FOCUS.cards}
+        eyebrow={SERVICE_BOXES_HEADING.eyebrow}
+        heading={SERVICE_BOXES_HEADING.heading}
+        intro={SERVICE_BOXES_HEADING.intro}
+        boxes={SERVICE_BOXES}
       />
 
       <RelatedCards
