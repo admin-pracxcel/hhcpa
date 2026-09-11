@@ -92,38 +92,30 @@ export const HOW_IT_WORKS: ServicePageData = {
       ],
     },
     /*
-     * §4.2 items 2 and 3 ask for "Our Approach to Care" and "How We Support
-     * You" from her live site. On her live how-it-works those are one section,
-     * not two: an h2 reading "How We Support You" over four items. The
-     * homepage carries the same four under an "Our Approach to Care" heading
-     * with a fifth item, which is what made the spec read them as separate.
-     * Her four, verbatim.
+     * §4.2 items 2 and 3, her two sections from the live how-it-works page,
+     * in her order and her design.
+     *
+     * They were read as one section and rebuilt as a two-column tile grid,
+     * on the reasoning that "Our Approach to Care" and "How We Support You"
+     * were the same four items under two names. They are not. Checked
+     * against her live DOM at 1534px, sections 3 and 4 of that page:
+     *
+     *   3. eyebrow "Our Approach to Care", h2 "How We Support You", a lead
+     *      paragraph, four accordion items and a quiz CTA, on the dark fill
+     *      with a photograph filling the right half.
+     *   4. eyebrow "How We Support You", h2 "Professional Medical
+     *      Consultations", then the five-card marquee.
+     *
+     * "How We Support You" appears in both — as the heading of one and the
+     * eyebrow of the next — which is what made them look like one section.
+     * The tile grid lost the accordion, the image, the lead paragraph, the
+     * CTA and the whole second section with it.
+     *
+     * Both are the same components the homepage uses, with the same
+     * defaults, so the two pages cannot drift.
      */
-    {
-      kind: "tiles",
-      tinted: true,
-      eyebrow: "Our Approach to Care",
-      heading: "How We Support You",
-      columns: 2,
-      tiles: [
-        {
-          title: "Medical Guidance",
-          body: "Navigate your healthcare journey with confidence. Our AHPRA-registered medical practitioners provide ongoing support throughout your consultations, helping you understand your options and ensuring you receive the professional guidance you need at every stage of your care.",
-        },
-        {
-          title: "Judgement-Free Care",
-          body: "Your health concerns deserve a supportive, confidential environment. We create a safe space where you can openly discuss your healthcare needs with qualified medical professionals who listen without judgement and respect your individual circumstances throughout the process.",
-        },
-        {
-          title: "Clinical Standards",
-          body: "All consultations are conducted by AHPRA-registered medical practitioners who maintain rigorous clinical standards. Our practitioners bring extensive medical experience and stay current with healthcare guidelines to provide informed, professional consultations.",
-        },
-        {
-          title: "Informed Approach",
-          body: "Our consultation process follows established medical protocols and professional healthcare standards. Our AHPRA-registered practitioners will review your medical history and discuss your health concerns to determine the most appropriate pathway for your individual circumstances.",
-        },
-      ],
-    },
+    { kind: "approach" },
+    { kind: "careAreas" },
     {
       kind: "statement",
       /* §4.2 item 5: solid background, no image. Her explicit answer. Leave it. */

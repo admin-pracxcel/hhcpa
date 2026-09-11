@@ -30,6 +30,8 @@ import {
 import { cn } from "@/lib/utils";
 import type { PriceKey } from "@/content/pricing";
 
+import { ApproachSection } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
+import { CareAreasSection } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/CareAreasSection";
 import { ChecklistSection } from "./ChecklistSection";
 import { InlineCtaBand } from "./InlineCtaBand";
 import { PriceCards } from "./PriceCards";
@@ -143,6 +145,15 @@ export type ServiceModule =
       readonly labels?: Partial<Record<PriceKey, string>>;
       readonly note?: string;
     }
+  /*
+   * Her two original sections, carried across whole rather than re-expressed
+   * as tiles. Both take no content: the components hold her copy as their
+   * defaults, and those defaults are the clone's, so they are already hers.
+   * That is the point of using them — a `tiles` approximation is what got
+   * the design wrong here in the first place.
+   */
+  | { readonly kind: "approach" }
+  | { readonly kind: "careAreas" }
   | {
       readonly kind: "inlineCta";
       readonly heading: string;
@@ -319,6 +330,10 @@ function Module({ module }: { module: ServiceModule }) {
           columns={module.columns}
         />
       );
+    case "approach":
+      return <ApproachSection />;
+    case "careAreas":
+      return <CareAreasSection />;
     case "statement":
       return (
         <StatementBand
