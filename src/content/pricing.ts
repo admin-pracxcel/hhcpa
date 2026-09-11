@@ -34,9 +34,19 @@
  *
  * The two services that were absent here because the approved sitemap had no
  * page for them — Continuity & Preventative Health (from $69) and Holistic Care
- * / Alternative Medicine (from $49) — now have both. The second still bears on
- * the open question above: her "holistic from $59" reads against a live price
- * of $49, and $49 is what is built until she confirms otherwise.
+ * / Alternative Medicine — now have both.
+ *
+ * Holistic Care moved to $59 on 2026-09-11, at Bilal's instruction. It had been
+ * $49 because that is what her live site shows, held there until she confirmed
+ * the change in writing. Her onboarding reply — "Wants to change - from $99 but
+ * holistic from $59" — is the change, and $59 is also the only figure that makes
+ * the pricing page coherent: the fees block below the table is titled "Our Fees:
+ * Holistic Care / Alternative Medicine" and its cheapest fee is the $59
+ * follow-up. At $49 the table quoted a price that appeared nowhere in the block
+ * directly beneath it.
+ *
+ * It stays `provisional`. This resolves an internal contradiction; it is not her
+ * written sign-off.
  *
  * Anything marked `provisional` is awaiting Ranjeeta's written confirmation per
  * onboarding items 21 and 25, and must not be presented as final until confirmed
@@ -105,7 +115,7 @@ export const PRICES: Record<PriceKey, Price> = {
    */
   continuityPreventative:
                       { label: "Continuity & Preventative Health", amount: 69,   from: true,  provisional: true },
-  holisticCare:       { label: "Holistic Care / Alternative Medicine", amount: 49, from: true, provisional: true },
+  holisticCare:       { label: "Holistic Care / Alternative Medicine", amount: 59, from: true, provisional: true },
   /* Renamed from "Structured health programs" by §5.1: the row is the Health
      Optimisation hub's price, so it should read as that service's name. */
   healthProgram:      { label: "Health Optimisation & Complete Wellness", amount: 299, from: true, provisional: true },
