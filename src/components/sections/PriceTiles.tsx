@@ -83,14 +83,18 @@ const STYLES = `
 }
 
 /*
- * Five to a row, and ten services, so the two rows come out even. Explicit
- * columns rather than the focus grid's flex-basis arithmetic: a dangling
- * fifth tile on a row of its own is the thing to avoid here, and a grid says
- * "five" in one place instead of deriving it from a percentage.
+ * Four to a row, and twelve services, so the three rows come out even.
+ * Explicit columns rather than the focus grid's flex-basis arithmetic: a
+ * dangling tile on a row of its own is the thing to avoid here, and a grid
+ * says "four" in one place instead of deriving it from a percentage.
+ *
+ * Twelve is the number to keep an eye on. It divides by four; it also divided
+ * by the five this used to be only because there were ten services then. Add a
+ * thirteenth and the last row has one tile on it.
  */
 .hhcp-ptl-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin: 0;
 }
@@ -103,10 +107,21 @@ const STYLES = `
   min-height: 150px;
   padding: 24px;
   border-radius: 12px;
-  background: #ffffff;
   border: 1px solid #d6e8e1;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/*
+ * The two fills alternate tile by tile, in source order.
+ *
+ * With four to a row that lands as columns rather than a checkerboard —
+ * one and three take the darker fill, two and four the lighter — because an
+ * even column count means every row starts on the same colour. At the 991px
+ * two-column layout the same thing happens, and at 478 it stacks to one
+ * column and alternates row by row, which is where it reads as stripes.
+ */
+.hhcp-ptl-tile:nth-child(odd) { background: #ddffeb; }
+.hhcp-ptl-tile:nth-child(even) { background: #f5fff9; }
 
 .hhcp-ptl-tile:hover {
   transform: translateY(-4px);
@@ -130,7 +145,9 @@ const STYLES = `
   align-self: flex-start;
   padding: 6px 12px;
   border-radius: var(--hhcp-radius-s, 6.667px);
-  background: var(--hhcp-accent, #f5fff9);
+  /* White, not --hhcp-accent: that is now one of the two tile fills, and the
+     chip disappeared entirely on every tile that got it. */
+  background: #ffffff;
   /* 20px, not 14: this is the other half of the page's pricing, and at 14 it
      read as an annotation on the service name rather than the point of the
      tile. See the note in PriceCards about the two sections ranking equally. */
