@@ -43,7 +43,26 @@ const STYLES = `
   /* 495px and 619px of a 1340px container. See the header. */
   grid-template-columns: 37% 46.2%;
   justify-content: space-between;
+  /*
+   * Required for the sticky column below, not just for looks: a grid item
+   * defaults to stretching the full row height, and an element as tall as its
+   * scroll container has nowhere to travel, so it never sticks.
+   */
   align-items: start;
+}
+
+/*
+ * The copy holds at the top while the form scrolls past it, as hers does.
+ * Her wrapper is sticky sticky--top static--l at top: 0; ours offsets by
+ * the pinned header instead, because her header scrolls away and ours does
+ * not — at top: 0 the eyebrow would sit under the floating pill.
+ *
+ * CSS only. No scroll listener and no IntersectionObserver, which this
+ * codebase does not have and is not getting.
+ */
+.hhcp-ds-copy {
+  position: sticky;
+  top: calc(var(--hhcp-header-pinned-h, 110px) + var(--hhcp-space-s, 20px));
 }
 
 .hhcp-ds-eyebrow {
@@ -126,6 +145,12 @@ const STYLES = `
     row-gap: var(--hhcp-space-l, 40px);
   }
 
+  /* Her static--l: stacked, the copy is above the form, so pinning it would
+     only push the form off screen. */
+  .hhcp-ds-copy {
+    position: static;
+  }
+
   .hhcp-ds-title {
     font-size: var(--hhcp-h2, 40px);
     line-height: 1.1;
@@ -145,7 +170,7 @@ export function DischargeSwitch({ form }: { form: ReactNode }) {
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-ds-container">
         <div className="hhcp-ds-grid">
-          <div>
+          <div className="hhcp-ds-copy">
             <div className="hhcp-ds-eyebrow">
               <span className="hhcp-ds-dot" />
               <span>{DISCHARGE_PAGE.eyebrow}</span>
