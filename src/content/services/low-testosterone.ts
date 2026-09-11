@@ -38,6 +38,7 @@ export const LOW_TESTOSTERONE: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Men's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Men's Health", href: "/mens-health/" },
@@ -93,7 +94,7 @@ export const LOW_TESTOSTERONE: ServicePageData = {
       paragraphs: [
         "Treatment for low testosterone is not something to start and forget. It needs ongoing review to keep it safe and effective, including periodic blood tests and check-ins. Our service builds that monitoring in, so you are supported rather than left to manage it alone.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("low-testosterone-monitoring"),
       imageAlt:
         "A man talks with a nurse in a pathology collection centre before a routine blood test.",

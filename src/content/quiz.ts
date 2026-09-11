@@ -1480,6 +1480,67 @@ export function findStep(id: string): QuizStep | undefined {
   return QUIZ_STEPS.find((step) => step.id === id);
 }
 
+/* ------------------------------------------------------------------ *
+ * Deep-linking a service                                              *
+ * ------------------------------------------------------------------ */
+
+/** The id of the branch-selection step, so nothing else has to hardcode it. */
+export const SERVICE_STEP_ID = "service";
+
+/** The field that step writes, used when a deep link answers it for the visitor. */
+export const SERVICE_FIELD = "service_selection";
+
+/**
+ * The eight service labels, read from the step rather than written out again.
+ *
+ * There is exactly one service list in this file and this reads it. A second
+ * copy would drift the first time a service is renamed, and the renaming is
+ * the likely event — "Metabolic Health" is already an open question with her.
+ */
+export function serviceOptions(): readonly string[] {
+  const step = findStep(SERVICE_STEP_ID);
+  return step !== undefined && step.kind === "choice" ? step.options : [];
+}
+
+/**
+ * URL form of a service label.
+ *
+ * Derived, not authored: apostrophes are dropped rather than becoming
+ * separators, and every other run of non-alphanumerics collapses to a single
+ * hyphen. That gives "Men's Health" → "mens-health" and "Continuity &
+ * Preventative Health" → "continuity-preventative-health", which are the paths
+ * those services already live at — so the links read as though they were
+ * hand-written, without a table anyone has to keep in step.
+ */
+export function serviceSlug(label: string): string {
+  return label
+    .toLowerCase()
+    .replace(/['\u2019]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Resolve a `?service=` value back to its label, or undefined.
+ *
+ * Accepts the slug or the label itself, and is deliberately total: an unknown
+ * value returns undefined and the caller falls back to asking the question.
+ * A deep link is a convenience, and a mistyped one must not be able to break
+ * the quiz or, worse, silently put someone down the wrong clinical branch.
+ */
+export function serviceFromSlug(value: string | null | undefined): string | undefined {
+  if (value === null || value === undefined) return undefined;
+  const wanted = serviceSlug(value);
+  if (wanted === "") return undefined;
+  return serviceOptions().find((label) => serviceSlug(label) === wanted);
+}
+
+/** `/quiz/?service=…` for a service label, or plain `/quiz/` if it is unknown. */
+export function quizHrefFor(label: string): string {
+  const known = serviceOptions().includes(label);
+  return known ? `${QUIZ_META.path}?service=${serviceSlug(label)}` : QUIZ_META.path;
+}
+
 /** Answer → next step id, honouring the `*` fallback. */
 export function nextStepId(step: QuizStep, answer: string): string {
   switch (step.kind) {

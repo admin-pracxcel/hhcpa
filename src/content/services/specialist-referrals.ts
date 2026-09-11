@@ -17,6 +17,7 @@ export const SPECIALIST_REFERRALS: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Online Doctor",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Online Doctor", href: "/online-doctor/" },

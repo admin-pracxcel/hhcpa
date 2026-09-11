@@ -23,6 +23,7 @@ export const PREMATURE_EJACULATION: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Men's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Men's Health", href: "/mens-health/" },
@@ -83,7 +84,7 @@ export const PREMATURE_EJACULATION: ServicePageData = {
       paragraphs: [
         "Premature ejaculation can have several contributors, and often more than one is involved at once. Anxiety and stress play a large part for many men, particularly performance-related worry that becomes self-reinforcing. Sensitivity, relationship dynamics and general health can all feed in. In some cases it appears alongside erectile difficulty, which is worth assessing together. Understanding the drivers is what makes a management plan work, and that is the first thing your practitioner explores with you.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("premature-ejaculation-contributors"),
       imageAlt:
         "A couple sit together on a couch in daylight, turned toward each other in conversation.",

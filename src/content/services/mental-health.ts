@@ -33,6 +33,7 @@ export const MENTAL_HEALTH: ServicePageData = {
    * are allowed to disagree, and the schema follows the service, not the path.
    */
   serviceSchemaName: "Mental health support consultations",
+  quizService: "Mental Health Support",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Online Doctor", href: "/online-doctor/" },
@@ -78,7 +79,7 @@ export const MENTAL_HEALTH: ServicePageData = {
       paragraphs: [
         "Your practitioner listens first, then works with you on a plan. That might involve advice and strategies, treatment where appropriate, referral to a psychologist or specialist service, or a combination. Mental health is health, and it responds to the same careful, individualised approach we bring to everything else.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("mental-health-our-approach"),
       imageAlt:
         "A practitioner sits in a softly lit room, giving her full attention to someone speaking.",

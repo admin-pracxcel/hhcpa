@@ -386,6 +386,87 @@ describe("quiz form", () => {
     expect(body.consents.marketing).toBe(true);
   });
 
+  /* ---------- deep-linked service ---------- */
+
+  /*
+   * A service page links to /quiz/?service=…, which answers the branch question
+   * before the visitor arrives. Two things have to stay true: the three gates
+   * still run in front of it, and the service still reaches the payload — the
+   * step is skipped, not dropped. n8n routes on `service`, so a preselection
+   * that quietly failed to record would look exactly like a working quiz until
+   * somebody went looking for the bookings.
+   */
+  const gates = () => {
+    choose("No"); // not an emergency
+    choose("Yes"); // 18 or over
+    choose("Yes"); // in Australia
+  };
+
+  it("runs all three gates before the preselected service", () => {
+    render(<QuizForm onClose={close} preselectedService="Men's Health" />);
+
+    expect(screen.getByText(/experiencing a medical emergency/i)).toBeTruthy();
+    choose("No");
+    expect(screen.getByText(/18 years of age or older/i)).toBeTruthy();
+    choose("Yes");
+    expect(screen.getByText(/currently located in Australia/i)).toBeTruthy();
+    choose("Yes");
+
+    /* Straight into the branch: the service question is not asked. */
+    expect(screen.queryByText(/what service are you interested in/i)).toBeNull();
+    expect(screen.getByText(/what is your main concern/i)).toBeTruthy();
+  });
+
+  it("still asks when no service is supplied", () => {
+    render(<QuizForm onClose={close} />);
+    gates();
+    expect(screen.getByText(/what service are you interested in/i)).toBeTruthy();
+  });
+
+  it("asks as normal when the service is not one the quiz knows", () => {
+    /* What an unrecognised ?service= resolves to. It must not throw, and it
+       must not silently drop someone into an arbitrary branch. */
+    render(<QuizForm onClose={close} preselectedService={undefined} />);
+    gates();
+    expect(screen.getByText(/what service are you interested in/i)).toBeTruthy();
+  });
+
+  it("sends the preselected service in the payload", async () => {
+    render(
+      <QuizForm
+        onClose={close}
+        preselectedService="Health Optimisation & Complete Wellness"
+      />,
+    );
+    gates();
+    choose("Energy, Vitality & Wellness");
+    choose("No");
+    choose("No");
+    choose("No");
+    choose("No");
+    choose("No");
+    choose("No");
+    choose("No");
+
+    fillContactAndSubmit();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    const body = sentBody();
+    expect(body.service).toBe("Health Optimisation & Complete Wellness");
+    expect(body.answers.service_selection).toBe(
+      "Health Optimisation & Complete Wellness",
+    );
+  });
+
+  it("goes back to the residency gate, not to a step that never ran", () => {
+    render(<QuizForm onClose={close} preselectedService="Men's Health" />);
+    gates();
+    expect(screen.getByText(/what is your main concern/i)).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: /back/i }));
+    expect(screen.getByText(/currently located in Australia/i)).toBeTruthy();
+  });
+
   it("refuses to submit without the required consents", () => {
     render(<QuizForm onClose={close} />);
     start("Mental Health Support");

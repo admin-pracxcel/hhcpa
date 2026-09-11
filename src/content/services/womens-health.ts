@@ -26,6 +26,7 @@ export const WOMENS_HEALTH: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Women's Health",
   crumbs: [{ label: "Home", href: "/" }],
   trust: [
     "AHPRA-registered practitioners",
@@ -89,7 +90,7 @@ export const WOMENS_HEALTH: ServicePageData = {
       paragraphs: [
         "Women often describe having to push to be taken seriously about fatigue, mood, cycles and menopause. We build our consultations around listening first. Your practitioner asks about what you are actually experiencing, connects the dots, arranges tests where they help, and gives you a plan you understand. You should leave feeling assessed, not dismissed.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("womens-health-being-heard"),
       imageAlt:
         "A general practitioner listens closely as a patient speaks in a consulting room.",

@@ -29,6 +29,7 @@ import {
 } from "@/lib/schema";
 import { cn } from "@/lib/utils";
 import type { PriceKey } from "@/content/pricing";
+import { QUIZ_META, quizHrefFor } from "@/content/quiz";
 
 import { ApproachSection } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/ApproachSection";
 import { CareAreasSection } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/CareAreasSection";
@@ -207,6 +208,19 @@ export interface ServicePageData {
       readonly answer: string;
     }[];
   };
+  /**
+   * The quiz service this page belongs to, so its CTAs deep-link.
+   *
+   * Every `/quiz/` link on the page becomes `/quiz/?service=…`, which lands
+   * the visitor past the branch-selection step with this service already
+   * chosen. A child page names its parent hub's service; the quiz has no key
+   * of its own for, say, erectile dysfunction.
+   *
+   * Omit it and every link stays `/quiz/`, which is the correct behaviour for
+   * the pages that are not a service — /pricing/, /about-us/ and the rest.
+   * An unrecognised value is also ignored rather than producing a dead link.
+   */
+  readonly quizService?: string;
   readonly closing: {
     readonly heading: string;
     readonly body: string;
@@ -226,7 +240,46 @@ export interface ServicePageData {
 
 const TINT = "bg-[color:var(--hhcp-accent)]";
 
-export function ServicePage({ data }: { data: ServicePageData }) {
+/**
+ * Rewrites every `href: "/quiz/"` in the page data to the service's deep link.
+ *
+ * Done here, once, rather than at each of the sixty-odd call sites across the
+ * content files. Those sites are hero buttons, lead-paragraph links, module
+ * CTAs and the closing band, and most of them are not rendered by this file —
+ * they are handed to ServiceHero, LeadParagraph and the modules. Transforming
+ * the data on the way in reaches all of them and leaves one place to read.
+ *
+ * Only keys named `href` whose value is exactly the quiz path are touched, so
+ * body copy that happens to mention the path is left alone.
+ */
+function rewriteQuizHrefs<T>(value: T, href: string): T {
+  if (Array.isArray(value)) {
+    return value.map((item) => rewriteQuizHrefs(item, href)) as T;
+  }
+  if (typeof value === "object" && value !== null) {
+    const out: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(value)) {
+      out[key] =
+        key === "href" && item === QUIZ_META.path
+          ? href
+          : rewriteQuizHrefs(item, href);
+    }
+    return out as T;
+  }
+  return value;
+}
+
+function withQuizService(data: ServicePageData): ServicePageData {
+  if (data.quizService === undefined) return data;
+  const href = quizHrefFor(data.quizService);
+  /* quizHrefFor returns the plain path for a service the quiz does not know,
+     so an unrecognised value costs nothing and changes nothing. */
+  if (href === QUIZ_META.path) return data;
+  return rewriteQuizHrefs(data, href);
+}
+
+export function ServicePage({ data: raw }: { data: ServicePageData }) {
+  const data = withQuizService(raw);
   return (
     <>
       <JsonLd
@@ -273,7 +326,21 @@ export function ServicePage({ data }: { data: ServicePageData }) {
 
       <LeadParagraph
         text={data.intro}
-        cta={data.introCta ?? { label: "Check your eligibility", href: "/quiz/" }}
+        /*
+         * The fallback goes through the same rewrite as everything else.
+         * It is not part of `data`, so the transform above never sees it —
+         * which left the one quiz link most pages rely on pointing at the
+         * generic quiz while the rest of the page deep-linked.
+         */
+        cta={
+          data.introCta ?? {
+            label: "Check your eligibility",
+            href:
+              raw.quizService === undefined
+                ? QUIZ_META.path
+                : quizHrefFor(raw.quizService),
+          }
+        }
       />
 
       {data.modules.map((module, index) => (

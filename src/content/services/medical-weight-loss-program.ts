@@ -30,6 +30,7 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Weight Management",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Weight Management", href: "/weight-management/" },
@@ -72,7 +73,7 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
       paragraphs: [
         "Most weight returns because the underlying drivers were never addressed, and because support stopped the moment the number moved. A supervised program keeps the plan alive. Your practitioner can respond to plateaus, manage side effects, and keep you focused on the habits that protect the result. Weight management is a long game, and this program is built for the long game.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("medical-weight-loss-program-ongoing-review"),
       imageAlt:
         "A man walks along a suburban footpath in early morning light.",

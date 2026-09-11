@@ -25,6 +25,7 @@ export const CONTRACEPTION: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Women's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Women's Health", href: "/womens-health/" },
@@ -106,7 +107,7 @@ export const CONTRACEPTION: ServicePageData = {
       paragraphs: [
         "Contraception is personal, and the right choice depends on your health, your preferences and your stage of life. In a consultation, your practitioner talks through the options that may suit you, explains how they work, and checks that a given option is appropriate and safe for you. They can continue an existing prescription where it remains suitable, and arrange testing or an in-person review when that is the safer path. You leave with a clear understanding and a plan you are comfortable with.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("contraception-options"),
       imageAlt:
         "A woman and a general practitioner talk in a private consulting room.",

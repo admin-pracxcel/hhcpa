@@ -29,6 +29,7 @@
 import { PRICES } from "./pricing";
 import { CALL_CTA } from "./clinic";
 import { sectionImage } from "./services/shared";
+import { quizHrefFor } from "./quiz";
 
 export const WLP_META = {
   title: "Medical Weight Loss Clinic Online | Australia",
@@ -37,10 +38,20 @@ export const WLP_META = {
   path: "/weight-management/",
 } as const;
 
+/**
+ * Every quiz link on this page, with the service already chosen.
+ *
+ * The hub is hand-assembled rather than built from `ServicePageData`, so it
+ * does not get the deep link from ServicePage's transform the way the other
+ * service pages do. Derived from the quiz's own service list either way — the
+ * string below is one of its labels, not a slug written out here.
+ */
+export const WLP_QUIZ_HREF = quizHrefFor("Weight Management");
+
 export const WLP_HERO = {
   eyebrow: "Weight management",
   heading: "Medical weight loss, guided by AHPRA-registered practitioners",
-  primary: { label: "Check your eligibility", href: "/quiz/" },
+  primary: { label: "Check your eligibility", href: WLP_QUIZ_HREF },
   secondary: CALL_CTA,
 } as const;
 
@@ -63,7 +74,7 @@ export const WLP_EXPLAINER = {
     "Medically supervised weight loss means a registered practitioner assesses your health, agrees a plan with you, and reviews it over time, rather than you buying something without advice. It looks at the whole picture: your history, your other medications, your goals and your safety. When diet and exercise alone have stalled, a supervised approach can help you understand why, and what is realistic for you.",
     "Here is the honest version. Where a prescription is clinically appropriate, that is a decision your practitioner makes with you in the consultation, based on your individual circumstances. We do not name or promote specific medicines on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
   ],
-  cta: { label: "Book a consultation", href: "/quiz/" },
+  cta: { label: "Start your booking", href: WLP_QUIZ_HREF },
   image: sectionImage("weight-management-how-it-works"),
   imageAlt:
     "A woman at a kitchen table listens during a video consultation, a notebook open beside her.",
@@ -113,7 +124,7 @@ export const WLP_STEPS = {
         "Weight management is not a single appointment. If treatment begins, your practitioner reviews how you are going, adjusts the plan, and manages eligible prescriptions over time.",
     },
   ],
-  cta: { label: "Start the free quiz", href: "/quiz/" },
+  cta: { label: "Start the free quiz", href: WLP_QUIZ_HREF },
 } as const;
 
 export const WLP_SUPERVISION = {
@@ -218,5 +229,5 @@ export const WLP_CLOSING = {
    * form disproves.
    */
   body: "Start with the free pre-screening quiz. Seven minutes, no diagnosis, no commitment. If a medically supervised weight-loss approach is right for you, your practitioner will guide it from there.",
-  primary: { label: "Start the free quiz", href: "/quiz/" },
+  primary: { label: "Start the free quiz", href: WLP_QUIZ_HREF },
 } as const;

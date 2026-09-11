@@ -30,6 +30,7 @@ export const ONLINE_DOCTOR: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Online Doctor",
   crumbs: [{ label: "Home", href: "/" }],
   trust: [
     "AHPRA-registered practitioners",

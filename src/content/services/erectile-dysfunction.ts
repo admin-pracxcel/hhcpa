@@ -30,6 +30,7 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Men's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Men's Health", href: "/mens-health/" },

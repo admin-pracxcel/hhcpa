@@ -25,6 +25,7 @@ export const ONLINE_PRESCRIPTIONS: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Online Doctor",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Online Doctor", href: "/online-doctor/" },
@@ -126,7 +127,7 @@ export const ONLINE_PRESCRIPTIONS: ServicePageData = {
       paragraphs: [
         "Many requests are to continue treatment that is already working, where a review confirms it remains appropriate to renew. Others are for a new concern a practitioner can assess and, where suitable, treat. Common areas include ongoing conditions managed with regular medication, skin concerns, and everyday health issues. Some medications carry restrictions and are not suitable for a first telehealth consultation, and your practitioner will tell you when that applies and what the safe alternative is.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("online-prescriptions-what-patients-ask"),
       imageAlt:
         "A woman at a home desk gestures as she speaks during a video consultation.",

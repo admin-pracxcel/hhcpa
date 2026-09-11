@@ -50,6 +50,7 @@ export const CONTINUITY_PREVENTATIVE_HEALTH: ServicePageData = {
     primary: { label: "Book a consultation", href: "/services/" },
     secondary: CALL_CTA,
   },
+  quizService: "Continuity & Preventative Health",
   crumbs: [{ label: "Home", href: "/" }],
   serviceSchemaName: "Continuity and preventative health consultations",
   intro:

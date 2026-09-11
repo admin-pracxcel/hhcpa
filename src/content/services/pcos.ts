@@ -24,6 +24,7 @@ export const PCOS: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Women's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Women's Health", href: "/womens-health/" },
@@ -81,7 +82,7 @@ export const PCOS: ServicePageData = {
       paragraphs: [
         "PCOS shows up differently for different women, and your plan reflects that. Common concerns patients bring to us include irregular or missing periods, acne and skin changes, unwanted hair growth, difficulty managing weight, and questions about fertility. Mood and energy often come into it too. Because PCOS connects to insulin and longer-term metabolic health, your practitioner looks beyond any single symptom and helps you manage the whole picture over time.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("pcos-symptoms"),
       imageAlt:
         "A woman at a kitchen table points to a handwritten list during a phone consultation.",

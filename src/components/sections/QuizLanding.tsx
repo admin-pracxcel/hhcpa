@@ -17,10 +17,12 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { MouseEvent } from "react";
 import Link from "next/link";
 
 import { QUIZ_LANDING } from "@/content/quiz-landing";
+import { serviceFromSlug } from "@/content/quiz";
 import { QuizForm } from "./QuizForm";
 
 const STYLES = `
@@ -242,6 +244,18 @@ export function QuizLanding() {
   const opener = useRef<HTMLButtonElement>(null);
 
   /*
+   * `?service=` from a service page's CTA, resolved to one of the quiz's own
+   * labels. An unknown or absent value resolves to undefined, which is the
+   * normal path — the quiz asks which service, as it always has.
+   *
+   * Reading the parameter is what puts this component behind a Suspense
+   * boundary on the page; see the note there.
+   */
+  const preselectedService = serviceFromSlug(
+    useSearchParams().get("service"),
+  );
+
+  /*
    * Focus goes back to the button that opened the quiz. Without it, closing the
    * overlay drops the caret at the top of the document and a keyboard user has
    * to tab all the way back to where they were.
@@ -387,7 +401,9 @@ export function QuizLanding() {
         </div>
       </div>
 
-      {open && <QuizForm onClose={close} />}
+      {open && (
+        <QuizForm onClose={close} preselectedService={preselectedService} />
+      )}
     </section>
   );
 }

@@ -65,7 +65,16 @@ export default function Page() {
       </Suspense>
 
       <main id="brx-content">
-        <QuizLanding />
+        {/*
+          QuizLanding reads `?service=` to pre-select a service, and
+          useSearchParams opts its subtree out of static rendering. The
+          boundary keeps that to the quiz itself so the rest of the page is
+          still prerendered — and the fallback is null because the panel it
+          wraps is the whole page: a spinner here would flash on every load.
+        */}
+        <Suspense fallback={null}>
+          <QuizLanding />
+        </Suspense>
       </main>
 
       {/*

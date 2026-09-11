@@ -74,6 +74,7 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Health Optimisation & Complete Wellness",
   crumbs: [{ label: "Home", href: "/" }],
   serviceSchemaName: "Health optimisation and wellness programs",
   intro:
@@ -88,7 +89,7 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
         "Your practitioner starts by understanding where you are: your history, your current medications, how you sleep, how you recover, and what you are actually trying to change. Where it would inform the plan, they arrange pathology so decisions rest on your own results rather than on assumptions.",
         "From there you agree an approach together and review it over time. What that approach involves is a clinical decision made in your consultation, based on your individual circumstances. We do not name or promote specific treatments on this page, and we do not sell them. Your practitioner discusses suitable options with you directly, in private.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("health-optimisation-how-it-works"),
       imageAlt:
         "A woman reviews her pathology results with a practitioner during a video consultation at home.",

@@ -27,6 +27,7 @@ export const MENS_HEALTH: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Men's Health",
   crumbs: [{ label: "Home", href: "/" }],
   trust: [
     "AHPRA-registered practitioners",

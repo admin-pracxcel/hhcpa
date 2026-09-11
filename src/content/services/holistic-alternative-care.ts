@@ -68,9 +68,10 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
   hero: {
     eyebrow: "Holistic & alternative care",
     heading: "Whole-person care, assessed by registered practitioners",
-    primary: { label: "Book a consultation", href: "/quiz/" },
+    primary: { label: "Start your booking", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Holistic Care / Alternative Medicine",
   crumbs: [{ label: "Home", href: "/" }],
   serviceSchemaName: "Holistic and alternative care consultations",
   /*
@@ -78,7 +79,7 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
    * its call to action to "Check your eligibility" — which is how that exact
    * phrase reached a page whose header warns against it. Set explicitly.
    */
-  introCta: { label: "Book a consultation", href: "/quiz/" },
+  introCta: { label: "Start your booking", href: "/quiz/" },
   intro:
     "A personalised approach supporting chronic conditions, pain, sleep and overall wellbeing through evidence-based treatment options. Holistic care means your practitioner considers the whole picture rather than one complaint in isolation, and coordinates with the rest of your medical care rather than working around it.",
   modules: [

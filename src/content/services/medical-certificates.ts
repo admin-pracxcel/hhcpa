@@ -24,6 +24,7 @@ export const MEDICAL_CERTIFICATES: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Online Doctor",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Online Doctor", href: "/online-doctor/" },
@@ -78,7 +79,7 @@ export const MEDICAL_CERTIFICATES: ServicePageData = {
       paragraphs: [
         "A medical certificate makes sense when illness or injury genuinely affects your ability to work, study or care for someone, and you need documentation for your employer or institution. Your practitioner assesses your situation in a short consultation and issues a certificate where the assessment supports it. Because the certificate rests on a real consultation with a registered practitioner, it is a genuine document that holds up. If a certificate is not appropriate, your practitioner explains why and what you can do instead.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("medical-certificates-when-appropriate"),
       imageAlt:
         "A general practitioner listens and asks a follow-up question during a consultation.",

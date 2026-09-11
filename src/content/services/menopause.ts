@@ -33,6 +33,7 @@ export const MENOPAUSE: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Women's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Women's Health", href: "/womens-health/" },
@@ -69,7 +70,7 @@ export const MENOPAUSE: ServicePageData = {
       paragraphs: [
         "Your practitioner discusses your symptoms and history, considers your personal and family health, and where useful arranges tests. They explain the range of options open to you, from lifestyle approaches through to prescribed treatment where it is clinically appropriate, and help you weigh what suits you. The goal is a plan that fits your body, your history and your preferences, reviewed over time.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("menopause-how-treatment-is-assessed"),
       imageAlt:
         "A practitioner and a patient sit across a table, discussing options together.",

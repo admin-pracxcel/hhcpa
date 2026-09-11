@@ -23,6 +23,7 @@ export const HAIR_LOSS: ServicePageData = {
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
+  quizService: "Men's Health",
   crumbs: [
     { label: "Home", href: "/" },
     { label: "Men's Health", href: "/mens-health/" },
@@ -73,7 +74,7 @@ export const HAIR_LOSS: ServicePageData = {
       paragraphs: [
         "Most male hair loss is driven by a mix of genetics and hormones, and it follows a recognisable pattern that tends to progress over time. Age, family history and individual sensitivity all shape how quickly it happens. Less commonly, hair loss can point to another health factor worth checking, which is one reason a practitioner assessment helps before starting anything. Your practitioner confirms the type of hair loss you have and sets realistic expectations about what each option can do.",
       ],
-      cta: { label: "Book a consultation", href: "/quiz/" },
+      cta: { label: "Start your booking", href: "/quiz/" },
       image: sectionImage("hair-loss-what-causes-it"),
       imageAlt:
         "A father and his adult son stand talking in a backyard in afternoon light.",

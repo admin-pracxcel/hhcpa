@@ -38,6 +38,7 @@ import {
 import { CLINIC } from "@/content/clinic";
 import {
   WLP_CLOSING,
+  WLP_QUIZ_HREF,
   WLP_EXPLAINER,
   WLP_FAQ,
   WLP_HERO,
@@ -106,7 +107,7 @@ export default function WeightManagement() {
 
       <LeadParagraph
         text={WLP_INTRO}
-        cta={{ label: "Check your eligibility", href: "/quiz/" }}
+        cta={{ label: "Check your eligibility", href: WLP_QUIZ_HREF }}
       />
 
       <SplitFeature

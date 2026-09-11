@@ -31,6 +31,8 @@ import {
   QUIZ_CONSENTS,
   QUIZ_CONTACT,
   QUIZ_ENTRY_STEP,
+  SERVICE_FIELD,
+  SERVICE_STEP_ID,
   QUIZ_STEPS,
   prescriptionFee,
   triageMessagesFor,
@@ -788,9 +790,22 @@ interface QuizFormProps {
    * quiz is open — the form has enough state of its own.
    */
   onClose: () => void;
+  /**
+   * A service already chosen for the visitor, from `?service=` on the page.
+   *
+   * Resolved to one of the step's own labels before it gets here — an
+   * unrecognised value arrives as undefined and the question is asked as
+   * normal. The gates are unaffected: this removes the branch-selection step
+   * and nothing else.
+   */
+  preselectedService?: string;
 }
 
-export function QuizForm({ className, onClose }: QuizFormProps) {
+export function QuizForm({
+  className,
+  onClose,
+  preselectedService,
+}: QuizFormProps) {
   const [history, setHistory] = useState<string[]>([QUIZ_ENTRY_STEP]);
   /** Single-value answers: choices, follow-up text, numbers, dates. */
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -841,12 +856,48 @@ export function QuizForm({ className, onClose }: QuizFormProps) {
     setAnswers((current) => ({ ...current, [name]: value }));
   }, []);
 
-  const go = useCallback((from: QuizStep, answer: string) => {
-    const nextId = nextStepId(from, answer);
-    if (nextId === "") return;
-    setProblem("");
-    setHistory((stack) => [...stack, nextId]);
-  }, []);
+  const go = useCallback(
+    (from: QuizStep, answer: string) => {
+      const nextId = nextStepId(from, answer);
+      if (nextId === "") return;
+      setProblem("");
+
+      /*
+       * Arriving at the branch selection with the answer already given.
+       *
+       * The step is skipped rather than pre-filled: its answer is recorded as
+       * though it had been chosen, and the step it would have led to is pushed
+       * in its place. The visitor never sees a question they have effectively
+       * already answered by clicking through from a service page.
+       *
+       * It happens here, at the transition, rather than in the initial history
+       * — so the three gates run first exactly as they always do. Back from the
+       * branch lands on the residency gate, which is right: in this run the
+       * service step did not happen.
+       *
+       * If the service somehow leads nowhere, this falls through and asks the
+       * question. Better a redundant step than a dead end.
+       */
+      if (nextId === SERVICE_STEP_ID && preselectedService !== undefined) {
+        const serviceStep = findStep(SERVICE_STEP_ID);
+        const after =
+          serviceStep === undefined
+            ? ""
+            : nextStepId(serviceStep, preselectedService);
+        if (after !== "") {
+          setAnswers((current) => ({
+            ...current,
+            [SERVICE_FIELD]: preselectedService,
+          }));
+          setHistory((stack) => [...stack, after]);
+          return;
+        }
+      }
+
+      setHistory((stack) => [...stack, nextId]);
+    },
+    [preselectedService],
+  );
 
   const back = useCallback(() => {
     setProblem("");
