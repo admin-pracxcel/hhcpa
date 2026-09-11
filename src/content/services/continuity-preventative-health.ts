@@ -17,10 +17,24 @@
  * and the answer is the same one the rest of the site gives, from
  * MEDICARE_ANSWER, rather than a friendlier version written for this page.
  *
- * No pre-screening quiz. There is no assessment form for this service (v2.4
- * answer to Q30), so the page advertises no screening step and no duration —
- * its call to action is to book. Advertising a questionnaire with no questions
- * behind it is worse than not mentioning one.
+ * ─── THE QUIZ, AND WHAT IT IS NOT ──────────────────────────────────────────
+ *
+ * The page starts the quiz, which asks one question — which of her five
+ * categories of ongoing care the patient came for — and then takes their
+ * details and books them.
+ *
+ * That is a sub-selection, not screening, and Q30 still stands: there is no
+ * assessment form behind this service, nothing here gates eligibility, and
+ * nothing feeds triage. The page still advertises no screening step and no
+ * duration, and its call to action is to book rather than to be assessed.
+ *
+ * What changed on 2026-09-11 is where the button goes. It used to go to
+ * /services/, which is a menu — it answered "book a consultation" by showing
+ * the patient the list of services they had just navigated away from. The
+ * five categories come from her own booking wizard, which asked exactly this
+ * before sending people to Halaxy; routing through the quiz keeps that
+ * question and adds the contact capture, so the enquiry is recorded rather
+ * than left in an iframe.
  */
 
 import { PRICES } from "../pricing";
@@ -47,7 +61,7 @@ export const CONTINUITY_PREVENTATIVE_HEALTH: ServicePageData = {
   hero: {
     eyebrow: "Continuity & preventative health",
     heading: "Care that continues between appointments",
-    primary: { label: "Book a consultation", href: "/services/" },
+    primary: { label: "Start your booking", href: "/quiz/" },
     secondary: CALL_CTA,
   },
   quizService: "Continuity & Preventative Health",
@@ -56,7 +70,7 @@ export const CONTINUITY_PREVENTATIVE_HEALTH: ServicePageData = {
   intro:
     "Chronic disease management, long-term care planning and preventative health support, delivered by telehealth across Australia. Ongoing conditions need someone who knows your history and reviews it with you over time, not a fresh explanation at every appointment. That continuity is the service.",
   /* No quiz: there is no assessment form for this service yet. */
-  introCta: { label: "Book a consultation", href: "/services/" },
+  introCta: { label: "Start your booking", href: "/quiz/" },
   modules: [
     {
       kind: "tiles",
@@ -174,6 +188,6 @@ export const CONTINUITY_PREVENTATIVE_HEALTH: ServicePageData = {
   closing: {
     heading: "Professional Healthcare, Wherever You Are",
     body: "Book a consultation with an AHPRA-registered practitioner and start with a proper review of where things stand.",
-    primary: { label: "Book a consultation", href: "/services/" },
+    primary: { label: "Start your booking", href: "/quiz/" },
   },
 };

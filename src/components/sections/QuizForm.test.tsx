@@ -467,6 +467,47 @@ describe("quiz form", () => {
     expect(screen.getByText(/currently located in Australia/i)).toBeTruthy();
   });
 
+  /* ---------- continuity ---------- */
+
+  it("asks which kind of ongoing care, then goes straight to contact", async () => {
+    /*
+     * Her five categories, from her own booking wizard. A sub-selection, not
+     * screening: Q30 keeps this service out of Step 4, so the one question is
+     * followed by the contact capture and nothing else.
+     *
+     * The answer is clinical. "Chronic Disease Management" says the person has
+     * a chronic condition, and a health answer in the open payload is a
+     * privacy defect rather than a naming one.
+     */
+    render(
+      <QuizForm
+        onClose={close}
+        preselectedService="Continuity & Preventative Health"
+      />,
+    );
+    gates();
+
+    expect(screen.getByText(/what kind of ongoing care/i)).toBeTruthy();
+    for (const option of [
+      "Chronic Disease Management",
+      "Preventative Health Programs",
+      "Structured Care Plans",
+      "Ongoing Monitoring",
+      "Lifestyle & Risk Assessment",
+    ]) {
+      expect(screen.getByRole("button", { name: option })).toBeTruthy();
+    }
+
+    choose("Chronic Disease Management");
+    fillContactAndSubmit();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    const body = sentBody();
+    expect(body.service).toBe("Continuity & Preventative Health");
+    expect(body.clinical.continuity_focus).toBe("Chronic Disease Management");
+    expect(body.answers.continuity_focus).toBeUndefined();
+  });
+
   it("refuses to submit without the required consents", () => {
     render(<QuizForm onClose={close} />);
     start("Mental Health Support");

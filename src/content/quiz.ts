@@ -344,9 +344,40 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
       "Women's Health": "wh_concern",
       "Mental Health Support": "mh_diagnosed",
       "Online Doctor": "od_kind",
-      "Continuity & Preventative Health": "contact",
+      "Continuity & Preventative Health": "cp_focus",
       "Holistic Care / Alternative Medicine": "hl_concern",
     },
+  },
+  /*
+   * Continuity's sub-selection, the five categories from her own booking
+   * wizard (bookingWizardData, "continuity-preventative"), verbatim.
+   *
+   * It is a sub-selection, not screening. Q30 kept this service out of Step 4
+   * because the consultation is the screening and there is no assessment form
+   * behind it — that still holds, and nothing here gates eligibility or feeds
+   * triage. What it does is tell the practitioner which of the five the
+   * patient came for before the call, which is what her wizard asked and what
+   * the page otherwise threw away by sending people to /services/.
+   *
+   * Marked clinical. "Chronic Disease Management" says the person has a
+   * chronic condition, which is health information however briefly it is
+   * phrased — and the rule in this codebase is that the cost of guessing wrong
+   * runs one way.
+   */
+  {
+    kind: "choice",
+    id: "cp_focus",
+    field: "continuity_focus",
+    clinical: true,
+    question: "What kind of ongoing care are you looking for?",
+    options: [
+      "Chronic Disease Management",
+      "Preventative Health Programs",
+      "Structured Care Plans",
+      "Ongoing Monitoring",
+      "Lifestyle & Risk Assessment",
+    ],
+    next: { "*": "contact" },
   },
   {
     kind: "choice",
