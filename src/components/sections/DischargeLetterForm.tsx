@@ -44,36 +44,26 @@ const MAX_BYTES = 4 * 1024 * 1024;
 const ACCEPT = ".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png";
 
 const STYLES = `
-.hhcp-dl-section {
-  padding: var(--hhcp-section-space-m) var(--hhcp-gutter);
-  background: var(--hhcp-accent, #f5fff9);
-}
-
+/*
+ * Her mint card, measured off the live page: rgba(180, 253, 236, 0.3) on
+ * white, 48px of padding, a 10px radius, and 32px group headings. It is the
+ * right-hand column of the grid in DischargeSwitch, so it sets no width of
+ * its own.
+ */
 .hhcp-dl-card {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: var(--hhcp-space-l, 40px);
-  border-radius: var(--hhcp-radius-m, 12px);
-  background: #ffffff;
-  border: 1px solid var(--hhcp-neutral-ultra-light, #d6e8e1);
+  padding: 48px;
+  border-radius: 10px;
+  background: rgba(180, 253, 236, 0.3);
 }
 
-.hhcp-dl-title {
-  font-size: var(--hhcp-h3, 28px);
-  line-height: 1.2;
-  color: var(--hhcp-primary, #013126);
+.hhcp-dl-group + .hhcp-dl-group {
+  margin-top: var(--hhcp-space-l, 40px);
 }
-
-.hhcp-dl-group { margin-top: var(--hhcp-space-l, 40px); }
 
 .hhcp-dl-group-title {
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--hhcp-neutral-ultra-light, #d6e8e1);
-  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.36px;
-  text-transform: uppercase;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 400;
   color: var(--hhcp-primary, #013126);
 }
 
@@ -114,16 +104,47 @@ const STYLES = `
   color: var(--hhcp-base-80, #34524a);
 }
 
-.hhcp-dl-terms {
-  margin-top: var(--hhcp-space-l, 40px);
-  padding: var(--hhcp-space-m, 30px);
-  border-radius: var(--hhcp-radius-s, 6.667px);
-  background: var(--hhcp-neutral-ultra-light, #eef6f3);
-  font-size: var(--hhcp-text-s, 14px);
+/* Her file control is a pill button, not the browser's default row. */
+.hhcp-dl-file { display: none; }
+
+.hhcp-dl-file-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 19.2px;
+  border-radius: var(--hhcp-radius-pill, 999px);
+  background: var(--hhcp-action, #58eda2);
+  font-family: var(--font-roboto-mono-local), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
   color: var(--hhcp-primary, #013126);
+  cursor: pointer;
 }
 
-.hhcp-dl-terms strong { display: block; margin-bottom: 6px; }
+.hhcp-dl-file-button:hover { background: var(--hhcp-primary, #013126); color: var(--hhcp-action, #58eda2); }
+
+.hhcp-dl-submit {
+  width: 100%;
+  margin-top: var(--hhcp-space-m, 30px);
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+}
+
+.hhcp-dl-offer {
+  margin-top: var(--hhcp-space-s, 20px);
+  font-size: var(--hhcp-text-s, 14px);
+  line-height: 20px;
+  text-align: center;
+  color: var(--hhcp-base-80, #34524a);
+}
+
+.hhcp-dl-terms {
+  margin-top: 10px;
+  font-size: var(--hhcp-text-xs, 12px);
+  line-height: 17px;
+  color: var(--hhcp-base-60, #6b817b);
+}
 
 .hhcp-dl-problem {
   margin-top: var(--hhcp-space-s, 20px);
@@ -132,14 +153,24 @@ const STYLES = `
 }
 
 .hhcp-dl-done {
-  padding: var(--hhcp-space-m, 30px);
-  border-radius: var(--hhcp-radius-s, 6.667px);
-  background: var(--hhcp-accent, #f5fff9);
+  font-size: 16px;
+  line-height: 24px;
   color: var(--hhcp-primary, #013126);
 }
 
-@media (max-width: 767px) {
-  .hhcp-dl-card { padding: var(--hhcp-space-m, 30px) var(--hhcp-space-s, 20px); }
+.hhcp-dl-done-title {
+  margin-bottom: var(--hhcp-space-s, 20px);
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+@media (max-width: 991px) {
+  .hhcp-dl-card { padding: var(--hhcp-space-m, 30px); }
+}
+
+@media (max-width: 478px) {
+  .hhcp-dl-card { padding: var(--hhcp-space-s, 20px); }
   .hhcp-dl-pair { grid-template-columns: 1fr; }
 }
 `;
@@ -240,91 +271,91 @@ export function DischargeLetterForm() {
   };
 
   return (
-    <section className="hhcp-dl-section" id="discharge-letter">
+    <div className="hhcp-dl-card" id="discharge-letter">
       <style>{STYLES}</style>
-      <div className="hhcp-dl-card">
-        {status === "done" ? (
-          <div className="hhcp-dl-done font-dm-sans">
-            <h2 className="hhcp-dl-title font-dm-sans">Thanks, we have that</h2>
-            <p>
-              We will be in touch to arrange your transfer consultation. If you
-              still need help getting your discharge letter, we can help with
-              that on the call.
-            </p>
+      {status === "done" ? (
+        <div className="hhcp-dl-done font-dm-sans">
+          <h2 className="hhcp-dl-done-title font-dm-sans">Thanks, we have that</h2>
+          <p>
+            We will be in touch to arrange your transfer consultation. If you
+            still need help getting your discharge letter, we can help with
+            that on the call.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={submit}>
+          <div className="hhcp-dl-group">
+            <h2 className="hhcp-dl-group-title font-dm-sans">
+              {DISCHARGE_FORM.headings.details}
+            </h2>
+            <div className="hhcp-dl-pair">
+              <Field name="firstName" label="First Name" required />
+              <Field name="lastName" label="Last Name" required />
+            </div>
+            <Field name="mobile" label="Mobile Contact" type="tel" required />
+            <Field name="email" label="Your Email" type="email" required />
           </div>
-        ) : (
-          <form onSubmit={submit}>
-            <h2 className="hhcp-dl-title font-dm-sans">{DISCHARGE_FORM.heading}</h2>
 
-            <div className="hhcp-dl-group">
-              <h3 className="hhcp-dl-group-title">Your details</h3>
-              <div className="hhcp-dl-pair">
-                <Field name="firstName" label="First name" required />
-                <Field name="lastName" label="Last name" required />
-              </div>
-              <div className="hhcp-dl-pair">
-                <Field name="mobile" label="Mobile" type="tel" required />
-                <Field name="email" label="Email" type="email" required />
-              </div>
-            </div>
-
-            <div className="hhcp-dl-group">
-              <h3 className="hhcp-dl-group-title">Your current clinic</h3>
-              <Field name="previousClinic" label="Previous clinic name" />
-              <Field name="previousDoctor" label="Previous doctor's name" />
-
-              <div className="hhcp-dl-field">
-                <label className="hhcp-dl-label" htmlFor="dl-letter">
-                  Upload your discharge letter
-                </label>
-                <input
-                  id="dl-letter"
-                  name="letter"
-                  type="file"
-                  accept={ACCEPT}
-                  onChange={(event) =>
-                    setFileName(event.target.files?.[0]?.name ?? "")
-                  }
-                />
-                <p className="hhcp-dl-hint">
-                  {fileName !== ""
-                    ? `Selected: ${fileName}`
-                    : "PDF, JPG or PNG, up to 4MB. Optional: if you do not have one yet, tell us below."}
-                </p>
-              </div>
-
-              <div className="hhcp-dl-field">
-                <label className="hhcp-dl-label" htmlFor="dl-help">
-                  {DISCHARGE_FORM.helpLabel}
-                </label>
-                <textarea id="dl-help" name="help" className="hhcp-dl-textarea" />
-              </div>
-            </div>
-
-            <div className="hhcp-dl-terms font-dm-sans">
-              <strong>{DISCHARGE_FORM.offer}</strong>
-              <p>{DISCHARGE_FORM.terms}</p>
-            </div>
-
-            {problem !== "" && (
-              <p className="hhcp-dl-problem font-dm-sans" role="alert">
-                {problem}
-              </p>
-            )}
+          <div className="hhcp-dl-group">
+            <h2 className="hhcp-dl-group-title font-dm-sans">
+              {DISCHARGE_FORM.headings.clinic}
+            </h2>
+            <Field name="previousClinic" label="Previous Clinic Name" />
+            <Field name="previousDoctor" label="Previous Doctor's Name" />
 
             <div className="hhcp-dl-field">
-              <button
-                type="submit"
-                className="hhcp-btn"
-                disabled={status === "sending"}
-              >
-                {status === "sending" ? "Sending…" : "Complete"}
-              </button>
+              <label className="hhcp-dl-label" htmlFor="dl-letter">
+                Upload Your Discharge Letter
+              </label>
+              {/* The input is hidden and the label is the control, which is
+                  how her page renders it — a pill reading CHOOSE FILE. */}
+              <input
+                id="dl-letter"
+                name="letter"
+                type="file"
+                className="hhcp-dl-file"
+                accept={ACCEPT}
+                onChange={(event) =>
+                  setFileName(event.target.files?.[0]?.name ?? "")
+                }
+              />
+              <label className="hhcp-dl-file-button" htmlFor="dl-letter">
+                Choose file
+              </label>
+              <p className="hhcp-dl-hint">
+                {fileName !== ""
+                  ? `Selected: ${fileName}`
+                  : "PDF, JPG or PNG, up to 4MB. Optional: if you do not have one yet, tell us below."}
+              </p>
             </div>
-          </form>
-        )}
-      </div>
-    </section>
+
+            <div className="hhcp-dl-field">
+              <label className="hhcp-dl-label" htmlFor="dl-help">
+                {DISCHARGE_FORM.helpLabel}
+              </label>
+              <textarea id="dl-help" name="help" className="hhcp-dl-textarea" />
+            </div>
+          </div>
+
+          {problem !== "" && (
+            <p className="hhcp-dl-problem font-dm-sans" role="alert">
+              {problem}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="hhcp-btn hhcp-dl-submit"
+            disabled={status === "sending"}
+          >
+            {status === "sending" ? "Sending…" : "Complete"}
+          </button>
+
+          <p className="hhcp-dl-offer font-dm-sans">{DISCHARGE_FORM.offer}</p>
+          <p className="hhcp-dl-terms font-dm-sans">{DISCHARGE_FORM.terms}</p>
+        </form>
+      )}
+    </div>
   );
 }
 
