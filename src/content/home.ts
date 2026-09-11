@@ -35,8 +35,9 @@ export const HOME_META = {
 } as const;
 
 export const HOME_HERO = {
+  /* Her wording, given on 2026-09-11. */
   heading:
-    "Australia's practitioner-led telehealth clinic for everyday health, weight, hormones and health optimisation",
+    "Australia's practitioner-led telehealth clinic for everyday care, hormone health and weight management",
   body: "See an AHPRA-registered practitioner from home, anywhere in Australia. Start with a free pre-screening quiz, then book a real consultation by video or phone. Care is private, transparent, and centred on you.",
   primary: { label: "Check your eligibility", href: "/quiz/" },
   secondary: CALL_CTA,
