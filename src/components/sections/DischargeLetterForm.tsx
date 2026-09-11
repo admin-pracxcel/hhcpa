@@ -37,7 +37,9 @@
 
 import { useState } from "react";
 
+import { findCountry } from "@/content/countries";
 import { DISCHARGE_FORM } from "@/content/services/discharge";
+import { PhoneField } from "./PhoneField";
 
 /** Base64 inflates by about a third; n8n's default body cap is the real limit. */
 const MAX_BYTES = 4 * 1024 * 1024;
@@ -85,10 +87,33 @@ const STYLES = `
 
 .hhcp-dl-req { color: #b3261e; }
 
+/*
+ * PhoneField brings the contact form's own wrapper and label classes with it.
+ * Inside this card they have to read as one of its fields, not as a transplant
+ * from another page: same 20px gap above, same sentence-case label rather than
+ * the contact form's uppercase mono.
+ */
+.hhcp-dl-card .hhcp-form-field {
+  margin-top: var(--hhcp-space-s, 20px);
+}
+
+.hhcp-dl-card .hhcp-form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--hhcp-text-s, 14px);
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--hhcp-primary, #013126);
+}
+
+/* 14px, not 12, so these sit at the same 54px height as PhoneField's input —
+   the mobile field is one of this column and must not be the odd one out. */
 .hhcp-dl-input,
 .hhcp-dl-textarea {
   width: 100%;
-  padding: 12px 14px;
+  padding: 14px;
   border: 1px solid var(--hhcp-neutral-ultra-light, #d6e8e1);
   border-radius: var(--hhcp-radius-s, 6.667px);
   font: inherit;
@@ -192,6 +217,8 @@ export function DischargeLetterForm() {
     const data = new FormData(event.currentTarget);
     const value = (name: string) => String(data.get(name) ?? "").trim();
 
+    const mobileCountry = findCountry(value("mobileCountry"));
+
     const missing = (["firstName", "lastName", "mobile", "email"] as const).filter(
       (name) => value(name) === "",
     );
@@ -239,6 +266,10 @@ export function DischargeLetterForm() {
               firstName: value("firstName"),
               lastName: value("lastName"),
               mobile: value("mobile"),
+              /* The national part alone is not dialable. Same three fields the
+                 contact form sends, so n8n sees one shape for a phone number. */
+              mobileCountry: mobileCountry.code,
+              mobileDial: mobileCountry.dial,
               email: value("email"),
               previousClinic: value("previousClinic"),
               previousDoctor: value("previousDoctor"),
@@ -290,7 +321,13 @@ export function DischargeLetterForm() {
               <Field name="firstName" label="First Name" required />
               <Field name="lastName" label="Last Name" required />
             </div>
-            <Field name="mobile" label="Mobile Contact" type="tel" required />
+            {/*
+              Her page puts a country selector on this field. Ours is the same
+              PhoneField the contact form uses, so there is one such control on
+              the site rather than two that behave differently — and it defaults
+              to Australia, where hers defaults to India.
+            */}
+            <PhoneField name="mobile" label="Mobile Contact" required />
             <Field name="email" label="Your Email" type="email" required />
           </div>
 
@@ -376,7 +413,12 @@ function Field({
     <div className="hhcp-dl-field">
       <label className="hhcp-dl-label" htmlFor={`dl-${name}`}>
         {label}
-        {required && <span className="hhcp-dl-req"> *</span>}
+        {/* Decoration; `required` on the input is what announces it. */}
+        {required && (
+          <span className="hhcp-dl-req" aria-hidden="true">
+            {" *"}
+          </span>
+        )}
       </label>
       <input
         id={`dl-${name}`}

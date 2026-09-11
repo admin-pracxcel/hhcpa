@@ -48,6 +48,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const STYLES = `
+.hhcp-ph-req {
+  color: #b3261e;
+}
+
 .hhcp-ph-group {
   position: relative;
   display: flex;
@@ -330,6 +334,20 @@ export function PhoneField({
       <style>{STYLES}</style>
       <label className="hhcp-form-label" htmlFor={inputId}>
         {label}
+        {/*
+          The input has carried `required` all along; the label never showed it.
+          Nothing on the contact form is required, so it took /discharge/ — where
+          this is the one mandatory field without a marker — for it to surface.
+
+          aria-hidden because the asterisk is decoration: `required` on the input
+          is what actually announces the field as mandatory, and leaving the star
+          in the accessible name makes it read "Phone number star, required".
+        */}
+        {required === true && (
+          <span className="hhcp-ph-req" aria-hidden="true">
+            {" *"}
+          </span>
+        )}
       </label>
 
       <div className="hhcp-ph-group" ref={groupRef}>

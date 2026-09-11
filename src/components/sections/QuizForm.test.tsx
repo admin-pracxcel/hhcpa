@@ -63,7 +63,7 @@ describe("quiz form", () => {
     type("First name", "Jane");
     type("Last name", "Citizen");
     type("Email", "jane@example.com");
-    type("Phone number", "412345678");
+    type(/Phone number/, "412345678");
     for (const box of screen.getAllByRole("checkbox")) fireEvent.click(box);
     fireEvent.click(screen.getByRole("button", { name: /get my results/i }));
   };
@@ -396,7 +396,7 @@ describe("quiz form", () => {
     type("First name", "Jane");
     type("Last name", "Citizen");
     type("Email", "jane@example.com");
-    type("Phone number", "412345678");
+    type(/Phone number/, "412345678");
 
     fireEvent.submit(screen.getByRole("button", { name: /get my results/i }));
 
