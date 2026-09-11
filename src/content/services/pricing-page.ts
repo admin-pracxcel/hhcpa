@@ -90,7 +90,12 @@ export const PRICING_PAGE: ServicePageData = {
     },
     {
       kind: "priceCards",
-      tinted: true,
+      /*
+       * Deliberately untinted. This block and the "All services and fees"
+       * table above it are the page's two price sections, and the brief is
+       * that neither outranks the other. A tint here made this one a raised
+       * slab and the table above it look like a footnote to it.
+       */
       /*
        * §5.2 retitles this block. It is her own instruction, ticked, and it
        * matches her live site, which carries the identical heading above the

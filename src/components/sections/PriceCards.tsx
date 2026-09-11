@@ -20,6 +20,23 @@ import type { ConsultationPlan } from "@/content/consultation-plans";
 import { PricingSection } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/PricingSection";
 
 const STYLES = `
+/*
+ * The price down from the clone's h1 to its h2.
+ *
+ * PricingSection is the homepage's component and sets 64px there, which is
+ * right on a page where it is the only price. Here it sits directly under a
+ * table of thirteen fees, and at 64px against that table's 14px it read as
+ * the page's real pricing with the table as small print. The two sections are
+ * meant to carry equal weight.
+ *
+ * Scoped to PriceCards rather than changed in PricingSection: the homepage
+ * still wants 64px, and priceCards is only used on /pricing/.
+ */
+.hhcp-pr-section .hhcp-pr-price {
+  font-size: var(--hhcp-h2, 40px);
+  line-height: 1.1;
+}
+
 .hhcp-pc-feature {
   display: flex;
   flex-direction: row;

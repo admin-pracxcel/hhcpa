@@ -36,10 +36,16 @@ const STYLES = `
   gap: var(--hhcp-space-l, 45px);
 }
 
+/*
+ * Left-aligned to match the fees block below it. The two are the page's pair
+ * of price sections and are meant to read as equals; a centred heading over
+ * one and a left-aligned heading over the other is the first thing that says
+ * otherwise, before anyone reads either.
+ */
 .hhcp-ptl-heading {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--hhcp-space-s, 20px);
   padding-bottom: var(--hhcp-space-l, 45px);
   border-bottom: 1px solid #ececec;
@@ -48,7 +54,6 @@ const STYLES = `
 .hhcp-ptl-eyebrow {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
 }
 
@@ -73,7 +78,7 @@ const STYLES = `
   line-height: var(--hhcp-heading-lh);
   letter-spacing: -0.6px;
   font-weight: 400;
-  text-align: center;
+  text-align: start;
   color: var(--hhcp-primary, #013126);
 }
 
@@ -126,7 +131,10 @@ const STYLES = `
   padding: 6px 12px;
   border-radius: var(--hhcp-radius-s, 6.667px);
   background: var(--hhcp-accent, #f5fff9);
-  font-size: 14px;
+  /* 20px, not 14: this is the other half of the page's pricing, and at 14 it
+     read as an annotation on the service name rather than the point of the
+     tile. See the note in PriceCards about the two sections ranking equally. */
+  font-size: 20px;
   line-height: 1.4;
   font-weight: 500;
   color: var(--hhcp-primary, #013126);
