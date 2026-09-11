@@ -52,24 +52,37 @@ export const DISCHARGE_PAGE = {
 /**
  * The Discharge Letter form's own copy (build spec v2.3 §8).
  *
- * Her live page ties the 15% to "a valid discharge letter from your current
- * prescribing doctor or clinic". The v2.4 answer to Q32 retied it to
- * transferring care instead: eligibility conditional on holding a
- * prescription, on the transfer path for the holistic service, edges from a
- * discount toward an inducement connected to a prescription-only medicine.
- * The terms below are stated on the page because under the National Law a
- * discount may be advertised provided its terms are.
+ * ─── THE OFFER LINE IS HERS, VERBATIM, BY INSTRUCTION ──────────────────────
  *
- * ⚠️ Both the retie and this terms text are ours and need her approval. It is
- * her offer and her margin. With the rest of the page now matched to hers,
- * this sentence is the only copy on /discharge/ that is not what she wrote.
+ * The v2.4 answer to Q32 had retied the 15% from "a valid discharge letter
+ * from your current prescribing doctor or clinic" to transferring care,
+ * reasoning that eligibility conditional on holding a prescription — on the
+ * transfer path for the holistic service — edges from a discount toward an
+ * inducement connected to a prescription-only medicine.
+ *
+ * That was raised with Bilal on 2026-09-11 and he asked for her wording back:
+ * the page is to be a replica. So it is hers, character for character, and
+ * this comment is the record of why it says what it says. Do not quietly
+ * reword it again — it is her offer, and the decision to run it is Pracxcel's.
+ *
+ * The terms below are still ours. They stay because the National Law lets you
+ * advertise a discount provided its terms are stated, and her page states
+ * none. They are the one addition to her copy on this page, and they too need
+ * her approval — it is her margin.
+ *
+ * Their first sentence restates the eligibility basis, so it follows the offer
+ * line rather than sitting beside it saying something different. It read
+ * "new patients transferring their care from another provider" while the offer
+ * above it named a discharge letter, which is the page contradicting itself
+ * about who qualifies. Keep the two in step.
  */
 export const DISCHARGE_FORM = {
   headings: { details: "Your Details", clinic: "Clinic Details" },
   helpLabel:
     "If you need support with acquiring a discharge letter or have any questions, please let us know below and we'll contact you shortly.",
+  /* Hers, verbatim. See the header before changing this. */
   offer:
-    "Receive 15% off your first consultation when you transfer your care to Horizon Health Care Partners.",
+    "Receive 15% off your Initial Consultation with a valid discharge letter from your current prescribing doctor or clinic.",
   terms:
-    "Offer terms: 15% applies to the first consultation fee for new patients transferring their care from another provider. One use per patient. The discount applies to the consultation fee only and does not apply to medicines, pathology, imaging or any third-party cost. Not available in conjunction with any other offer. A consultation with an AHPRA-registered practitioner is required, and no treatment or prescription is guaranteed. Horizon Health Care Partners may vary or withdraw this offer at any time.",
+    "Offer terms: 15% applies to the first consultation fee for new patients who provide a valid discharge letter from their current prescribing doctor or clinic. One use per patient. The discount applies to the consultation fee only and does not apply to medicines, pathology, imaging or any third-party cost. Not available in conjunction with any other offer. A consultation with an AHPRA-registered practitioner is required, and no treatment or prescription is guaranteed. Horizon Health Care Partners may vary or withdraw this offer at any time.",
 } as const;
