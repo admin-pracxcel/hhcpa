@@ -53,12 +53,7 @@ const STYLES = `
  * holds the title above 7:1.
  */
 .hhcp-sv-scrim {
-  background: linear-gradient(
-    90deg,
-    rgba(1, 49, 38, 0.92) 0%,
-    rgba(1, 49, 38, 0.82) 45%,
-    rgba(1, 49, 38, 0.55) 100%
-  );
+  background: linear-gradient(transparent 0%, var(--black) 100%);
 }
 
 /* The header is absolute over this band, so the top padding clears it. */

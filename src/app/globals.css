@@ -150,6 +150,9 @@
   --hhcp-cream: #ede9e3;
   --hhcp-grey: #ececec;
   --hhcp-white: #ffffff;
+  /* True black, for the hero scrim's gradient. The palette's darkest is
+     --hhcp-dark (#01221b), a very dark green, which is not the same thing. */
+  --black: #000000;
   --hhcp-action-dark: #0c7340;
   --hhcp-action-light: #baf8d9;
   --hhcp-action-hover: #87f2bd;
