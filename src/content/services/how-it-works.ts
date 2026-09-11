@@ -32,6 +32,13 @@ export const HOW_IT_WORKS: ServicePageData = {
   hero: {
     eyebrow: "How it works",
     heading: "How it works: from pre-screening to ongoing care in four steps",
+    /* Same treatment as /about-us/ and /pricing/: her footage, a poster cut
+       from its first frame so the band is never empty while the video loads. */
+    media: {
+      src: "/videos/how-it-works-hero.mp4",
+      poster: "/images/how-it-works-hero-poster.webp",
+      alt: "A woman stands by a curtained window, looking down at the phone in her hand.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

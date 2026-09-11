@@ -70,10 +70,23 @@ const IMAGE_ALT =
   "Two older adults with gray hair, wearing sweaters and jeans, embrace and smile at each other outdoors in a green, natural setting.";
 
 const STYLES = `
+/*
+ * The dark fill runs flush into the sections above and below, rather than
+ * floating between them.
+ *
+ * It used to hold its distance with a section-space-m block margin and pad
+ * only 32px inside, so the band was a slab with a gap either side.
+ * That space is now padding: same distance from the neighbouring content,
+ * but it belongs to the dark band instead of to the gap, so the colour is
+ * continuous down the page.
+ *
+ * Note this is the value the ≤991px rule already used, which is why that
+ * override is gone — it now says exactly what the base rule says.
+ */
 .hhcp-ap-section {
   background-color: var(--hhcp-dark, #01221b);
-  padding: 32px var(--hhcp-gutter);
-  margin: var(--hhcp-section-space-m) 0;
+  padding: var(--hhcp-section-space-m) var(--hhcp-gutter);
+  margin: 0;
 }
 
 /* The section supplies the gutter, so the shared container must not add its own. */
@@ -277,10 +290,6 @@ const STYLES = `
 }
 
 @media (max-width: 991px) {
-  .hhcp-ap-section {
-    padding-block: var(--hhcp-section-space-m);
-  }
-
   .hhcp-ap-grid {
     grid-template-columns: 1fr;
     gap: var(--hhcp-space-m, 30px);
