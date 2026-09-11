@@ -17,7 +17,6 @@
  */
 
 import { NotFoundPanel } from "./NotFoundPanel";
-import { SiteDisclaimer } from "../layout/SiteDisclaimer";
 import { SiteFooter } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteFooter";
 import { SiteHeader } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteHeader";
 
@@ -28,8 +27,8 @@ export function NotFoundPage() {
       <main id="brx-content">
         <NotFoundPanel />
       </main>
+      {/* The disclaimer is inside SiteFooter; mounting it here too duplicates it. */}
       <SiteFooter />
-      <SiteDisclaimer />
     </>
   );
 }

@@ -28,7 +28,6 @@
  */
 
 import Link from "next/link";
-import { SiteDisclaimer } from "@/components/layout/SiteDisclaimer";
 import { cn } from "@/lib/utils";
 import {
   LinkedInIcon,
@@ -36,7 +35,7 @@ import {
   InstagramIcon,
 } from "../shared/icons";
 import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
-import { CLINIC } from "@/content/clinic";
+import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
 
 const LOGO_SRC =
   "/images/logo-light-tagline.svg";
@@ -77,10 +76,19 @@ const SOCIAL_LINKS: readonly SocialLink[] = [
 const CREDIT = "©  2026 by Horizon Health Care Partners. All Rights Reserved.";
 
 /**
- * The footer no longer carries its own disclaimer. `SiteDisclaimer` renders the
- * canonical text from `(site)/layout.tsx` on every page — the version here was
- * both a duplicate and less complete, omitting the Lifeline and Beyond Blue
- * numbers the content specification requires.
+ * The footer carries the site-wide disclaimer again, as the clone's own
+ * `.hhcp-ft-disclaimer` class always expected it to.
+ *
+ * It had been moved out to `(site)/layout.tsx`, where it rendered as a sibling
+ * *after* `</footer>` — the one legally required block on the page, sitting
+ * outside the landmark a screen reader calls the footer. It is back in the
+ * footer's container, below the copyright row, behind the same hairline as
+ * every other row.
+ *
+ * `SiteDisclaimer` still exists and is still needed: `/quiz/` and the 404 page
+ * render outside this footer and mount it directly as a standalone band. Any
+ * page that has this footer must not also mount that component, or the text
+ * appears twice.
  */
 
 const STYLES = `
@@ -414,11 +422,28 @@ const STYLES = `
   letter-spacing: -0.6px;
 }
 
+/*
+ * The clone footer always had this class; the slot it belonged to was the one
+ * the disclaimer was supposed to sit in. It went to the site layout instead
+ * and rendered outside the closing footer tag for months, which is why adding
+ * a second rule for it earlier in this file did nothing: that one is later
+ * and won the cascade.
+ *
+ * Bold and full opacity, which her 9 September reply asked for. Everything
+ * else in this footer is 80% white; the one legally required block is the one
+ * that should not be.
+ */
 .hhcp-ft-disclaimer {
+  /*
+   * No margin: the container is a flex column with a 45px row-gap, so a
+   * margin here would stack on top of it and set this row further from its
+   * hairline than every other row in the footer.
+   */
+  margin: 0;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
-  color: rgba(245, 255, 249, 0.8);
+  font-weight: 600;
+  color: var(--hhcp-accent, #f5fff9);
   max-width: 100%;
   text-align: start;
 }
@@ -580,18 +605,24 @@ export function SiteFooter({ className }: SiteFooterProps) {
             </small>
           </div>
         </div>
+
+        {/*
+          The site-wide disclaimer.
+
+          It rendered from `(site)/layout.tsx` as a sibling after `</footer>`,
+          which put the one legally required block on the page outside the
+          landmark a screen reader calls the footer. Moving it in is right;
+          the first attempt then dropped it in as its own full-bleed band,
+          which inside the footer read as a darker slab with its own edges,
+          its own gutters and text that lined up with nothing above it.
+
+          It belongs in the footer's own container, below the copyright row
+          and behind the same hairline every other row uses — so it is part of
+          the footer rather than a thing parked at the bottom of it.
+        */}
+        <div className="hhcp-ft-divider" />
+        <p className="hhcp-ft-disclaimer font-dm-sans">{SITE_DISCLAIMER}</p>
       </div>
-
-      {/*
-        The site-wide disclaimer, inside the footer.
-
-        It used to render from `(site)/layout.tsx` as a sibling *after*
-        `</footer>`, which put the one legally required block on the page
-        outside the landmark a screen reader announces as the footer. Her
-        9 September reply asked for it in bold; the 11 September audit found
-        it small, low-contrast and outside the element entirely.
-      */}
-      <SiteDisclaimer />
     </footer>
   );
 }

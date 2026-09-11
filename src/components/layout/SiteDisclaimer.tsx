@@ -4,9 +4,12 @@ import { SITE_DISCLAIMER } from "@/content/clinic";
  * The site-wide disclaimer.
  *
  * Required on every page by the content specification and by the Service
- * Agreement's compliant-claims obligations. It renders from inside
- * `SiteFooter`, so no page can omit it — and `/quiz/`, which sits outside the
- * site layout, mounts it directly.
+ * Agreement's compliant-claims obligations.
+ *
+ * ⚠️ Most pages get it from inside `SiteFooter`, not from here. This component
+ * is the standalone band for the two pages that have no footer: `/quiz/`,
+ * which sits outside the site layout on purpose, and the 404. Mounting it on
+ * a page that already has the footer renders the disclaimer twice.
  *
  * It has been through three legibility fixes, which is the point of this note.
  * It began as --hhcp-base-20, the brand green at 20% opacity, measuring about
