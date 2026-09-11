@@ -22,6 +22,12 @@ export const CONTACT_PAGE = {
   hero: {
     eyebrow: "Contact",
     heading: "Contact our team",
+    /* Her footage, same treatment as /about-us/ and /pricing/. */
+    media: {
+      src: "/videos/contact-hero.mp4",
+      poster: "/images/contact-hero-poster.webp",
+      alt: "An aerial view looking straight down at a green clifftop meeting dark blue sea.",
+    },
     primary: { label: "Book a consultation", href: "/quiz/" },
     secondary: CALL_CTA,
   },

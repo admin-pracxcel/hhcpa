@@ -49,6 +49,7 @@ export default function Page() {
       <ServiceHero
         eyebrow={CONTACT_PAGE.hero.eyebrow}
         heading={CONTACT_PAGE.hero.heading}
+        media={CONTACT_PAGE.hero.media}
         crumbs={CONTACT_PAGE.crumbs}
         primary={CONTACT_PAGE.hero.primary}
         secondary={CONTACT_PAGE.hero.secondary}

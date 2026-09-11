@@ -26,6 +26,12 @@ export const FAQS_PAGE = {
   hero: {
     eyebrow: "FAQs",
     heading: "Your questions, answered",
+    /* Her footage, same treatment as /about-us/ and /pricing/. */
+    media: {
+      src: "/videos/faq-hero.mp4",
+      poster: "/images/faq-hero-poster.webp",
+      alt: "Mist drifting over a still lake at dawn, forest along both shores.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

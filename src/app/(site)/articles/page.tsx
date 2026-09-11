@@ -56,6 +56,12 @@ export default function Page() {
       <ServiceHero
         eyebrow="Knowledge hub"
         heading="Guidance worth reading"
+        /* Her footage, same treatment as /about-us/ and /pricing/. */
+        media={{
+          src: "/videos/articles-hero.mp4",
+          poster: "/images/articles-hero-poster.webp",
+          alt: "An aerial view across dense forest toward cloud-covered mountains.",
+        }}
         crumbs={[{ label: "Home", href: "/" }]}
         primary={{ label: "Check your eligibility", href: "/quiz/" }}
         secondary={CALL_CTA}
