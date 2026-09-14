@@ -41,6 +41,11 @@ export const PRACTITIONERS_PAGE = {
   hero: {
     eyebrow: "Our practitioners",
     heading: "Our AHPRA-registered practitioners",
+    media: {
+      src: "/videos/our-practitioners-hero.webm",
+      poster: "/images/our-practitioners-hero-poster.webp",
+      alt: "The sun sets over the sea beyond a rocky foreshore, the tide running back over wet stones.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
