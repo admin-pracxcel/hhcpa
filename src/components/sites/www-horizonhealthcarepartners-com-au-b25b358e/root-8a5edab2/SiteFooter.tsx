@@ -33,6 +33,9 @@ import {
   LinkedInIcon,
   FacebookSquareIcon,
   InstagramIcon,
+  PhoneIcon,
+  MailIcon,
+  ClockIcon,
 } from "../shared/icons";
 import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
 import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
@@ -202,6 +205,23 @@ const STYLES = `
   color: var(--hhcp-action-light, #baf8d9);
   list-style: none;
 }
+/*
+ * The three lines that carry a mark. align-items is flex-start rather than
+ * center so the icon holds to the first line when the email wraps, which it
+ * does in this column at the narrower widths.
+ */
+.hhcp-ft-nap-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.hhcp-ft-nap-icon {
+  flex: none;
+  /* Optically centred on a 21px line: (21 - 16) / 2, rounded down. */
+  margin-top: 2px;
+}
+
 .hhcp-ft-nap a {
   color: var(--hhcp-action-light, #baf8d9);
   transition: all 0.3s linear;
@@ -551,20 +571,38 @@ export function SiteFooter({ className }: SiteFooterProps) {
             <span className="hhcp-ft-menu-heading font-roboto-mono">
               {CLINIC.name}
             </span>
+            {/*
+              Rewritten 2026-09-14 to Bilal's copy and order: the blurb, then
+              the three contact lines with their marks, then the entity and
+              the ABN on separate lines.
+
+              The entity moved from second to last. It is a legal
+              identification line, not a selling line, and it was sitting
+              above the phone number.
+
+              The marks are decorative — every line reads without them, and
+              the phone and email are already links — so they carry
+              aria-hidden and the list keeps its own semantics.
+            */}
             <ul className="hhcp-ft-nap font-dm-sans">
-              <li>AHPRA-registered telehealth care, Australia-wide.</li>
               <li>
-                {CLINIC.legalName} · ABN {CLINIC.abn}
+                Telehealth consultations with AHPRA-registered healthcare
+                practitioners, Australia-wide.
               </li>
-              <li>
+              <li className="hhcp-ft-nap-row">
+                <PhoneIcon className="hhcp-ft-nap-icon" />
                 <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
               </li>
-              <li>
+              <li className="hhcp-ft-nap-row">
+                <MailIcon className="hhcp-ft-nap-icon" />
                 <a href={CLINIC.emailHref}>{CLINIC.email}</a>
               </li>
-              <li>
-                {CLINIC.serviceArea} · Hours: {CLINIC.hours}
+              <li className="hhcp-ft-nap-row">
+                <ClockIcon className="hhcp-ft-nap-icon" />
+                <span>{CLINIC.hoursDisplay}</span>
               </li>
+              <li>{CLINIC.legalName}</li>
+              <li>ABN {CLINIC.abn}</li>
             </ul>
           </div>
 

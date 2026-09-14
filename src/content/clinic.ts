@@ -29,6 +29,19 @@ export const CLINIC = {
    * the reading below is no longer provisional.
    */
   hours: "Monday to Sunday, 8am to 10pm AEST",
+  /**
+   * The same hours, set as a standalone line rather than as prose.
+   *
+   * Two forms because there are two jobs. `hours` is read inside a sentence —
+   * NotFoundPanel and ThankYouPanel both splice it into one, where a middot
+   * would land mid-clause. `hoursDisplay` stands on its own line in the
+   * footer. Neither reads well in the other's place, which is why this is a
+   * second field and not a reformat of the first.
+   *
+   * clinic.test.ts asserts the two carry the same times, so they cannot
+   * drift apart silently.
+   */
+  hoursDisplay: "Monday – Sunday · 8:00am – 10:00pm AEST",
   hoursProvisional: false,
 } as const;
 

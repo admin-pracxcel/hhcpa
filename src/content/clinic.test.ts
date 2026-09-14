@@ -16,6 +16,21 @@ describe("CLINIC", () => {
     expect(CLINIC.hours).toContain("8am to 10pm");
     expect(CLINIC.hoursProvisional).toBe(false);
   });
+
+  /* Two renderings of one fact: prose for mid-sentence, a line for the
+     footer. They must not drift apart. */
+  it("states the same hours in both forms", () => {
+    const times = (value: string) =>
+      (value.toLowerCase().match(/\d{1,2}(?::\d{2})?\s?(?:am|pm)/g) ?? []).map(
+        (time) => time.replace(":00", "").replace(/\s/g, ""),
+      );
+    expect(times(CLINIC.hoursDisplay)).toEqual(times(CLINIC.hours));
+    expect(times(CLINIC.hours)).toEqual(["8am", "10pm"]);
+    for (const day of ["Monday", "Sunday", "AEST"]) {
+      expect(CLINIC.hoursDisplay).toContain(day);
+      expect(CLINIC.hours).toContain(day);
+    }
+  });
 });
 
 describe("SITE_DISCLAIMER", () => {

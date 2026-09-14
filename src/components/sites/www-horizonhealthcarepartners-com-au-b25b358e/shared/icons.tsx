@@ -130,6 +130,45 @@ export function PauseCircleIcon(props: IconProps) {
 }
 
 /**
+ * Footer contact marks — phone, email and hours.
+ *
+ * Not from the target. Its footer carries no icons on the NAP block at all;
+ * these were asked for on 2026-09-14 and are drawn to sit with the block's
+ * 14px text: 16px box, 1.4 stroke, currentColor so the column colour and its
+ * hover transition drive them.
+ */
+export function PhoneIcon(props: IconProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M5.2 2H3.4C2.63 2 2 2.63 2 3.4c0 6.4 4.2 10.6 10.6 10.6.77 0 1.4-.63 1.4-1.4v-1.8a.8.8 0 0 0-.62-.78l-2.3-.5a.8.8 0 0 0-.83.35l-.52.78a7.6 7.6 0 0 1-3.36-3.36l.78-.52a.8.8 0 0 0 .35-.83l-.5-2.3A.8.8 0 0 0 5.2 2Z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function MailIcon(props: IconProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" {...props}>
+      <rect x="1.7" y="3.2" width="12.6" height="9.6" rx="1.4" stroke="currentColor" strokeWidth="1.4" />
+      <path d="m2.3 4.4 5.06 3.8a1.07 1.07 0 0 0 1.28 0L13.7 4.4" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ClockIcon(props: IconProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" {...props}>
+      <circle cx="8" cy="8" r="6.3" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 4.5V8l2.4 1.6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/**
  * Footer social marks. The source renders these as Font Awesome 6 Brands glyphs
  * (`fa-linkedin-in`, `fa-facebook-square`, `fa-instagram`) from an icon font, so
  * there is no inline SVG to lift. These are the equivalent brand paths, sized to
