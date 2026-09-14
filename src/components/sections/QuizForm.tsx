@@ -281,10 +281,22 @@ const STYLES = `
   transition: all 0.2s linear;
 }
 
-.hhcp-qz-option:hover,
-.hhcp-qz-option[data-selected="true"] {
+/*
+ * Hover and selected used to share one rule, so a hovered option and the
+ * chosen one were pixel-identical — on a step reached by Back, you could not
+ * tell which answer was yours. They are now two different weights: hover is
+ * the light tint, selected is the dark fill.
+ */
+.hhcp-qz-option:hover:not([data-selected="true"]) {
   border-color: var(--hhcp-primary, #013126);
   background: var(--hhcp-accent, #f5fff9);
+}
+
+/* Dark green, not the brand's bright #58eda2 — Bilal, 2026-09-14. */
+.hhcp-qz-option[data-selected="true"] {
+  border-color: var(--hhcp-primary, #013126);
+  background: var(--hhcp-primary, #013126);
+  color: #ffffff;
 }
 
 .hhcp-qz-option-mark {
@@ -299,10 +311,27 @@ const STYLES = `
   border-radius: 4px;
 }
 
-.hhcp-qz-option:hover .hhcp-qz-option-mark,
-.hhcp-qz-option[data-selected="true"] .hhcp-qz-option-mark {
+/*
+ * Hover darkens the ring but does not fill it. Filling it was the other half
+ * of the collision above: a hovered option wore a checked control.
+ */
+.hhcp-qz-option:hover:not([data-selected="true"]) .hhcp-qz-option-mark {
   border-color: var(--hhcp-action-dark, #0c7340);
-  background: var(--hhcp-action, #58eda2);
+}
+
+/* White on the dark fill. Bright green would be back to the colour removed. */
+.hhcp-qz-option[data-selected="true"] .hhcp-qz-option-mark {
+  border-color: #ffffff;
+  background: #ffffff;
+}
+
+/*
+ * The only focus style in the flow, and it has to clear both grounds: the
+ * dark fill swallows an inset ring, so the ring sits outside the tile.
+ */
+.hhcp-qz-option:focus-visible {
+  outline: 2px solid var(--hhcp-action-dark, #0c7340);
+  outline-offset: 2px;
 }
 
 /* Advisory shown when an answer carries one. Never ends the flow. */
