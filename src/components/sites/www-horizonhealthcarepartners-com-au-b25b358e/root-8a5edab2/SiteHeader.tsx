@@ -480,6 +480,9 @@ const HEADER_CSS = `
 .hhcp-hdr__mega-list a {
   font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--hhcp-text-s);
+  /* 500, not the inherited 400 — Bilal, 2026-09-14. The About dropdown below
+     tracks this; see the note on .hhcp-hdr__submenu a. */
+  font-weight: 500;
   line-height: 1.4;
   color: var(--hhcp-base-80);
   text-decoration: none;
@@ -524,6 +527,11 @@ const HEADER_CSS = `
  * regular weight in --hhcp-base-80, so opening About after Services looked like
  * a different menu from a different site.
  *
+ * That is why this moved to 500 alongside the mega panel on 2026-09-14 rather
+ * than staying at 400. The instruction named the services panel; leaving this
+ * one behind would have reopened exactly the mismatch the paragraph above
+ * describes. If the two are ever meant to differ, change both knowingly.
+ *
  * The row's hover background stays. That belongs to this panel rather than to
  * the type, and without it a dropdown of plain links has nothing to show which
  * row the pointer is on.
@@ -534,6 +542,7 @@ const HEADER_CSS = `
   color: var(--hhcp-base-80);
   font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--hhcp-text-s);
+  font-weight: 500;
   line-height: 1.4;
   padding: var(--hhcp-space-xs) var(--hhcp-space-s);
   text-decoration: none;
