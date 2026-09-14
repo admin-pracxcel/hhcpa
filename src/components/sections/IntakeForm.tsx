@@ -158,10 +158,23 @@ const STYLES = `
   transition: all 0.2s linear;
 }
 
+/*
+ * Chosen chips fill dark green with white text — Bilal, 2026-09-14, and the
+ * same treatment .hhcp-qz-option carries. These render inside the quiz flow
+ * too, so a chip that kept the old near-white fill would read as unchosen
+ * next to a filled question above it.
+ */
 .hhcp-in-option[data-on="true"] {
   border-color: var(--hhcp-primary, #013126);
-  background: var(--hhcp-accent, #f5fff9);
+  background: var(--hhcp-primary, #013126);
+  color: #ffffff;
   font-weight: 500;
+}
+
+/* Outside the chip: an inset ring disappears into the dark fill. */
+.hhcp-in-option:focus-visible {
+  outline: 2px solid var(--hhcp-action-dark, #0c7340);
+  outline-offset: 2px;
 }
 
 /* Crisis numbers, above everything else on the step. Same treatment the quiz
