@@ -289,7 +289,8 @@ const STYLES = `
  */
 .hhcp-qz-option:hover:not([data-selected="true"]) {
   border-color: var(--hhcp-primary, #013126);
-  background: var(--hhcp-accent, #f5fff9);
+  background: var(--hhcp-primary, #013126);
+  color: #ffffff;
 }
 
 /* Dark green, not the brand's bright #58eda2 — Bilal, 2026-09-14. */
@@ -313,11 +314,19 @@ const STYLES = `
 }
 
 /*
- * Hover darkens the ring but does not fill it. Filling it was the other half
- * of the collision above: a hovered option wore a checked control.
+ * Hover takes the dark fill too, so the row previews what choosing it looks
+ * like. The mark is the one thing it does not take: hover shows an empty
+ * white ring, the chosen row shows that ring with its dot or tick.
+ *
+ * That difference is deliberate and is the whole reason hover and selected
+ * are still two rules. They were one rule until 1552826, and on any step
+ * reached by Back you could not tell your own answer from whichever row the
+ * pointer happened to be over. The fill now says "this is what you would
+ * get"; the dot says "this is what you have".
  */
 .hhcp-qz-option:hover:not([data-selected="true"]) .hhcp-qz-option-mark {
-  border-color: var(--hhcp-action-dark, #0c7340);
+  border: 2px solid #ffffff;
+  background: transparent;
 }
 
 /*
