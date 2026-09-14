@@ -97,7 +97,8 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
     {
       kind: "tiles",
       eyebrow: "What we look at",
-      heading: "The areas a program can cover",
+      /* Bilal, 2026-09-14. Was "The areas a program can cover". */
+      heading: "A more complete view of your health",
       columns: 2,
       tiles: [
         {
