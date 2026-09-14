@@ -148,11 +148,12 @@ const STYLES = `
 
 .hhcp-ct-textarea { min-height: 84px; resize: vertical; }
 
+/* Layout, border and states come from the shared .hhcp-check-row in
+   globals.css. Only the stacking gap and the type are this block's. */
 .hhcp-ct-check {
-  display: flex;
-  gap: 10px;
-  margin-top: var(--hhcp-space-xs, 10px);
+  margin-top: 12px;
   font-size: var(--hhcp-text-s, 14px);
+  line-height: 1.5;
   color: var(--hhcp-primary, #013126);
 }
 
@@ -365,7 +366,7 @@ function Question({
 
   if (question.type === "check") {
     return (
-      <label className="hhcp-ct-check">
+      <label className="hhcp-check-row hhcp-ct-check" data-on={value === true}>
         <input
           className="hhcp-check"
           type="checkbox"

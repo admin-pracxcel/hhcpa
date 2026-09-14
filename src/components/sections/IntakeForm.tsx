@@ -215,11 +215,11 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
+/* Layout, border and states come from the shared .hhcp-check-row. */
 .hhcp-in-check {
-  display: flex;
-  gap: 10px;
-  margin-top: var(--hhcp-space-s, 20px);
+  margin-top: 12px;
   font-size: var(--hhcp-text-s, 14px);
+  line-height: 1.5;
   color: var(--hhcp-primary, #013126);
 }
 
@@ -405,7 +405,11 @@ export function IntakeForm({
           <div className="hhcp-in-declaration font-dm-sans">
             <p>{form.declaration}</p>
             {INTAKE_CONFIRMATIONS.map((confirmation) => (
-              <label key={confirmation.id} className="hhcp-in-check">
+              <label
+                key={confirmation.id}
+                className="hhcp-check-row hhcp-in-check"
+                data-on={confirmed[confirmation.id] === true}
+              >
                 <input
                   className="hhcp-check"
                   type="checkbox"

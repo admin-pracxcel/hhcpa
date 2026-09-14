@@ -344,6 +344,41 @@
  * the quiz consents, her certificate declaration and the intake form — for
  * the same reason .hhcp-btn is shared.
  */
+/*
+ * The row a checkbox sits in — Bilal's values, 2026-09-14, taken off her
+ * certificate declaration.
+ *
+ * Checked is deliberately identical to hover; only the control itself says
+ * which is which. That is his call, and it is the same trade the option rows
+ * make one file over, so the two read consistently.
+ *
+ * #f4fffa is his literal and is one step off --hhcp-accent (#f5fff9). Close
+ * enough to look like a mistake and not be one, so it stays written out with
+ * this note rather than folded into the token.
+ *
+ * Measured off his screenshot: border #d6e8e1, 8px radius, 12px between rows,
+ * 16px from the card edge to the box.
+ */
+.hhcp-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #d6e8e1;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition:
+    border-color 0.15s linear,
+    background-color 0.15s linear;
+}
+
+.hhcp-check-row:hover,
+.hhcp-check-row[data-on="true"] {
+  border-color: var(--hhcp-primary);
+  background: #f4fffa;
+}
+
 .hhcp-check {
   flex: none;
   width: 20px;

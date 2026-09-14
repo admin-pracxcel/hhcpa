@@ -686,18 +686,15 @@ const STYLES = `
 .hhcp-qz-consents {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   margin-top: var(--hhcp-space-s, 20px);
 }
 
+/* Layout, border and states come from the shared .hhcp-check-row. */
 .hhcp-qz-consent {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
   font-size: 14px;
   line-height: 1.5;
   color: rgba(1, 49, 38, 0.85);
-  cursor: pointer;
 }
 
 /*
@@ -1867,7 +1864,11 @@ function ContactStep({
 
       <div className="hhcp-qz-consents">
         {QUIZ_CONSENTS.map((consent) => (
-          <label key={consent.id} className="hhcp-qz-consent font-dm-sans">
+          <label
+            key={consent.id}
+            className="hhcp-check-row hhcp-qz-consent font-dm-sans"
+            data-on={consents[consent.id] === true}
+          >
             <input
               className="hhcp-check"
               type="checkbox"
