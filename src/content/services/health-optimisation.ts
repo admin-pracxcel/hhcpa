@@ -200,13 +200,17 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
       heading: "What a program costs",
       headline: `from $${PRICES.healthProgram.amount}`,
       headlineLabel: "Programs",
-      rows: [
-        { label: "Pre-screening quiz", value: "Free" },
-        {
-          label: "Standard consultation",
-          value: `$${PRICES.firstConsult.amount}`,
-        },
-      ],
+      /*
+       * The standard consultation row is gone — Ranjeeta, via Bilal,
+       * 2026-09-14: a $69 line under a "from $299" headline reads as though
+       * this program might cost $69.
+       *
+       * It is not replaced with a program-specific figure, because there
+       * isn't one beyond the headline. /pricing/ carries the full list and
+       * the CTA below goes there. This also matches /mens-health/ and
+       * /womens-health/, which already show the quiz row alone.
+       */
+      rows: [{ label: "Pre-screening quiz", value: "Free" }],
       note: "Pathology, imaging and anything dispensed by a pharmacy are separate from the consultation fee. There is no commitment until you decide to book.",
       cta: { label: "See full pricing", href: "/pricing/" },
     },
