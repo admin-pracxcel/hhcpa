@@ -143,11 +143,21 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
     },
     {
       kind: "statement",
-      eyebrow: "Why review matters",
-      heading: "A program is the review, not the plan",
+      /*
+       * Rewritten 2026-09-14, Bilal's copy, verbatim. Curly apostrophes in
+       * what he sent were straightened to match the rest of this file.
+       *
+       * "Your care evolves with you." is its own paragraph on purpose — he
+       * set it off from the two around it, and the statement block renders
+       * one <p> per entry, so keeping it separate keeps his break.
+       */
+      eyebrow: "Why ongoing review matters",
+      heading: "Your care doesn't stop with the first plan",
       paragraphs: [
-        "Anyone can write a plan. What changes the result is someone looking at it again with you: checking whether it is working, whether anything has shifted, and whether the original reasoning still holds. That is what makes this a program rather than an appointment, and it is why your practitioner agrees a review schedule with you rather than leaving you to it.",
-        "Outcomes vary between people, and nothing here is guaranteed. Your practitioner will tell you honestly if a different pathway would serve you better, or if the evidence for something does not support it in your case.",
+        "A personalised plan is only the beginning. Your practitioner reviews your progress with you, considers what has changed, and assesses whether your care plan remains appropriate for your health needs and goals.",
+        "Regular reviews provide an opportunity to discuss your response, review relevant symptoms or health markers, consider new information, and adjust your care where clinically appropriate.",
+        "Your care evolves with you.",
+        "Health outcomes vary between individuals and cannot be guaranteed. If your practitioner determines that another approach, further investigation or referral would be more appropriate, they will discuss this with you.",
       ],
     },
     {
