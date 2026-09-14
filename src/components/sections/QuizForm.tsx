@@ -300,6 +300,7 @@ const STYLES = `
 }
 
 .hhcp-qz-option-mark {
+  position: relative;
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -319,10 +320,43 @@ const STYLES = `
   border-color: var(--hhcp-action-dark, #0c7340);
 }
 
-/* White on the dark fill. Bright green would be back to the colour removed. */
+/*
+ * A solid white disc is not what a chosen radio looks like — it reads as a
+ * blank control that happens to be filled in, which is why it sat oddly on
+ * the dark row. Both shapes now say what they mean:
+ *
+ *   radio     white ring, a gap of the row's own green, white dot
+ *   checkbox  white square with the row's green tick cut into it
+ *
+ * That also keeps the single-answer/multi-answer distinction the two shapes
+ * exist to carry. Filled white on both made them near-identical at 18px.
+ *
+ * Everything is border-box, so widening the border to 2px does not grow the
+ * control; it eats into the 18px instead.
+ */
 .hhcp-qz-option[data-selected="true"] .hhcp-qz-option-mark {
-  border-color: #ffffff;
+  border: 2px solid #ffffff;
   background: #ffffff;
+  box-shadow: inset 0 0 0 3px var(--hhcp-primary, #013126);
+}
+
+/* The tick is drawn instead of the inset ring, so the ring comes off. */
+.hhcp-qz-option[data-selected="true"] .hhcp-qz-option-mark[data-shape="box"] {
+  box-shadow: none;
+}
+
+.hhcp-qz-option[data-selected="true"] .hhcp-qz-option-mark[data-shape="box"]::after {
+  content: "";
+  position: absolute;
+  /* Optically centred, not geometrically: rotating the glyph leaves more
+     white below it than above. Measured at 12x on the rendered control. */
+  left: 5px;
+  top: 1.5px;
+  width: 4px;
+  height: 9px;
+  border: solid var(--hhcp-primary, #013126);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 /*
