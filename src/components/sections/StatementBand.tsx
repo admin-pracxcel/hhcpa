@@ -68,6 +68,16 @@ const STYLES = `
   color: rgba(255, 255, 255, 0.85);
 }
 
+/*
+ * A paragraph set in bold. It takes full white as well as the weight — at
+ * 0.85 alpha the emphasis reads as a slightly heavier grey rather than as
+ * emphasis, which defeats the point of marking it.
+ */
+.hhcp-sm-text[data-strong="true"] {
+  font-weight: 600;
+  color: #ffffff;
+}
+
 @media (max-width: 991px) {
   .hhcp-sm-container {
     grid-template-columns: 1fr;
@@ -86,11 +96,21 @@ const STYLES = `
 }
 `;
 
+/**
+ * A paragraph, or a paragraph marked to be set in bold.
+ *
+ * The plain string stays valid, which is what the other twenty-odd statement
+ * bands pass; only a paragraph that needs the emphasis takes the object form.
+ */
+export type StatementParagraph =
+  | string
+  | { readonly text: string; readonly strong: true };
+
 interface StatementBandProps {
   className?: string;
   eyebrow: string;
   heading: string;
-  paragraphs: readonly string[];
+  paragraphs: readonly StatementParagraph[];
 }
 
 export function StatementBand({
@@ -112,11 +132,19 @@ export function StatementBand({
 
         <div className="hhcp-sm-body">
           <h2 className="hhcp-sm-title font-dm-sans">{heading}</h2>
-          {paragraphs.map((paragraph) => (
-            <p key={paragraph} className="hhcp-sm-text font-dm-sans">
-              {paragraph}
-            </p>
-          ))}
+          {paragraphs.map((paragraph) => {
+            const text =
+              typeof paragraph === "string" ? paragraph : paragraph.text;
+            return (
+              <p
+                key={text}
+                className="hhcp-sm-text font-dm-sans"
+                data-strong={typeof paragraph !== "string"}
+              >
+                {text}
+              </p>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -149,14 +149,15 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
        *
        * "Your care evolves with you." is its own paragraph on purpose — he
        * set it off from the two around it, and the statement block renders
-       * one <p> per entry, so keeping it separate keeps his break.
+       * one <p> per entry, so keeping it separate keeps his break. It is
+       * also the one paragraph he asked to be set in bold.
        */
       eyebrow: "Why ongoing review matters",
       heading: "Your care doesn't stop with the first plan",
       paragraphs: [
         "A personalised plan is only the beginning. Your practitioner reviews your progress with you, considers what has changed, and assesses whether your care plan remains appropriate for your health needs and goals.",
         "Regular reviews provide an opportunity to discuss your response, review relevant symptoms or health markers, consider new information, and adjust your care where clinically appropriate.",
-        "Your care evolves with you.",
+        { text: "Your care evolves with you.", strong: true },
         "Health outcomes vary between individuals and cannot be guaranteed. If your practitioner determines that another approach, further investigation or referral would be more appropriate, they will discuss this with you.",
       ],
     },

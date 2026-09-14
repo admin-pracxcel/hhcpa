@@ -45,7 +45,7 @@ import { LeadParagraph } from "./LeadParagraph";
 import { ServiceHero } from "./ServiceHero";
 import type { Crumb } from "./ServiceHero";
 import { SplitFeature } from "./SplitFeature";
-import { StatementBand } from "./StatementBand";
+import { StatementBand, type StatementParagraph } from "./StatementBand";
 import { ValueTiles } from "./ValueTiles";
 import type { RelatedCard } from "./RelatedCards";
 
@@ -83,7 +83,7 @@ export type ServiceModule =
       readonly kind: "statement";
       readonly eyebrow: string;
       readonly heading: string;
-      readonly paragraphs: readonly string[];
+      readonly paragraphs: readonly StatementParagraph[];
     }
   | {
       readonly kind: "checklist";
