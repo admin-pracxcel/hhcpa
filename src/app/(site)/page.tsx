@@ -114,14 +114,22 @@ export default function Home() {
 
       <LeadParagraph text={HOME_INTRO.text} cta={HOME_INTRO.cta} />
 
-      {/* --hhcp-accent is #f5fff9. Tinting these three breaks the page into
-          bands instead of one continuous white scroll. */}
+      {/* Three sections carry the --hhcp-accent tint (#f5fff9): this one,
+          "How it works" and the knowledge-hub teaser. The tint bands the page
+          rather than running it as one continuous white scroll, and the three
+          are spaced so no two tinted sections ever sit adjacent. Nothing else
+          on this page is tinted — adding a fourth is what collapses the
+          rhythm into stripes. */}
       {/*
         Her "Choose Your Service" boxes, replacing the eight-card focus grid.
         Her 9 September instruction and the 11 September audit; see
         content/service-boxes.ts for the three agreed departures.
       */}
       <ServiceBoxes
+        /* Homepage only. `/services/` renders the same boxes on white, and
+           this prop is how the tint stays on one page instead of both. The
+           cards are #ffffff, so they still read as cards against it. */
+        className="bg-[color:var(--hhcp-accent)]"
         id="book"
         eyebrow={SERVICE_BOXES_HEADING.eyebrow}
         heading={SERVICE_BOXES_HEADING.heading}
