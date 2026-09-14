@@ -324,6 +324,35 @@
   padding-inline: var(--hhcp-gutter);
 }
 
+/*
+ * Checkbox — her design, from the screenshot Bilal supplied on 2026-09-14
+ * (her certificate declaration, step 12 of 12).
+ *
+ * A native checkbox with `accent-color`, not an appearance:none rebuild.
+ * Sampling her render gives rgb(9, 49, 38) fill with a white tick when
+ * checked, and rgb(118, 118, 118) — the platform default — on the unchecked
+ * border. That pair is exactly what `accent-color` produces, so hers is a
+ * native control and matching it means using one too.
+ *
+ * The consequence worth knowing: the unchecked border is the platform grey
+ * rather than --hhcp-base-20, and it will differ slightly between browsers.
+ * That is hers, not a gap. Rebuilding the control would brand that edge but
+ * would stop matching the screenshot, and would cost the free keyboard and
+ * screen-reader behaviour a real checkbox has.
+ *
+ * Shared here rather than copied into the three scoped blocks that use it —
+ * the quiz consents, her certificate declaration and the intake form — for
+ * the same reason .hhcp-btn is shared.
+ */
+.hhcp-check {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--hhcp-primary);
+  cursor: pointer;
+}
+
 /* Pill button — Roboto Mono 12px/500, uppercase, mint fill. */
 .hhcp-btn {
   display: inline-flex;

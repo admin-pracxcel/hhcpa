@@ -700,12 +700,12 @@ const STYLES = `
   cursor: pointer;
 }
 
+/*
+ * Size and colour come from the shared .hhcp-check in globals.css. This was
+ * 18px at --hhcp-action-dark; her design is 20px at --hhcp-primary.
+ */
 .hhcp-qz-consent input {
-  margin-top: 3px;
-  flex: none;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--hhcp-action-dark, #0c7340);
+  margin-top: 1px;
 }
 
 .hhcp-qz-consent a {
@@ -1869,6 +1869,7 @@ function ContactStep({
         {QUIZ_CONSENTS.map((consent) => (
           <label key={consent.id} className="hhcp-qz-consent font-dm-sans">
             <input
+              className="hhcp-check"
               type="checkbox"
               name={consent.field}
               checked={consents[consent.id] === true}

@@ -156,7 +156,9 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
-.hhcp-ct-check input { margin-top: 3px; flex: none; }
+/* Size and colour come from the shared .hhcp-check in globals.css. Only the
+   optical alignment against a 14px line is this block's business. */
+.hhcp-ct-check input { margin-top: 1px; }
 
 .hhcp-ct-problem {
   margin-top: var(--hhcp-space-s, 20px);
@@ -365,6 +367,7 @@ function Question({
     return (
       <label className="hhcp-ct-check">
         <input
+          className="hhcp-check"
           type="checkbox"
           checked={value === true}
           onChange={(event) => set(question.id, event.target.checked)}

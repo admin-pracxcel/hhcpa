@@ -223,7 +223,8 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
-.hhcp-in-check input { margin-top: 3px; flex: none; }
+/* Size and colour come from the shared .hhcp-check in globals.css. */
+.hhcp-in-check input { margin-top: 1px; }
 
 .hhcp-in-problem {
   margin-top: var(--hhcp-space-s, 20px);
@@ -406,6 +407,7 @@ export function IntakeForm({
             {INTAKE_CONFIRMATIONS.map((confirmation) => (
               <label key={confirmation.id} className="hhcp-in-check">
                 <input
+                  className="hhcp-check"
                   type="checkbox"
                   checked={confirmed[confirmation.id] === true}
                   onChange={(event) =>
