@@ -98,6 +98,7 @@ export default function WeightManagement() {
       <ServiceHero
         eyebrow={WLP_HERO.eyebrow}
         heading={WLP_HERO.heading}
+        media={WLP_HERO.media}
         crumbs={[{ label: "Home", href: "/" }]}
         primary={WLP_HERO.primary}
         secondary={WLP_HERO.secondary}

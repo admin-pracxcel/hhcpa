@@ -27,6 +27,11 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
   hero: {
     eyebrow: "Erectile dysfunction",
     heading: "Erectile dysfunction, assessed privately online",
+    media: {
+      src: "/videos/erectile-dysfunction-hero.webm",
+      poster: "/images/erectile-dysfunction-hero-poster.webp",
+      alt: "A couple rest together on a sofa at home, one lying across the other's lap.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

@@ -30,6 +30,11 @@ export const MENOPAUSE: ServicePageData = {
   hero: {
     eyebrow: "Menopause & perimenopause",
     heading: "Menopause and perimenopause, assessed online by practitioners who listen",
+    media: {
+      src: "/videos/menopause-hero.webm",
+      poster: "/images/menopause-hero-poster.webp",
+      alt: "A silver-haired woman gathers cut flowers in an overgrown glasshouse.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

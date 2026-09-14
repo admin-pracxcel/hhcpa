@@ -51,6 +51,11 @@ export const WLP_QUIZ_HREF = quizHrefFor("Weight Management");
 export const WLP_HERO = {
   eyebrow: "Weight management",
   heading: "Medical weight loss, guided by AHPRA-registered practitioners",
+  media: {
+    src: "/videos/weight-management-hero.webm",
+    poster: "/images/weight-management-hero-poster.webp",
+    alt: "Two people jog away along a shaded bush track.",
+  },
   primary: { label: "Check your eligibility", href: WLP_QUIZ_HREF },
   secondary: CALL_CTA,
 } as const;

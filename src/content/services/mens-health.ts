@@ -24,6 +24,11 @@ export const MENS_HEALTH: ServicePageData = {
   hero: {
     eyebrow: "Men's health",
     heading: "Men's health, handled discreetly and online",
+    media: {
+      src: "/videos/mens-health-hero.webm",
+      poster: "/images/mens-health-hero-poster.webp",
+      alt: "A man stands at an open window with a cup, looking out at wet greenery.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

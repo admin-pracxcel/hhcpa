@@ -20,6 +20,11 @@ export const HAIR_LOSS: ServicePageData = {
   hero: {
     eyebrow: "Hair loss",
     heading: "Hair loss in men, assessed online",
+    media: {
+      src: "/videos/hair-loss-hero.webm",
+      poster: "/images/hair-loss-hero-poster.webp",
+      alt: "A man sits alone on a shoreline at sunset, silhouetted against a bank of cloud.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

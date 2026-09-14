@@ -14,6 +14,11 @@ export const PATHOLOGY_IMAGING: ServicePageData = {
   hero: {
     eyebrow: "Pathology & imaging referrals",
     heading: "Pathology and imaging referrals, arranged online",
+    media: {
+      src: "/videos/pathology-imaging-referrals-hero.webm",
+      poster: "/images/pathology-imaging-referrals-hero-poster.webp",
+      alt: "A woman takes notes at a desk while on the phone, a window behind her.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

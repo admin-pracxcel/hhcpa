@@ -61,6 +61,11 @@ export const CONTINUITY_PREVENTATIVE_HEALTH: ServicePageData = {
   hero: {
     eyebrow: "Continuity & preventative health",
     heading: "Care that continues between appointments",
+    media: {
+      src: "/videos/continuity-preventative-health-hero.webm",
+      poster: "/images/continuity-preventative-health-hero-poster.webp",
+      alt: "An older woman in glasses sits at a laptop in a bright living room, mid-conversation.",
+    },
     primary: { label: "Start your booking", href: "/quiz/" },
     secondary: CALL_CTA,
   },

@@ -14,6 +14,11 @@ export const SPECIALIST_REFERRALS: ServicePageData = {
   hero: {
     eyebrow: "Specialist referrals",
     heading: "Specialist referrals, assessed and issued online",
+    media: {
+      src: "/videos/specialist-referrals-hero.webm",
+      poster: "/images/specialist-referrals-hero-poster.webp",
+      alt: "A man works at a laptop in a bright room with plants behind him.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

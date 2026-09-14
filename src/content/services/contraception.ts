@@ -22,6 +22,11 @@ export const CONTRACEPTION: ServicePageData = {
   hero: {
     eyebrow: "Contraception & sexual health",
     heading: "Contraception and sexual health, handled privately online",
+    media: {
+      src: "/videos/contraception-hero.webm",
+      poster: "/images/contraception-hero-poster.webp",
+      alt: "A woman rides a folding bicycle along a path through a park in summer.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

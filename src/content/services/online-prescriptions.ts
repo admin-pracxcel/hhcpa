@@ -22,6 +22,11 @@ export const ONLINE_PRESCRIPTIONS: ServicePageData = {
     eyebrow: "Online prescriptions",
     heading:
       "Online prescriptions and repeat scripts, where clinically appropriate",
+    media: {
+      src: "/videos/online-prescriptions-hero.webm",
+      poster: "/images/online-prescriptions-hero-poster.webp",
+      alt: "A woman on a sofa reads her phone, morning light across the room.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

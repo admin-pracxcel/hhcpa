@@ -68,6 +68,11 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
   hero: {
     eyebrow: "Holistic & alternative care",
     heading: "Whole-person care, assessed by registered practitioners",
+    media: {
+      src: "/videos/holistic-alternative-care-hero.webm",
+      poster: "/images/holistic-alternative-care-hero-poster.webp",
+      alt: "A woman reads a book in an armchair by a tall window in a wood-panelled room.",
+    },
     primary: { label: "Start your booking", href: "/quiz/" },
     secondary: CALL_CTA,
   },

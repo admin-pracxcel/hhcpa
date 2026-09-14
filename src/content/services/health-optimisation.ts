@@ -71,6 +71,11 @@ export const HEALTH_OPTIMISATION: ServicePageData = {
     eyebrow: "Health optimisation",
     heading:
       "Health optimisation and complete wellness, guided by AHPRA-registered practitioners",
+    media: {
+      src: "/videos/health-optimisation-hero.webm",
+      poster: "/images/health-optimisation-hero-poster.webp",
+      alt: "Early sun breaks through pines along a quiet country road.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

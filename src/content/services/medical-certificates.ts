@@ -21,6 +21,11 @@ export const MEDICAL_CERTIFICATES: ServicePageData = {
   hero: {
     eyebrow: "Medical certificates",
     heading: "Online medical certificates for work, study and carer's leave",
+    media: {
+      src: "/videos/medical-certificates-hero.webm",
+      poster: "/images/medical-certificates-hero-poster.webp",
+      alt: "A young woman sits up in bed wrapped in a blanket, writing in a notebook.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

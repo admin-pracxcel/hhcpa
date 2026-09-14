@@ -27,6 +27,11 @@ export const ONLINE_DOCTOR: ServicePageData = {
   hero: {
     eyebrow: "Online doctor",
     heading: "Online doctor consultations across Australia",
+    media: {
+      src: "/videos/online-doctor-hero.webm",
+      poster: "/images/online-doctor-hero-poster.webp",
+      alt: "A young man with an earbud in talks to a laptop from a sofa at home.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

@@ -23,6 +23,11 @@ export const WOMENS_HEALTH: ServicePageData = {
   hero: {
     eyebrow: "Women's health",
     heading: "Women's health, on your schedule and online",
+    media: {
+      src: "/videos/womens-health-hero.webm",
+      poster: "/images/womens-health-hero-poster.webp",
+      alt: "A woman stands by a window with venetian blinds, holding a mug.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

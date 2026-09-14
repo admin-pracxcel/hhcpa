@@ -20,6 +20,11 @@ export const PREMATURE_EJACULATION: ServicePageData = {
   hero: {
     eyebrow: "Premature ejaculation",
     heading: "Premature ejaculation, assessed discreetly online",
+    media: {
+      src: "/videos/premature-ejaculation-hero.webm",
+      poster: "/images/premature-ejaculation-hero-poster.webp",
+      alt: "A couple walk away arm in arm along a path through a sunlit park.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

@@ -35,6 +35,11 @@ export const LOW_TESTOSTERONE: ServicePageData = {
   hero: {
     eyebrow: "Low testosterone",
     heading: "Low testosterone, assessed properly online",
+    media: {
+      src: "/videos/low-testosterone-hero.webm",
+      poster: "/images/low-testosterone-hero-poster.webp",
+      alt: "A man walks a heath path at sunrise, mist low across the trees.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

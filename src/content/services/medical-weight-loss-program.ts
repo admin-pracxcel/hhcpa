@@ -27,6 +27,11 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
   hero: {
     eyebrow: "Medical weight loss program",
     heading: "A medical weight loss program built around review, not quick fixes",
+    media: {
+      src: "/videos/medical-weight-loss-program-hero.webm",
+      poster: "/images/medical-weight-loss-program-hero-poster.webp",
+      alt: "A woman talks to a laptop at a desk against a brick wall, mid video call.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

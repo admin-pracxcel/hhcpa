@@ -22,6 +22,11 @@ export const MENTAL_HEALTH: ServicePageData = {
   hero: {
     eyebrow: "Mental health support",
     heading: "Mental health support, without the waiting room",
+    media: {
+      src: "/videos/mental-health-hero.webm",
+      poster: "/images/mental-health-hero-poster.webp",
+      alt: "A person walks alone along an empty beach at dawn, the sea flat beside them.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },

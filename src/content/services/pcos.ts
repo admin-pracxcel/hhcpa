@@ -21,6 +21,11 @@ export const PCOS: ServicePageData = {
   hero: {
     eyebrow: "PCOS management",
     heading: "PCOS management, coordinated online",
+    media: {
+      src: "/videos/pcos-management-hero.webm",
+      poster: "/images/pcos-management-hero-poster.webp",
+      alt: "A woman lies back on a sofa with a hand in her hair, eyes closed.",
+    },
     primary: { label: "Check your eligibility", href: "/quiz/" },
     secondary: CALL_CTA,
   },
