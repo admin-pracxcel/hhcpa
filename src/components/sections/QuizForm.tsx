@@ -200,7 +200,8 @@ const STYLES = `
 
 .hhcp-qz-card {
   width: 100%;
-  max-width: 720px;
+  /* 1100px — Bilal, 2026-09-14. Was 720. */
+  max-width: 1100px;
   padding: var(--hhcp-space-l, 45px);
   border-radius: 12px;
   background: #ffffff;
