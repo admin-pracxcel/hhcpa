@@ -130,6 +130,13 @@ export type QuizStep =
       readonly variant: "blocked" | "crisis" | "emergency";
       readonly heading: string;
       readonly body: string;
+      /**
+       * An optional panel below the body, with its own heading. Only
+       * `exit-cert-safety` uses one — Bilal gave that stop as a title plus a
+       * titled box rather than the flat heading-and-paragraph the other
+       * exits are written as.
+       */
+      readonly notice?: { readonly title: string; readonly body: string };
     }
   | {
       /**
@@ -144,12 +151,30 @@ export type QuizStep =
       readonly kind: "certificate";
       readonly id: string;
       readonly next: string;
+      /**
+       * Exits `CertificateAssessment` can end the flow at, which it reaches
+       * by jumping rather than by answering this step.
+       *
+       * They are declared here because they are real edges of the graph. The
+       * reachability test walks `next` alone, so an exit only the component
+       * knows about would either read as unreachable or, worse, be quietly
+       * dropped from the walk and never checked at all.
+       */
+      readonly stops: readonly string[];
     }
   | { readonly kind: "contact"; readonly id: string };
 
 /* -------------------------------------------------------------------------
    Page copy
    ------------------------------------------------------------------------- */
+
+/**
+ * The two exits `CertificateAssessment` ends at. Named rather than typed out
+ * at each site so the component, the step's `stops` and the graph cannot
+ * drift apart.
+ */
+export const CERT_SAFETY_EXIT = "exit-cert-safety";
+export const CERT_LOCATION_EXIT = "exit-location";
 
 export const QUIZ_META = {
   title: "Free Pre-Screening Quiz | Check Your Eligibility | HHCPA",
@@ -305,7 +330,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
   },
   {
     kind: "exit",
-    id: "exit-location",
+    id: CERT_LOCATION_EXIT,
     variant: "blocked",
     heading: "Unable to Proceed",
     body: "Our services are only available to patients currently located in Australia.",
@@ -413,7 +438,45 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
      Nothing on the certificates page or in this flow may say a consultation
      is always required (§4.9, §7.3). The homepage FAQ's "not on a
      questionnaire alone" line is about prescriptions and stays about them. */
-  { kind: "certificate", id: "cert_assessment", next: "contact" },
+  {
+    kind: "certificate",
+    id: "cert_assessment",
+    next: "contact",
+    stops: [CERT_SAFETY_EXIT, CERT_LOCATION_EXIT],
+  },
+
+  /*
+   * Safety Screening, step 8 of her twelve. Anything ticked other than "None
+   * of the Above" ends the assessment here — Bilal, 2026-09-14, copy his.
+   *
+   * DECISION: the stop itself is hers and predates this; it is in
+   * `CertificateAssessment` as one of the two hard stops ported from her live
+   * wizard. What was wrong is that it recorded the flag and then walked on to
+   * the contact step anyway, so a patient reporting chest pain or thoughts of
+   * self-harm was asked for their email and thanked. It now lands here.
+   *
+   * The list it gates on is hers, unchanged: chest pain, difficulty
+   * breathing, severe allergic reaction, sudden vision changes, severe
+   * dizziness, confusion, slurred speech, facial drooping, new weakness or
+   * numbness, thoughts of self-harm. No option was added or removed.
+   *
+   * The emergency variant carries the crisis numbers, which is why it is used
+   * rather than `blocked`: the copy says to call 000, and "Thoughts of
+   * Self-Harm" is on the list, so Lifeline and Beyond Blue belong on the
+   * screen a patient who ticked it is looking at. The numbers are the only
+   * thing here that is not Bilal's wording.
+   */
+  {
+    kind: "exit",
+    id: CERT_SAFETY_EXIT,
+    variant: "emergency",
+    heading: "Please seek urgent care",
+    body: "",
+    notice: {
+      title: "This service may not be suitable for your condition",
+      body: "Based on your responses, please seek urgent medical attention, attend your nearest Emergency Department, or call 000.",
+    },
+  },
 
   /* ---------- online prescriptions, the conditional ladder (§4.8) ----------
      Her three questions, in her order. She modelled them on a competitor's

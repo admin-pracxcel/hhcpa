@@ -29,8 +29,11 @@ function targetsOf(step: QuizStep): readonly string[] {
     case "input":
     case "bmi":
     case "summary":
-    case "certificate":
       return [step.next];
+    /* Plus the exits its component jumps to, which are edges of the graph
+       even though no answer on this step leads to them. */
+    case "certificate":
+      return [step.next, ...step.stops];
     case "exit":
     case "contact":
       return [];

@@ -192,7 +192,12 @@ export interface CertificateResult {
 interface Props {
   onDone: (result: CertificateResult) => void;
   /** Ends the assessment: a safety flag, or not being in Australia. */
-  onStop: (reason: string) => void;
+  /**
+   * Ends the assessment. `kind` says which of her two hard stops fired, so
+   * the caller can send each to its own exit — they are not the same event
+   * and must not land on the same screen.
+   */
+  onStop: (stop: { kind: "safety" | "location"; reason: string }) => void;
 }
 
 export function CertificateAssessment({ onDone, onStop }: Props) {
@@ -242,7 +247,10 @@ export function CertificateAssessment({ onDone, onStop }: Props) {
 
     /* Her two hard stops, unchanged. */
     if (step.title === "Eligibility" && answers.inAustralia === "No") {
-      onStop("Not currently located in Australia.");
+      onStop({
+        kind: "location",
+        reason: "Not currently located in Australia.",
+      });
       return;
     }
     if (step.title === "Safety Screening") {
@@ -250,7 +258,7 @@ export function CertificateAssessment({ onDone, onStop }: Props) {
         (v) => v !== "None of the Above",
       );
       if (flagged.length > 0) {
-        onStop(flagged.join("; "));
+        onStop({ kind: "safety", reason: flagged.join("; ") });
         return;
       }
     }

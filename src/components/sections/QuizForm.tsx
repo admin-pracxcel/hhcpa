@@ -26,6 +26,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
+  CERT_LOCATION_EXIT,
+  CERT_SAFETY_EXIT,
   CONSENT_VERSION,
   NONE_OF_THESE,
   QUIZ_CONSENTS,
@@ -441,6 +443,49 @@ const STYLES = `
 .hhcp-qz-card[data-variant="crisis"] .hhcp-qz-back,
 .hhcp-qz-card[data-variant="emergency"] .hhcp-qz-back {
   color: var(--hhcp-action-light, #baf8d9);
+}
+
+/*
+ * The exit notice panel. Same white-on-translucent treatment as the crisis
+ * numbers below, because it sits on the same dark card, with the red rule
+ * the warning notes elsewhere in the flow use.
+ */
+.hhcp-qz-notice {
+  margin-top: var(--hhcp-space-s, 20px);
+  padding: 16px 18px;
+  border-left: 3px solid #ff6b5e;
+  border-radius: var(--hhcp-radius-s, 6.667px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hhcp-qz-notice strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--hhcp-text-m, 16px);
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.hhcp-qz-notice p {
+  font-size: var(--hhcp-text-m, 16px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/*
+ * On a light exit card the translucent white would be white on near-white,
+ * the same trap the urgent panel documents below.
+ */
+.hhcp-qz-card[data-variant="blocked"] .hhcp-qz-notice {
+  background: var(--hhcp-accent, #f5fff9);
+}
+
+.hhcp-qz-card[data-variant="blocked"] .hhcp-qz-notice strong {
+  color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-qz-card[data-variant="blocked"] .hhcp-qz-notice p {
+  color: rgba(1, 49, 38, 0.85);
 }
 
 .hhcp-qz-urgent {
@@ -971,6 +1016,15 @@ export function QuizForm({
     [preselectedService],
   );
 
+  /*
+   * Pushed onto the same history stack `go` uses, so Back still works from
+   * an exit reached this way.
+   */
+  const jump = useCallback((id: string) => {
+    setProblem("");
+    setHistory((stack) => [...stack, id]);
+  }, []);
+
   const back = useCallback(() => {
     setProblem("");
     setHistory((stack) => (stack.length > 1 ? stack.slice(0, -1) : stack));
@@ -1229,6 +1283,7 @@ export function QuizForm({
               set={set}
               toggle={toggle}
               go={go}
+              jump={jump}
               setConsents={setConsents}
               onSubmit={submit}
             />
@@ -1274,6 +1329,8 @@ export function QuizForm({
     set: (name: string, value: string) => void;
     toggle: (field: string, option: string) => void;
     go: (from: QuizStep, answer: string) => void;
+    /** Straight to a named step, for a component that owns its own exits. */
+    jump: (id: string) => void;
     setConsents: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   }
@@ -1662,6 +1719,7 @@ function CertificateStep({
   step,
   set,
   go,
+  jump,
 }: StepBodyProps & { step: Extract<QuizStep, { kind: "certificate" }> }) {
   return (
     <CertificateAssessment
@@ -1677,9 +1735,21 @@ function CertificateStep({
         }
         go(step, "");
       }}
-      onStop={(reason) => {
-        set("cert_stopped", reason);
-        go(step, "");
+      /*
+       * Each hard stop lands on its own exit. It used to record the reason
+       * and then call `go`, which walks to the contact step — so a patient
+       * who ticked chest pain or thoughts of self-harm was asked for their
+       * email and thanked. Fixed 2026-09-14 on Bilal's instruction.
+       *
+       * Nothing is posted from here, which is right and worth stating: the
+       * contact step is where a name and an email are collected, and this
+       * never reaches it. There is no lead to send and nobody to send it
+       * about. The self-harm alert that is still on the launch list is about
+       * disclosures made *after* contact details exist, and is unaffected.
+       */
+      onStop={(stop) => {
+        set("cert_stopped", stop.reason);
+        jump(stop.kind === "safety" ? CERT_SAFETY_EXIT : CERT_LOCATION_EXIT);
       }}
     />
   );
@@ -1689,7 +1759,17 @@ function ExitStep({ step }: { step: Extract<QuizStep, { kind: "exit" }> }) {
   return (
     <>
       <h2 className="hhcp-qz-exit-heading font-dm-sans">{step.heading}</h2>
-      <p className="hhcp-qz-exit-body font-dm-sans">{step.body}</p>
+      {/* Only the safety exit is written as a titled box with no lead
+          paragraph, so the paragraph is skipped rather than left empty. */}
+      {step.body !== "" && (
+        <p className="hhcp-qz-exit-body font-dm-sans">{step.body}</p>
+      )}
+      {step.notice !== undefined && (
+        <div className="hhcp-qz-notice font-dm-sans">
+          <strong>{step.notice.title}</strong>
+          <p>{step.notice.body}</p>
+        </div>
+      )}
       {(step.variant === "crisis" || step.variant === "emergency") && (
         <div className="hhcp-qz-urgent font-dm-sans">
           {URGENT.map((line) => (
