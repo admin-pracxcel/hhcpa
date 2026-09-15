@@ -43,7 +43,8 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   gap: 0.7em;
-  font-size: 40px;
+  /* 30px — Bilal, 2026-09-15. Was 40. */
+  font-size: 30px;
   line-height: 1.3;
   font-weight: 400;
   letter-spacing: -0.5px;
@@ -53,12 +54,15 @@ const STYLES = `
 /*
  * A multi-paragraph intro steps down a size.
  *
- * 40px was chosen for a single short paragraph, where it reads as a statement.
- * The homepage intro is now four paragraphs of her copy and About Us is four
- * more, and at 40px that is roughly 900px of text between the trust bar and
- * the first real section — a wall rather than an opening. 28px keeps it
- * clearly above body copy and ahead of every heading below it, and lets the
- * whole intro land in about half the height.
+ * This was written when the single-paragraph size was 40px: at that size the
+ * homepage's four paragraphs of her copy ran to roughly 900px between the
+ * trust bar and the first section, which is a wall rather than an opening,
+ * and 28px halved it.
+ *
+ * The base dropped to 30px on 2026-09-15, so the step is now 30 to 28 and
+ * barely reads as one. Kept rather than collapsed, because two paragraph
+ * counts wanting the same size is a decision to take deliberately, not a
+ * side effect of changing the other number. Raised with Bilal.
  */
 .hhcp-lp-text[data-paragraphs="many"] {
   font-size: 28px;
@@ -89,9 +93,11 @@ const STYLES = `
 
 /* Tablet. */
 @media (max-width: 991px) {
-  .hhcp-lp-text {
-    font-size: 30px;
-  }
+  /*
+   * No rule for the single-paragraph case: it was 30px here, which is now the
+   * desktop size too, so the declaration set a value to itself. The step to
+   * 20px at 767px below still applies.
+   */
   .hhcp-lp-text[data-paragraphs="many"] {
     font-size: 22px;
   }
