@@ -198,10 +198,21 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
       kind: "pricingCue",
       eyebrow: "What it costs",
       heading: "What it costs",
-      headline: `from $${PRICES.holisticCare.amount}`,
-      headlineLabel: "Consultations",
+      /*
+       * Broken out per visit, from her 2026-09-15 email: $69 initial, $59
+       * follow-up, $59 transfer. It read "from $59" with only the transfer
+       * shown, which is the floor and stays the floor everywhere the service
+       * is listed — but on its own page the initial fee is what a new patient
+       * pays and it should not take a click to find out it is $69.
+       */
+      headline: `$${PRICES.holisticInitial.amount}`,
+      headlineLabel: "Initial consultation",
       rows: [
         { label: "Pre-screening", value: "Free" },
+        {
+          label: "Follow-up consultation",
+          value: `$${PRICES.followUpConsult.amount}`,
+        },
         {
           label: "Transfer consultation",
           value: `$${PRICES.transferConsult.amount}`,

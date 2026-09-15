@@ -9,7 +9,9 @@ describe("formatPrice", () => {
   });
 
   it("prefixes 'from' where the fee is a starting price", () => {
-    expect(formatPrice("weightManagement")).toBe("from $99");
+    /* $69 since 2026-09-15: weight loss prices per visit and the floor is its
+       follow-up, not its initial. See the per-visit block below. */
+    expect(formatPrice("weightManagement")).toBe("from $69");
   });
 
   it("renders cents only when the amount has them", () => {
@@ -32,6 +34,45 @@ describe("PRICES", () => {
     for (const key of required) {
       expect(PRICES[key]).toBeDefined();
     }
+  });
+});
+
+/*
+ * A "from" price is the least a patient can be charged for that service.
+ *
+ * Two services price per visit — weight management and holistic care — and
+ * their floors are therefore equal to their own cheapest fee, not to a number
+ * chosen separately. Left unguarded, someone changes a follow-up and the
+ * floor keeps advertising the old one, which under-quotes on the homepage
+ * badge, the /services/ box and the /pricing/ table all at once.
+ *
+ * The floors themselves are Bilal's call of 2026-09-15, from Ranjeeta's email
+ * of the same day.
+ */
+describe("per-visit services advertise their true floor", () => {
+  const FLOORS = {
+    weightManagement: ["weightLossInitial", "weightLossFollowUp"],
+    holisticCare: ["holisticInitial", "followUpConsult", "transferConsult"],
+  } as const;
+
+  for (const [floorKey, feeKeys] of Object.entries(FLOORS)) {
+    it(`${floorKey} equals the cheapest fee it covers`, () => {
+      const cheapest = Math.min(
+        ...feeKeys.map((key) => PRICES[key as keyof typeof PRICES].amount),
+      );
+      expect(PRICES[floorKey as keyof typeof PRICES].amount).toBe(cheapest);
+      /* A floor that is not marked "from" reads as the only price. */
+      expect(PRICES[floorKey as keyof typeof PRICES].from).toBe(true);
+    });
+  }
+
+  it("keeps the initial fee above the floor, or the split is pointless", () => {
+    expect(PRICES.weightLossInitial.amount).toBeGreaterThan(
+      PRICES.weightManagement.amount,
+    );
+    expect(PRICES.holisticInitial.amount).toBeGreaterThan(
+      PRICES.holisticCare.amount,
+    );
   });
 });
 

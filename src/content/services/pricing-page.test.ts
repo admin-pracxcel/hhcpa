@@ -37,13 +37,30 @@ describe("pricing page", () => {
    * be findable. It is stated in the tiles' own note, which the second test
    * checks is still there.
    */
-  const DISCLOSED_IN_PROSE: readonly PriceKey[] = ["prescriptionsComplex"];
+  const DISCLOSED_IN_PROSE: readonly PriceKey[] = [
+    "prescriptionsComplex",
+    /*
+     * Same reason, added 2026-09-15. Weight management and holistic care
+     * price per visit now, so their rows show the floor and the initial fee
+     * is stated in the note instead of being a thirteenth and fourteenth row.
+     */
+    "weightLossInitial",
+    "weightLossFollowUp",
+    "holisticInitial",
+  ];
 
-  it("states the prescription ladder's upper tier in the note", () => {
+  it("states every prose-disclosed fee in the note", () => {
     const tiles = PRICING_PAGE.modules.find((m) => m.kind === "priceTiles");
     const note = tiles !== undefined && "note" in tiles ? (tiles.note ?? "") : "";
-    expect(note).toContain(`$${PRICES.prescriptionsComplex.amount}`);
     expect(note).toContain(`$${PRICES.prescriptions.amount}`);
+    /*
+     * Every key the list above excuses from having a row has to be here
+     * instead, or the exemption becomes a way to hide a fee rather than a
+     * place to put one.
+     */
+    for (const key of DISCLOSED_IN_PROSE) {
+      expect(note, key).toContain(`$${PRICES[key].amount}`);
+    }
   });
 
   it("lists every price in the record exactly once", () => {

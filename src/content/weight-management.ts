@@ -141,13 +141,19 @@ export const WLP_SUPERVISION = {
 export const WLP_PRICING = {
   eyebrow: "What to expect on cost",
   heading: "Straightforward pricing",
-  headline: `$${PRICES.firstConsult.amount}`,
-  headlineLabel: "First consultation",
+  /*
+   * Per-visit weight-loss fees, from her 2026-09-15 email: $99 initial, $69
+   * follow-up. These were the generic firstConsult and followUpConsult, which
+   * are $69 and $59 and are still right for everything that is not a weight
+   * or holistic consultation.
+   */
+  headline: `$${PRICES.weightLossInitial.amount}`,
+  headlineLabel: "Initial consultation",
   secondary: [
     { label: "Pre-screening quiz", value: "Free" },
     {
       label: "Follow-up consultation",
-      value: `$${PRICES.followUpConsult.amount}`,
+      value: `$${PRICES.weightLossFollowUp.amount}`,
     },
     {
       label: "Structured weight-management programs",

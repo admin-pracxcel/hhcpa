@@ -85,8 +85,15 @@ export const PRICING_PAGE: ServicePageData = {
        * ladder in §4.8, not the only price. A fee a patient can be charged
        * has to be one they can look up, so the ceiling is stated here rather
        * than discovered at the end of the flow.
+       *
+       * Weight management and holistic care are here for the same reason and
+       * were added 2026-09-15. Both now price per visit, so their rows show a
+       * floor — $69 and $59, their follow-ups — and the initial fee a new
+       * patient actually pays would otherwise appear nowhere on this page.
+       * The table is fixed at twelve rows by the build spec, so these go in
+       * the note rather than becoming rows of their own.
        */
-      note: `Prescription requests are $${PRICES.prescriptions.amount} for a single medication you are already taking with no repeats, and $${PRICES.prescriptionsComplex.amount} otherwise. Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.`,
+      note: `Prescription requests are $${PRICES.prescriptions.amount} for a single medication you are already taking with no repeats, and $${PRICES.prescriptionsComplex.amount} otherwise. Weight management is $${PRICES.weightLossInitial.amount} for your initial consultation and $${PRICES.weightLossFollowUp.amount} for follow-ups. Holistic care is $${PRICES.holisticInitial.amount} for your initial consultation, and $${PRICES.followUpConsult.amount} for follow-ups and transfers. Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.`,
     },
     {
       kind: "priceCards",

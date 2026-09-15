@@ -71,6 +71,9 @@ export type PriceKey =
   | "quiz"
   | "firstConsult"
   | "followUpConsult"
+  | "weightLossInitial"
+  | "weightLossFollowUp"
+  | "holisticInitial"
   | "transferConsult"
   | "generalConsult"
   | "afterHoursConsult"
@@ -107,7 +110,19 @@ export const PRICES: Record<PriceKey, Price> = {
   pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 49,   from: true,  provisional: true },
   mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
   mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
-  weightManagement:   { label: "Weight management",                amount: 99,   from: true,  provisional: true },
+  /*
+   * The floor, which is the follow-up. Her 2026-09-15 email prices weight
+   * loss per visit — $99 initial, $69 follow-up — so "from" is $69, the
+   * cheapest fee a patient can actually be charged for this service. It reads
+   * as "From $69" on the home service box, /services/ and the /pricing/
+   * table. Bilal, 2026-09-15: change all three, not the table alone.
+   *
+   * pricing.test.ts asserts this equals the cheapest per-visit fee below, so
+   * the two cannot drift apart.
+   */
+  weightManagement:   { label: "Weight management",                amount: 69,   from: true,  provisional: true },
+  weightLossInitial:  { label: "Weight management initial consultation", amount: 99, from: false, provisional: true },
+  weightLossFollowUp: { label: "Weight management follow-up",      amount: 69,   from: false, provisional: true },
   /*
    * Both were priced on her live site and were missing from the rebuild only
    * because the approved sitemap had no page for them. Build spec v2.1 §5.1
@@ -115,7 +130,14 @@ export const PRICES: Record<PriceKey, Price> = {
    */
   continuityPreventative:
                       { label: "Continuity & Preventative Health", amount: 69,   from: true,  provisional: true },
+  /*
+   * The floor again, and this one is unchanged at $59. Her email prices
+   * holistic care at $69 initial, $59 follow-up, $59 transfer, so $59 is
+   * genuinely the least she charges — Bilal's call on 2026-09-15 to keep the
+   * "from" reading as the floor rather than promoting the initial fee.
+   */
   holisticCare:       { label: "Holistic Care / Alternative Medicine", amount: 59, from: true, provisional: true },
+  holisticInitial:    { label: "Holistic care initial consultation", amount: 69, from: false, provisional: true },
   /* Renamed from "Structured health programs" by §5.1: the row is the Health
      Optimisation hub's price, so it should read as that service's name. */
   healthProgram:      { label: "Health Optimisation & Complete Wellness", amount: 299, from: true, provisional: true },

@@ -126,7 +126,9 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
         { label: "Pre-screening quiz", value: "Free" },
         {
           label: "Standard consultation",
-          value: `$${PRICES.firstConsult.amount}`,
+          /* The weight-loss initial, not the generic $69 — same service as the
+             hub page two clicks away, which would otherwise disagree. */
+          value: `$${PRICES.weightLossInitial.amount}`,
         },
       ],
       note: "See the full breakdown on our pricing page, and read the journey from first quiz to ongoing review on how it works.",
@@ -151,7 +153,7 @@ export const MEDICAL_WEIGHT_LOSS_PROGRAM: ServicePageData = {
       {
         id: "cost",
         question: "What does it cost?",
-        answer: `Programs are available from $${PRICES.healthProgram.amount}, with standard consultations at $${PRICES.firstConsult.amount}.`,
+        answer: `Programs are available from $${PRICES.healthProgram.amount}, with standard consultations at $${PRICES.weightLossInitial.amount}.`,
       },
     ],
   },
