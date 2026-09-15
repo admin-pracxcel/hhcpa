@@ -31,6 +31,8 @@
 
 import { createHmac, randomUUID } from "node:crypto";
 
+import { aestDate, aestDateTime } from "@/lib/aest";
+
 import { QUIZ_CONSENTS, REQUIRED_CONSENT_IDS } from "@/content/quiz";
 
 const DEFAULT_WEBHOOK_URL = "https://n8n.pracxcel.com.au/webhook/hhcpa-quiz";
@@ -130,12 +132,13 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
+    const stagedAt = new Date();
     return forward(
       JSON.stringify({
         submissionId: priorId,
         formType: "quiz",
         stage,
-        submittedAt: new Date().toISOString(),
+        submittedAt: stagedAt.toISOString(),
         /*
          * An intake is detail on a patient already counted at stage one. A
          * discharge submission is its own enquiry with no stage one behind
@@ -144,6 +147,23 @@ export async function POST(request: Request) {
         countsTowardPatientQuota: stage === "discharge",
         service: clean(payload.service),
         safetyFlag: payload.safetyFlag === true,
+
+        /*
+         * The same three lead fields, in the same names, as every other form.
+         * This branch returns early and so was missing all of them — a
+         * discharge submission is its own enquiry, and it arrived at n8n with
+         * no country, no campaign and no AEST date at all.
+         */
+        attribution: record(payload.attribution),
+        leadCountry: clean(payload.leadCountry),
+        leadCountryName: clean(payload.leadCountryName),
+        leadSource: clean(payload.leadSource),
+        leadSourceLatest: clean(payload.leadSourceLatest),
+        leadDate: aestDate(stagedAt),
+        leadDateTime: aestDateTime(stagedAt),
+        leadTimezone: "AEST (+10:00)",
+        pagePath: clean(payload.pagePath),
+
         clinical: { intake: payload.intake },
       }),
       priorId,
@@ -191,7 +211,8 @@ export async function POST(request: Request) {
   }
 
   const submissionId = randomUUID();
-  const submittedAt = new Date().toISOString();
+  const now = new Date();
+  const submittedAt = now.toISOString();
   const consentedAt = clean(payload.consentedAt) || submittedAt;
   const consentVersion = clean(payload.consentVersion);
 
@@ -243,9 +264,31 @@ export async function POST(request: Request) {
       ]),
     ),
 
+    /*
+     * The full campaign set — click ids, every utm_ parameter, the landing
+     * page and the referrer. leadSource below is the one field lifted out of
+     * it, because every other form on the site sends that name at the top
+     * level and n8n should not have to reach into a nested object here alone.
+     */
     attribution: record(payload.attribution),
+
+    /* The three lead fields every form carries, in the same names and the
+       same place. See lib/lead-fields.ts. */
     leadCountry: clean(payload.leadCountry),
     leadCountryName: clean(payload.leadCountryName),
+    leadSource: clean(payload.leadSource),
+    leadSourceLatest: clean(payload.leadSourceLatest),
+    /*
+     * submittedAt above is ISO UTC and stays, because the idempotency key and
+     * the audit trail are keyed on it. These three are the AEST reading of the
+     * same instant, which is what n8n formats against. Both are the server's
+     * clock, never the browser's.
+     */
+    leadDate: aestDate(now),
+    leadDateTime: aestDateTime(now),
+    leadTimezone: "AEST (+10:00)",
+    /* Flat, like every other form sends it. `page` below keeps the title. */
+    pagePath: clean(payload.pagePath),
     page: { path: "/quiz/", title: clean(payload.pageTitle) },
 
     /*

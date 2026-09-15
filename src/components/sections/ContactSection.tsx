@@ -31,8 +31,8 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 
 import { CLINIC } from "@/content/clinic";
-import { findCountry, guessCountry } from "@/content/countries";
-import { getLeadSource } from "@/lib/attribution";
+import { findCountry } from "@/content/countries";
+import { getLeadFields } from "@/lib/lead-fields";
 import { cn } from "@/lib/utils";
 import { PhoneField } from "./PhoneField";
 
@@ -278,8 +278,6 @@ export function ContactSection({
     const data = new FormData(form);
     const value = (name: string) => String(data.get(name) ?? "");
 
-    /* Where the visitor is, which is not necessarily the dial code they chose. */
-    const visitorCountry = findCountry(guessCountry());
     const phoneCountry = findCountry(value("phoneCountry"));
 
     setStatus("sending");
@@ -296,11 +294,9 @@ export function ContactSection({
           phoneDial: phoneCountry.dial,
           message: value("message"),
           company: value("company"),
-          leadCountry: visitorCountry.code,
-          leadCountryName: visitorCountry.name,
-          ...getLeadSource(),
-          pagePath:
-            typeof window === "undefined" ? "" : window.location.pathname,
+          /* Lead country, source and page path — the same three every form
+             sends. The date is stamped in the route, not here. */
+          ...getLeadFields(),
         }),
       });
 

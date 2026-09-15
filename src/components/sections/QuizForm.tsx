@@ -46,8 +46,9 @@ import {
   triage,
 } from "@/content/quiz";
 import type { QuizStep, TriageLevel } from "@/content/quiz";
-import { findCountry, guessCountry } from "@/content/countries";
-import { getAttribution, getLeadSource } from "@/lib/attribution";
+import { findCountry } from "@/content/countries";
+import { getAttribution } from "@/lib/attribution";
+import { getLeadFields } from "@/lib/lead-fields";
 import { cn } from "@/lib/utils";
 import { CertificateAssessment } from "./CertificateAssessment";
 import { PhoneField } from "./PhoneField";
@@ -1064,7 +1065,6 @@ export function QuizForm({
     }
 
     const phoneCountry = findCountry(value("phoneCountry"));
-    const visitor = findCountry(guessCountry());
 
     const clinical: Record<string, string> = {};
     const general: Record<string, string> = {};
@@ -1119,9 +1119,10 @@ export function QuizForm({
           ),
           consentVersion: CONSENT_VERSION,
           consentedAt: new Date().toISOString(),
-          attribution: { ...getAttribution(), ...getLeadSource() },
-          leadCountry: visitor.code,
-          leadCountryName: visitor.name,
+          attribution: getAttribution(),
+          /* Lead country, source and page path — the same three every form
+             sends. The date is stamped in the route, not here. */
+          ...getLeadFields(),
           pageTitle: typeof document === "undefined" ? "" : document.title,
           answers: general,
           clinical,

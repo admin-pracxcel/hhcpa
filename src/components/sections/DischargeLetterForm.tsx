@@ -38,6 +38,8 @@
 import { useState } from "react";
 
 import { findCountry } from "@/content/countries";
+import { getAttribution } from "@/lib/attribution";
+import { getLeadFields } from "@/lib/lead-fields";
 import { DISCHARGE_FORM } from "@/content/services/discharge";
 import { PhoneField } from "./PhoneField";
 
@@ -258,6 +260,10 @@ export function DischargeLetterForm() {
           stage: "discharge",
           submissionId: crypto.randomUUID(),
           service: "Transfer your care",
+          /* Lead country, source and page path — the same three every form
+             sends. This form had none of them. */
+          ...getLeadFields(),
+          attribution: getAttribution(),
           intake: {
             formId: "HHCPA-DISCHARGE",
             formVersion: "1.0",

@@ -100,6 +100,10 @@ export async function POST(request: Request) {
      */
     formPlacement: clean(payload.formPlacement),
 
+    /* Where the visitor is, guessed from their browser. */
+    leadCountry: clean(payload.leadCountry),
+    leadCountryName: clean(payload.leadCountryName),
+
     /* First touch, then the visit that converted. See lib/attribution.ts. */
     leadSource: clean(payload.leadSource),
     leadSourceLatest: clean(payload.leadSourceLatest),

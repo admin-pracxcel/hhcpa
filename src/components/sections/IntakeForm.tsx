@@ -48,6 +48,8 @@
 import { useMemo, useState } from "react";
 
 import { EMERGENCY_CONTACTS } from "@/content/clinic";
+import { getAttribution } from "@/lib/attribution";
+import { getLeadFields } from "@/lib/lead-fields";
 import {
   INTAKE_CONFIRMATIONS,
   type IntakeField,
@@ -326,6 +328,10 @@ export function IntakeForm({
           submissionId,
           service,
           safetyFlag: disclosedSelfHarm,
+          /* Lead country, source and page path — the same three every form
+             sends. This form had none of them. */
+          ...getLeadFields(),
+          attribution: getAttribution(),
           intake: {
             formId: form.id,
             formVersion: form.version,

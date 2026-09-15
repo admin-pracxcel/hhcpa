@@ -19,7 +19,7 @@
 import { useCallback, useState } from "react";
 import type { FormEvent } from "react";
 
-import { getLeadSource } from "@/lib/attribution";
+import { getLeadFields } from "@/lib/lead-fields";
 
 export type NewsletterPlacement = "footer" | "closing-cta" | "hero";
 
@@ -76,9 +76,7 @@ export function useNewsletterSignup(
               email: address,
               company: String(data.get("company") ?? ""),
               formPlacement: placement,
-              ...getLeadSource(),
-              pagePath:
-                typeof window === "undefined" ? "" : window.location.pathname,
+              ...getLeadFields(),
             }),
           });
 
