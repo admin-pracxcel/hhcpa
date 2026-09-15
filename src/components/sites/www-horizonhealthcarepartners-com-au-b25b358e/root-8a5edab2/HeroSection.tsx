@@ -16,9 +16,10 @@
  * every responsive rule is written as an arbitrary `max-[…]` variant.
  */
 
-import { useCallback, useRef, useState } from "react";
-import type { FormEvent, ReactNode } from "react";
+import { useCallback, useRef } from "react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 
 const ASSET_BASE =
   "/videos";
@@ -64,7 +65,7 @@ export function HeroSection({
   actions,
 }: HeroSectionProps = {}) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [email, setEmail] = useState("");
+  const news = useNewsletterSignup("hero");
 
   // Matches the source: clicking the background video toggles playback.
   const toggleVideo = useCallback(() => {
@@ -75,11 +76,6 @@ export function HeroSection({
     } else {
       video.pause();
     }
-  }, []);
-
-  // Demo-only form — the target posts to a mailing provider we do not clone.
-  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
   }, []);
 
   return (
@@ -169,20 +165,31 @@ export function HeroSection({
           >
             <div className="max-w-[500px] min-w-[404px] max-[767px]:w-full max-[767px]:max-w-[400px] max-[767px]:min-w-[auto]">
               <form
-                onSubmit={handleSubmit}
+                onSubmit={news.onSubmit}
                 className="relative flex items-center justify-between rounded-[40px] border-none bg-[#f5fff9] py-[2px] pr-[2px] pl-[25px] focus-within:[outline:1px_solid_rgba(88,237,162,0.5)]"
               >
                 <input
                   type="email"
                   name="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
+                  value={news.email}
+                  onChange={(event) => news.setEmail(event.target.value)}
+                  disabled={news.status === "sending"}
                   placeholder="E-MAIL"
                   aria-label="Email"
                   className="font-roboto-mono flex-1 border-none bg-transparent p-0 text-[12px] font-medium tracking-[0.36px] text-[#013126] outline-none"
                 />
+                {/* Honeypot: off-screen, unlabelled, and never focusable. */}
+                <input
+                  type="text"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-px w-px opacity-0 pointer-events-none"
+                />
                 <button
                   type="submit"
+                  disabled={news.status === "sending"}
                   className={cn(
                     "font-roboto-mono rounded-[33px] border-none bg-[#58eda2] px-[20px] py-[12.3px]",
                     "text-[12px] leading-[1.625] font-medium tracking-[0.36px] whitespace-nowrap uppercase text-[#013126]",
@@ -190,9 +197,25 @@ export function HeroSection({
                     "hover:bg-[#0c7340] hover:text-[#baf8d9] focus:bg-[#0c7340] focus:text-[#baf8d9]",
                   )}
                 >
-                  Book Consultation
+                  {/*
+                    "Sign Up", not the target's "Book Consultation". The form
+                    takes an email address and joins a mailing list; nothing
+                    about it books anything, and a button that says it does is
+                    a promise the page cannot keep.
+                  */}
+                  {news.status === "sending" ? "Sending" : "Sign Up"}
                 </button>
               </form>
+
+              {/* Reserves its line so nothing below shifts when a message lands. */}
+              <p
+                role="status"
+                aria-live="polite"
+                className="font-dm-sans mt-[8px] min-h-[21px] text-[14px] leading-[1.5] text-white"
+              >
+                {news.status === "done" && "Thanks — you are on the list."}
+                {news.status === "error" && news.problem}
+              </p>
             </div>
 
             <a

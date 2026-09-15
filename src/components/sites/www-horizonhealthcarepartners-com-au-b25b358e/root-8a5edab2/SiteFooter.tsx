@@ -39,6 +39,7 @@ import {
 } from "../shared/icons";
 import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
 import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
+import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 
 const LOGO_SRC =
   "/images/logo-light-tagline.svg";
@@ -346,6 +347,28 @@ const STYLES = `
   color: #baf8d9;
 }
 
+/*
+ * Off-screen rather than display:none — a bot reading the DOM fills what it
+ * can see in the markup, and a hidden input is the obvious tell.
+ */
+.hhcp-ft-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hhcp-ft-news-status {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--hhcp-action-light, #baf8d9);
+  /* Reserves its line so the terms below do not jump when a message lands. */
+  min-height: 21px;
+}
+
 .hhcp-ft-terms {
   font-size: 10px;
   line-height: 15px;
@@ -509,6 +532,8 @@ interface SiteFooterProps {
 }
 
 export function SiteFooter({ className }: SiteFooterProps) {
+  const news = useNewsletterSignup("footer");
+
   return (
     <footer className={cn("hhcp-ft", className)}>
       <style>{STYLES}</style>
@@ -538,21 +563,46 @@ export function SiteFooter({ className }: SiteFooterProps) {
               Email sign-up for occasional health guidance.
             </p>
 
-            <form
-              className="hhcp-ft-form"
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <form className="hhcp-ft-form" onSubmit={news.onSubmit}>
               <input
                 className="hhcp-ft-input"
                 type="email"
                 name="email"
                 placeholder="Enter your email"
                 aria-label="Enter your email"
+                value={news.email}
+                onChange={(event) => news.setEmail(event.target.value)}
+                disabled={news.status === "sending"}
               />
-              <button className="hhcp-ft-submit font-roboto-mono" type="submit">
-                Register
+              {/* Honeypot: off-screen, unlabelled, and never focusable. */}
+              <input
+                className="hhcp-ft-trap"
+                type="text"
+                name="company"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+              <button
+                className="hhcp-ft-submit font-roboto-mono"
+                type="submit"
+                disabled={news.status === "sending"}
+              >
+                {news.status === "sending" ? "Sending" : "Register"}
               </button>
             </form>
+
+            {/*
+              One live region for both outcomes, so a screen reader hears the
+              result without the message moving around. It sits above the terms
+              line rather than replacing the form: the form stays on the page
+              after a signup, because nothing stops someone adding a second
+              address.
+            */}
+            <p className="hhcp-ft-news-status" role="status" aria-live="polite">
+              {news.status === "done" && "Thanks — you are on the list."}
+              {news.status === "error" && news.problem}
+            </p>
 
             <p className="hhcp-ft-terms">
               {"By clicking Register, you acknowledge that you have read and accepted our "}
