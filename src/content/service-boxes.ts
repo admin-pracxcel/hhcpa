@@ -134,7 +134,13 @@ export const SERVICE_BOXES: readonly ServiceBox[] = [
   {
     key: "mens-health",
     title: "Men's Health",
-    icon: `${ICON_BASE}icon-mens-womens-health.svg`,
+    /*
+     * Its own icon since 2026-09-15. Both boxes shared
+     * icon-mens-womens-health.svg, which is hers and is drawn for the single
+     * combined service her site lists — two boxes with one glyph read as one
+     * service split in half.
+     */
+    icon: `${ICON_BASE}mens-health.webp`,
     iconAlt: "Men's health",
     description:
       "Discreet online consultations for erectile dysfunction, low testosterone, hair loss and more.",
@@ -144,7 +150,7 @@ export const SERVICE_BOXES: readonly ServiceBox[] = [
   {
     key: "womens-health",
     title: "Women's Health",
-    icon: `${ICON_BASE}icon-mens-womens-health.svg`,
+    icon: `${ICON_BASE}womens-health.webp`,
     iconAlt: "Women's health",
     description:
       "Menopause and perimenopause support, hormones, PCOS and contraception.",
