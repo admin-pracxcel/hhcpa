@@ -111,7 +111,16 @@ describe("second-stage submissions", () => {
       (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
     ) as Record<string, unknown>;
 
-  it("accepts the clinical intake without a contact block", async () => {
+  /*
+   * The intake stage is gone. Her six FRMs ran at /quiz-book/ between triage
+   * and booking until 2026-09-15; the route no longer has a branch for them.
+   *
+   * Asserted rather than deleted, because "accepted and forwarded" and "not a
+   * stage at all" are different behaviours and only one of them is right. A
+   * stale client still posting `stage: "intake"` should be told no, not have
+   * a clinical payload quietly relayed to n8n under a stage nothing consumes.
+   */
+  it("no longer accepts the clinical intake stage", async () => {
     const response = await POST(
       request({
         stage: "intake",
@@ -119,10 +128,8 @@ describe("second-stage submissions", () => {
         intake: { formId: "HHCPA-FRM-005", signature: "Jane Citizen" },
       }),
     );
-    expect(response.status).toBe(200);
-    expect(sent().stage).toBe("intake");
-    // Detail on someone already counted at stage one.
-    expect(sent().countsTowardPatientQuota).toBe(false);
+    expect(response.status).toBe(400);
+    expect(vi.mocked(fetch)).not.toHaveBeenCalled();
   });
 
   it("accepts the discharge letter form and counts it", async () => {
@@ -154,7 +161,9 @@ describe("second-stage submissions", () => {
   });
 
   it("rejects a second stage with nothing to attach it to", async () => {
-    const response = await POST(request({ stage: "intake", intake: { a: 1 } }));
+    const response = await POST(
+      request({ stage: "discharge", intake: { a: 1 } }),
+    );
     expect(response.status).toBe(400);
   });
 });

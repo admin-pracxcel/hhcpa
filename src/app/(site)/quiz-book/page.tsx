@@ -8,9 +8,19 @@
  *
  * Absent from `ROUTES` and `noindex`, like the other post-submission pages.
  *
- * It renders two steps, not one: the clinical intake form for the patient's
- * service, then the booking widget. See `BookingFlow` for what happens when
- * there is no form, or when the patient arrived here some other way.
+ * It renders the booking widget and nothing else.
+ *
+ * It used to run her six clinical intake forms first — build spec v2.3
+ * addendum §1 step 6. Removed 2026-09-15 on Bilal's instruction. Her own
+ * architecture, in v2.2 Q21, was a single pass: gates, service selection, the
+ * question set, triage, then booking. The step-6 split was ours, introduced to
+ * stop a red outcome collecting a residential address, and it put a 25-field
+ * form between a cleared patient and the booking button. v2.4 Q28 already
+ * records the split causing a regression of its own.
+ *
+ * The forms are not lost: they are Ranjeeta's FRM documents and they are in
+ * git history. If she wants them collected after booking instead, the natural
+ * home is the confirmation email rather than this page.
  *
  * ⚠️ Which URL a patient lands on still says something about their answers:
  * here means they were offered a booking, `/quiz-thank-you/` means they were
@@ -22,7 +32,7 @@
 
 import type { Metadata } from "next";
 
-import { BookingFlow } from "@/components/sections/BookingFlow";
+import { BookingPanel } from "@/components/sections/BookingPanel";
 
 export const metadata: Metadata = {
   title: "Book your consultation | Horizon Health Care Partners",
@@ -30,5 +40,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <BookingFlow />;
+  return <BookingPanel />;
 }

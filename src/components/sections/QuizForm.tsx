@@ -1169,28 +1169,11 @@ export function QuizForm({
       }
 
       /*
-       * The submission id links stage two, the clinical intake form, to this
-       * one. Stashed rather than put in the URL: /quiz-book/ already leaks
-       * which side of the triage someone landed on, and an identifier in the
-       * address bar would survive being shared or pasted into a support
-       * ticket.
-       *
-       * sessionStorage, so it dies with the tab. Q35 bars persisting intake
-       * answers or the signature; an opaque id is neither.
+       * Nothing is stashed for the next page any more. The submission id used
+       * to travel in sessionStorage so the intake form at /quiz-book/ could
+       * link stage two to stage one; that form is gone, and /quiz-book/ now
+       * renders the booking widget alone. See that page for why.
        */
-      if (typeof body.submissionId === "string") {
-        try {
-          window.sessionStorage.setItem(
-            "hhcpa:intake",
-            JSON.stringify({
-              submissionId: body.submissionId,
-              service: allAnswers.service_selection ?? "",
-            }),
-          );
-        } catch {
-          /* Private browsing can refuse. The booking page copes without it. */
-        }
-      }
 
       /*
        * `status` stays "sending" through the navigation so the button stays

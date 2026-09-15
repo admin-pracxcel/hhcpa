@@ -121,26 +121,21 @@ export async function POST(request: Request) {
   }
 
   /*
-   * Stage two: the clinical intake form.
+   * The discharge letter form on /discharge/.
    *
-   * A separate POST, carrying the submission id the triage stage returned, so
-   * n8n can attach it to the person already in the queue (v2.4 Q36). It has no
-   * contact block and no consents — those were taken and validated at stage
-   * one, and asking for them again would mean holding a second copy.
+   * Its own POST with its own submission id, no contact block and no consents
+   * of its own, and everything it carries is clinical — including the letter
+   * — so the whole `intake` object travels under the segregated key rather
+   * than beside it.
    *
-   * Everything in `intake` is clinical, including the signature and the
-   * declaration it signs, so the whole object travels under the segregated
-   * key rather than beside it.
-   */
-  /*
-   * Two stages share this shape: the clinical intake form after triage, and
-   * the discharge letter form on /discharge/. Both carry a `submissionId` and
-   * an `intake` object, both are entirely clinical, and neither has a contact
-   * block or consents of its own — so both take the same path rather than the
-   * discharge form growing a third branch that drifts from this one.
+   * The key is still called `intake` because this branch used to serve two
+   * submissions: this one and the clinical intake form that ran at
+   * /quiz-book/ between triage and booking. That form was removed on
+   * 2026-09-15 (see the note on /quiz-book/); renaming the key now would
+   * break every n8n mapping built on it for no gain.
    */
   const stage = clean(payload.stage);
-  if (stage === "intake" || stage === "discharge") {
+  if (stage === "discharge") {
     /*
      * Checked on the raw object, not through `record()`.
      *
@@ -169,12 +164,8 @@ export async function POST(request: Request) {
         formType: "quiz",
         stage,
         submittedAt: stagedAt.toISOString(),
-        /*
-         * An intake is detail on a patient already counted at stage one. A
-         * discharge submission is its own enquiry with no stage one behind
-         * it, so it counts.
-         */
-        countsTowardPatientQuota: stage === "discharge",
+        /* Its own enquiry, with no stage one behind it, so it counts. */
+        countsTowardPatientQuota: true,
         service: clean(payload.service),
         safetyFlag: payload.safetyFlag === true,
 
@@ -353,9 +344,10 @@ export async function POST(request: Request) {
 /**
  * Deliver to n8n, with the retry, the signature and the fallback.
  *
- * Extracted so both stages use the same path. The intake stage was written as
- * a second copy of this loop first, which is one of those duplications that
- * stays right up until the retry policy changes on only one of them.
+ * Extracted so the triage submission and the discharge form use the same
+ * path. The second one was written as a copy of this loop first, which is one
+ * of those duplications that stays right up until the retry policy changes on
+ * only one of them.
  */
 async function forward(body: string, submissionId: string) {
   const headers: Record<string, string> = {

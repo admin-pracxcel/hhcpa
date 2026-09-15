@@ -37,31 +37,25 @@ const FILES = globSync("src/**/*.{ts,tsx}").filter(
   (file) => !/\.test\.tsx?$/.test(file),
 );
 
-/**
- * The one hole in the net, and it is deliberate.
+/*
+ * No exemptions, and nothing here needs one.
  *
- * HHCPA-FRM-007 asks "have you previously used peptide therapy or other health
- * optimisation treatment?" and its declaration says "health optimisation or
- * peptide treatment is not guaranteed". Both are Ranjeeta's wording.
+ * There was exactly one, from 2026-09-10: "peptide" was allowed inside
+ * src/content/intake-forms.ts, because HHCPA-FRM-007 asked "have you
+ * previously used peptide therapy…" in Ranjeeta's own wording and Bilal
+ * directed that her wording ship as written, with the risk flagged to her at
+ * review rather than edited out.
  *
- * The build spec asked twice for that wording to be replaced, and the second
- * time (v2.4 Q29) preferred a neutral question publicly with her wording kept
- * for the post-booking record. Bilal directed on 2026-09-10 that her exact
- * wording ships as written and the risk is flagged to her at review instead.
- * That is his call to make and it is recorded, not silently absorbed.
+ * That file was deleted on 2026-09-15 when the intake forms were removed from
+ * the flow, so the wording is no longer anywhere on the site and the hole in
+ * the net closed with it. "peptide" now fails the build everywhere, with no
+ * exception — which is where the register wanted to be all along.
  *
- * The exemption is scoped as narrowly as it can be: one file, one word, and
- * only inside the intake form definitions. Every other restricted term still
- * fails the build in that file, and "peptide" still fails the build
- * everywhere else — including in page copy, metadata, schema and the public
- * Step 4 screening, which is where the original incident happened.
- *
- * REMOVE THIS the moment she asks for the neutral wording, or if the intake
- * form ever moves somewhere a member of the public can reach without booking.
+ * Worth knowing rather than quietly banking: the accepted risk is resolved by
+ * deletion, not by agreement. If her forms come back — by email, post-booking,
+ * or anywhere else — that wording comes back with them and this decision has
+ * to be made again.
  */
-const EXEMPT = new Map<string, RegExp>([
-  ["src/content/intake-forms.ts", /^peptides?$/i],
-]);
 
 describe("restricted prescription terms", () => {
   it("has a file list to scan at all", () => {
@@ -72,42 +66,14 @@ describe("restricted prescription terms", () => {
   it("appear nowhere outside comments", () => {
     const offenders: string[] = [];
     for (const file of FILES) {
-      const allowed = EXEMPT.get(file);
       const lines = stripComments(readFileSync(file, "utf8")).split("\n");
       lines.forEach((line, index) => {
         const hit = RESTRICTED.exec(line);
         if (hit === null) return;
-        if (allowed !== undefined && allowed.test(hit[0])) return;
         offenders.push(`${file}:${index + 1}  ${hit[0]}`);
       });
     }
     expect(offenders).toEqual([]);
-  });
-
-  it("keeps the exemption to one file and one word", () => {
-    /*
-     * An exemption that quietly widens is worse than no rule. This pins it:
-     * one entry, and the pattern it allows matches "peptide" and nothing else
-     * on the register.
-     */
-    expect([...EXEMPT.keys()]).toEqual(["src/content/intake-forms.ts"]);
-    const allowed = EXEMPT.get("src/content/intake-forms.ts");
-    expect(allowed?.test("peptide")).toBe(true);
-    expect(allowed?.test("peptides")).toBe(true);
-    for (const term of ["cannabis", "GLP-1", "semaglutide", "TRT", "MHT"]) {
-      expect(allowed?.test(term)).toBe(false);
-    }
-  });
-
-  it("still fails the build on a restricted term in the exempt file", () => {
-    // The exemption covers one word, not the file.
-    const source = readFileSync("src/content/intake-forms.ts", "utf8");
-    const allowed = EXEMPT.get("src/content/intake-forms.ts");
-    for (const line of stripComments(source).split("\n")) {
-      const hit = RESTRICTED.exec(line);
-      if (hit === null) continue;
-      expect(allowed?.test(hit[0])).toBe(true);
-    }
   });
 
   it("still catches a term when one is reintroduced", () => {
