@@ -8,9 +8,13 @@ describe("ROUTES", () => {
    * 33, and build spec v2 §1.1 adds the three new service hubs, taking it to
    * 36. Eight service areas, and the count is the cheapest way to notice a hub
    * that was added to the nav but never registered.
+   *
+   * 37 since 2026-09-14: Transfer Your Care and the Discharge Letter page had
+   * been registered as one route under build spec v2.3 §8, which was wrong and
+   * cost the approved Transfer page. See services/transfer-your-care.ts.
    */
   it("covers every route in the current sitemap", () => {
-    expect(ROUTES).toHaveLength(36);
+    expect(ROUTES).toHaveLength(37);
   });
 
   it("registers all eight service hubs", () => {

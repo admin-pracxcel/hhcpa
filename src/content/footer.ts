@@ -38,14 +38,16 @@ export const FOOTER_COLUMNS: readonly FooterColumn[] = [
       { label: "How It Works", href: "/how-it-works/" },
       { label: "Pricing", href: "/pricing/" },
       { label: "Pre-Screening Quiz", href: "/quiz/" },
-      { label: "Transfer Your Care", href: "/discharge/" },
+      { label: "Transfer Your Care", href: "/transfer-your-care/" },
       /*
-       * §6.2 asks for a Discharge Letter link in this column. It points at
-       * /discharge/, not a new page: her live discharge page is titled
-       * "Discharge Letter" and is the same page as Transfer Your Care, which
-       * the v2.3 §8 answer confirmed after v2.2 Q11 assumed otherwise.
+       * §6.2 asks for a Discharge Letter link in this column, and it is a
+       * page of its own — her live Discharge Letter page, with the switch
+       * offer and the form. The v2.3 §8 reading that it was the same page as
+       * Transfer Your Care was wrong, and acting on it replaced the approved
+       * Transfer page; both exist again as of 2026-09-14. The anchor is gone
+       * with it: the link goes to the page, not to a fragment of another one.
        */
-      { label: "Discharge Letter", href: "/discharge/#discharge-letter" },
+      { label: "Discharge Letter", href: "/discharge/" },
       { label: "Patient Portal", href: "https://escript.link/" },
       { label: "FAQs", href: "/faqs/" },
     ],

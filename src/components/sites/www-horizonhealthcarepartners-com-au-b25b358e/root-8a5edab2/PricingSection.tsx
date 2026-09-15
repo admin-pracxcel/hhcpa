@@ -24,7 +24,9 @@ import { CheckCircleIcon } from "../shared/icons";
 
 /* Relative: this site now *is* horizonhealthcarepartners.com.au. */
 const QUIZ_HREF = "/quiz/";
-const DISCHARGE_HREF = "/discharge/";
+/* The transfer page, not her discharge-letter page. Two pages since
+   2026-09-14; the button here says "Transfer Your Care". */
+const TRANSFER_HREF = "/transfer-your-care/";
 
 export interface PricingPlan {
   /** White chip above the price. */
@@ -71,7 +73,7 @@ const PLANS: readonly PricingPlan[] = [
       "Review of current treatment and medical records",
       "Continuity of care with no disruption",
     ],
-    cta: { text: "Transfer Your Care", href: DISCHARGE_HREF },
+    cta: { text: "Transfer Your Care", href: TRANSFER_HREF },
     variant: "mint",
   },
 ] as const;

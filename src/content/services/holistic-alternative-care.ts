@@ -166,7 +166,7 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
         {
           title: "Transfer your care",
           body: "Moving across from another provider, with continuity and no disruption.",
-          links: [{ label: "Transfer your care", href: "/discharge/" }],
+          links: [{ label: "Transfer your care", href: "/transfer-your-care/" }],
         },
         {
           title: "Continuity and preventative health",

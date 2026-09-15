@@ -61,7 +61,7 @@ export const CONSULTATION_PLANS = [
       "Review of your current treatment and records",
       "Continuity of care with no disruption",
     ],
-    cta: { text: "Transfer your care", href: "/discharge/" },
+    cta: { text: "Transfer your care", href: "/transfer-your-care/" },
     variant: "mint",
   },
 ] as const satisfies readonly ConsultationPlan[];

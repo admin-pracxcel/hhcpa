@@ -142,7 +142,7 @@ export const PRICING_PAGE: ServicePageData = {
         {
           title: "Transfer your care",
           body: "Moving across from another provider.",
-          links: [{ label: "Transfer your care", href: "/discharge/" }],
+          links: [{ label: "Transfer your care", href: "/transfer-your-care/" }],
         },
       ],
       footnote: "Still deciding? Read the",

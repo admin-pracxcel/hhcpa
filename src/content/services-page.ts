@@ -62,7 +62,7 @@ export const SERVICES_PAGE = {
     ],
     footnote: "Moving across from another provider? See",
     footnoteLinks: [
-      { label: "transfer your care", href: "/discharge/" },
+      { label: "transfer your care", href: "/transfer-your-care/" },
       { label: "FAQs", href: "/faqs/" },
     ],
   },

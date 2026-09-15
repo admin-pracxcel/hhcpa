@@ -63,7 +63,9 @@ export const ROUTES: readonly RouteEntry[] = [
 
   // Patient actions
   { path: "/quiz/", title: "Free Pre-Screening Quiz" },
-  { path: "/discharge/", title: "Transfer Your Care" },
+  /* Two pages, not one. See services/transfer-your-care.ts. */
+  { path: "/transfer-your-care/", title: "Transfer Your Care" },
+  { path: "/discharge/", title: "Discharge Letter" },
   { path: "/services/", title: "Services" },
 
   // Policies & safety
