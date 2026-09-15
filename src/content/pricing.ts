@@ -109,18 +109,39 @@ export const PRICES: Record<PriceKey, Price> = {
                       { label: "Prescriptions, multiple or new", amount: 49,   from: false, provisional: true },
   pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 49,   from: true,  provisional: true },
   mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
-  mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
   /*
-   * The floor, which is the follow-up. Her 2026-09-15 email prices weight
-   * loss per visit — $99 initial, $69 follow-up — so "from" is $69, the
-   * cheapest fee a patient can actually be charged for this service. It reads
-   * as "From $69" on the home service box, /services/ and the /pricing/
-   * table. Bilal, 2026-09-15: change all three, not the table alone.
+   * $69, the first consultation — Bilal, 2026-09-15, applying the rule above
+   * to the rest of the list. It was $89.
    *
-   * pricing.test.ts asserts this equals the cheapest per-visit fee below, so
-   * the two cannot drift apart.
+   * This resolved a contradiction the site was already carrying: /mens-health/
+   * and /womens-health/ headline their own first consultation from
+   * `firstConsult`, which is $69, while the home service box and the /pricing/
+   * table read this key and said $89. Same service, two prices, both live.
+   *
+   * ⚠️ Two things to put to Ranjeeta. Her live site still says "From $89
+   * Men's & Women's Health", and her 2026-09-15 email gives $69 for Men's
+   * Health only — it does not mention Women's Health at all. This applies the
+   * men's figure to both, because the site has always priced them together
+   * and because $69 is what both hub pages already quote. If she prices them
+   * apart, this key has to split in two.
    */
-  weightManagement:   { label: "Weight management",                amount: 69,   from: true,  provisional: true },
+  mensWomensHealth:   { label: "Men's and women's health",         amount: 69,   from: true,  provisional: true },
+  /*
+   * THE RULE: an advertised "from" price is the INITIAL consultation.
+   *
+   * It is what a new patient pays, and it is how Ranjeeta uses the phrase
+   * everywhere on her own site — her booking wizard reads "From $99 Weight
+   * Management" while her pricing page lists a cheaper follow-up, so "from"
+   * there is plainly the entry fee and not the floor.
+   *
+   * Briefly built as the floor ($69) on 2026-09-15 and reverted the same day.
+   * Read literally, "the cheapest fee for this service" collapses almost every
+   * row to the $59 follow-up and the prices stop distinguishing the services
+   * from each other.
+   *
+   * holisticCare below is the one exception, and it is deliberate.
+   */
+  weightManagement:   { label: "Weight management",                amount: 99,   from: true,  provisional: true },
   weightLossInitial:  { label: "Weight management initial consultation", amount: 99, from: false, provisional: true },
   weightLossFollowUp: { label: "Weight management follow-up",      amount: 69,   from: false, provisional: true },
   /*
@@ -131,10 +152,20 @@ export const PRICES: Record<PriceKey, Price> = {
   continuityPreventative:
                       { label: "Continuity & Preventative Health", amount: 69,   from: true,  provisional: true },
   /*
-   * The floor again, and this one is unchanged at $59. Her email prices
-   * holistic care at $69 initial, $59 follow-up, $59 transfer, so $59 is
-   * genuinely the least she charges — Bilal's call on 2026-09-15 to keep the
-   * "from" reading as the floor rather than promoting the initial fee.
+   * THE EXCEPTION, and the only one. Bilal's instruction of 2026-09-15:
+   * holistic care keeps "from $59" while every other service advertises its
+   * initial consultation.
+   *
+   * $59 is her own figure — she asked for it at onboarding, when holistic had
+   * a single price and $59 was it. Her 2026-09-15 email then split the
+   * service into $69 initial, $59 follow-up and $59 transfer, which leaves
+   * the $59 she named sitting on the follow-up. Keeping it is a decision to
+   * honour the number she gave rather than re-derive it.
+   *
+   * ⚠️ The consequence is that "from $59" under-quotes a new patient by $10.
+   * What stops that being a misquote is the note on /pricing/, which states
+   * the $69 initial in prose. Do not remove it, and do not add a service to
+   * this exception without doing the same for it.
    */
   holisticCare:       { label: "Holistic Care / Alternative Medicine", amount: 59, from: true, provisional: true },
   holisticInitial:    { label: "Holistic care initial consultation", amount: 69, from: false, provisional: true },

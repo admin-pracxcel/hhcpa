@@ -9,9 +9,7 @@ describe("formatPrice", () => {
   });
 
   it("prefixes 'from' where the fee is a starting price", () => {
-    /* $69 since 2026-09-15: weight loss prices per visit and the floor is its
-       follow-up, not its initial. See the per-visit block below. */
-    expect(formatPrice("weightManagement")).toBe("from $69");
+    expect(formatPrice("weightManagement")).toBe("from $99");
   });
 
   it("renders cents only when the amount has them", () => {
@@ -38,41 +36,51 @@ describe("PRICES", () => {
 });
 
 /*
- * A "from" price is the least a patient can be charged for that service.
+ * An advertised "from" price is the INITIAL consultation, not the cheapest
+ * fee the service charges.
  *
- * Two services price per visit — weight management and holistic care — and
- * their floors are therefore equal to their own cheapest fee, not to a number
- * chosen separately. Left unguarded, someone changes a follow-up and the
- * floor keeps advertising the old one, which under-quotes on the homepage
- * badge, the /services/ box and the /pricing/ table all at once.
+ * That is how Ranjeeta uses it on her own site, and it is the only reading
+ * under which all of her statements agree — see the note on weightManagement
+ * in pricing.ts. Read as "the cheapest fee", nearly every row collapses to
+ * the $59 follow-up and the prices stop telling a patient which service costs
+ * what.
  *
- * The floors themselves are Bilal's call of 2026-09-15, from Ranjeeta's email
- * of the same day.
+ * Holistic care is the single exception, by Bilal's instruction. It is
+ * asserted here rather than excluded, so it cannot quietly become two
+ * exceptions, and so nobody "fixes" it later without meeting this comment.
  */
-describe("per-visit services advertise their true floor", () => {
-  const FLOORS = {
-    weightManagement: ["weightLossInitial", "weightLossFollowUp"],
-    holisticCare: ["holisticInitial", "followUpConsult", "transferConsult"],
+describe("advertised from-prices", () => {
+  const PER_VISIT = {
+    weightManagement: {
+      initial: "weightLossInitial",
+      cheapest: "weightLossFollowUp",
+    },
+    holisticCare: { initial: "holisticInitial", cheapest: "followUpConsult" },
   } as const;
 
-  for (const [floorKey, feeKeys] of Object.entries(FLOORS)) {
-    it(`${floorKey} equals the cheapest fee it covers`, () => {
-      const cheapest = Math.min(
-        ...feeKeys.map((key) => PRICES[key as keyof typeof PRICES].amount),
-      );
-      expect(PRICES[floorKey as keyof typeof PRICES].amount).toBe(cheapest);
-      /* A floor that is not marked "from" reads as the only price. */
-      expect(PRICES[floorKey as keyof typeof PRICES].from).toBe(true);
-    });
-  }
+  const amount = (key: string) =>
+    PRICES[key as keyof typeof PRICES].amount;
 
-  it("keeps the initial fee above the floor, or the split is pointless", () => {
-    expect(PRICES.weightLossInitial.amount).toBeGreaterThan(
-      PRICES.weightManagement.amount,
-    );
-    expect(PRICES.holisticInitial.amount).toBeGreaterThan(
-      PRICES.holisticCare.amount,
-    );
+  it("advertises weight management at its initial consultation", () => {
+    expect(amount("weightManagement")).toBe(amount("weightLossInitial"));
+  });
+
+  it("advertises holistic care at its follow-up, the one exception", () => {
+    expect(amount("holisticCare")).toBe(amount("followUpConsult"));
+    expect(amount("holisticCare")).toBeLessThan(amount("holisticInitial"));
+  });
+
+  it("keeps every per-visit service marked as a from-price", () => {
+    for (const key of Object.keys(PER_VISIT)) {
+      /* A from-price rendered without "from" reads as the only price. */
+      expect(PRICES[key as keyof typeof PRICES].from, key).toBe(true);
+    }
+  });
+
+  it("keeps each initial above the cheapest, or the split says nothing", () => {
+    for (const [key, fees] of Object.entries(PER_VISIT)) {
+      expect(amount(fees.initial), key).toBeGreaterThan(amount(fees.cheapest));
+    }
   });
 });
 
