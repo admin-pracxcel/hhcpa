@@ -40,8 +40,20 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
     { label: "Home", href: "/" },
     { label: "Men's Health", href: "/mens-health/" },
   ],
+  /*
+   * The opening sentence was "Erectile dysfunction starts with a conversation
+   * you can have from home", which says the condition is caused by a
+   * conversation. The subject had slipped: what starts with a conversation is
+   * getting help, not the dysfunction. Rewritten 2026-09-15, Bilal's call on
+   * the wording.
+   *
+   * The reassurance moved to the front with it, so the page opens on "common
+   * and often very treatable" rather than on the problem. Nothing else in the
+   * paragraph changed, and no new claim was introduced — "often very
+   * treatable" was already the third sentence.
+   */
   intro:
-    "Erectile dysfunction starts with a conversation you can have from home. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses what might be behind the problem and, where it is clinically appropriate, discusses treatment options with you in private. Erectile dysfunction is common, it becomes more common with age, and it is often very treatable. It can also be an early signal of something worth checking, which is exactly why a proper assessment beats guessing.",
+    "Erectile dysfunction is common and often very treatable, and getting help starts with a conversation you can have from home. At Horizon Health Care Partners, an AHPRA-registered practitioner assesses what might be behind the problem and, where it is clinically appropriate, discusses treatment options with you in private. It becomes more common with age, and it can also be an early signal of something worth checking, which is exactly why a proper assessment beats guessing.",
   modules: [
     {
       kind: "split",
