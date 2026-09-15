@@ -50,6 +50,7 @@ import { useMemo, useState } from "react";
 import { EMERGENCY_CONTACTS } from "@/content/clinic";
 import { getAttribution } from "@/lib/attribution";
 import { getLeadFields } from "@/lib/lead-fields";
+import { toReadable } from "@/lib/readable";
 import {
   INTAKE_CONFIRMATIONS,
   type IntakeField,
@@ -348,6 +349,19 @@ export function IntakeForm({
              * thing that matters if the wording is ever questioned.
              */
             renderedAt: fields.map((f) => ({ name: f.name, label: f.label })),
+            /*
+             * The same answers, each beside the question that produced it, in
+             * the order they were asked. `answers` above is untouched — this
+             * is a second view of it for the email n8n sends the clinic.
+             *
+             * Built from `fields`, which is the list actually rendered after
+             * the conditionals, so a question the patient never saw cannot
+             * appear in the email with a blank beside it.
+             */
+            answersReadable: toReadable(
+              values,
+              new Map(fields.map((f) => [f.name, f.label])),
+            ),
             declaration: form.declaration,
           },
         }),

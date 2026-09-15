@@ -1579,6 +1579,48 @@ export function findStep(id: string): QuizStep | undefined {
  * ------------------------------------------------------------------ */
 
 /** The id of the branch-selection step, so nothing else has to hardcode it. */
+/* -------------------------------------------------------------------------
+   Readable answers
+   ------------------------------------------------------------------------- */
+
+/**
+ * Posted field name → the exact question the patient read.
+ *
+ * Derived from QUIZ_STEPS, never authored, so it cannot drift from what is on
+ * screen. It exists because the answers are emailed to the clinic and a line
+ * reading `ho_prior_therapy: Yes` says nothing on its own.
+ *
+ * The three at the bottom are the exceptions, and are the only labels written
+ * by hand here: two BMI fields the bmi step renders itself rather than
+ * declaring, and the triage reasons, which are produced by `triage()` rather
+ * than answered by anyone.
+ */
+export function quizFieldLabels(): ReadonlyMap<string, string> {
+  const labels = new Map<string, string>();
+
+  for (const step of QUIZ_STEPS) {
+    if (step.kind === "choice" || step.kind === "multi") {
+      labels.set(step.field, step.question);
+    }
+    if (step.kind === "choice" && step.followUp !== undefined) {
+      labels.set(step.followUp.name, step.followUp.label);
+    }
+    if (step.kind === "multi" && step.other !== undefined) {
+      labels.set(step.other.name, step.other.label);
+    }
+    if (step.kind === "input") {
+      for (const field of step.fields) labels.set(field.name, field.label);
+    }
+  }
+
+  labels.set("wl_height_cm", "Height (cm)");
+  labels.set("wl_weight_kg", "Weight (kg)");
+  labels.set("wl_bmi", "BMI, calculated from height and weight");
+  labels.set("triage_reasons", "Why this was triaged the way it was");
+
+  return labels;
+}
+
 export const SERVICE_STEP_ID = "service";
 
 /** The field that step writes, used when a deep link answers it for the visitor. */

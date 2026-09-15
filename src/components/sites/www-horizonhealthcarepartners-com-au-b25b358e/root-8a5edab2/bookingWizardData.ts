@@ -638,6 +638,38 @@ export type AnswerMap = Readonly<Record<string, AnswerValue | undefined>>;
  * Medical certificate assessment (`hhpCertSteps`) — 12 steps          *
  * ------------------------------------------------------------------ */
 
+/**
+ * Question id → the exact wording the patient read.
+ *
+ * Derived from CERT_STEPS rather than written out, so it cannot drift from
+ * what is on screen — which is the whole reason it exists. n8n emails the
+ * answers to the clinic, and `consent5: true` tells nobody what was agreed to.
+ *
+ * `warning` and `info` blocks are skipped: they carry no answer.
+ */
+export function certQuestionLabels(): ReadonlyMap<string, string> {
+  const labels = new Map<string, string>();
+  for (const step of CERT_STEPS) {
+    for (const question of step.questions) {
+      if (question.type === "warning" || question.type === "info") continue;
+      /* A check carries its declaration in `text`; everything else in `label`. */
+      labels.set(
+        question.id,
+        question.type === "check" ? question.text : question.label,
+      );
+      /* The "if yes, please specify" box is its own answer and its own id. */
+      if (
+        (question.type === "single" || question.type === "multi") &&
+        question.detailId !== undefined &&
+        question.detailLabel !== undefined
+      ) {
+        labels.set(question.detailId, question.detailLabel);
+      }
+    }
+  }
+  return labels;
+}
+
 export const CERT_STEPS: readonly CertStep[] = [
   {
     title: "HHCPA Medical Certificate Assessment",

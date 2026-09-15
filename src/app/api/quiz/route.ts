@@ -62,6 +62,36 @@ function record(value: unknown): Record<string, string> {
   );
 }
 
+/**
+ * The readable view of the clinical answers — see lib/readable.ts.
+ *
+ * Rebuilt from the payload rather than trusted whole: it reaches n8n and from
+ * there an email, so every string is length-capped and every entry is checked
+ * for shape. An entry missing a key or a label is dropped rather than
+ * forwarded half-formed.
+ */
+function readable(value: unknown): { key: string; label: string; value: string; source: string }[] {
+  if (!Array.isArray(value)) return [];
+  const out: { key: string; label: string; value: string; source: string }[] = [];
+  for (const entry of value.slice(0, 200)) {
+    if (typeof entry !== "object" || entry === null) continue;
+    const row = entry as Record<string, unknown>;
+    const key = clean(row.key).slice(0, 80);
+    const label = clean(row.label).slice(0, 400);
+    if (key === "" || label === "") continue;
+    out.push({
+      key,
+      label,
+      value: clean(row.value),
+      /* Anything unrecognised is treated as an answer, which is the reading
+         that overstates least: it never presents a patient's words as
+         something the system worked out. */
+      source: row.source === "derived" ? "derived" : "answer",
+    });
+  }
+  return out;
+}
+
 const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -165,6 +195,12 @@ export async function POST(request: Request) {
         pagePath: clean(payload.pagePath),
 
         clinical: { intake: payload.intake },
+        /* See the note on the main payload below. Same data, same
+           sensitivity, laid out for a human to read. */
+        clinicalReadable: readable(
+          (payload.intake as Record<string, unknown> | undefined)
+            ?.answersReadable,
+        ),
       }),
       priorId,
     );
@@ -296,6 +332,19 @@ export async function POST(request: Request) {
      * this before any marketing-facing branch. Never log its contents.
      */
     clinical: record(payload.clinical),
+    /*
+     * The same answers as `clinical`, each beside the question that produced
+     * it, in the order they were asked. Additive: `clinical` is unchanged and
+     * anything reading it keeps working. This is for the email n8n sends the
+     * clinic, where a bare key says nothing — `cert_consent5: true` is one of
+     * eight declarations and names none of them.
+     *
+     * ⚠️ Same sensitivity as `clinical`, and easier to mishandle because it
+     * reads well. APP 3 and APP 11 apply to it, it must not reach a marketing
+     * branch, and the mailbox it is sent to has to be one the clinic treats as
+     * clinical. Never log its contents.
+     */
+    clinicalReadable: readable(payload.clinicalReadable),
   });
 
   return forward(body, submissionId);

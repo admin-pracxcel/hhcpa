@@ -40,6 +40,7 @@ import { useState } from "react";
 import { findCountry } from "@/content/countries";
 import { getAttribution } from "@/lib/attribution";
 import { getLeadFields } from "@/lib/lead-fields";
+import { toReadable } from "@/lib/readable";
 import { DISCHARGE_FORM } from "@/content/services/discharge";
 import { PhoneField } from "./PhoneField";
 
@@ -281,6 +282,39 @@ export function DischargeLetterForm() {
               previousDoctor: value("previousDoctor"),
               help: value("help"),
             },
+            /*
+             * The same answers with their on-screen labels, for the email n8n
+             * sends the clinic. Written out rather than derived: these eight
+             * labels are JSX props on the fields below, not data, and lifting
+             * them into a list purely to derive this would move the copy away
+             * from the form it belongs to.
+             *
+             * The letter itself is not here. It is a file, it is already
+             * carried under `letter`, and an email is not where it belongs.
+             */
+            answersReadable: toReadable(
+              {
+                firstName: value("firstName"),
+                lastName: value("lastName"),
+                mobile:
+                  value("mobile") === ""
+                    ? ""
+                    : `${mobileCountry.dial} ${value("mobile")}`,
+                email: value("email"),
+                previousClinic: value("previousClinic"),
+                previousDoctor: value("previousDoctor"),
+                help: value("help"),
+              },
+              new Map([
+                ["firstName", "First Name"],
+                ["lastName", "Last Name"],
+                ["mobile", "Mobile Contact"],
+                ["email", "Your Email"],
+                ["previousClinic", "Previous Clinic Name"],
+                ["previousDoctor", "Previous Doctor's Name"],
+                ["help", DISCHARGE_FORM.helpLabel],
+              ]),
+            ),
             /* Health information. Segregated with everything else clinical. */
             letter,
           },

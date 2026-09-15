@@ -42,6 +42,7 @@ import {
   calculateBmi,
   findStep,
   nextStepId,
+  quizFieldLabels,
   summaryRows,
   triage,
 } from "@/content/quiz";
@@ -49,8 +50,10 @@ import type { QuizStep, TriageLevel } from "@/content/quiz";
 import { findCountry } from "@/content/countries";
 import { getAttribution } from "@/lib/attribution";
 import { getLeadFields } from "@/lib/lead-fields";
+import { toReadable } from "@/lib/readable";
 import { cn } from "@/lib/utils";
 import { CertificateAssessment } from "./CertificateAssessment";
+import { certQuestionLabels } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/bookingWizardData";
 import { PhoneField } from "./PhoneField";
 
 const STYLES = `
@@ -1078,6 +1081,23 @@ export function QuizForm({
       clinical.triage_reasons = outcome.reasons.join("; ");
     }
 
+    /*
+     * The same answers, each beside the question that produced it, in the
+     * order they were asked. `clinical` is untouched — this is a second view
+     * of it for the email n8n sends the clinic, not a replacement.
+     *
+     * Two label sets because there are two flows behind one payload: the
+     * quiz's own steps, and the certificate assessment, whose answers arrive
+     * here under `cert_` and whose questions live in CERT_STEPS.
+     */
+    const labels = new Map([
+      ...quizFieldLabels(),
+      ...[...certQuestionLabels()].map(
+        ([id, label]): [string, string] => [`cert_${id}`, label],
+      ),
+    ]);
+    const clinicalReadable = toReadable(clinical, labels, "cert_");
+
     setProblem("");
     setStatus("sending");
     try {
@@ -1126,6 +1146,7 @@ export function QuizForm({
           pageTitle: typeof document === "undefined" ? "" : document.title,
           answers: general,
           clinical,
+          clinicalReadable,
           company: value("company"),
         }),
       });
