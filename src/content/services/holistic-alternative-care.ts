@@ -71,7 +71,9 @@ export const HOLISTIC_ALTERNATIVE_CARE: ServicePageData = {
     media: {
       src: "/videos/holistic-alternative-care-hero.webm",
       poster: "/images/holistic-alternative-care-hero-poster.webp",
-      alt: "A woman reads a book in an armchair by a tall window in a wood-panelled room.",
+      /* Re-shot 2026-09-15: the first clip had a wine bottle and a glass of
+       red in frame, which is not what a health service page should carry. */
+    alt: "A woman reads in a chair by a window, surrounded by large houseplants.",
     },
     primary: { label: "Start your booking", href: "/quiz/" },
     secondary: CALL_CTA,
