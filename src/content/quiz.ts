@@ -137,6 +137,13 @@ export type QuizStep =
        * exits are written as.
        */
       readonly notice?: { readonly title: string; readonly body: string };
+      /**
+       * A closing line rendered *after* the crisis numbers rather than above
+       * them. Only `exit-crisis` uses one, because her page puts the "not
+       * suitable for crisis situations" sentence below the list and the order
+       * is the point: read these numbers, then know why.
+       */
+      readonly footnote?: string;
     }
   | {
       /**
@@ -550,18 +557,44 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     question: "Are you experiencing severe symptoms or crisis?",
     options: ["Yes", "No"],
     /*
-     * Was `Yes: "exit-crisis"`, a hard exit. The v2.4 answer to Q31 replaced
-     * it: the numbers appear immediately and inline, the person can carry on
-     * or leave as they choose, the outcome is red so nothing auto-books, and
-     * the submission carries `safetyFlag` so a human is actually told. The old
-     * exit did the first part and none of the rest — it showed the numbers and
-     * then dropped the person, with no record that anyone had disclosed.
+     * A hard exit, which is what her live site does and what she is expecting.
+     *
+     * v2.4 Q31 had replaced it: capture the person, promise a callback, flag
+     * the submission so n8n pages someone. Reverted 2026-09-15 on Bilal's
+     * instruction, and the reasoning is worth keeping.
+     *
+     * Q31 was our judgement, not hers, and it was a clinical safety policy
+     * decision — which belongs to the AHPRA-registered practitioner. It also
+     * left the site in the one state nobody can defend: telling a person in
+     * crisis that "a member of our team will contact you" with nothing built
+     * to make that true.
+     *
+     * And the promise is the weaker offer regardless. Lifeline answers 24/7.
+     * This clinic answers 8am to 10pm. A callback tomorrow morning, offered to
+     * someone at 11pm, can make them wait instead of calling the service that
+     * would pick up now.
+     *
+     * If she ever wants follow-up instead, it needs a named recipient and a
+     * response time from her first — see v2.2 Q20 — and the `safetyFlag`
+     * machinery below is still in place to carry it.
      */
-    optionCrisis: ["Yes"],
-    optionNotes: {
-      Yes: "If you are in crisis or thinking about harming yourself, please contact one of the services above now. You can still continue if you would like us to arrange a consultation, and someone from our team will be in touch.",
-    },
-    next: { "*": "contact" },
+    next: { Yes: "exit-crisis", No: "contact" },
+  },
+
+  /*
+   * Her crisis exit, wording verbatim from her live site as Bilal quoted it
+   * on 2026-09-15. The three numbers are not listed here: the crisis variant
+   * renders URGENT, which is Lifeline, Beyond Blue and Emergency in that
+   * order, already matching hers.
+   */
+  {
+    kind: "exit",
+    id: "exit-crisis",
+    variant: "crisis",
+    heading: "Crisis Support",
+    body: "If you are in crisis or experiencing thoughts of self-harm, please reach out immediately:",
+    footnote:
+      "Our telehealth service is not suitable for crisis situations. Please contact the services above for immediate support.",
   },
 
   /* ---------- weight loss (the 14-question instrument) ---------- */
@@ -1358,10 +1391,14 @@ export function triage(
   }
 
   /*
-   * A crisis disclosure is red and is flagged separately from the colour.
-   * v2.4 Q31: "the submission carries a dedicated flag, not just the triage
-   * colour", because a colour code someone has to notice is not a safety
-   * mechanism. n8n branches on `safetyFlag` to raise the alert.
+   * Unreachable since the hard exit went back on 2026-09-15: answering "Yes"
+   * to mh_severe_crisis now ends the flow, so no submission ever carries this.
+   *
+   * Kept rather than deleted. It is the whole mechanism v2.2 Q20 asks for — a
+   * dedicated boolean distinct from the triage colour — and if Ranjeeta ever
+   * wants a crisis disclosure followed up, restoring it is changing one
+   * `next` back. Deleting it would mean rebuilding the safety plumbing under
+   * time pressure, which is the worst moment to write it.
    */
   const safety = is("mh_severe_crisis", "Yes");
   if (safety) red.push("Disclosed severe symptoms or crisis");

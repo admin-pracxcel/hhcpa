@@ -145,13 +145,14 @@ describe("quiz form", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("surfaces crisis numbers immediately, and does not dead-end", () => {
+  it("ends the flow on a crisis disclosure, with her numbers", async () => {
     /*
-     * This used to be a hard exit: numbers on screen, flow over, nobody told.
-     * v2.4 Q31 replaced it — a hard exit turns away someone who has just
-     * disclosed and leaves no follow-up. The numbers still appear the instant
-     * the answer is given, but the person can carry on if they want a
-     * consultation arranged.
+     * A hard exit, which is what her live site does. It had been replaced by
+     * capture-and-follow-up under v2.4 Q31 and was reverted on 2026-09-15 —
+     * see the note on `mh_severe_crisis` in content/quiz.ts for why.
+     *
+     * The order is asserted because it is the point: reach out to these
+     * services, and then why this one is not among them.
      */
     render(<QuizForm onClose={close} />);
     start("Mental Health Support");
@@ -159,33 +160,33 @@ describe("quiz form", () => {
     choose("Yes"); // on treatment
     choose("Yes"); // severe symptoms or crisis
 
+    expect(screen.getByText("Crisis Support")).toBeTruthy();
     expect(screen.getByText("13 11 14")).toBeTruthy();
     expect(screen.getByText("1300 22 4636")).toBeTruthy();
     expect(screen.getByText("000")).toBeTruthy();
+    expect(
+      screen.getByText(/not suitable for crisis situations/i),
+    ).toBeTruthy();
 
-    // Not a dead end: Continue is offered, and it leads to the contact step.
-    cont();
-    expect(screen.getByLabelText(/first name/i)).toBeTruthy();
+    /* Nothing is collected and nothing is sent. */
+    expect(screen.queryByLabelText(/first name/i)).toBeNull();
+    await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
   });
 
-  it("triages a crisis disclosure red and flags it separately", async () => {
+  it("promises no callback it cannot keep", () => {
     /*
-     * The colour alone is not the safety mechanism — red also covers
-     * pregnancy and active cancer treatment. `safetyFlag` is what n8n pages
-     * on, so it has to be its own field in the payload.
+     * The state this reverted out of was the one that could not be defended:
+     * "a member of our team will contact you", with nothing built to make it
+     * true. Guard the wording, not just the routing.
      */
     render(<QuizForm onClose={close} />);
     start("Mental Health Support");
     choose("Yes");
     choose("Yes");
     choose("Yes");
-    cont();
-    fillContactAndSubmit();
-    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
-    const body = sentBody();
-    expect(body.outcome).toBe("red");
-    expect(body.safetyFlag).toBe(true);
-    expect(body.clinical.triage_reasons).toMatch(/crisis/i);
+
+    expect(screen.queryByText(/will be in touch/i)).toBeNull();
+    expect(screen.queryByText(/will contact you/i)).toBeNull();
   });
 
   it("leaves the safety flag off when nothing was disclosed", async () => {

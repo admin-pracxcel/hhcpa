@@ -493,6 +493,14 @@ const STYLES = `
   color: rgba(1, 49, 38, 0.85);
 }
 
+/* The line under the crisis numbers. Same colour as the exit body above. */
+.hhcp-qz-exit-footnote {
+  margin-top: var(--hhcp-space-m, 30px);
+  font-size: var(--hhcp-text-m, 16px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .hhcp-qz-urgent {
   display: flex;
   flex-direction: column;
@@ -1782,6 +1790,10 @@ function ExitStep({ step }: { step: Extract<QuizStep, { kind: "exit" }> }) {
             </a>
           ))}
         </div>
+      )}
+      {/* After the numbers, not before them — see `footnote` in quiz.ts. */}
+      {step.footnote !== undefined && (
+        <p className="hhcp-qz-exit-footnote font-dm-sans">{step.footnote}</p>
       )}
     </>
   );
