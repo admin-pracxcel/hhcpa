@@ -179,7 +179,15 @@ describe("quiz form", () => {
    * that is the whole reason there is one exit and not three.
    */
   describe("holistic care gates", () => {
-    const EXIT = /you may not be eligible for holistic\/alternative care/i;
+    /*
+     * Each gate has its own exit copy, hers. Asserted per gate rather than
+     * against one shared string, because "the right exit for the right gate"
+     * is exactly what breaks silently when a `next` is retargeted.
+     */
+    const blocked = (fragment: RegExp) => {
+      expect(screen.getByText("Unable to Proceed")).toBeTruthy();
+      expect(screen.getByText(fragment)).toBeTruthy();
+    };
 
     const toHolistic = () => {
       render(<QuizForm onClose={close} />);
@@ -189,8 +197,7 @@ describe("quiz form", () => {
     it("stops someone with no chronic condition of over three months", async () => {
       toHolistic();
       choose("No");
-      expect(screen.getByText("Unable to Proceed")).toBeTruthy();
-      expect(screen.getByText(EXIT)).toBeTruthy();
+      blocked(/require a diagnosed chronic condition/i);
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
 
@@ -206,7 +213,7 @@ describe("quiz form", () => {
       toHolistic();
       choose("Yes");
       choose("No");
-      expect(screen.getByText(EXIT)).toBeTruthy();
+      blocked(/tried conventional prescription medication before/i);
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
 
@@ -216,7 +223,7 @@ describe("quiz form", () => {
       choose("Yes");
       cont();
       choose("No");
-      expect(screen.getByText(EXIT)).toBeTruthy();
+      blocked(/conventional medications have been unsuccessful/i);
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
 
@@ -227,8 +234,8 @@ describe("quiz form", () => {
       fireEvent.click(screen.getByRole("button", { name: "Liver disease" }));
       cont();
 
-      expect(screen.getByText(EXIT)).toBeTruthy();
-      /* The exit must not repeat the answer back. */
+      blocked(/may not be eligible for holistic\/alternative care/i);
+      /* The one exit of the five that still names no answer. */
       expect(screen.queryByText(/liver/i)).toBeNull();
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
@@ -239,7 +246,7 @@ describe("quiz form", () => {
       fireEvent.click(screen.getByRole("button", { name: "None of these" }));
       cont();
       choose("Yes"); // schizophrenia, bipolar 1 or 2, or psychosis
-      expect(screen.getByText(EXIT)).toBeTruthy();
+      blocked(/Based on your psychiatric history/i);
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
 

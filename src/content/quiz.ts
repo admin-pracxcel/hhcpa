@@ -1169,9 +1169,9 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
    * raised with Bilal in those terms and he directed it be built as she
    * asked. His call to make; this is the record that it was made knowingly.
    *
-   * What still holds, and must keep holding: the exit names no answer, so
-   * nobody is told which response to change. That is the part AHPRA's
-   * guidance is actually about.
+   * Each gate has its own exit as of 2026-09-15, in her wording. See the note
+   * above them: three of the five name the criterion that was failed, which
+   * was raised and overruled.
    *
    * The exit names no answer. Hers does not either — "based on your response"
    * — which matters, because an exit that says which answer disqualified you
@@ -1192,7 +1192,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     question:
       "Do you have a chronic condition lasting more than 3 months that has been diagnosed by a doctor?",
     options: ["Yes", "No"],
-    next: { Yes: "hl_tried_medication", No: "exit-holistic" },
+    next: { Yes: "hl_tried_medication", No: "exit-hl-chronic" },
   },
   {
     kind: "choice",
@@ -1215,7 +1215,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
        */
       label: "What did you try, and what was the outcome?",
     },
-    next: { Yes: "hl_medication_outcome", No: "exit-holistic" },
+    next: { Yes: "hl_medication_outcome", No: "exit-hl-medication" },
   },
   {
     kind: "choice",
@@ -1226,7 +1226,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     question:
       "Has the medication been unsuccessful in fully treating your symptoms, or does it cause adverse side effects?",
     options: ["Yes", "No"],
-    next: { Yes: "hl_conditions", No: "exit-holistic" },
+    next: { Yes: "hl_conditions", No: "exit-hl-outcome" },
   },
   {
     kind: "multi",
@@ -1254,7 +1254,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
       NONE_OF_THESE,
     ],
     next: "hl_psych_history",
-    nextWhenTicked: "exit-holistic",
+    nextWhenTicked: "exit-hl-conditions",
   },
   {
     kind: "choice",
@@ -1265,7 +1265,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     question:
       "Do you have a history of schizophrenia, bipolar type 1 or 2 disorder or have you experienced psychosis?",
     options: ["Yes", "No"],
-    next: { Yes: "exit-holistic", No: "hl_concern" },
+    next: { Yes: "exit-hl-psych", No: "hl_concern" },
   },
   /*
    * Her five gates run first and these two follow, which reverses the order
@@ -1329,16 +1329,63 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     next: { "*": "contact" },
   },
   /*
-   * One exit for all three gates, her copy verbatim. One rather than three on
-   * purpose: three would differ only by which answer sent you there, and that
-   * is precisely what an exit must not reveal.
+   * ─── FIVE EXITS, HERS, ONE PER GATE ───────────────────────────────────
+   *
+   * There was one shared exit here until 2026-09-15, written to say nothing
+   * about which answer sent you there. Her live site has five, and three of
+   * them name the criterion the patient failed: "our consultations require a
+   * diagnosed chronic condition", "you need to have tried conventional
+   * prescription medication", "this service is designed for patients whose
+   * conventional medications have been unsuccessful".
+   *
+   * ⚠️ That is the pattern v2.4 Q34 ruled out, and it is the specific thing
+   * AHPRA names about online questionnaires: an exit that states the required
+   * answer, next to a Back button, is an instruction to change it. It was put
+   * to Bilal in those terms twice and he directed her copy be used as written.
+   * His call; this comment is the record that it was made knowingly, not the
+   * place to argue it again.
+   *
+   * If it is ever reopened, the fix that keeps her wording is to stop the
+   * patient returning to a gated answer — remove Back from these five, or lock
+   * the answer once the gate has run, which Q34(b) already asks for. Then the
+   * copy is honest eligibility information rather than a coaching mechanism.
+   *
+   * All five bodies below are hers, verbatim.
    */
   {
     kind: "exit",
-    id: "exit-holistic",
+    id: "exit-hl-chronic",
+    variant: "blocked",
+    heading: "Unable to Proceed",
+    body: "Based on your response, you may not meet the eligibility criteria for this service. Our Holistic / Alternative Care consultations require a diagnosed chronic condition. Please consider our other services instead.",
+  },
+  {
+    kind: "exit",
+    id: "exit-hl-medication",
+    variant: "blocked",
+    heading: "Unable to Proceed",
+    body: "Based on your response, you may not meet the eligibility criteria at this time. You need to have tried conventional prescription medication before accessing this service. Please consult with your regular GP first.",
+  },
+  {
+    kind: "exit",
+    id: "exit-hl-outcome",
+    variant: "blocked",
+    heading: "Unable to Proceed",
+    body: "Based on your response, you may not meet the eligibility criteria at this time. This service is designed for patients whose conventional medications have been unsuccessful or cause adverse side effects.",
+  },
+  {
+    kind: "exit",
+    id: "exit-hl-conditions",
     variant: "blocked",
     heading: "Unable to Proceed",
     body: "Based on your response, you may not be eligible for holistic/alternative care treatment at this time. Please consult with your GP for appropriate care options.",
+  },
+  {
+    kind: "exit",
+    id: "exit-hl-psych",
+    variant: "blocked",
+    heading: "Unable to Proceed",
+    body: "Based on your psychiatric history, holistic/alternative care treatment may not be suitable. Please speak with your treating psychiatrist or GP for guidance.",
   },
 
   /* ---------- closing ---------- */
