@@ -194,14 +194,35 @@ describe("quiz form", () => {
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
 
+    /** The three gates that come before the conditions list. */
+    const pastFirstGates = () => {
+      choose("Yes"); // chronic condition, diagnosed, over three months
+      choose("Yes"); // tried conventional prescription medication
+      cont(); //      past the "what did you try" follow-up
+      choose("Yes"); // it failed or caused side effects
+    };
+
+    it("stops someone who has not tried prescription medication", async () => {
+      toHolistic();
+      choose("Yes");
+      choose("No");
+      expect(screen.getByText(EXIT)).toBeTruthy();
+      await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
+    });
+
+    it("stops someone whose medication is working without side effects", async () => {
+      toHolistic();
+      choose("Yes");
+      choose("Yes");
+      cont();
+      choose("No");
+      expect(screen.getByText(EXIT)).toBeTruthy();
+      await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
+    });
+
     it("stops any ticked condition, and names none of them", async () => {
       toHolistic();
-      choose("Yes"); // chronic, over three months
-      choose("Chronic pain");
-      type("How long have symptoms been present?", "two years");
-      type("Current severity", "6");
-      cont();
-      choose("No"); // nothing tried before
+      pastFirstGates();
 
       fireEvent.click(screen.getByRole("button", { name: "Liver disease" }));
       cont();
@@ -214,12 +235,7 @@ describe("quiz form", () => {
 
     it("stops a psychiatric history", async () => {
       toHolistic();
-      choose("Yes");
-      choose("Chronic pain");
-      type("How long have symptoms been present?", "two years");
-      type("Current severity", "6");
-      cont();
-      choose("No");
+      pastFirstGates();
       fireEvent.click(screen.getByRole("button", { name: "None of these" }));
       cont();
       choose("Yes"); // schizophrenia, bipolar 1 or 2, or psychosis
@@ -227,17 +243,31 @@ describe("quiz form", () => {
       await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
     });
 
+    it("asks nothing about symptoms until every gate is passed", () => {
+      /*
+       * The gates run before the descriptive questions on purpose: someone
+       * who was never eligible should not have handed over their symptoms,
+       * duration and severity first.
+       */
+      toHolistic();
+      expect(screen.queryByText(/what would you like support with/i)).toBeNull();
+      pastFirstGates();
+      fireEvent.click(screen.getByRole("button", { name: "None of these" }));
+      cont();
+      choose("No"); // no psychiatric history
+      expect(screen.getByText(/what would you like support with/i)).toBeTruthy();
+    });
+
     it("lets a clear answer through to the contact step", () => {
       toHolistic();
-      choose("Yes");
+      pastFirstGates();
+      fireEvent.click(screen.getByRole("button", { name: "None of these" }));
+      cont();
+      choose("No"); // no psychiatric history
       choose("Chronic pain");
       type("How long have symptoms been present?", "two years");
       type("Current severity", "6");
       cont();
-      choose("No");
-      fireEvent.click(screen.getByRole("button", { name: "None of these" }));
-      cont();
-      choose("No"); // no psychiatric history
       choose("No"); // no medications
       expect(screen.getByLabelText(/first name/i)).toBeTruthy();
     });

@@ -1157,11 +1157,21 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
    * Steps 0 to 2". That default existed because her thresholds had not been
    * signed off. They have now — these are them.
    *
-   * Two things this deliberately does NOT restore from her live flow, because
-   * she did not ask for them and they are the pair that makes the sequence
-   * read as a prescription-eligibility funnel rather than a health
-   * questionnaire: "have you tried conventional prescription medication" and
-   * "was it unsuccessful or did it cause adverse effects".
+   * Five gates, not three. The medication pair — "have you tried conventional
+   * prescription medication" and "has it been unsuccessful or does it cause
+   * adverse side effects" — was left out on the first pass and added on
+   * 2026-09-15 when she supplied the wording.
+   *
+   * ⚠️ That pair is what makes this sequence a prescription-eligibility
+   * pathway rather than a health questionnaire: a chronic diagnosed condition,
+   * conventional medication tried, that medication failed or caused side
+   * effects, then a contraindication list and a psychiatric history. It was
+   * raised with Bilal in those terms and he directed it be built as she
+   * asked. His call to make; this is the record that it was made knowingly.
+   *
+   * What still holds, and must keep holding: the exit names no answer, so
+   * nobody is told which response to change. That is the part AHPRA's
+   * guidance is actually about.
    *
    * The exit names no answer. Hers does not either — "based on your response"
    * — which matters, because an exit that says which answer disqualified you
@@ -1178,17 +1188,91 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     id: "hl_chronic",
     field: "hl_chronic",
     clinical: true,
-    /*
-     * DECISION: her criterion, our phrasing. Bilal relayed the rule — "no to
-     * chronic conditions not lasting more than 3 months, they are not able to
-     * proceed" — but not her question wording, and it is the one string here
-     * that is not hers. Replace it with her exact text when it is to hand.
-     */
+    /* Her wording, supplied 2026-09-15. */
     question:
-      "Do you have a chronic condition that has lasted more than 3 months?",
+      "Do you have a chronic condition lasting more than 3 months that has been diagnosed by a doctor?",
     options: ["Yes", "No"],
-    next: { Yes: "hl_concern", No: "exit-holistic" },
+    next: { Yes: "hl_tried_medication", No: "exit-holistic" },
   },
+  {
+    kind: "choice",
+    id: "hl_tried_medication",
+    field: "hl_tried_medication",
+    clinical: true,
+    /* Her wording. */
+    question:
+      "Have you tried conventional prescription medication for your condition?",
+    options: ["Yes", "No"],
+    followUp: {
+      when: "Yes",
+      name: "hl_previous_care_detail",
+      /*
+       * Carried over from FRM-003's own "have you tried anything before"
+       * question, which these two replace. The free-text outcome is the most
+       * useful thing a practitioner reads before the consultation, and losing
+       * it silently while merging two versions of the same question would be
+       * the wrong kind of tidy.
+       */
+      label: "What did you try, and what was the outcome?",
+    },
+    next: { Yes: "hl_medication_outcome", No: "exit-holistic" },
+  },
+  {
+    kind: "choice",
+    id: "hl_medication_outcome",
+    field: "hl_medication_outcome",
+    clinical: true,
+    /* Her wording. */
+    question:
+      "Has the medication been unsuccessful in fully treating your symptoms, or does it cause adverse side effects?",
+    options: ["Yes", "No"],
+    next: { Yes: "hl_conditions", No: "exit-holistic" },
+  },
+  {
+    kind: "multi",
+    id: "hl_conditions",
+    field: "hl_conditions",
+    clinical: true,
+    /*
+     * Her question and her five conditions, verbatim. Two options that were
+     * here are gone with her list: kidney disease, which she does not screen
+     * for, and bipolar disorder, which moves into the psychiatric history
+     * question below. "Heart condition" becomes her "Cardio pulmonary
+     * disease", which is not the same thing and is hers.
+     *
+     * "None of these" rather than her "None of the above": it is the exclusive
+     * option on every multi-select on the site and the toggle logic keys off
+     * the shared constant. Same answer, one wording.
+     */
+    question: "Do you have any of the following conditions?",
+    options: [
+      "Active psychosis",
+      "Drug dependence or substance abuse",
+      "Cardio pulmonary disease",
+      "Pregnant or breastfeeding",
+      "Liver disease",
+      NONE_OF_THESE,
+    ],
+    next: "hl_psych_history",
+    nextWhenTicked: "exit-holistic",
+  },
+  {
+    kind: "choice",
+    id: "hl_psych_history",
+    field: "hl_psych_history",
+    clinical: true,
+    /* Her wording, verbatim. */
+    question:
+      "Do you have a history of schizophrenia, bipolar type 1 or 2 disorder or have you experienced psychosis?",
+    options: ["Yes", "No"],
+    next: { Yes: "exit-holistic", No: "hl_concern" },
+  },
+  /*
+   * Her five gates run first and these two follow, which reverses the order
+   * FRM-003 has them in. A gate that turns someone away should do it before
+   * their symptoms, duration and severity have been collected, not after —
+   * the less held about a person who was never eligible, the better (APP 3).
+   */
   {
     kind: "choice",
     id: "hl_concern",
@@ -1228,61 +1312,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
         unit: "out of 10",
       },
     ],
-    next: "hl_previous_care",
-  },
-  {
-    kind: "choice",
-    id: "hl_previous_care",
-    field: "hl_previous_care",
-    clinical: true,
-    question:
-      "Have you tried any treatments or medicines for this before?",
-    options: ["Yes", "No"],
-    followUp: {
-      when: "Yes",
-      name: "hl_previous_care_detail",
-      label: "What did you try, and what was the outcome?",
-    },
-    next: { "*": "hl_conditions" },
-  },
-  {
-    kind: "multi",
-    id: "hl_conditions",
-    field: "hl_conditions",
-    clinical: true,
-    /*
-     * Her question and her five conditions, verbatim. Two options that were
-     * here are gone with her list: kidney disease, which she does not screen
-     * for, and bipolar disorder, which moves into the psychiatric history
-     * question below. "Heart condition" becomes her "Cardio pulmonary
-     * disease", which is not the same thing and is hers.
-     *
-     * "None of these" rather than her "None of the above": it is the exclusive
-     * option on every multi-select on the site and the toggle logic keys off
-     * the shared constant. Same answer, one wording.
-     */
-    question: "Do you have any of the following conditions?",
-    options: [
-      "Active psychosis",
-      "Drug dependence or substance abuse",
-      "Cardio pulmonary disease",
-      "Pregnant or breastfeeding",
-      "Liver disease",
-      NONE_OF_THESE,
-    ],
-    next: "hl_psych_history",
-    nextWhenTicked: "exit-holistic",
-  },
-  {
-    kind: "choice",
-    id: "hl_psych_history",
-    field: "hl_psych_history",
-    clinical: true,
-    /* Her wording, verbatim. */
-    question:
-      "Do you have a history of schizophrenia, bipolar type 1 or 2 disorder or have you experienced psychosis?",
-    options: ["Yes", "No"],
-    next: { Yes: "exit-holistic", No: "hl_medications" },
+    next: "hl_medications",
   },
   {
     kind: "choice",
