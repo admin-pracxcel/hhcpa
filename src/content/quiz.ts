@@ -1261,9 +1261,17 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     id: "hl_psych_history",
     field: "hl_psych_history",
     clinical: true,
-    /* Her wording, verbatim. */
+    /*
+     * Her wording, verbatim and confirmed against her live site on
+     * 2026-09-15. It was relayed first as "type 1 or 2 disorder or have you
+     * experienced" and corrected to this. Both differences are hers: "and"
+     * rather than "or", and no "you" before "experienced".
+     *
+     * Left exactly as she has it. Tidying a clinical question's grammar is
+     * how a question stops being the one that was approved.
+     */
     question:
-      "Do you have a history of schizophrenia, bipolar type 1 or 2 disorder or have you experienced psychosis?",
+      "Do you have a history of schizophrenia, bipolar type 1 and 2 disorder or have experienced psychosis?",
     options: ["Yes", "No"],
     next: { Yes: "exit-hl-psych", No: "hl_concern" },
   },
