@@ -359,6 +359,28 @@
  * Measured off his screenshot: border #d6e8e1, 8px radius, 12px between rows,
  * 16px from the card edge to the box.
  */
+/*
+ * A phone number inside a run of text — the emergency numbers in the site
+ * disclaimer, and nothing else so far.
+ *
+ * It keeps the colour of the sentence it sits in rather than taking a link
+ * colour, because the disclaimer is one continuous instruction and a
+ * differently-coloured number would read as a separate thing. The underline
+ * is what says it can be pressed; the hover is deliberately a small shift,
+ * enough to confirm it and not enough to break the line up.
+ */
+.hhcp-tel {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color 0.3s linear;
+}
+
+.hhcp-tel:hover {
+  color: var(--hhcp-action-light);
+}
+
 .hhcp-check-row {
   display: flex;
   align-items: flex-start;

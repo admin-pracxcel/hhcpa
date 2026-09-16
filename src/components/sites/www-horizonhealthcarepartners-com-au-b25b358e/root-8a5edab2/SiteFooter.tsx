@@ -39,6 +39,7 @@ import {
 } from "../shared/icons";
 import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
 import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
+import { linkEmergencyNumbers } from "@/components/DisclaimerText";
 import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 
 const LOGO_SRC =
@@ -709,7 +710,9 @@ export function SiteFooter({ className }: SiteFooterProps) {
           the footer rather than a thing parked at the bottom of it.
         */}
         <div className="hhcp-ft-divider" />
-        <p className="hhcp-ft-disclaimer font-dm-sans">{SITE_DISCLAIMER}</p>
+        <p className="hhcp-ft-disclaimer font-dm-sans">
+          {linkEmergencyNumbers(SITE_DISCLAIMER)}
+        </p>
       </div>
     </footer>
   );

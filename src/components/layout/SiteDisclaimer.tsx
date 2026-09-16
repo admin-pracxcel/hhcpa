@@ -1,4 +1,5 @@
 import { SITE_DISCLAIMER } from "@/content/clinic";
+import { linkEmergencyNumbers } from "@/components/DisclaimerText";
 
 /**
  * The site-wide disclaimer.
@@ -19,12 +20,16 @@ import { SITE_DISCLAIMER } from "@/content/clinic";
  * the footer element altogether. It is now bold, full opacity, and inside the
  * footer. A disclaimer that is technically present and practically unreadable
  * is not a disclaimer.
+ *
+ * The emergency numbers are tel: links here too, not only in the footer. This
+ * is the copy /quiz/ and the 404 carry, and a number on those pages is no less
+ * worth pressing than the same number two clicks away.
  */
 export function SiteDisclaimer() {
   return (
     <div className="bg-[color:var(--hhcp-dark)] px-[var(--hhcp-gutter)] py-[var(--hhcp-space-m)]">
       <p className="hhcp-container font-dm-sans text-[length:var(--hhcp-text-xs)] leading-[var(--hhcp-text-lh)] font-semibold text-[color:var(--hhcp-accent)]">
-        {SITE_DISCLAIMER}
+        {linkEmergencyNumbers(SITE_DISCLAIMER)}
       </p>
     </div>
   );
