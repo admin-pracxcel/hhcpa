@@ -25,7 +25,12 @@ function targetsOf(step: QuizStep): readonly string[] {
   switch (step.kind) {
     case "choice":
       return Object.values(step.next);
+    /* A multi can branch too, since the holistic contraindication step exits
+       on any tick. Both targets are real edges. */
     case "multi":
+      return step.nextWhenTicked === undefined
+        ? [step.next]
+        : [step.next, step.nextWhenTicked];
     case "input":
     case "bmi":
     case "summary":

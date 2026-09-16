@@ -107,6 +107,15 @@ export type QuizStep =
       /** Free text for "Other, please add ___". */
       readonly other?: { readonly name: string; readonly label: string };
       readonly next: string;
+      /**
+       * Where to go when anything other than "None of these" is ticked.
+       *
+       * Only the holistic contraindication step uses one. A choice step
+       * branches on its answer and a multi could not, which is the only reason
+       * this exists — the alternative was special-casing one step id inside
+       * the navigation, where nobody would find it.
+       */
+      readonly nextWhenTicked?: string;
     })
   | (StepBase & {
       readonly kind: "input";
@@ -377,7 +386,7 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
       "Mental Health Support": "mh_diagnosed",
       "Online Doctor": "od_kind",
       "Continuity & Preventative Health": "cp_focus",
-      "Holistic Care / Alternative Medicine": "hl_concern",
+      "Holistic Care / Alternative Medicine": "hl_chronic",
     },
   },
   /*
@@ -1133,6 +1142,53 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
      no medicine at all. Its contraindication tick-list feeds the triage as
      amber rather than as a door closing. Nobody is turned away; a practitioner
      reviews instead, which is where that judgement belonged. */
+  /*
+   * ─── HER THREE HARD EXITS, RESTORED 2026-09-15 ─────────────────────────
+   *
+   * Ranjeeta's instruction, relayed by Bilal: on her live site a patient
+   * cannot proceed if they have no chronic condition of more than three
+   * months, if they tick any of the listed conditions, or if they answer yes
+   * to the psychiatric history question. She supplied the conditions list, the
+   * psychiatric question and the exit copy verbatim; all three are below word
+   * for word.
+   *
+   * ⚠️ This overrides build spec v2.3 addendum §1.1, which says any
+   * contraindication tick produces amber and "nothing auto-excludes except
+   * Steps 0 to 2". That default existed because her thresholds had not been
+   * signed off. They have now — these are them.
+   *
+   * Two things this deliberately does NOT restore from her live flow, because
+   * she did not ask for them and they are the pair that makes the sequence
+   * read as a prescription-eligibility funnel rather than a health
+   * questionnaire: "have you tried conventional prescription medication" and
+   * "was it unsuccessful or did it cause adverse effects".
+   *
+   * The exit names no answer. Hers does not either — "based on your response"
+   * — which matters, because an exit that says which answer disqualified you
+   * is an instruction to go back and change it, and that is the pattern AHPRA
+   * names in its guidance on online questionnaires (v2.4 Q34).
+   *
+   * Consequences, recorded because they are real: a patient who exits here
+   * produces no submission at all, so these enquiries no longer reach n8n as
+   * amber; and the decision moves from a practitioner reviewing a flagged
+   * answer to the form itself. Both are what her live site does.
+   */
+  {
+    kind: "choice",
+    id: "hl_chronic",
+    field: "hl_chronic",
+    clinical: true,
+    /*
+     * DECISION: her criterion, our phrasing. Bilal relayed the rule — "no to
+     * chronic conditions not lasting more than 3 months, they are not able to
+     * proceed" — but not her question wording, and it is the one string here
+     * that is not hers. Replace it with her exact text when it is to hand.
+     */
+    question:
+      "Do you have a chronic condition that has lasted more than 3 months?",
+    options: ["Yes", "No"],
+    next: { Yes: "hl_concern", No: "exit-holistic" },
+  },
   {
     kind: "choice",
     id: "hl_concern",
@@ -1194,18 +1250,39 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
     id: "hl_conditions",
     field: "hl_conditions",
     clinical: true,
-    question: "Please tick any that apply.",
+    /*
+     * Her question and her five conditions, verbatim. Two options that were
+     * here are gone with her list: kidney disease, which she does not screen
+     * for, and bipolar disorder, which moves into the psychiatric history
+     * question below. "Heart condition" becomes her "Cardio pulmonary
+     * disease", which is not the same thing and is hers.
+     *
+     * "None of these" rather than her "None of the above": it is the exclusive
+     * option on every multi-select on the site and the toggle logic keys off
+     * the shared constant. Same answer, one wording.
+     */
+    question: "Do you have any of the following conditions?",
     options: [
-      "Psychosis or schizophrenia",
-      "Bipolar disorder",
+      "Active psychosis",
+      "Drug dependence or substance abuse",
+      "Cardio pulmonary disease",
       "Pregnant or breastfeeding",
-      "Heart condition",
       "Liver disease",
-      "Kidney disease",
-      "Substance dependence",
       NONE_OF_THESE,
     ],
-    next: "hl_medications",
+    next: "hl_psych_history",
+    nextWhenTicked: "exit-holistic",
+  },
+  {
+    kind: "choice",
+    id: "hl_psych_history",
+    field: "hl_psych_history",
+    clinical: true,
+    /* Her wording, verbatim. */
+    question:
+      "Do you have a history of schizophrenia, bipolar type 1 or 2 disorder or have you experienced psychosis?",
+    options: ["Yes", "No"],
+    next: { Yes: "exit-holistic", No: "hl_medications" },
   },
   {
     kind: "choice",
@@ -1220,6 +1297,18 @@ export const QUIZ_STEPS: readonly QuizStep[] = [
       label: "Please list them",
     },
     next: { "*": "contact" },
+  },
+  /*
+   * One exit for all three gates, her copy verbatim. One rather than three on
+   * purpose: three would differ only by which answer sent you there, and that
+   * is precisely what an exit must not reveal.
+   */
+  {
+    kind: "exit",
+    id: "exit-holistic",
+    variant: "blocked",
+    heading: "Unable to Proceed",
+    body: "Based on your response, you may not be eligible for holistic/alternative care treatment at this time. Please consult with your GP for appropriate care options.",
   },
 
   /* ---------- closing ---------- */
@@ -1367,17 +1456,24 @@ export function triage(
      same reason it already is in the weight and health-optimisation branches:
      it changes what can safely be considered, so it should reach a human
      before a booking is confirmed rather than after. */
+  /*
+   * `hl_conditions` is not in this list any more. Ticking anything there exits
+   * the flow as of 2026-09-15, so it can never reach triage — see her three
+   * gates in the holistic branch. Leaving it would be a rule that reads as
+   * live and has not run since.
+   */
   for (const [field, label] of [
     ["mn_background", "Men's health background"],
     ["wh_history", "Women's health history"],
-    ["hl_conditions", "Holistic care contraindication"],
   ] as const) {
     const ticked = answers[field] ?? "";
     if (ticked !== "" && ticked !== NONE_OF_THESE) {
       amber.push(`${label}: ${ticked}`);
     }
   }
-  for (const field of ["wh_history", "hl_conditions"] as const) {
+  /* Same reason: pregnancy on the holistic branch now exits rather than
+     reaching a practitioner as red. Women's health still runs this. */
+  for (const field of ["wh_history"] as const) {
     if (has(field, "Pregnant") || has(field, "breastfeeding")) {
       red.push("Pregnant, planning pregnancy or breastfeeding");
     }
@@ -1720,6 +1816,19 @@ export function nextStepId(step: QuizStep, answer: string): string {
     case "choice":
       return step.next[answer] ?? step.next["*"] ?? "";
     case "multi":
+      /*
+       * "None of these" is exclusive both ways, so an answer that is not
+       * exactly it, and not empty, means at least one option was ticked.
+       * Splitting the joined string would be the fragile way to ask.
+       */
+      if (
+        step.nextWhenTicked !== undefined &&
+        answer.trim() !== "" &&
+        answer !== NONE_OF_THESE
+      ) {
+        return step.nextWhenTicked;
+      }
+      return step.next;
     case "input":
     case "bmi":
     case "summary":

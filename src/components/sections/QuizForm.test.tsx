@@ -173,6 +173,76 @@ describe("quiz form", () => {
     await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
   });
 
+  /*
+   * Ranjeeta's three holistic gates, restored 2026-09-15. Each has to end the
+   * flow without submitting, and none of them may say which answer did it —
+   * that is the whole reason there is one exit and not three.
+   */
+  describe("holistic care gates", () => {
+    const EXIT = /you may not be eligible for holistic\/alternative care/i;
+
+    const toHolistic = () => {
+      render(<QuizForm onClose={close} />);
+      start("Holistic Care / Alternative Medicine");
+    };
+
+    it("stops someone with no chronic condition of over three months", async () => {
+      toHolistic();
+      choose("No");
+      expect(screen.getByText("Unable to Proceed")).toBeTruthy();
+      expect(screen.getByText(EXIT)).toBeTruthy();
+      await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
+    });
+
+    it("stops any ticked condition, and names none of them", async () => {
+      toHolistic();
+      choose("Yes"); // chronic, over three months
+      choose("Chronic pain");
+      type("How long have symptoms been present?", "two years");
+      type("Current severity", "6");
+      cont();
+      choose("No"); // nothing tried before
+
+      fireEvent.click(screen.getByRole("button", { name: "Liver disease" }));
+      cont();
+
+      expect(screen.getByText(EXIT)).toBeTruthy();
+      /* The exit must not repeat the answer back. */
+      expect(screen.queryByText(/liver/i)).toBeNull();
+      await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
+    });
+
+    it("stops a psychiatric history", async () => {
+      toHolistic();
+      choose("Yes");
+      choose("Chronic pain");
+      type("How long have symptoms been present?", "two years");
+      type("Current severity", "6");
+      cont();
+      choose("No");
+      fireEvent.click(screen.getByRole("button", { name: "None of these" }));
+      cont();
+      choose("Yes"); // schizophrenia, bipolar 1 or 2, or psychosis
+      expect(screen.getByText(EXIT)).toBeTruthy();
+      await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
+    });
+
+    it("lets a clear answer through to the contact step", () => {
+      toHolistic();
+      choose("Yes");
+      choose("Chronic pain");
+      type("How long have symptoms been present?", "two years");
+      type("Current severity", "6");
+      cont();
+      choose("No");
+      fireEvent.click(screen.getByRole("button", { name: "None of these" }));
+      cont();
+      choose("No"); // no psychiatric history
+      choose("No"); // no medications
+      expect(screen.getByLabelText(/first name/i)).toBeTruthy();
+    });
+  });
+
   it("promises no callback it cannot keep", () => {
     /*
      * The state this reverted out of was the one that could not be defended:
