@@ -71,6 +71,11 @@ export const PRACTITIONERS_META = {
  * in place of the photograph rather than being held back — the registration
  * number is the thing that makes a card publishable, and she has one.
  *
+ * She is last in the array rather than sixth, on Bilal's instruction of
+ * 2026-09-15. The order here is the order on the page, so the one card
+ * without a photograph closes the grid instead of sitting between two that
+ * have one. Move her back up the moment a headshot arrives.
+ *
  * Typos in the supplied lists were corrected where they were plainly typos
  * ("Managment", "Womens", "Mens") and the wording was matched to the service
  * names used everywhere else on the site. No list gained or lost an item.
@@ -157,18 +162,18 @@ export const PRACTITIONERS: readonly Practitioner[] = [
     ],
   },
   {
-    /* No headshot supplied, and no focus areas. Both omitted rather than
-       guessed; the card renders with her initials. */
-    name: "Miss Paidamoyo Mildred Hatendi",
-    title: "Nurse Practitioner",
-    ahpraNumber: "NMW0001913861",
-  },
-  {
     /* No focus areas supplied. */
     name: "Miss Nattallee Jane Allan",
     title: "Nurse Practitioner",
     ahpraNumber: "NMW0001298808",
     photo: "/images/miss-nattallee-jane-allan.webp",
+  },
+  {
+    /* No headshot supplied, and no focus areas. Both omitted rather than
+       guessed; the card renders with her initials. */
+    name: "Miss Paidamoyo Mildred Hatendi",
+    title: "Nurse Practitioner",
+    ahpraNumber: "NMW0001913861",
   },
 ];
 
