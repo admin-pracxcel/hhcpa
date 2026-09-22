@@ -114,16 +114,20 @@ export const PRICES: Record<PriceKey, Price> = {
    * of the same day. It had been $89, went to $69 on that email, and is $89
    * again. Three states in one day; this is the one she confirmed.
    *
-   * This key is now the combined row on /pricing/ and nothing else. Men's
-   * health and women's health are listed separately everywhere on the site
-   * except that one row, and separately they are the first consultation,
-   * $69 — Bilal, 2026-09-15.
+   * $89 is the men's and women's health consultation, and every men's or
+   * women's surface reads it: the combined row on /pricing/, both service
+   * boxes, both hub page headlines, and the fee line in the
+   * erectile-dysfunction, low-testosterone and menopause FAQs.
    *
-   * So the two service boxes and the fee line in the erectile-dysfunction,
-   * low-testosterone and menopause FAQs read `firstConsult` instead. That is
-   * the same fee /mens-health/ and /womens-health/ already headline, so a box
-   * and the page it links to finally agree. Both figures stay findable on
-   * /pricing/ — this one as its own row, $69 as the First consultation card.
+   * It took three passes to land there, which is worth recording. The figure
+   * went $89 → $69 → $89 in a day, and separately the two hub pages had been
+   * headlining `firstConsult` at $69 — the general first-consultation fee,
+   * which is not what these pages charge. That mismatch is why a homepage box
+   * and the page it linked to used to quote different numbers. One key now
+   * feeds all of it.
+   *
+   * `firstConsult` stays $69 and stays the general fee: the home FAQ, the
+   * continuity page and the First consultation card on /pricing/.
    */
   mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
   /*

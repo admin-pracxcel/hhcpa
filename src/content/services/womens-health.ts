@@ -131,7 +131,14 @@ export const WOMENS_HEALTH: ServicePageData = {
       kind: "pricingCue",
       eyebrow: "What it costs",
       heading: "What it costs",
-      headline: `from $${PRICES.firstConsult.amount}`,
+      /*
+       * The men's and women's health consultation, $89 — confirmed by
+       * Ranjeeta on 2026-09-15. It read `firstConsult` at $69, which is the
+       * general first-consultation fee and is not what these pages charge.
+       * That is why the box on the homepage and this headline used to
+       * disagree.
+       */
+      headline: `from $${PRICES.mensWomensHealth.amount}`,
       headlineLabel: "Consultations",
       rows: [{ label: "Pre-screening quiz", value: "Free" }],
       note: "Every fee is on our pricing page. Any medicine dispensed by a pharmacy is a separate cost.",
