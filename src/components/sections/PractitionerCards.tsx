@@ -74,7 +74,8 @@ const STYLES = `
 }
 
 .hhcp-pc-card {
-  flex: 0 1 calc((100% - 40px) / 3);
+  /* Four across — Bilal, 2026-09-15. Three gaps of 20px come out of the row. */
+  flex: 0 1 calc((100% - 60px) / 4);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -163,6 +164,13 @@ const STYLES = `
   font-size: var(--hhcp-text-l, 21.328px);
   line-height: 1.6;
   color: var(--hhcp-primary, #013126);
+}
+
+/* Three across before the cards get too narrow for an eleven-item list. */
+@media (max-width: 1200px) {
+  .hhcp-pc-card {
+    flex-basis: calc((100% - 40px) / 3);
+  }
 }
 
 @media (max-width: 900px) {

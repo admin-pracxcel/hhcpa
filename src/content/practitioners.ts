@@ -62,6 +62,10 @@ export const PRACTITIONERS_META = {
  *    not the title — which is accurate whatever their registration and needs
  *    no correction if they are all fellowed. Raised with Bilal 2026-09-15.
  *
+ * Names are exactly as the client supplied them, honorifics included —
+ * restored 2026-09-15 after being dropped for consistency with the doctors.
+ * How a clinician is styled on their own listing is theirs, not a house rule.
+ *
  * Miss Paidamoyo Mildred Hatendi has no headshot and no focus areas; both
  * were absent from what the client supplied. The card renders with initials
  * in place of the photograph rather than being held back — the registration
@@ -155,13 +159,13 @@ export const PRACTITIONERS: readonly Practitioner[] = [
   {
     /* No headshot supplied, and no focus areas. Both omitted rather than
        guessed; the card renders with her initials. */
-    name: "Paidamoyo Mildred Hatendi",
+    name: "Miss Paidamoyo Mildred Hatendi",
     title: "Nurse Practitioner",
     ahpraNumber: "NMW0001913861",
   },
   {
     /* No focus areas supplied. */
-    name: "Nattallee Jane Allan",
+    name: "Miss Nattallee Jane Allan",
     title: "Nurse Practitioner",
     ahpraNumber: "NMW0001298808",
     photo: "/images/miss-nattallee-jane-allan.webp",
