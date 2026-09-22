@@ -110,22 +110,26 @@ export const PRICES: Record<PriceKey, Price> = {
   pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 49,   from: true,  provisional: true },
   mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
   /*
-   * $69, the first consultation — Bilal, 2026-09-15, applying the rule above
-   * to the rest of the list. It was $89.
+   * Back to $89 — Ranjeeta, 2026-09-15, correcting the $69 in her own email
+   * of the same day. It had been $89, went to $69 on that email, and is $89
+   * again. Three states in one day; this is the one she confirmed.
    *
-   * This resolved a contradiction the site was already carrying: /mens-health/
-   * and /womens-health/ headline their own first consultation from
-   * `firstConsult`, which is $69, while the home service box and the /pricing/
-   * table read this key and said $89. Same service, two prices, both live.
+   * ⚠️ It could not be changed on the /pricing/ table alone, which is what was
+   * asked for. One key feeds the table row, both service boxes on the
+   * homepage and /services/, and the fee line in the erectile-dysfunction,
+   * low-testosterone and menopause FAQs. Splitting it so the table alone says
+   * $89 would mean a price a patient can be charged that appears nowhere they
+   * can look it up, which is the thing pricing-page.test.ts exists to stop.
+   * So all five moved together.
    *
-   * ⚠️ Two things to put to Ranjeeta. Her live site still says "From $89
-   * Men's & Women's Health", and her 2026-09-15 email gives $69 for Men's
-   * Health only — it does not mention Women's Health at all. This applies the
-   * men's figure to both, because the site has always priced them together
-   * and because $69 is what both hub pages already quote. If she prices them
-   * apart, this key has to split in two.
+   * ⚠️ Still unresolved, and visible on the site: /mens-health/ and
+   * /womens-health/ headline their own first consultation from `firstConsult`
+   * at $69. So the homepage box now says "From $89" and the page it links to
+   * says "from $69". That predates this change, it survives it, and it needs
+   * one answer from her — is a men's or women's health consultation $89, or
+   * is $89 something else and the consultation genuinely $69?
    */
-  mensWomensHealth:   { label: "Men's and women's health",         amount: 69,   from: true,  provisional: true },
+  mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
   /*
    * THE RULE: an advertised "from" price is the INITIAL consultation.
    *
