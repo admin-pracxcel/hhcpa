@@ -66,15 +66,11 @@ export const PRACTITIONERS_META = {
  * restored 2026-09-15 after being dropped for consistency with the doctors.
  * How a clinician is styled on their own listing is theirs, not a house rule.
  *
- * Miss Paidamoyo Mildred Hatendi has no headshot and no focus areas; both
- * were absent from what the client supplied. The card renders with initials
- * in place of the photograph rather than being held back — the registration
- * number is the thing that makes a card publishable, and she has one.
- *
- * She is last in the array rather than sixth, on Bilal's instruction of
- * 2026-09-15. The order here is the order on the page, so the one card
- * without a photograph closes the grid instead of sitting between two that
- * have one. Move her back up the moment a headshot arrives.
+ * Miss Paidamoyo Mildred Hatendi has no focus areas, and her image is a
+ * placeholder silhouette rather than a photograph — see the note at her
+ * entry. She is last in the array, which is the order on the page, so the
+ * one card without a real headshot closes the grid. Move her back up when a
+ * real one arrives.
  *
  * Typos in the supplied lists were corrected where they were plainly typos
  * ("Managment", "Womens", "Mens") and the wording was matched to the service
@@ -169,11 +165,22 @@ export const PRACTITIONERS: readonly Practitioner[] = [
     photo: "/images/miss-nattallee-jane-allan.webp",
   },
   {
-    /* No headshot supplied, and no focus areas. Both omitted rather than
-       guessed; the card renders with her initials. */
+    /*
+     * No focus areas supplied, so none are shown.
+     *
+     * ⚠️ The image is a placeholder, not a photograph of her — a generic grey
+     * silhouette, 2.3KB and 633 colours. Bilal's instruction of 2026-09-15,
+     * after being told what it is: use it rather than the initials card,
+     * so the grid reads uniformly.
+     *
+     * Replace it the moment a real headshot arrives. Every other card on this
+     * page carries a real face, which is what makes this one read as a
+     * depiction rather than as an absence.
+     */
     name: "Miss Paidamoyo Mildred Hatendi",
     title: "Nurse Practitioner",
     ahpraNumber: "NMW0001913861",
+    photo: "/images/miss-paidamoyo-mildred-hatendi.webp",
   },
 ];
 
