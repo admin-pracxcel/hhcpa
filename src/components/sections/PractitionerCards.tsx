@@ -84,6 +84,48 @@ const STYLES = `
   border: 1px solid #d6e8e1;
 }
 
+.hhcp-pc-photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  /* Faces sit high in a portrait crop; centring them cuts the forehead. */
+  object-position: 50% 22%;
+  border-radius: 10px;
+  background: var(--hhcp-accent, #f5fff9);
+}
+
+.hhcp-pc-photo[data-fallback="true"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-dm-sans-local), ui-sans-serif, system-ui, sans-serif;
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--hhcp-primary, #013126);
+  border: 1px solid #d6e8e1;
+}
+
+.hhcp-pc-focus-label {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.36px;
+  text-transform: uppercase;
+  color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-pc-focus {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #526f68;
+}
+
 .hhcp-pc-name {
   font-size: 20px;
   line-height: 1.3;
@@ -146,7 +188,16 @@ export interface Practitioner {
   readonly title: string;
   /** Required. A practitioner without one is not rendered. */
   readonly ahpraNumber: string;
-  readonly bio: string;
+  /**
+   * Optional, and left out rather than written for someone who has not
+   * supplied one. A bio invented for a named clinician is a claim about a real
+   * person made by whoever typed it.
+   */
+  readonly bio?: string;
+  /** Headshot under /images/. Optional: one practitioner has not supplied one. */
+  readonly photo?: string;
+  /** What they consult on, as supplied. Optional for the same reason as `bio`. */
+  readonly focusAreas?: readonly string[];
 }
 
 interface PractitionerCardsProps {
@@ -155,6 +206,16 @@ interface PractitionerCardsProps {
   heading: string;
   practitioners: readonly Practitioner[];
   emptyMessage: string;
+}
+
+/** "Dr Ines Fernandes" -> "IF". Drops the honorific, keeps two letters. */
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter((part) => !/^(dr|mr|mrs|ms|miss)\.?$/i.test(part))
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 }
 
 export function PractitionerCards({
@@ -188,10 +249,49 @@ export function PractitionerCards({
           <div className="hhcp-pc-grid">
             {publishable.map((person) => (
               <article key={person.ahpraNumber} className="hhcp-pc-card">
+                {/*
+                  A card without a headshot keeps its initials in the same
+                  box rather than collapsing, so one missing photo does not
+                  leave a row of cards at two different heights.
+
+                  Decorative: the name is directly beneath it in text, so a
+                  screen reader announcing the photograph as well would only
+                  repeat it.
+                */}
+                {person.photo === undefined ? (
+                  <div className="hhcp-pc-photo" data-fallback="true" aria-hidden="true">
+                    {initials(person.name)}
+                  </div>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="hhcp-pc-photo"
+                    src={person.photo}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    aria-hidden="true"
+                  />
+                )}
                 <h3 className="hhcp-pc-name font-dm-sans">{person.name}</h3>
                 <p className="hhcp-pc-role font-dm-sans">{person.title}</p>
                 <p className="hhcp-pc-ahpra">{`AHPRA ${person.ahpraNumber}`}</p>
-                <p className="hhcp-pc-bio font-dm-sans">{person.bio}</p>
+                {person.bio !== undefined && (
+                  <p className="hhcp-pc-bio font-dm-sans">{person.bio}</p>
+                )}
+                {person.focusAreas !== undefined &&
+                  person.focusAreas.length > 0 && (
+                    <>
+                      <p className="hhcp-pc-focus-label font-dm-sans">
+                        Consults on
+                      </p>
+                      <ul className="hhcp-pc-focus font-dm-sans">
+                        {person.focusAreas.map((area) => (
+                          <li key={area}>{area}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
               </article>
             ))}
           </div>
