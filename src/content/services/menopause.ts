@@ -147,7 +147,7 @@ export const MENOPAUSE: ServicePageData = {
         id: "cost",
         question: "What does it cost?",
         answer:
-          `The pre-screening quiz is free and consultations start from $${PRICES.mensWomensHealth.amount}. Any tests or medication may involve separate costs.`,
+          `The pre-screening quiz is free and consultations start from $${PRICES.firstConsult.amount}. Any tests or medication may involve separate costs.`,
       },
     ],
   },

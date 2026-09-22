@@ -114,20 +114,16 @@ export const PRICES: Record<PriceKey, Price> = {
    * of the same day. It had been $89, went to $69 on that email, and is $89
    * again. Three states in one day; this is the one she confirmed.
    *
-   * ⚠️ It could not be changed on the /pricing/ table alone, which is what was
-   * asked for. One key feeds the table row, both service boxes on the
-   * homepage and /services/, and the fee line in the erectile-dysfunction,
-   * low-testosterone and menopause FAQs. Splitting it so the table alone says
-   * $89 would mean a price a patient can be charged that appears nowhere they
-   * can look it up, which is the thing pricing-page.test.ts exists to stop.
-   * So all five moved together.
+   * This key is now the combined row on /pricing/ and nothing else. Men's
+   * health and women's health are listed separately everywhere on the site
+   * except that one row, and separately they are the first consultation,
+   * $69 — Bilal, 2026-09-15.
    *
-   * ⚠️ Still unresolved, and visible on the site: /mens-health/ and
-   * /womens-health/ headline their own first consultation from `firstConsult`
-   * at $69. So the homepage box now says "From $89" and the page it links to
-   * says "from $69". That predates this change, it survives it, and it needs
-   * one answer from her — is a men's or women's health consultation $89, or
-   * is $89 something else and the consultation genuinely $69?
+   * So the two service boxes and the fee line in the erectile-dysfunction,
+   * low-testosterone and menopause FAQs read `firstConsult` instead. That is
+   * the same fee /mens-health/ and /womens-health/ already headline, so a box
+   * and the page it links to finally agree. Both figures stay findable on
+   * /pricing/ — this one as its own row, $69 as the First consultation card.
    */
   mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
   /*

@@ -144,7 +144,18 @@ export const SERVICE_BOXES: readonly ServiceBox[] = [
     iconAlt: "Men's health",
     description:
       "Discreet online consultations for erectile dysfunction, low testosterone, hair loss and more.",
-    priceKey: "mensWomensHealth",
+    /*
+     * The first consultation, $69 — not the combined "Men's and women's
+     * health" figure, which is $89 and belongs only to the single combined
+     * row on /pricing/. Bilal, 2026-09-15: these two boxes are separate
+     * services here, so they carry the separate price.
+     *
+     * `firstConsult` rather than a key of their own, because it is the same
+     * fee /mens-health/ and /womens-health/ already headline. The box and the
+     * page it links to now agree, which they did not before.
+     */
+    priceKey: "firstConsult",
+    priceLabel: `from $${PRICES.firstConsult.amount}`,
     href: "/mens-health/",
   },
   {
@@ -154,7 +165,18 @@ export const SERVICE_BOXES: readonly ServiceBox[] = [
     iconAlt: "Women's health",
     description:
       "Menopause and perimenopause support, hormones, PCOS and contraception.",
-    priceKey: "mensWomensHealth",
+    /*
+     * The first consultation, $69 — not the combined "Men's and women's
+     * health" figure, which is $89 and belongs only to the single combined
+     * row on /pricing/. Bilal, 2026-09-15: these two boxes are separate
+     * services here, so they carry the separate price.
+     *
+     * `firstConsult` rather than a key of their own, because it is the same
+     * fee /mens-health/ and /womens-health/ already headline. The box and the
+     * page it links to now agree, which they did not before.
+     */
+    priceKey: "firstConsult",
+    priceLabel: `from $${PRICES.firstConsult.amount}`,
     href: "/womens-health/",
   },
   {

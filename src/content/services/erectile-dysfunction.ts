@@ -157,7 +157,7 @@ export const ERECTILE_DYSFUNCTION: ServicePageData = {
         id: "cost",
         question: "What will it cost?",
         answer:
-          `The pre-screening quiz is free and consultations start from $${PRICES.mensWomensHealth.amount}. Any medication from a pharmacy is separate.`,
+          `The pre-screening quiz is free and consultations start from $${PRICES.firstConsult.amount}. Any medication from a pharmacy is separate.`,
       },
     ],
   },
