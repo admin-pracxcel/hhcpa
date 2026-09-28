@@ -10,7 +10,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Horizon Health Care Partners
 
-Next.js 16 (App Router, Turbopack) · React 19 · TypeScript strict · Tailwind CSS v4.
+Next.js 16 (App Router; Turbopack in dev, webpack for the build) · React 19 ·
+TypeScript strict · Tailwind CSS v4.
 
 `/` serves the rebuilt site, written to `HHCPA_Website_Content_UPDATED.md` and then
 reframed by `HHCPA_Remediation_Change_Spec.md` — where the two disagree, the
@@ -29,8 +30,15 @@ change layout values, re-measure rather than eyeballing.
 ```bash
 npm install
 npm run dev      # Turbopack dev server
-npm run check    # lint + typecheck + build — run before calling anything done
+npm run check    # lint + typecheck + test + build — run before calling anything done
 ```
+
+**`npm run build` passes `--webpack` on purpose, and `experimental.cpus` is
+capped at 2.** Both are there to fit a shared-plan build container, not because
+anything is wrong with Turbopack — a deploy died on 2026-09-28 when a PostCSS
+worker was killed mid-build. Turbopack peaks around 1.41GB from clean, webpack
+around 690MB. `npm run dev` still uses Turbopack; only the build changed. See
+the note in `next.config.ts` before undoing either.
 
 ## Layout
 

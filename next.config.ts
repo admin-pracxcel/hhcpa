@@ -2,6 +2,30 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
+  /*
+   * Build-time memory, not runtime. The production host is a shared cloud plan
+   * and the build is what has to fit, not the server.
+   *
+   * On 2026-09-28 a deploy died with a Turbopack panic: a PostCSS worker was
+   * killed while processing a next/font CSS module — "node process exited
+   * before we could connect to it with exit status: 0", no stdout, no stderr,
+   * which is a kill rather than a failure. It builds locally either way; the
+   * difference is headroom. Measured here from clean: Turbopack peaks at
+   * 1.41GB, webpack at 691MB. `npm run build` therefore passes --webpack.
+   *
+   * `cpus` is the other half. Static generation forks one worker per core —
+   * nine on this laptop — and each holds its own React render context, so a
+   * machine with more cores spawns a bigger spike after compile has finished.
+   * Two keeps that predictable regardless of what the host reports, at the
+   * cost of a slower generate step on 52 pages.
+   *
+   * Both are here to fit a constrained builder, not because anything is wrong
+   * with Turbopack. If the plan grows, drop --webpack first and keep this.
+   */
+  experimental: {
+    cpus: 2,
+  },
   async redirects() {
     return [
       // The WordPress site folded these into the new information architecture.
