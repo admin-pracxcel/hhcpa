@@ -13,7 +13,7 @@ describe("formatPrice", () => {
   });
 
   it("renders cents only when the amount has them", () => {
-    expect(formatPrice("medicalCertificate")).toBe("from $19.90");
+    expect(formatPrice("medicalCertificate")).toBe("from $24.90");
   });
 
   it("renders Free for a zero amount", () => {

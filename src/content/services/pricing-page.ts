@@ -93,7 +93,7 @@ export const PRICING_PAGE: ServicePageData = {
        * The table is fixed at twelve rows by the build spec, so these go in
        * the note rather than becoming rows of their own.
        */
-      note: `Prescription requests are $${PRICES.prescriptions.amount} for a single medication you are already taking with no repeats, and $${PRICES.prescriptionsComplex.amount} otherwise. Weight management is $${PRICES.weightLossInitial.amount} for your initial consultation and $${PRICES.weightLossFollowUp.amount} for follow-ups. Holistic care is $${PRICES.holisticInitial.amount} for your initial consultation, and $${PRICES.followUpConsult.amount} for follow-ups and transfers. Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.`,
+      note: `Prescription requests are $${PRICES.prescriptions.amount} for a single medication you are already taking with no repeats, and $${PRICES.prescriptionsComplex.amount} otherwise. A medical certificate is $${PRICES.medicalCertificate.amount.toFixed(2)} for a single day and $${PRICES.medicalCertificateMultiDay.amount} for two or more. Weight management is $${PRICES.weightLossInitial.amount} for your initial consultation and $${PRICES.weightLossFollowUp.amount} for follow-ups. Holistic care is $${PRICES.holisticInitial.amount} for your initial consultation, and $${PRICES.followUpConsult.amount} for follow-ups and transfers. Any medicine dispensed by a pharmacy is a separate cost and is not part of the consultation fee.`,
     },
     {
       kind: "priceCards",

@@ -27,6 +27,8 @@
  * one-day certificate flow, and the no-argument branch embeds the Halaxy widget
  * in place rather than navigating. It is kept here for parity with the source.
  */
+import { PRICES } from "@/content/pricing";
+
 export const BOOKING_REDIRECT_URL =
   "https://www.horizonhealthcarepartners.com.au/book-consultation/";
 /**
@@ -883,7 +885,16 @@ export const CERT_STEPS: readonly CertStep[] = [
   {
     title: "Certificate Request",
     subtitle: "Tell us the dates you need covered.",
-    note: "Medical certificates cannot be backdated. Pricing: Single-day certificate $19.90 · Multiple-day certificate (2+ days) $49.",
+    /*
+     * The two figures read from PRICES rather than sitting in the string.
+     *
+     * They were hardcoded here when this file was ported from her wizard, and
+     * this note renders live in the quiz — so when the certificate price moved
+     * on 2026-09-22 the quiz would have kept quoting $19.90 while /pricing/
+     * said $24.90, on the screen a patient reads immediately before paying.
+     * Her wording is otherwise untouched.
+     */
+    note: `Medical certificates cannot be backdated. Pricing: Single-day certificate $${PRICES.medicalCertificate.amount.toFixed(2)} · Multiple-day certificate (2+ days) $${PRICES.medicalCertificateMultiDay.amount}.`,
     questions: [
       { id: "firstDay", label: "First Day Required", type: "date", required: true },
       { id: "lastDay", label: "Last Day Required", type: "date", required: true },

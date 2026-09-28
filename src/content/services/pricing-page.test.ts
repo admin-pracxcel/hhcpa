@@ -47,6 +47,8 @@ describe("pricing page", () => {
     "weightLossInitial",
     "weightLossFollowUp",
     "holisticInitial",
+    /* The certificate ladder's upper tier, like the prescription one above. */
+    "medicalCertificateMultiDay",
   ];
 
   it("states every prose-disclosed fee in the note", () => {

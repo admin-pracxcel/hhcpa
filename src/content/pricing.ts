@@ -79,6 +79,7 @@ export type PriceKey =
   | "afterHoursConsult"
   | "priorityConsult"
   | "medicalCertificate"
+  | "medicalCertificateMultiDay"
   | "prescriptions"
   | "prescriptionsComplex"
   | "pathologyReferral"
@@ -95,10 +96,23 @@ export const PRICES: Record<PriceKey, Price> = {
   followUpConsult:    { label: "Follow-up consultation",           amount: 59,   from: false, provisional: true },
   transferConsult:    { label: "Transfer consultation",            amount: 59,   from: false, provisional: true },
   generalConsult:     { label: "General consult and referrals",    amount: 49,   from: true,  provisional: true },
-  afterHoursConsult:  { label: "After-hours consult",              amount: 69,   from: true,  provisional: true },
-  priorityConsult:    { label: "Priority consult",                 amount: 98,   from: true,  provisional: true },
-  medicalCertificate: { label: "Medical certificates",             amount: 19.9, from: true,  provisional: true },
-  prescriptions:      { label: "Prescriptions and repeat scripts", amount: 19,   from: true,  provisional: true },
+  /* Her four changes of 2026-09-22, from $69 / $98 / $19.90 / $19. */
+  afterHoursConsult:  { label: "After-hours consult",              amount: 79,   from: true,  provisional: true },
+  priorityConsult:    { label: "Priority consult",                 amount: 99,   from: true,  provisional: true },
+  medicalCertificate: { label: "Medical certificates",             amount: 24.9, from: true,  provisional: true },
+  /*
+   * The multi-day tier, unchanged at $49 and unmentioned in her email. It was
+   * hardcoded in the certificate step of the quiz until 2026-09-22, which is
+   * how the quiz could have gone on quoting $19.90 after the pricing page
+   * moved to $24.90 — on the screen a patient reads immediately before paying.
+   *
+   * ⚠️ She gave the single-day floor only. Both certificate tiers and both
+   * prescription tiers are ladders and she has specified the bottom rung of
+   * each; whether the $49s move is still open with her.
+   */
+  medicalCertificateMultiDay:
+                      { label: "Medical certificate, 2+ days",     amount: 49,   from: false, provisional: true },
+  prescriptions:      { label: "Prescriptions and repeat scripts", amount: 29,   from: true,  provisional: true },
   /*
    * The upper tier of the same service, not a separate one. §4.8's ladder
    * charges $19 for the simple case and $49 for anything else; the pricing

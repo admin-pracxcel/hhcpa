@@ -50,7 +50,13 @@ describe("price tiles", () => {
         rows={["medicalCertificate"]}
       />,
     );
-    expect(screen.getAllByText("from $19.90").length).toBeGreaterThan(0);
+    /* Read from the record rather than repeated, so a price change is one
+       edit and not two. The point of the test is the cents, not the number. */
+    expect(
+      screen.getAllByText(`from $${PRICES.medicalCertificate.amount.toFixed(2)}`)
+        .length,
+    ).toBeGreaterThan(0);
+    expect(PRICES.medicalCertificate.amount % 1).not.toBe(0);
   });
 
   it("prefers a supplied label over the canonical one", () => {
