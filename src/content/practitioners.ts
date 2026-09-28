@@ -66,11 +66,10 @@ export const PRACTITIONERS_META = {
  * restored 2026-09-15 after being dropped for consistency with the doctors.
  * How a clinician is styled on their own listing is theirs, not a house rule.
  *
- * Miss Paidamoyo Mildred Hatendi has no focus areas, and her image is a
- * placeholder silhouette rather than a photograph — see the note at her
- * entry. She is last in the array, which is the order on the page, so the
- * one card without a real headshot closes the grid. Move her back up when a
- * real one arrives.
+ * Miss Paidamoyo Mildred Hatendi is last in the array, which is the order on
+ * the page. She was moved there while her card had no headshot; hers arrived
+ * on 2026-09-28 and the position was left alone, since the order is nobody's
+ * ranking and moving her again would only churn the page.
  *
  * Typos in the supplied lists were corrected where they were plainly typos
  * ("Managment", "Womens", "Mens") and the wording was matched to the service
@@ -166,21 +165,27 @@ export const PRACTITIONERS: readonly Practitioner[] = [
   },
   {
     /*
-     * No focus areas supplied, so none are shown.
-     *
-     * ⚠️ The image is a placeholder, not a photograph of her — a generic grey
-     * silhouette, 2.3KB and 633 colours. Bilal's instruction of 2026-09-15,
-     * after being told what it is: use it rather than the initials card,
-     * so the grid reads uniformly.
-     *
-     * Replace it the moment a real headshot arrives. Every other card on this
-     * page carries a real face, which is what makes this one read as a
-     * depiction rather than as an absence.
+     * Her real headshot replaced the silhouette placeholder on 2026-09-28,
+     * and her focus areas arrived with it. Every card on this page now
+     * carries a photograph of the person it names.
      */
     name: "Miss Paidamoyo Mildred Hatendi",
     title: "Nurse Practitioner",
     ahpraNumber: "NMW0001913861",
     photo: "/images/miss-paidamoyo-mildred-hatendi.webp",
+    focusAreas: [
+      "General consultations",
+      "Weight management",
+      "Women's health",
+      "Men's health",
+      "Mental health",
+      "Chronic disease management",
+      "Continuity and preventative health",
+      "Prescriptions",
+      "Medical certificates",
+      "Pathology and imaging referrals",
+      "Holistic and alternative care",
+    ],
   },
 ];
 
