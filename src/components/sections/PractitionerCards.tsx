@@ -290,8 +290,16 @@ export function PractitionerCards({
                 {person.focusAreas !== undefined &&
                   person.focusAreas.length > 0 && (
                     <>
+                      {/*
+                        Ranjeeta's label from the email she supplied these
+                        lists in, tidied from "Services Offering" — Bilal,
+                        2026-09-28. It was "Consults on", which was written
+                        from the patient's side and described what a clinician
+                        discusses rather than what they offer. Hers is the
+                        clinic's own wording for its own roster, so it wins.
+                      */}
                       <p className="hhcp-pc-focus-label font-dm-sans">
-                        Consults on
+                        Services offered
                       </p>
                       <ul className="hhcp-pc-focus font-dm-sans">
                         {person.focusAreas.map((area) => (
