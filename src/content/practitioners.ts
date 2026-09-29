@@ -37,11 +37,13 @@ export const PRACTITIONERS_META = {
 } as const;
 
 /**
- * The roster, supplied by the client on 2026-09-15 with AHPRA numbers.
+ * The roster. Seven supplied by the client on 2026-09-15 with AHPRA numbers,
+ * and Dr Arpita Ray added on 2026-09-29. Five medical practitioners and three
+ * nurse practitioners, doctors first — the array order is the page order.
  *
  * Every number is published as given. Nothing here is inferred: the titles
  * come from the registration prefix — MED is a medical practitioner, NMW a
- * nurse practitioner, which the client stated for all three — and the focus
+ * nurse practitioner, which the client stated for each — and the focus
  * areas are each person's own list. Nobody has a bio, so nobody has one
  * rendered; writing one would be inventing a claim about a real person.
  *
@@ -143,6 +145,28 @@ export const PRACTITIONERS: readonly Practitioner[] = [
       "Pathology and imaging referrals",
       "After-hours consultations",
       "Priority consultations",
+    ],
+  },
+  {
+    /*
+     * Added 2026-09-29. Her list came as "General GP: Yes" and so on; the
+     * yes/no framing is dropped because a list of services is already a list
+     * of what she offers, and "General GP" reads as "General consultations"
+     * for the same reason it does on the other four doctors' cards.
+     */
+    name: "Dr Arpita Ray",
+    title: "Medical Practitioner",
+    ahpraNumber: "MED0001204770",
+    photo: "/images/dr-arpita-ray.webp",
+    focusAreas: [
+      "General consultations",
+      "Weight management",
+      "Women's health",
+      "Mental health",
+      "Prescriptions",
+      "Medical certificates",
+      "Pathology and imaging referrals",
+      "After-hours and priority consultations",
     ],
   },
   {
