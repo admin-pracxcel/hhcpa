@@ -44,8 +44,9 @@ export const PRACTITIONERS_META = {
  * Every number is published as given. Nothing here is inferred: the titles
  * come from the registration prefix — MED is a medical practitioner, NMW a
  * nurse practitioner, which the client stated for each — and the focus
- * areas are each person's own list. Nobody has a bio, so nobody has one
- * rendered; writing one would be inventing a claim about a real person.
+ * areas are each person's own list — every card has one as of 2026-10-02.
+ * Nobody has a bio, so nobody has one rendered; writing one would be
+ * inventing a claim about a real person.
  *
  * ⚠️ TWO THINGS TO VERIFY BEFORE THIS GOES PUBLIC.
  *
@@ -181,11 +182,25 @@ export const PRACTITIONERS: readonly Practitioner[] = [
     ],
   },
   {
-    /* No focus areas supplied. */
+    /*
+     * Her services arrived on 2026-10-02, the last card to get them. She came
+     * through as "Nattallee Allan" that time; the fuller name here is the one
+     * supplied alongside her registration number on 2026-09-15 and is kept,
+     * since it is the name a patient would check the register against.
+     */
     name: "Miss Nattallee Jane Allan",
     title: "Nurse Practitioner",
     ahpraNumber: "NMW0001298808",
     photo: "/images/miss-nattallee-jane-allan.webp",
+    focusAreas: [
+      "General consultations",
+      "Women's health",
+      "Mental health",
+      "Prescriptions",
+      "Medical certificates",
+      "Pathology and imaging referrals",
+      "After-hours and priority consultations",
+    ],
   },
   {
     /*
