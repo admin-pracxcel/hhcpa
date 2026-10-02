@@ -48,22 +48,23 @@ export const PRACTITIONERS_META = {
  * Nobody has a bio, so nobody has one rendered; writing one would be
  * inventing a claim about a real person.
  *
- * ⚠️ TWO THINGS TO VERIFY BEFORE THIS GOES PUBLIC.
+ * ✅ Registration numbers: checked by Bilal against the AHPRA public register
+ * on 2026-10-02. They had been typed from emails rather than looked up, and a
+ * number that does not resolve is worse than publishing none. Re-check any
+ * number that changes, and check a new practitioner's before their card ships.
  *
- * 1. Every number should be checked against the AHPRA public register at
- *    ahpra.gov.au/registration/registers-of-practitioners. Publishing a
- *    number that does not resolve is worse than publishing none, and the
- *    numbers here have been typed from an email, not looked up.
- *
- * 2. Four of these lists say "General GP" or "General GP Consultations".
- *    "General practitioner" is a protected specialist title: only a medical
- *    practitioner holding specialist registration in general practice
- *    (FRACGP or FACRRM) may be described as one, and AHPRA treats an implied
- *    claim the same as an explicit one. A doctor with general registration
- *    who is not fellowed is not a GP. The register shows this per person.
- *    Until it is checked, these read "General consultations" — the service,
- *    not the title — which is accurate whatever their registration and needs
- *    no correction if they are all fellowed. Raised with Bilal 2026-09-15.
+ * ⚠️ STILL OPEN: six of these lists say "General GP" or "General GP
+ * Consultations".
+ * "General practitioner" is a protected specialist title: only a medical
+ * practitioner holding specialist registration in general practice (FRACGP
+ * or FACRRM) may be described as one, and AHPRA treats an implied claim the
+ * same as an explicit one. A doctor with general registration
+ * who is not fellowed is not a GP, and the register shows specialty per
+ * person — so the 2026-10-02 check may already have settled this, but the
+ * answer has not come back. Until it does, these read "General
+ * consultations": the service, not the title, which is accurate whatever
+ * their registration and needs no correction if they are all fellowed.
+ * Raised with Bilal 2026-09-15.
  *
  * Names are exactly as the client supplied them, honorifics included —
  * restored 2026-09-15 after being dropped for consistency with the doctors.
