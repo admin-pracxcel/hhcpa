@@ -27,11 +27,6 @@
  * That list is the point rather than an afterthought. A patient who has just
  * been told they can book must not reach a dead end, and a checkout that
  * cannot complete is worse than a number that can.
- *
- * ⚠️ Payment comes before scheduling in her portal, which is the reverse of
- * what most people expect. The line above the buttons says so. Do not remove
- * it: someone who thinks they are picking a time and is asked for a card has
- * been surprised by their own clinic.
  */
 
 "use client";
@@ -144,19 +139,10 @@ const STYLES = `
   color: #526f68;
 }
 
-.hhcp-bk-order {
-  font-size: var(--hhcp-text-m, 16px);
-  line-height: 1.6;
-  text-align: center;
-  color: var(--hhcp-primary, #013126);
-  font-weight: 600;
-}
-
 .hhcp-bk-products {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: var(--hhcp-space-s, 20px);
 }
 
 .hhcp-bk-product {
@@ -367,11 +353,6 @@ export function BookingPanel({ className }: { className?: string }) {
 
         {products.length > 0 ? (
           <div>
-            {/* Her portal takes payment first. See the header. */}
-            <p className="hhcp-bk-order font-dm-sans">
-              Payment is taken first, then you choose your appointment time
-              with your practitioner.
-            </p>
             <div className="hhcp-bk-products">
               {products.map((product) => (
                 /*

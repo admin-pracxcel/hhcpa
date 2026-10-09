@@ -94,14 +94,6 @@ describe("BookingPanel", () => {
     expect(screen.getByText("$49")).toBeTruthy();
   });
 
-  it("says payment comes before the appointment time", () => {
-    /* Her portal reverses the usual order. Someone who thinks they are
-       picking a time and is asked for a card has been surprised. */
-    write({ service: "Weight Management", level: "green" });
-    render(<BookingPanel />);
-    expect(screen.getByText(/Payment is taken first/i)).toBeTruthy();
-  });
-
   it("keeps the checkout in the same tab", () => {
     write({ service: "Weight Management", level: "green" });
     const { container } = render(<BookingPanel />);
