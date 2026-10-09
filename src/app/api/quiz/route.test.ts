@@ -12,6 +12,7 @@ import { REQUIRED_CONSENT_IDS } from "@/content/quiz";
  * nobody finds out until it matters.
  */
 const WEBHOOK = "http://webhook.test/quiz";
+const DISCHARGE_WEBHOOK = "http://webhook.test/discharge";
 
 const valid = {
   contact: {
@@ -34,6 +35,7 @@ function request(body: unknown) {
 describe("POST /api/quiz", () => {
   beforeEach(() => {
     process.env.QUIZ_WEBHOOK_URL = WEBHOOK;
+    process.env.DISCHARGE_WEBHOOK_URL = DISCHARGE_WEBHOOK;
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => new Response("{}", { status: 200 })),
@@ -43,6 +45,7 @@ describe("POST /api/quiz", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     delete process.env.QUIZ_WEBHOOK_URL;
+    delete process.env.DISCHARGE_WEBHOOK_URL;
   });
 
   const forwarded = () =>
@@ -99,11 +102,13 @@ describe("POST /api/quiz", () => {
 describe("second-stage submissions", () => {
   beforeEach(() => {
     process.env.QUIZ_WEBHOOK_URL = "http://webhook.test/quiz";
+    process.env.DISCHARGE_WEBHOOK_URL = "http://webhook.test/discharge";
     vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 200 })));
   });
   afterEach(() => {
     vi.unstubAllGlobals();
     delete process.env.QUIZ_WEBHOOK_URL;
+    delete process.env.DISCHARGE_WEBHOOK_URL;
   });
 
   const sent = () =>
@@ -160,10 +165,49 @@ describe("second-stage submissions", () => {
     expect(JSON.stringify(rest)).not.toContain("Dr Example");
   });
 
+  /*
+   * The two enquiries shared one webhook until 2026-10-09 and were told apart
+   * downstream by `stage`. They have a workflow each now, and crossing them
+   * breaks nothing visible — the submission still succeeds and the patient
+   * still sees their confirmation. It just lands in the wrong place, which is
+   * why it is asserted rather than left to a reviewer's eye.
+   */
+  const sentTo = () => vi.mocked(fetch).mock.calls[0][0] as string;
+
+  it("sends a discharge request to the discharge workflow", async () => {
+    await POST(
+      request({
+        stage: "discharge",
+        submissionId: "sub-4",
+        intake: { answers: { reason: "Moving clinics" } },
+      }),
+    );
+    expect(sentTo()).toBe("http://webhook.test/discharge");
+  });
+
+  it("leaves the quiz on the quiz workflow", async () => {
+    await POST(request(valid));
+    expect(sentTo()).toBe("http://webhook.test/quiz");
+  });
+
+  it("does not change the discharge payload shape along with its address", async () => {
+    /* Only the destination moved, so a mapping built on this keeps working. */
+    await POST(
+      request({
+        stage: "discharge",
+        submissionId: "sub-5",
+        intake: { answers: { reason: "Moving clinics" } },
+      }),
+    );
+    expect(sent().formType).toBe("quiz");
+    expect(sent().stage).toBe("discharge");
+  });
+
   it("rejects a second stage with nothing to attach it to", async () => {
     const response = await POST(
       request({ stage: "discharge", intake: { a: 1 } }),
     );
     expect(response.status).toBe(400);
   });
+
 });

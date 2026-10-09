@@ -35,13 +35,49 @@ import { aestDate, aestDateTime } from "@/lib/aest";
 
 import { QUIZ_CONSENTS, REQUIRED_CONSENT_IDS } from "@/content/quiz";
 
-const DEFAULT_WEBHOOK_URL = "https://n8n.pracxcel.com.au/webhook/hhcpa-quiz";
-const WEBHOOK_URL = process.env.QUIZ_WEBHOOK_URL ?? DEFAULT_WEBHOOK_URL;
+/**
+ * One workflow per form, not one for the route.
+ *
+ * The discharge letter form posts here too — it always has, because it needs
+ * the same retry, idempotency and fallback this route already has, and
+ * building a second copy of that was the worse trade. What it does not need
+ * is the quiz's workflow: the two are different enquiries, and n8n was having
+ * to tell them apart by `stage` before it could do anything with either.
+ *
+ * ⚠️ `countsTowardPatientQuota` is on BOTH. A discharge request is its own
+ * enquiry under Clause 1.2 and has always counted. Now that it arrives at its
+ * own workflow, that workflow has to honour the flag — if only the quiz
+ * workflow counts, the number quietly drops by every transfer request.
+ */
+const WEBHOOKS = {
+  quiz: {
+    label: "quiz",
+    fallback: "https://n8n.pracxcel.com.au/webhook/hhcpa-quiz",
+    urlEnv: "QUIZ_WEBHOOK_URL",
+    secretEnv: "QUIZ_WEBHOOK_SECRET",
+  },
+  discharge: {
+    label: "discharge",
+    fallback: "https://n8n.pracxcel.com.au/webhook/hhcpa-discharge",
+    urlEnv: "DISCHARGE_WEBHOOK_URL",
+    secretEnv: "DISCHARGE_WEBHOOK_SECRET",
+  },
+} as const;
 
-if (WEBHOOK_URL !== DEFAULT_WEBHOOK_URL) {
-  console.warn(
-    `[quiz] QUIZ_WEBHOOK_URL override active — submissions go to ${WEBHOOK_URL}, not n8n.`,
-  );
+type Destination = (typeof WEBHOOKS)[keyof typeof WEBHOOKS];
+
+/* Read per call, not once at import: an override set after this module loads
+   — which is what a test does — would otherwise never apply. */
+const webhookUrl = (destination: Destination): string =>
+  process.env[destination.urlEnv] ?? destination.fallback;
+
+for (const destination of Object.values(WEBHOOKS)) {
+  const url = webhookUrl(destination);
+  if (url !== destination.fallback) {
+    console.warn(
+      `[${destination.label}] ${destination.urlEnv} override active — submissions go to ${url}, not n8n.`,
+    );
+  }
 }
 
 const FIELD_LIMIT = 4000;
@@ -161,6 +197,12 @@ export async function POST(request: Request) {
     return forward(
       JSON.stringify({
         submissionId: priorId,
+        /*
+         * Still "quiz", though this now has its own workflow. The payload
+         * shape is deliberately unchanged by the split — only its
+         * destination moved — so a mapping built on it keeps working. The
+         * form is identified by `stage: "discharge"`, as it always was.
+         */
         formType: "quiz",
         stage,
         submittedAt: stagedAt.toISOString(),
@@ -194,6 +236,7 @@ export async function POST(request: Request) {
         ),
       }),
       priorId,
+      WEBHOOKS.discharge,
     );
   }
 
@@ -338,7 +381,7 @@ export async function POST(request: Request) {
     clinicalReadable: readable(payload.clinicalReadable),
   });
 
-  return forward(body, submissionId);
+  return forward(body, submissionId, WEBHOOKS.quiz);
 }
 
 /**
@@ -349,14 +392,19 @@ export async function POST(request: Request) {
  * of those duplications that stays right up until the retry policy changes on
  * only one of them.
  */
-async function forward(body: string, submissionId: string) {
+async function forward(
+  body: string,
+  submissionId: string,
+  destination: Destination,
+) {
+  const url = webhookUrl(destination);
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     /* Lets n8n discard a duplicate rather than count one patient twice. */
     "Idempotency-Key": submissionId,
   };
 
-  const secret = process.env.QUIZ_WEBHOOK_SECRET;
+  const secret = process.env[destination.secretEnv];
   if (secret !== undefined && secret !== "") {
     headers["X-HHCPA-Signature"] = createHmac("sha256", secret)
       .update(body)
@@ -366,7 +414,7 @@ async function forward(body: string, submissionId: string) {
   for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
     if (BACKOFF_MS[attempt] > 0) await sleep(BACKOFF_MS[attempt]);
     try {
-      const response = await fetch(WEBHOOK_URL, {
+      const response = await fetch(url, {
         method: "POST",
         headers,
         body,
@@ -377,11 +425,11 @@ async function forward(body: string, submissionId: string) {
         return Response.json({ ok: true, submissionId });
       }
       console.error(
-        `[quiz] webhook responded ${response.status} on attempt ${attempt + 1}`,
+        `[${destination.label}] webhook responded ${response.status} on attempt ${attempt + 1}`,
       );
     } catch (error) {
       console.error(
-        `[quiz] webhook unreachable on attempt ${attempt + 1}:`,
+        `[${destination.label}] webhook unreachable on attempt ${attempt + 1}:`,
         error instanceof Error ? error.name : "unknown",
       );
     }
