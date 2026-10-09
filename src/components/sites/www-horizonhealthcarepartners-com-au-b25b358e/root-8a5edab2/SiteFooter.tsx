@@ -64,7 +64,7 @@ interface SocialLink {
 const SOCIAL_LINKS: readonly SocialLink[] = [
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/company/109897954/admin/dashboard/",
+    href: "https://www.linkedin.com/company/horizon-health-care-partners-australia/",
     Icon: LinkedInIcon,
   },
   {
