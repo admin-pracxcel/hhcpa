@@ -37,6 +37,8 @@
 
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { findCountry } from "@/content/countries";
 import { getAttribution } from "@/lib/attribution";
 import { getLeadFields } from "@/lib/lead-fields";
@@ -173,18 +175,6 @@ const STYLES = `
   font-size: var(--hhcp-text-s, 14px);
 }
 
-.hhcp-dl-done {
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--hhcp-primary, #013126);
-}
-
-.hhcp-dl-done-title {
-  margin-bottom: var(--hhcp-space-s, 20px);
-  font-size: 32px;
-  line-height: 1.2;
-  font-weight: 400;
-}
 
 @media (max-width: 991px) {
   .hhcp-dl-card { padding: var(--hhcp-space-m, 30px); }
@@ -209,7 +199,8 @@ const readAsBase64 = (file: File) =>
   });
 
 export function DischargeLetterForm() {
-  const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const router = useRouter();
+  const [status, setStatus] = useState<"idle" | "sending">("idle");
   const [problem, setProblem] = useState("");
   const [fileName, setFileName] = useState("");
 
@@ -325,7 +316,12 @@ export function DischargeLetterForm() {
         setStatus("idle");
         return;
       }
-      setStatus("done");
+      /*
+       * `status` stays "sending" through the navigation so the button stays
+       * disabled — going back to idle would re-enable it and let a slow
+       * redirect be submitted twice. Same reason as the contact form.
+       */
+      router.push("/discharge-thank-you/");
     } catch {
       setProblem(
         "We could not send that just now. Please check your connection and try again.",
@@ -337,103 +333,92 @@ export function DischargeLetterForm() {
   return (
     <div className="hhcp-dl-card" id="discharge-letter">
       <style>{STYLES}</style>
-      {status === "done" ? (
-        <div className="hhcp-dl-done font-dm-sans">
-          <h2 className="hhcp-dl-done-title font-dm-sans">Thanks, we have that</h2>
-          <p>
-            We will be in touch to arrange your transfer consultation. If you
-            still need help getting your discharge letter, we can help with
-            that on the call.
-          </p>
+      {/*
+        aria-label, not visible text: her form carries a hidden <legend>
+        reading "Discharge Letter Form", which is its accessible name. Same
+        name here, nothing added to the page.
+      */}
+      <form onSubmit={submit} aria-label="Discharge Letter Form">
+        <div className="hhcp-dl-group">
+          <h2 className="hhcp-dl-group-title font-dm-sans">
+            {DISCHARGE_FORM.headings.details}
+          </h2>
+          <div className="hhcp-dl-pair">
+            <Field name="firstName" label="First Name" required />
+            <Field name="lastName" label="Last Name" required />
+          </div>
+          {/*
+            Her page puts a country selector on this field. Ours is the same
+            PhoneField the contact form uses, so there is one such control on
+            the site rather than two that behave differently — and it defaults
+            to Australia, where hers defaults to India.
+          */}
+          <PhoneField name="mobile" label="Mobile Contact" required />
+          <Field name="email" label="Your Email" type="email" required />
         </div>
-      ) : (
-        /*
-         * aria-label, not visible text: her form carries a hidden <legend>
-         * reading "Discharge Letter Form", which is its accessible name. Same
-         * name here, nothing added to the page.
-         */
-        <form onSubmit={submit} aria-label="Discharge Letter Form">
-          <div className="hhcp-dl-group">
-            <h2 className="hhcp-dl-group-title font-dm-sans">
-              {DISCHARGE_FORM.headings.details}
-            </h2>
-            <div className="hhcp-dl-pair">
-              <Field name="firstName" label="First Name" required />
-              <Field name="lastName" label="Last Name" required />
-            </div>
+
+        <div className="hhcp-dl-group">
+          <h2 className="hhcp-dl-group-title font-dm-sans">
+            {DISCHARGE_FORM.headings.clinic}
+          </h2>
+          <Field name="previousClinic" label="Previous Clinic Name" />
+          <Field name="previousDoctor" label="Previous Doctor's Name" />
+
+          <div className="hhcp-dl-field">
+            <label className="hhcp-dl-label" htmlFor="dl-letter">
+              Upload Your Discharge Letter
+            </label>
+            {/* The input is hidden and the label is the control, which is
+                how her page renders it — a pill reading CHOOSE FILE. */}
+            <input
+              id="dl-letter"
+              name="letter"
+              type="file"
+              className="hhcp-dl-file"
+              accept={ACCEPT}
+              onChange={(event) =>
+                setFileName(event.target.files?.[0]?.name ?? "")
+              }
+            />
+            <label className="hhcp-dl-file-button" htmlFor="dl-letter">
+              Choose file
+            </label>
             {/*
-              Her page puts a country selector on this field. Ours is the same
-              PhoneField the contact form uses, so there is one such control on
-              the site rather than two that behave differently — and it defaults
-              to Australia, where hers defaults to India.
+              Her page has no hint line, so there is none here. This renders
+              only once a file is picked, and is not an addition to her copy:
+              the native input is hidden behind the pill above, so without it
+              nothing on screen tells you the file attached. Oversized files
+              still get their own message from the submit handler.
             */}
-            <PhoneField name="mobile" label="Mobile Contact" required />
-            <Field name="email" label="Your Email" type="email" required />
+            {fileName !== "" && (
+              <p className="hhcp-dl-hint">{`Selected: ${fileName}`}</p>
+            )}
           </div>
 
-          <div className="hhcp-dl-group">
-            <h2 className="hhcp-dl-group-title font-dm-sans">
-              {DISCHARGE_FORM.headings.clinic}
-            </h2>
-            <Field name="previousClinic" label="Previous Clinic Name" />
-            <Field name="previousDoctor" label="Previous Doctor's Name" />
-
-            <div className="hhcp-dl-field">
-              <label className="hhcp-dl-label" htmlFor="dl-letter">
-                Upload Your Discharge Letter
-              </label>
-              {/* The input is hidden and the label is the control, which is
-                  how her page renders it — a pill reading CHOOSE FILE. */}
-              <input
-                id="dl-letter"
-                name="letter"
-                type="file"
-                className="hhcp-dl-file"
-                accept={ACCEPT}
-                onChange={(event) =>
-                  setFileName(event.target.files?.[0]?.name ?? "")
-                }
-              />
-              <label className="hhcp-dl-file-button" htmlFor="dl-letter">
-                Choose file
-              </label>
-              {/*
-                Her page has no hint line, so there is none here. This renders
-                only once a file is picked, and is not an addition to her copy:
-                the native input is hidden behind the pill above, so without it
-                nothing on screen tells you the file attached. Oversized files
-                still get their own message from the submit handler.
-              */}
-              {fileName !== "" && (
-                <p className="hhcp-dl-hint">{`Selected: ${fileName}`}</p>
-              )}
-            </div>
-
-            <div className="hhcp-dl-field">
-              <label className="hhcp-dl-label" htmlFor="dl-help">
-                {DISCHARGE_FORM.helpLabel}
-              </label>
-              <textarea id="dl-help" name="help" className="hhcp-dl-textarea" />
-            </div>
+          <div className="hhcp-dl-field">
+            <label className="hhcp-dl-label" htmlFor="dl-help">
+              {DISCHARGE_FORM.helpLabel}
+            </label>
+            <textarea id="dl-help" name="help" className="hhcp-dl-textarea" />
           </div>
+        </div>
 
-          {problem !== "" && (
-            <p className="hhcp-dl-problem font-dm-sans" role="alert">
-              {problem}
-            </p>
-          )}
+        {problem !== "" && (
+          <p className="hhcp-dl-problem font-dm-sans" role="alert">
+            {problem}
+          </p>
+        )}
 
-          <button
-            type="submit"
-            className="hhcp-btn hhcp-dl-submit"
-            disabled={status === "sending"}
-          >
-            {status === "sending" ? "Sending…" : "Complete"}
-          </button>
+        <button
+          type="submit"
+          className="hhcp-btn hhcp-dl-submit"
+          disabled={status === "sending"}
+        >
+          {status === "sending" ? "Sending…" : "Complete"}
+        </button>
 
-          <p className="hhcp-dl-offer font-dm-sans">{DISCHARGE_FORM.offer}</p>
-        </form>
-      )}
+        <p className="hhcp-dl-offer font-dm-sans">{DISCHARGE_FORM.offer}</p>
+      </form>
     </div>
   );
 }
