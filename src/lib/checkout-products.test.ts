@@ -209,11 +209,20 @@ describe("checkout products", () => {
     });
   });
 
-  it("gives every live product a note", () => {
+  it("lets a product have no note, but never an empty one", () => {
     /*
-     * The note is the only thing on the row that says what the tier is for.
-     * A new product added without one ships a price with no context, which is
-     * the thing this file's notes exist to prevent.
+     * A missing note is allowed. Several products have none on purpose: a
+     * note may state a verifiable fact and nothing else, and for those tiers
+     * anything we could write would be our guess at which one a patient
+     * should pick rather than something her catalogue says.
+     *
+     * ⚠️ The three General GP tiers are the gap worth closing. They are bare
+     * because we do not have her consultation durations — minutes would say
+     * what the removed guidance tried to, as fact. Ask her for them, then add
+     * notes here; nothing else changes.
+     *
+     * What this does still hold is that a note, where there is one, is real
+     * text. An empty string renders an empty line under the label.
      */
     const kinds = [
       "A prescription or repeat script",
@@ -238,9 +247,29 @@ describe("checkout products", () => {
     const seen = new Set<string>();
     for (const p of all) {
       seen.add(p.ref);
-      expect(p.note ?? "", p.ref).not.toBe("");
+      if (p.note !== undefined) expect(p.note.trim(), p.ref).not.toBe("");
     }
     expect(seen.size, "all thirteen live products").toBe(13);
+  });
+
+  it("promises nothing about availability at the point of payment", () => {
+    /*
+     * "First available appointment" sat on the $99 priority button. Whatever
+     * her service boxes say, an availability claim must not be the last thing
+     * a patient reads before they are charged — it is unresolved with her.
+     */
+    const all = [
+      ...productsFor({ service: "Weight Management" }),
+      ...productsFor({
+        service: "Online Doctor",
+        onlineDoctorKind: "General or everyday care",
+      }),
+    ];
+    for (const p of all) {
+      expect(`${p.label} ${p.note ?? ""}`, p.ref).not.toMatch(
+        /first available|next available|same.?day|guaranteed|immediately/i,
+      );
+    }
   });
 
   it("names no restricted term in any ref or label", () => {

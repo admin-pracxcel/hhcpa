@@ -105,22 +105,27 @@ describe("BookingPanel", () => {
     }
   });
 
-  it("gives every product its note, under the label", () => {
+  it("renders a note under the label where there is one", () => {
     /*
-     * Four tiers of the same consultation with nothing but a price is how a
-     * patient picks the cheapest one and turns up to the wrong appointment.
+     * Not every product has one — see lib/checkout-products.ts, where a note
+     * must state a verifiable fact, and the tiers whose only honest note
+     * would be our guess at which to pick have none. What this holds is that
+     * a note that exists reaches the page, under its label.
      */
     write({ service: "Weight Management", level: "green" });
     const { container } = render(<BookingPanel />);
     const rows = container.querySelectorAll(".hhcp-bk-product");
     expect(rows).toHaveLength(4);
-    for (const row of rows) {
-      const note = row.querySelector(".hhcp-bk-product-note");
-      expect(note?.textContent ?? "", row.textContent ?? "").not.toBe("");
-    }
-    expect(
-      screen.getByText("To go through pathology results with your practitioner"),
-    ).toBeTruthy();
+
+    const notes = Array.from(rows).map(
+      (row) => row.querySelector(".hhcp-bk-product-note")?.textContent ?? null,
+    );
+    expect(notes).toEqual([
+      "Your first appointment",
+      "A check-in after your initial consultation",
+      null,
+      "To go through pathology results with your practitioner",
+    ]);
   });
 
   it("offers the phone to a patient who cannot choose between them", () => {

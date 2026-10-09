@@ -20,13 +20,19 @@
  * with Ranjeeta and not something to "fix" by editing one to match the other.
  * The advertised figure is her decision; this one is what her portal charges.
  *
- * ⚠️ The `note` on each product is OURS, not hers. Her spreadsheet carries a
- * name, a price and a link and nothing else, and four tiers of the same
- * consultation with no context is how a patient picks the cheapest one and
- * turns up to the wrong appointment. The notes say what the tier is for in
- * plain words and claim nothing clinical. Two are lifted from her own service
- * boxes — after-hours and priority. The rest are awaiting her sign-off along
- * with the prices, and are the kind of thing she may want reworded.
+ * ⚠️ A `note` may state a verifiable fact and nothing else.
+ *
+ * Her spreadsheet carries a name, a price and a link, so anything a note adds
+ * is ours. That is fine where it is checkable — how many days a certificate
+ * covers, that after-hours means evenings and weekends, which rung of the
+ * prescription ladder the quiz just put the patient on — and not fine where
+ * it is advice about which tier to choose, because we would be inventing the
+ * clinic's own tiering and charging a patient on it.
+ *
+ * So several products have no note, and that is deliberate rather than
+ * unfinished. The General GP tiers are the ones worth filling in: her
+ * consultation durations would say everything the removed guidance tried to,
+ * as fact. They are not on the spreadsheet; they need asking for.
  *
  * ⚠️ Her catalogue names a hormone-therapy product by its restricted
  * abbreviation. It is deliberately not in this file: nothing here reaches
@@ -79,11 +85,13 @@ const WEIGHT: readonly CheckoutProduct[] = [
     price: 69,
     note: "A check-in after your initial consultation",
   },
+  /* No note, for the same reason the General GP tiers have none: "when there
+     is more to go through" was our guess at when to pick this over a short
+     follow-up, not something her catalogue says. */
   {
     ref: "weight-metabolic-health-long-complex-review",
     label: "Long or complex review",
     price: 119,
-    note: "A longer appointment when there is more to go through",
   },
   {
     ref: "weight-metabolic-health-pathology-results-review",
@@ -124,24 +132,21 @@ const CERTIFICATES: readonly CheckoutProduct[] = [
 ];
 
 const GENERAL_CARE: readonly CheckoutProduct[] = [
-  {
-    ref: "general-gp-short",
-    label: "Short consultation",
-    price: 59,
-    note: "One straightforward issue",
-  },
-  {
-    ref: "general-gp-standard",
-    label: "Standard consultation",
-    price: 79,
-    note: "For most consultations",
-  },
-  {
-    ref: "general-gp-long",
-    label: "Long consultation",
-    price: 109,
-    note: "More than one issue, or something that needs more time",
-  },
+  /*
+   * No notes on the three General GP tiers.
+   *
+   * They had some, and they said which tier to pick — "one straightforward
+   * issue", "more than one issue". Nothing in her catalogue says that. We
+   * inferred it from the tier names, and a patient who picks a tier from our
+   * guess and is told at the consultation it was the wrong one is owed a
+   * refund conversation we caused.
+   *
+   * Pending her consultation durations. Minutes are a fact and would say all
+   * of this without any inference; until they arrive these stay bare.
+   */
+  { ref: "general-gp-short", label: "Short consultation", price: 59 },
+  { ref: "general-gp-standard", label: "Standard consultation", price: 79 },
+  { ref: "general-gp-long", label: "Long consultation", price: 109 },
   {
     ref: "priority-after-hours-after-hours",
     label: "After-hours consultation",
@@ -149,11 +154,15 @@ const GENERAL_CARE: readonly CheckoutProduct[] = [
     /* Her own wording, from the after-hours service box. */
     note: "Evenings and weekends",
   },
+  /*
+   * "First available appointment" came off her own service box and is a
+   * promise about availability that is still unresolved with her. Wherever
+   * else it sits, it must not sit on a button that takes a payment.
+   */
   {
     ref: "priority-after-hours-priority",
     label: "Priority consultation",
     price: 99,
-    note: "First available appointment",
   },
 ];
 

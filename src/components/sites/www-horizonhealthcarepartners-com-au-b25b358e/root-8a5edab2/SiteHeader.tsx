@@ -21,12 +21,10 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import type { FocusEvent } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "../shared/icons";
 import { visibleNavItems, type NavColumn, type NavItem } from "@/content/nav";
 import { CLINIC } from "@/content/clinic";
-import { isPostQuizRoute } from "@/lib/post-quiz-routes";
 
 /**
  * A mega-menu column flattened into the silos it stacks, the column's own first.
@@ -50,17 +48,6 @@ const LOGO_SRC =
 const NAV_ITEMS: readonly NavItem[] = visibleNavItems();
 
 const CTA = { label: "Book a consultation", href: "/quiz/" } as const;
-
-/*
- * What the drawer offers instead once the quiz is behind the patient. The bar
- * already carries the number at tablet width and above, so only the drawer —
- * which has no phone link of its own — needs a replacement rather than a
- * removal. See lib/post-quiz-routes.ts for why the CTA goes at all.
- */
-const POST_QUIZ_CTA = {
-  label: `Call ${CLINIC.phone}`,
-  href: CLINIC.phoneHref,
-} as const;
 
 /* Scoped stylesheet — every value transcribed from the source's computed styles. */
 const HEADER_CSS = `
@@ -767,9 +754,6 @@ const HEADER_CSS = `
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
-  /* Resolves on the server: both post-quiz routes are statically prerendered
-     and the app has no rewrites, so there is nothing to hydrate around. */
-  const afterQuiz = isPostQuizRoute(usePathname());
   /**
    * There are now four service dropdowns plus an About menu, so open-state is
    * tracked by label rather than as a single boolean. `null` means all closed.
@@ -946,15 +930,9 @@ export function SiteHeader() {
                   {CLINIC.phone}
                 </a>
 
-                {/* Dropped after the quiz; the number above it stays. */}
-                {!afterQuiz && (
-                  <a
-                    className={cn("hhcp-btn", "hhcp-hdr__cta")}
-                    href={CTA.href}
-                  >
-                    {CTA.label}
-                  </a>
-                )}
+                <a className={cn("hhcp-btn", "hhcp-hdr__cta")} href={CTA.href}>
+                  {CTA.label}
+                </a>
               </div>
             </div>
           </div>
@@ -1046,11 +1024,11 @@ export function SiteHeader() {
               <li className="hhcp-hdr__drawer-cta-row">
                 <a
                   className={cn("hhcp-btn", "hhcp-hdr__drawer-cta")}
-                  href={afterQuiz ? POST_QUIZ_CTA.href : CTA.href}
+                  href={CTA.href}
                   tabIndex={menuOpen ? undefined : -1}
                   onClick={closeMenu}
                 >
-                  {afterQuiz ? POST_QUIZ_CTA.label : CTA.label}
+                  {CTA.label}
                 </a>
               </li>
             </ul>
