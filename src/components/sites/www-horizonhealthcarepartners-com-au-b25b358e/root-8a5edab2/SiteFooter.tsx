@@ -39,6 +39,7 @@ import {
 } from "../shared/icons";
 import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
 import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
+import { externalLinkProps } from "@/lib/external-link";
 import { linkEmergencyNumbers } from "@/components/DisclaimerText";
 import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 
@@ -548,7 +549,12 @@ export function SiteFooter({ className }: SiteFooterProps) {
 
             <div className="hhcp-ft-social">
               {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-                <a key={href} href={href} aria-label={label}>
+                <a
+                  key={href}
+                  href={href}
+                  aria-label={label}
+                  {...externalLinkProps(href)}
+                >
                   <Icon />
                 </a>
               ))}
@@ -665,7 +671,11 @@ export function SiteFooter({ className }: SiteFooterProps) {
               <ul className="hhcp-ft-menu-list">
                 {column.links.map((link) => (
                   <li key={link.href}>
-                    <a className="font-dm-sans" href={link.href}>
+                    <a
+                      className="font-dm-sans"
+                      href={link.href}
+                      {...externalLinkProps(link.href)}
+                    >
                       {link.label}
                     </a>
                   </li>
