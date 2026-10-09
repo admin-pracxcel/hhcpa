@@ -1595,12 +1595,26 @@ export function triage(
  * ⚠️ FLAGGED: the weight-loss green heading is the client's wording. A quiz
  * outcome that tells someone a program "might work for you" states a treatment
  * direction ahead of any assessment. Built as directed.
+ *
+ * The three green bodies used to end "we will be in touch to arrange your
+ * consultation". They do not any more: since 2026-10-09 a green patient books
+ * themselves on /quiz-book/, and promising a callback that nobody is going to
+ * make is the same fault the crisis exit had.
+ *
+ * They point at the next screen rather than at the buttons on it, which is
+ * deliberate. Green does not always mean buttons — six of the eight services
+ * have no connected calendar yet and show a phone number instead, and the
+ * variant chosen here cannot tell which. "You can book on the next screen" is
+ * true of both; "choose your consultation below" would be false for six.
+ *
+ * The amber bodies still promise a callback, and should. Amber is exactly the
+ * case where a person decides what gets booked.
  */
 export const TRIAGE_MESSAGES = {
   weightLoss: {
     green: {
       heading: "Well done! Our Weight Loss Program might work for you!",
-      body: "Based on your answers we can create a treatment program that suits you the most. You are only a few steps away, so leave your details and we will be in touch to arrange your consultation.",
+      body: "Based on your answers we can create a treatment program that suits you the most. You are only a few steps away — leave your details and you can book your consultation on the next screen.",
     },
     amber: {
       heading: "Thanks, your answers are with us",
@@ -1614,7 +1628,7 @@ export const TRIAGE_MESSAGES = {
   general: {
     green: {
       heading: "Good news, it looks like we can help",
-      body: "Leave your details and we will be in touch to arrange a consultation with an AHPRA-registered practitioner.",
+      body: "Leave your details and you can book your consultation with an AHPRA-registered practitioner on the next screen.",
     },
     amber: {
       heading: "Thanks, your answers are with us",
@@ -1634,7 +1648,7 @@ export const TRIAGE_MESSAGES = {
   noScreening: {
     green: {
       heading: "Let's get you booked in",
-      body: "Leave your details and we will be in touch to arrange a consultation with an AHPRA-registered practitioner.",
+      body: "Leave your details and you can book your consultation with an AHPRA-registered practitioner on the next screen.",
     },
     amber: {
       heading: "Let's get you booked in",

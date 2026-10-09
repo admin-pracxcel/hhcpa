@@ -8,7 +8,10 @@
  *
  * Absent from `ROUTES` and `noindex`, like the other post-submission pages.
  *
- * It renders the booking widget and nothing else.
+ * It renders the booking step and nothing else: the live checkout links for
+ * the service the patient chose, or a phone number when there is no link for
+ * it. `BookingPanel` decides which, from the handoff the quiz left in
+ * sessionStorage — see lib/booking-handoff.ts.
  *
  * It used to run her six clinical intake forms first — build spec v2.3
  * addendum §1 step 6. Removed 2026-09-15 on Bilal's instruction. Her own

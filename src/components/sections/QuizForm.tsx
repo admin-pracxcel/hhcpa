@@ -50,6 +50,7 @@ import type { QuizStep, TriageLevel } from "@/content/quiz";
 import { findCountry } from "@/content/countries";
 import { getAttribution } from "@/lib/attribution";
 import { getLeadFields } from "@/lib/lead-fields";
+import { writeBookingHandoff } from "@/lib/booking-handoff";
 import { toReadable } from "@/lib/readable";
 import { cn } from "@/lib/utils";
 import { CertificateAssessment } from "./CertificateAssessment";
@@ -1177,22 +1178,35 @@ export function QuizForm({
       }
 
       /*
-       * Nothing is stashed for the next page any more. The submission id used
-       * to travel in sessionStorage so the intake form at /quiz-book/ could
-       * link stage two to stage one; that form is gone, and /quiz-book/ now
-       * renders the booking widget alone. See that page for why.
+       * What /quiz-book/ needs to show a checkout: the service, the Online
+       * Doctor branch, the triage level and the prescription tier the ladder
+       * already worked out.
+       *
+       * sessionStorage rather than the URL — the service and the level are
+       * health information, and a query string puts them in history, in the
+       * referrer of everything the next page loads, and in the path of any
+       * analytics added later. See lib/booking-handoff.ts; every read of it
+       * falls through to the phone block.
        */
+      writeBookingHandoff({
+        service: allAnswers.service_selection ?? "",
+        onlineDoctorKind: allAnswers.online_doctor_kind,
+        level: outcome.level,
+        prescriptionFee: prescriptionFee(allAnswers),
+      });
 
       /*
        * `status` stays "sending" through the navigation so the button stays
        * disabled — going back to "idle" would re-enable it and let a slow
        * redirect be submitted twice.
        *
-       * Where they land is the one thing the triage level decides on the site.
-       * Green and amber are offered a booking; red is told a person will be in
-       * touch, because red means the answers need review before any booking.
-       * The amber-versus-green difference is an email to the clinic, which n8n
-       * branches on from the `outcome` in the payload above — nothing here.
+       * Where they land is still the one thing the triage level decides here.
+       * Green and amber both reach /quiz-book/; red is told a person will be
+       * in touch, because red means the answers need review before any
+       * booking. What green and amber see on that page differs — checkout
+       * against a phone number — and that is decided there, from the level in
+       * the handoff above, not by sending them to different URLs. Two URLs
+       * would make the triage level readable from the address bar.
        */
       router.push(
         outcome.level === "red" ? "/quiz-thank-you/" : "/quiz-book/",
