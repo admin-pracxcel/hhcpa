@@ -113,6 +113,42 @@ describe("BookingPanel", () => {
     }
   });
 
+  it("gives every product its note, under the label", () => {
+    /*
+     * Four tiers of the same consultation with nothing but a price is how a
+     * patient picks the cheapest one and turns up to the wrong appointment.
+     */
+    write({ service: "Weight Management", level: "green" });
+    const { container } = render(<BookingPanel />);
+    const rows = container.querySelectorAll(".hhcp-bk-product");
+    expect(rows).toHaveLength(4);
+    for (const row of rows) {
+      const note = row.querySelector(".hhcp-bk-product-note");
+      expect(note?.textContent ?? "", row.textContent ?? "").not.toBe("");
+    }
+    expect(
+      screen.getByText("To go through pathology results with your practitioner"),
+    ).toBeTruthy();
+  });
+
+  it("offers the phone to a patient who cannot choose between them", () => {
+    /* The phone block covers having no products; this covers having too many. */
+    write({ service: "Weight Management", level: "green" });
+    const { container } = render(<BookingPanel />);
+    const unsure = container.querySelector(".hhcp-bk-unsure");
+    expect(unsure?.textContent).toBe(
+      `Not sure which one? Call ${CLINIC.phone} and we will help you choose.`,
+    );
+    expect(unsure?.querySelector("a")?.getAttribute("href")).toBe(
+      CLINIC.phoneHref,
+    );
+  });
+
+  it("does not repeat that line when the phone block is already showing", () => {
+    render(<BookingPanel />);
+    expect(document.querySelector(".hhcp-bk-unsure")).toBeNull();
+  });
+
   it("fires one dataLayer event, carrying no clinical detail", () => {
     const layer: unknown[] = [];
     vi.stubGlobal("dataLayer", layer);

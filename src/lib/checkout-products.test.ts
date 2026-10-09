@@ -209,6 +209,40 @@ describe("checkout products", () => {
     });
   });
 
+  it("gives every live product a note", () => {
+    /*
+     * The note is the only thing on the row that says what the tier is for.
+     * A new product added without one ships a price with no context, which is
+     * the thing this file's notes exist to prevent.
+     */
+    const kinds = [
+      "A prescription or repeat script",
+      "A medical certificate",
+      "General or everyday care",
+    ];
+    const all = [
+      ...productsFor({ service: "Weight Management" }),
+      ...kinds.flatMap((kind) => [
+        ...productsFor({
+          service: "Online Doctor",
+          onlineDoctorKind: kind,
+          prescriptionFee: 29,
+        }),
+        ...productsFor({
+          service: "Online Doctor",
+          onlineDoctorKind: kind,
+          prescriptionFee: 49,
+        }),
+      ]),
+    ];
+    const seen = new Set<string>();
+    for (const p of all) {
+      seen.add(p.ref);
+      expect(p.note ?? "", p.ref).not.toBe("");
+    }
+    expect(seen.size, "all thirteen live products").toBe(13);
+  });
+
   it("names no restricted term in any ref or label", () => {
     /*
      * Her catalogue includes a hormone-therapy product under its restricted

@@ -20,6 +20,14 @@
  * with Ranjeeta and not something to "fix" by editing one to match the other.
  * The advertised figure is her decision; this one is what her portal charges.
  *
+ * ⚠️ The `note` on each product is OURS, not hers. Her spreadsheet carries a
+ * name, a price and a link and nothing else, and four tiers of the same
+ * consultation with no context is how a patient picks the cheapest one and
+ * turns up to the wrong appointment. The notes say what the tier is for in
+ * plain words and claim nothing clinical. Two are lifted from her own service
+ * boxes — after-hours and priority. The rest are awaiting her sign-off along
+ * with the prices, and are the kind of thing she may want reworded.
+ *
  * ⚠️ Her catalogue names a hormone-therapy product by its restricted
  * abbreviation. It is deliberately not in this file: nothing here reaches
  * public copy today, but a ref and a label that sit in `src/` are one careless
@@ -63,21 +71,25 @@ const WEIGHT: readonly CheckoutProduct[] = [
     ref: "weight-metabolic-health-initial",
     label: "Initial consultation",
     price: 99,
+    note: "Your first appointment",
   },
   {
     ref: "weight-metabolic-health-short-follow-up",
     label: "Short follow-up",
     price: 69,
+    note: "A check-in after your initial consultation",
   },
   {
     ref: "weight-metabolic-health-long-complex-review",
     label: "Long or complex review",
     price: 119,
+    note: "A longer appointment when there is more to go through",
   },
   {
     ref: "weight-metabolic-health-pathology-results-review",
     label: "Pathology results review",
     price: 59,
+    note: "To go through pathology results with your practitioner",
   },
 ];
 
@@ -92,6 +104,8 @@ const PRESCRIPTION_REVIEW: CheckoutProduct = {
   ref: "prescriptions-referrals-prescription-medication-review",
   label: "Prescription or medication review",
   price: 49,
+  /* The mirror of the note above: this is what the ladder sends here. */
+  note: "More than one medication, repeats, or a new request",
 };
 
 const CERTIFICATES: readonly CheckoutProduct[] = [
@@ -99,6 +113,7 @@ const CERTIFICATES: readonly CheckoutProduct[] = [
     ref: "medical-certificates-single-day-certificate",
     label: "Single-day certificate",
     price: 24.9,
+    note: "One day",
   },
   {
     ref: "medical-certificates-multi-day-certificate-consultation",
@@ -109,13 +124,30 @@ const CERTIFICATES: readonly CheckoutProduct[] = [
 ];
 
 const GENERAL_CARE: readonly CheckoutProduct[] = [
-  { ref: "general-gp-short", label: "Short consultation", price: 59 },
-  { ref: "general-gp-standard", label: "Standard consultation", price: 79 },
-  { ref: "general-gp-long", label: "Long consultation", price: 109 },
+  {
+    ref: "general-gp-short",
+    label: "Short consultation",
+    price: 59,
+    note: "One straightforward issue",
+  },
+  {
+    ref: "general-gp-standard",
+    label: "Standard consultation",
+    price: 79,
+    note: "For most consultations",
+  },
+  {
+    ref: "general-gp-long",
+    label: "Long consultation",
+    price: 109,
+    note: "More than one issue, or something that needs more time",
+  },
   {
     ref: "priority-after-hours-after-hours",
     label: "After-hours consultation",
     price: 79,
+    /* Her own wording, from the after-hours service box. */
+    note: "Evenings and weekends",
   },
   {
     ref: "priority-after-hours-priority",

@@ -252,6 +252,29 @@ const STYLES = `
   }
 }
 
+/*
+ * The way out for a patient who has four prices in front of them and no idea
+ * which one they are. The phone block covers having no products; this covers
+ * having too many. Quiet on purpose — it is a fallback, not a competing CTA.
+ */
+.hhcp-bk-unsure {
+  margin-top: var(--hhcp-space-s, 20px);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+  color: #526f68;
+}
+
+.hhcp-bk-unsure a {
+  color: var(--hhcp-primary, #013126);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hhcp-bk-unsure a:hover {
+  color: var(--hhcp-action-dark, #0c7340);
+}
+
 .hhcp-bk-note {
   font-size: 14px;
   line-height: 1.6;
@@ -395,6 +418,11 @@ export function BookingPanel({ className }: { className?: string }) {
                 </a>
               ))}
             </div>
+            <p className="hhcp-bk-unsure font-dm-sans">
+              {"Not sure which one? Call "}
+              <a href={CLINIC.phoneHref}>{CLINIC.phone}</a>
+              {" and we will help you choose."}
+            </p>
           </div>
         ) : (
           <div className="hhcp-bk-slot">
