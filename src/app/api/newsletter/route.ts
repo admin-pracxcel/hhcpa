@@ -25,6 +25,11 @@
 import { createHmac } from "node:crypto";
 
 import { aestDate, aestDateTime } from "@/lib/aest";
+import {
+  recaptchaRefusal,
+  verifyRecaptcha,
+} from "@/lib/recaptcha-verify";
+import { CLINIC } from "@/content/clinic";
 
 const DEFAULT_WEBHOOK_URL =
   "https://n8n.pracxcel.com.au/webhook/hhcpa-newsletter";
@@ -65,6 +70,26 @@ export async function POST(request: Request) {
    */
   if (clean(payload.company) !== "") {
     return Response.json({ ok: true });
+  }
+
+  /*
+   * reCAPTCHA. Refused submissions never reach n8n, which is the point —
+   * Bilal's instruction of 2026-10-12 is that nothing scoring as a bot
+   * reaches the client at all, with no downstream filter to recover it.
+   *
+   * The refusal names the phone number rather than an error code, because
+   * most people who see it are real: an ad blocker or a privacy browser
+   * stops the token being minted just as surely as a script does.
+   */
+  const captcha = await verifyRecaptcha(payload.recaptchaToken, "newsletter");
+  if (!captcha.ok) {
+    console.warn(
+      `[newsletter] recaptcha refused: ${captcha.reason} score=${String(captcha.score)}`,
+    );
+    return Response.json(
+      { error: recaptchaRefusal(CLINIC.phone) },
+      { status: 400 },
+    );
   }
 
   const email = clean(payload.email);

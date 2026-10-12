@@ -42,6 +42,7 @@ import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
 import { externalLinkProps } from "@/lib/external-link";
 import { linkEmergencyNumbers } from "@/components/DisclaimerText";
 import { useNewsletterSignup } from "@/components/useNewsletterSignup";
+import { RecaptchaNotice } from "@/components/RecaptchaNotice";
 
 const LOGO_SRC =
   "/images/logo-light-tagline.svg";
@@ -570,7 +571,11 @@ export function SiteFooter({ className }: SiteFooterProps) {
               Email sign-up for occasional health guidance.
             </p>
 
-            <form className="hhcp-ft-form" onSubmit={news.onSubmit}>
+            <form
+              className="hhcp-ft-form"
+              onSubmit={news.onSubmit}
+              onFocus={news.onFocus}
+            >
               <input
                 className="hhcp-ft-input"
                 type="email"
@@ -614,6 +619,8 @@ export function SiteFooter({ className }: SiteFooterProps) {
             <p className="hhcp-ft-terms">
               {"By clicking Register, you acknowledge that you have read and accepted our "}
               <a href="/terms-and-conditions/">Terms and Conditions</a>.
+              {" "}
+              <RecaptchaNotice className="hhcp-ft-recaptcha" />
             </p>
           </div>
 

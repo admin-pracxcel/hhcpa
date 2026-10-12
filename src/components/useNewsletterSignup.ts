@@ -20,6 +20,7 @@ import { useCallback, useState } from "react";
 import type { FormEvent } from "react";
 
 import { getLeadFields } from "@/lib/lead-fields";
+import { primeRecaptcha, recaptchaToken } from "@/lib/recaptcha";
 
 export type NewsletterPlacement = "footer" | "closing-cta" | "hero";
 
@@ -32,6 +33,8 @@ export interface NewsletterSignup {
   /** Set only when `status` is "error"; safe to show to the visitor. */
   problem: string;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  /** Starts loading Google's script; wire to the form's `onFocus`. */
+  onFocus: () => void;
 }
 
 const GENERIC_PROBLEM =
@@ -69,10 +72,15 @@ export function useNewsletterSignup(
 
       void (async () => {
         try {
-          const response = await fetch("/api/newsletter", {
+          const captchaToken = await recaptchaToken("newsletter");
+
+          /* Trailing slash deliberate: `trailingSlash: true` would 308 the
+             unslashed path, costing a redirect on every submission. */
+          const response = await fetch("/api/newsletter/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+              recaptchaToken: captchaToken,
               email: address,
               company: String(data.get("company") ?? ""),
               formPlacement: placement,
@@ -108,5 +116,7 @@ export function useNewsletterSignup(
     [placement, status],
   );
 
-  return { email, setEmail, status, problem, onSubmit };
+  /* Wired to the form's onFocus by every placement, so Google's script is
+     already there by the time someone presses the button. */
+  return { email, setEmail, status, problem, onSubmit, onFocus: primeRecaptcha };
 }

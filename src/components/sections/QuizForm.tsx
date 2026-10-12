@@ -56,6 +56,8 @@ import { cn } from "@/lib/utils";
 import { CertificateAssessment } from "./CertificateAssessment";
 import { certQuestionLabels } from "../sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/bookingWizardData";
 import { PhoneField } from "./PhoneField";
+import { primeRecaptcha, recaptchaToken } from "@/lib/recaptcha";
+import { RecaptchaNotice } from "@/components/RecaptchaNotice";
 
 const STYLES = `
 /* ---------- Modal shell ---------- */
@@ -1110,10 +1112,15 @@ export function QuizForm({
     setProblem("");
     setStatus("sending");
     try {
-      const response = await fetch("/api/quiz", {
+      /* Minted here, at submit. A token taken when the page opened would be
+         long expired — the quiz runs well past the two-minute lifetime. */
+      const captchaToken = await recaptchaToken("quiz");
+
+      const response = await fetch("/api/quiz/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          recaptchaToken: captchaToken,
           contact: {
             firstName: value("firstName"),
             lastName: value("lastName"),
@@ -1827,7 +1834,7 @@ function ContactStep({
   const message = messages[outcome.level];
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} onFocus={primeRecaptcha}>
       {fee !== null && (
         <p className="hhcp-qz-fee font-dm-sans">
           <strong>{`Your request: $${fee}`}</strong> Shown before you pay.
@@ -1945,6 +1952,7 @@ function ContactStep({
       >
         {status === "sending" ? "Sending…" : "Get my results"}
       </button>
+      <RecaptchaNotice />
     </form>
   );
 }

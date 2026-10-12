@@ -3,6 +3,53 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { POST } from "./route";
 import { REQUIRED_CONSENT_IDS } from "@/content/quiz";
 
+/*
+ * Every form now posts a reCAPTCHA token and every route verifies it before
+ * forwarding, so these tests behave like a real submission: a stubbed Google
+ * that passes, and a `fetch` that can tell the two calls apart.
+ *
+ * The token carries the action it was minted for — "token:discharge" — and
+ * the stub echoes it back, so one stub serves both forms that post to this
+ * route and the action check is exercised rather than bypassed.
+ *
+ * `webhookCall()` finds the forward rather than assuming it is the first
+ * call, because verification goes out first.
+ */
+const SITEVERIFY = "https://www.google.com/recaptcha/api/siteverify";
+
+const isVerify = (url: unknown) => String(url).startsWith(SITEVERIFY);
+
+/** `webhookStatus` lets a test fail the forward while verification passes. */
+function stubFetch(opts: { webhookStatus?: number; score?: number } = {}) {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      if (isVerify(url)) {
+        const token = new URLSearchParams(String(init?.body ?? "")).get(
+          "response",
+        );
+        const action = (token ?? "").includes(":")
+          ? (token ?? "").split(":")[1]
+          : "quiz";
+        return new Response(
+          JSON.stringify({ success: true, score: opts.score ?? 0.9, action }),
+          { status: 200 },
+        );
+      }
+      return new Response("{}", { status: opts.webhookStatus ?? 200 });
+    }),
+  );
+}
+
+const webhookCalls = () =>
+  vi.mocked(fetch).mock.calls.filter(([url]) => !isVerify(url));
+
+const webhookCall = () => {
+  const call = webhookCalls()[0];
+  if (call === undefined) throw new Error("nothing was forwarded");
+  return call as unknown as [string, RequestInit];
+};
+
 /**
  * The quiz route's forwarding contract.
  *
@@ -24,25 +71,29 @@ const valid = {
   consents: Object.fromEntries(REQUIRED_CONSENT_IDS.map((id) => [id, true])),
 };
 
+/* Each test body gets a token; the stub above makes it verify. */
 function request(body: unknown) {
+  const withToken =
+    typeof body === "object" && body !== null
+      ? { recaptchaToken: "test-token:quiz", ...body }
+      : body;
   return new Request("http://localhost/api/quiz", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify(withToken),
   });
 }
 
 describe("POST /api/quiz", () => {
   beforeEach(() => {
+    process.env.RECAPTCHA_SECRET_KEY = "test-secret";
     process.env.QUIZ_WEBHOOK_URL = WEBHOOK;
     process.env.DISCHARGE_WEBHOOK_URL = DISCHARGE_WEBHOOK;
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => new Response("{}", { status: 200 })),
-    );
+    stubFetch();
   });
 
   afterEach(() => {
+    delete process.env.RECAPTCHA_SECRET_KEY;
     vi.unstubAllGlobals();
     delete process.env.QUIZ_WEBHOOK_URL;
     delete process.env.DISCHARGE_WEBHOOK_URL;
@@ -50,7 +101,7 @@ describe("POST /api/quiz", () => {
 
   const forwarded = () =>
     JSON.parse(
-      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+      webhookCall()[1].body as string,
     ) as Record<string, unknown>;
 
   it("forwards a disclosed crisis as its own field", async () => {
@@ -101,11 +152,13 @@ describe("POST /api/quiz", () => {
 
 describe("second-stage submissions", () => {
   beforeEach(() => {
+    process.env.RECAPTCHA_SECRET_KEY = "test-secret";
     process.env.QUIZ_WEBHOOK_URL = "http://webhook.test/quiz";
     process.env.DISCHARGE_WEBHOOK_URL = "http://webhook.test/discharge";
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 200 })));
+    stubFetch();
   });
   afterEach(() => {
+    delete process.env.RECAPTCHA_SECRET_KEY;
     vi.unstubAllGlobals();
     delete process.env.QUIZ_WEBHOOK_URL;
     delete process.env.DISCHARGE_WEBHOOK_URL;
@@ -113,7 +166,7 @@ describe("second-stage submissions", () => {
 
   const sent = () =>
     JSON.parse(
-      (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
+      webhookCall()[1].body as string,
     ) as Record<string, unknown>;
 
   /*
@@ -129,12 +182,13 @@ describe("second-stage submissions", () => {
     const response = await POST(
       request({
         stage: "intake",
+        recaptchaToken: "test-token:quiz",
         submissionId: "sub-1",
         intake: { formId: "HHCPA-FRM-005", signature: "Jane Citizen" },
       }),
     );
     expect(response.status).toBe(400);
-    expect(vi.mocked(fetch)).not.toHaveBeenCalled();
+    expect(webhookCalls()).toHaveLength(0);
   });
 
   it("accepts the discharge letter form and counts it", async () => {
@@ -142,6 +196,7 @@ describe("second-stage submissions", () => {
     const response = await POST(
       request({
         stage: "discharge",
+        recaptchaToken: "test-token:discharge",
         submissionId: "sub-2",
         intake: { formId: "HHCPA-DISCHARGE", answers: { email: "a@b.co" } },
       }),
@@ -155,6 +210,7 @@ describe("second-stage submissions", () => {
     await POST(
       request({
         stage: "discharge",
+        recaptchaToken: "test-token:discharge",
         submissionId: "sub-3",
         intake: { answers: { previousDoctor: "Dr Example" } },
       }),
@@ -172,12 +228,13 @@ describe("second-stage submissions", () => {
    * still sees their confirmation. It just lands in the wrong place, which is
    * why it is asserted rather than left to a reviewer's eye.
    */
-  const sentTo = () => vi.mocked(fetch).mock.calls[0][0] as string;
+  const sentTo = () => webhookCall()[0];
 
   it("sends a discharge request to the discharge workflow", async () => {
     await POST(
       request({
         stage: "discharge",
+        recaptchaToken: "test-token:discharge",
         submissionId: "sub-4",
         intake: { answers: { reason: "Moving clinics" } },
       }),
@@ -195,6 +252,7 @@ describe("second-stage submissions", () => {
     await POST(
       request({
         stage: "discharge",
+        recaptchaToken: "test-token:discharge",
         submissionId: "sub-5",
         intake: { answers: { reason: "Moving clinics" } },
       }),
@@ -205,7 +263,7 @@ describe("second-stage submissions", () => {
 
   it("rejects a second stage with nothing to attach it to", async () => {
     const response = await POST(
-      request({ stage: "discharge", intake: { a: 1 } }),
+      request({ stage: "discharge", recaptchaToken: "test-token:discharge", intake: { a: 1 } }),
     );
     expect(response.status).toBe(400);
   });

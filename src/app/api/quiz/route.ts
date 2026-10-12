@@ -34,6 +34,11 @@ import { createHmac, randomUUID } from "node:crypto";
 import { aestDate, aestDateTime } from "@/lib/aest";
 
 import { QUIZ_CONSENTS, REQUIRED_CONSENT_IDS } from "@/content/quiz";
+import {
+  recaptchaRefusal,
+  verifyRecaptcha,
+} from "@/lib/recaptcha-verify";
+import { CLINIC } from "@/content/clinic";
 
 /**
  * One workflow per form, not one for the route.
@@ -154,6 +159,33 @@ export async function POST(request: Request) {
   /* Honeypot: 200 so a bot learns nothing, but nothing is forwarded. */
   if (clean(payload.company) !== "") {
     return Response.json({ ok: true });
+  }
+
+  /*
+   * reCAPTCHA. Refused submissions never reach n8n, which is the point —
+   * Bilal's instruction of 2026-10-12 is that nothing scoring as a bot
+   * reaches the client at all, with no downstream filter to recover it.
+   *
+   * Two forms post here, so the action is read off the stage rather than
+   * fixed: a token minted by the discharge form must not pass as a quiz
+   * submission, which is the one that counts toward the quota.
+   *
+   * The refusal names the phone number rather than an error code, because
+   * most people who see it are real: an ad blocker or a privacy browser
+   * stops the token being minted just as surely as a script does.
+   */
+  const captcha = await verifyRecaptcha(
+    payload.recaptchaToken,
+    clean(payload.stage) === "discharge" ? "discharge" : "quiz",
+  );
+  if (!captcha.ok) {
+    console.warn(
+      `[quiz] recaptcha refused: ${captcha.reason} score=${String(captcha.score)}`,
+    );
+    return Response.json(
+      { error: recaptchaRefusal(CLINIC.phone) },
+      { status: 400 },
+    );
   }
 
   /*

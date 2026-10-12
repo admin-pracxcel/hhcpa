@@ -45,6 +45,8 @@ import { getLeadFields } from "@/lib/lead-fields";
 import { toReadable } from "@/lib/readable";
 import { DISCHARGE_FORM } from "@/content/services/discharge";
 import { PhoneField } from "./PhoneField";
+import { primeRecaptcha, recaptchaToken } from "@/lib/recaptcha";
+import { RecaptchaNotice } from "@/components/RecaptchaNotice";
 
 /** Base64 inflates by about a third; n8n's default body cap is the real limit. */
 const MAX_BYTES = 4 * 1024 * 1024;
@@ -245,10 +247,13 @@ export function DischargeLetterForm() {
     setProblem("");
     setStatus("sending");
     try {
-      const response = await fetch("/api/quiz", {
+      const captchaToken = await recaptchaToken("discharge");
+
+      const response = await fetch("/api/quiz/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          recaptchaToken: captchaToken,
           stage: "discharge",
           submissionId: crypto.randomUUID(),
           service: "Transfer your care",
@@ -338,7 +343,11 @@ export function DischargeLetterForm() {
         reading "Discharge Letter Form", which is its accessible name. Same
         name here, nothing added to the page.
       */}
-      <form onSubmit={submit} aria-label="Discharge Letter Form">
+      <form
+        onSubmit={submit}
+        onFocus={primeRecaptcha}
+        aria-label="Discharge Letter Form"
+      >
         <div className="hhcp-dl-group">
           <h2 className="hhcp-dl-group-title font-dm-sans">
             {DISCHARGE_FORM.headings.details}
@@ -418,6 +427,7 @@ export function DischargeLetterForm() {
         </button>
 
         <p className="hhcp-dl-offer font-dm-sans">{DISCHARGE_FORM.offer}</p>
+        <RecaptchaNotice />
       </form>
     </div>
   );

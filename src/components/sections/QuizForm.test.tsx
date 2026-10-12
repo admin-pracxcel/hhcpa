@@ -481,7 +481,9 @@ describe("quiz form", () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
 
     const [url] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe("/api/quiz");
+    /* Slashed: trailingSlash is on, so the unslashed path would 308 and cost
+       a redirect on every submission. */
+    expect(url).toBe("/api/quiz/");
 
     const body = sentBody();
     expect(body.clinical.ho_pregnancy).toBe("No");

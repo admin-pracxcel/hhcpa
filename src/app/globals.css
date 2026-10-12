@@ -523,3 +523,29 @@
 @media (prefers-reduced-motion: reduce) {
   .hhcp-marquee-track { animation: none !important; }
 }
+
+/*
+ * reCAPTCHA v3's floating badge.
+ *
+ * Hidden because it is fixed to the bottom-right and sits directly on top of
+ * the sticky mobile call bar, which is a tap target a patient needs. Google
+ * permits hiding it only if the notice it carries appears in the form
+ * instead — `RECAPTCHA_NOTICE` in lib/recaptcha.ts, rendered by every form
+ * that mints a token. Removing that notice while this rule stands breaks
+ * their terms, so the two move together.
+ */
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+/*
+ * The reCAPTCHA notice on the hero and the closing CTA sits on the band's own
+ * ground, not on white, so it takes that band's text colour at reduced
+ * opacity rather than the default slate grey — which is unreadable on both.
+ */
+.hhcp-hero-recaptcha,
+.hhcp-cta-recaptcha {
+  color: inherit;
+  opacity: 0.6;
+  max-width: 500px;
+}

@@ -35,6 +35,8 @@ import { findCountry } from "@/content/countries";
 import { getLeadFields } from "@/lib/lead-fields";
 import { cn } from "@/lib/utils";
 import { PhoneField } from "./PhoneField";
+import { primeRecaptcha, recaptchaToken } from "@/lib/recaptcha";
+import { RecaptchaNotice } from "@/components/RecaptchaNotice";
 
 const STYLES = `
 .hhcp-ct-section {
@@ -282,10 +284,13 @@ export function ContactSection({
 
     setStatus("sending");
     try {
-      const response = await fetch("/api/contact", {
+      const captchaToken = await recaptchaToken("contact");
+
+      const response = await fetch("/api/contact/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          recaptchaToken: captchaToken,
           firstName: value("firstName"),
           lastName: value("lastName"),
           email: value("email"),
@@ -377,7 +382,12 @@ export function ContactSection({
           </div>
         </div>
 
-        <form className="hhcp-ct-form" onSubmit={handleSubmit} noValidate={false}>
+        <form
+          className="hhcp-ct-form"
+          onSubmit={handleSubmit}
+          onFocus={primeRecaptcha}
+          noValidate={false}
+        >
           <div className="hhcp-ct-eyebrow">
             <span className="hhcp-ct-dot" />
             <span className="hhcp-ct-eyebrow-label font-roboto-mono">
@@ -471,6 +481,8 @@ export function ContactSection({
           >
             {status === "sending" ? "Sending…" : "Send message"}
           </button>
+
+          <RecaptchaNotice />
 
           {status === "invalid" && (
             <p className="hhcp-form-status font-dm-sans" role="alert">

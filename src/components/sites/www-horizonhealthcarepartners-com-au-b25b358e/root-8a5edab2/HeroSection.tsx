@@ -20,6 +20,7 @@ import { useCallback, useRef } from "react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useNewsletterSignup } from "@/components/useNewsletterSignup";
+import { RecaptchaNotice } from "@/components/RecaptchaNotice";
 
 const ASSET_BASE =
   "/videos";
@@ -166,6 +167,7 @@ export function HeroSection({
             <div className="max-w-[500px] min-w-[404px] max-[767px]:w-full max-[767px]:max-w-[400px] max-[767px]:min-w-[auto]">
               <form
                 onSubmit={news.onSubmit}
+                onFocus={news.onFocus}
                 className="relative flex items-center justify-between rounded-[40px] border-none bg-[#f5fff9] py-[2px] pr-[2px] pl-[25px] focus-within:[outline:1px_solid_rgba(88,237,162,0.5)]"
               >
                 <input
@@ -206,6 +208,7 @@ export function HeroSection({
                   {news.status === "sending" ? "Sending" : "Sign Up"}
                 </button>
               </form>
+              <RecaptchaNotice className="hhcp-hero-recaptcha" />
 
               {/* Reserves its line so nothing below shifts when a message lands. */}
               <p
