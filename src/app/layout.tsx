@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import Script from "next/script";
 
 import { SITE_INDEXABLE } from "@/lib/indexable";
+import { SITE_URL } from "@/lib/schema";
 import "./globals.css";
 
 // The exact woff2 files the target serves — DM Sans 400/500, Roboto Mono 500.
@@ -23,6 +24,14 @@ const robotoMono = localFont({
 
 export const metadata: Metadata = {
   /*
+   * Resolves every page's relative `alternates.canonical` to an absolute URL
+   * on the canonical origin. Without it Next emits the canonical exactly as
+   * written — `<link rel="canonical" href="/pricing/">` — which is legal but
+   * leaves the host to be inferred, so `www` and apex each declare themselves
+   * canonical and the 308 between them is the only thing saying otherwise.
+   */
+  metadataBase: new URL(SITE_URL),
+  /*
    * Every page on a non-indexable deployment carries noindex, from here, so no
    * page can be missed. Pages that set their own robots — the thank-you pages,
    * the 404, the archived clone — override this and are noindex either way.
@@ -38,7 +47,7 @@ export const metadata: Metadata = {
     title: "Telehealth Australia | AHPRA-Registered Practitioners",
     description:
       "Access AHPRA-registered practitioners online. Book telehealth consultations. Professional healthcare from home across Australia.",
-    url: "https://www.horizonhealthcarepartners.com.au/",
+    url: SITE_URL,
     siteName: "Horizon Health Care Partners",
     locale: "en_AU",
     type: "website",

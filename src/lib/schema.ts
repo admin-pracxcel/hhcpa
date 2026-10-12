@@ -7,7 +7,19 @@
  */
 import { CLINIC } from "@/content/clinic";
 
-export const SITE_URL = "https://www.horizonhealthcarepartners.com.au";
+/**
+ * The canonical origin — apex, no `www`.
+ *
+ * One spelling of the site, everywhere: canonicals, the sitemap, robots.txt
+ * and every JSON-LD `url` are built from this, so they cannot disagree with
+ * each other or with what the server actually serves. `www.` 308s here, from
+ * the rule in next.config.ts.
+ *
+ * Paths are written with a trailing slash and `trailingSlash: true` serves
+ * them that way, so `${SITE_URL}${path}` is the final URL and never one that
+ * redirects.
+ */
+export const SITE_URL = "https://horizonhealthcarepartners.com.au";
 
 const AREA_SERVED = { "@type": "Country", name: "Australia" } as const;
 
