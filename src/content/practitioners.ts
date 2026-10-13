@@ -49,9 +49,10 @@ export const PRACTITIONERS_META = {
  * inventing a claim about a real person.
  *
  * ✅ Registration numbers: checked by Bilal against the AHPRA public register
- * on 2026-10-02. They had been typed from emails rather than looked up, and a
- * number that does not resolve is worse than publishing none. Re-check any
- * number that changes, and check a new practitioner's before their card ships.
+ * on 2026-10-02, and Dr Alexander's on 2026-10-13. They had been typed from
+ * emails rather than looked up, and a number that does not resolve is worse
+ * than publishing none. Re-check any number that changes, and check a new
+ * practitioner's before their card ships.
  *
  * ⚠️ STILL OPEN: six of these lists say "General GP" or "General GP
  * Consultations".
@@ -69,6 +70,12 @@ export const PRACTITIONERS_META = {
  * Names are exactly as the client supplied them, honorifics included —
  * restored 2026-09-15 after being dropped for consistency with the doctors.
  * How a clinician is styled on their own listing is theirs, not a house rule.
+ *
+ * `/images/practitioner-placeholder.webp` is a generic grey silhouette, not a
+ * photograph of anyone. Miss Hatendi's card used it until her headshot
+ * arrived on 2026-09-28; Dr Alexander's uses it because she asked for no
+ * photograph at all. Those two cases are different and the second one is
+ * permanent — see the note at her entry.
  *
  * Miss Paidamoyo Mildred Hatendi is last in the array, which is the order on
  * the page. She was moved there while her card had no headshot; hers arrived
@@ -169,6 +176,50 @@ export const PRACTITIONERS: readonly Practitioner[] = [
       "Medical certificates",
       "Pathology and imaging referrals",
       "After-hours and priority consultations",
+    ],
+  },
+  {
+    /*
+     * Added 2026-10-13. Same yes/no framing dropped as the others.
+     *
+     * ⚠️ NO PHOTOGRAPH, AT HER REQUEST. She asked specifically not to have
+     * her picture on the site, so the card carries the shared placeholder
+     * silhouette — the same file Miss Hatendi's card used before her
+     * headshot arrived. It is not a photograph of her and must never be
+     * swapped for one without her saying so: this absence is a decision she
+     * made, not an asset nobody has sent yet.
+     *
+     * Rheumatology is named here, which is a deliberate exception to the
+     * caution the header applies to "General practitioner".
+     *
+     * It is a protected specialist title under s118: only a practitioner
+     * holding specialist registration in it may be described that way, and
+     * AHPRA treats an implied claim the same as an explicit one. It was held
+     * off the card when she was added. Bilal checked the register and
+     * confirmed it on 2026-10-13 — the register shows specialty per person,
+     * which is exactly the check this needed.
+     *
+     * Recorded as his confirmation rather than as a verified fact, because
+     * nobody on this side looked it up. If it is ever questioned, that is who
+     * to ask and what was asked.
+     *
+     * It is listed as one item because her list gave it as one line —
+     * "Musculoskeletal/rheumatology/chronic pain" — rather than as three
+     * separate services.
+     */
+    name: "Dr VanaMalini Alexander",
+    title: "Medical Practitioner",
+    ahpraNumber: "MED0002146122",
+    photo: "/images/practitioner-placeholder.webp",
+    focusAreas: [
+      "General consultations",
+      "Weight management",
+      "Mental health",
+      "Prescriptions",
+      "Medical certificates",
+      "Pathology and imaging referrals",
+      "After-hours and priority consultations",
+      "Musculoskeletal, rheumatology and chronic pain",
     ],
   },
   {
