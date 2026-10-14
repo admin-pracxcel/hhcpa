@@ -16,19 +16,128 @@ import { QUIZ_STEPS } from "@/content/quiz";
 describe("checkout products", () => {
   const refs = (list: readonly CheckoutProduct[]) => list.map((p) => p.ref);
 
-  describe("the six services with no connected calendar", () => {
+  describe("the services still without a connected calendar", () => {
+    /* Health Optimisation and Holistic Care are the two left. Neither is on
+       Dr Yulia's list and neither had a calendar before it. */
     for (const service of [
       "Health Optimisation & Complete Wellness",
-      "Men's Health",
-      "Women's Health",
-      "Mental Health Support",
-      "Continuity & Preventative Health",
       "Holistic Care / Alternative Medicine",
     ]) {
       it(`${service} offers nothing`, () => {
         expect(productsFor({ service })).toEqual([]);
       });
     }
+
+    it("offers nothing for a service the quiz does not have", () => {
+      expect(productsFor({ service: "Dentistry" })).toEqual([]);
+      expect(productsFor({ service: "" })).toEqual([]);
+    });
+  });
+
+  describe("the services Dr Yulia's list turned on (2026-10-14)", () => {
+    const refs2 = (list: readonly CheckoutProduct[]) => list.map((p) => p.ref);
+
+    it("offers three men's health tiers", () => {
+      expect(refs2(productsFor({ service: "Men's Health" }))).toEqual([
+        "mens-health-short",
+        "mens-health-standard",
+        "mens-health-initial-long",
+      ]);
+    });
+
+    it("offers three women's health tiers", () => {
+      expect(refs2(productsFor({ service: "Women's Health" }))).toEqual([
+        "womens-health-short",
+        "womens-health-standard",
+        "womens-health-initial-long",
+      ]);
+    });
+
+    it("offers three mental health tiers", () => {
+      expect(refs2(productsFor({ service: "Mental Health Support" }))).toEqual([
+        "mental-health-short",
+        "mental-health-standard",
+        "mental-health-initial-long",
+      ]);
+    });
+
+    it("sends chronic disease management to its own refs", () => {
+      /*
+       * `cp_focus`'s first option. Same three prices as the continuity set,
+       * different refs — the patient cannot tell them apart and should not
+       * need to; the ref is what routes them in her portal.
+       */
+      const chronic = productsFor({
+        service: "Continuity & Preventative Health",
+        continuityFocus: "Chronic Disease Management",
+      });
+      expect(refs2(chronic)).toEqual([
+        "chronic-disease-management-short",
+        "chronic-disease-management-standard",
+        "chronic-disease-management-long",
+      ]);
+      expect(chronic.map((p) => p.price)).toEqual([69, 89, 119]);
+    });
+
+    it("sends every other kind of ongoing care to the continuity refs", () => {
+      const step = QUIZ_STEPS.find((s) => s.id === "cp_focus");
+      expect(step, "cp_focus step").toBeDefined();
+      if (step === undefined || step.kind !== "choice") return;
+
+      for (const option of step.options) {
+        const got = refs2(
+          productsFor({
+            service: "Continuity & Preventative Health",
+            continuityFocus: option,
+          }),
+        );
+        const chronic = option === "Chronic Disease Management";
+        expect(got[0], option).toBe(
+          chronic
+            ? "chronic-disease-management-short"
+            : "continuity-preventative-health-short",
+        );
+      }
+    });
+
+    it("falls back to continuity when the question was never answered", () => {
+      expect(
+        refs2(productsFor({ service: "Continuity & Preventative Health" }))[0],
+      ).toBe("continuity-preventative-health-short");
+    });
+
+    it("offers all three referral kinds, because the quiz asks for one", () => {
+      /* The question is "a pathology, imaging or specialist referral" and
+         does not ask which, so the patient picks here. */
+      expect(
+        refs2(
+          productsFor({
+            service: "Online Doctor",
+            onlineDoctorKind: "A pathology, imaging or specialist referral",
+          }),
+        ),
+      ).toEqual([
+        "prescriptions-referrals-pathology-referral",
+        "prescriptions-referrals-imaging-referral",
+        "prescriptions-referrals-specialist-allied-health-referral",
+      ]);
+    });
+
+    it("keeps priority and after-hours, which are not on her list", () => {
+      /*
+       * The union, not the replacement. Her file omits them because she does
+       * not do after-hours; they were live before it arrived and taking them
+       * out would have cost the general-care path two buttons.
+       */
+      const general = refs2(
+        productsFor({
+          service: "Online Doctor",
+          onlineDoctorKind: "General or everyday care",
+        }),
+      );
+      expect(general).toContain("priority-after-hours-after-hours");
+      expect(general).toContain("priority-after-hours-priority");
+    });
   });
 
   it("offers all four weight products", () => {
@@ -86,10 +195,6 @@ describe("checkout products", () => {
       ]);
     });
 
-    it("offers nothing for referrals, which are not live", () => {
-      expect(od("A pathology, imaging or specialist referral")).toEqual([]);
-    });
-
     it("offers nothing for an answer it does not recognise", () => {
       expect(od("")).toEqual([]);
       expect(od("something else entirely")).toEqual([]);
@@ -113,9 +218,8 @@ describe("checkout products", () => {
         onlineDoctorKind: option,
         prescriptionFee: 29,
       });
-      /* Referrals are the one option with nothing behind it, by design. */
-      const expectEmpty = /referral/i.test(option);
-      expect(result.length === 0, `${option}`).toBe(expectEmpty);
+      /* Every option now has products behind it. */
+      expect(result.length, `${option}`).toBeGreaterThan(0);
     }
   });
 

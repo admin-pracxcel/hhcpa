@@ -1198,6 +1198,7 @@ export function QuizForm({
       writeBookingHandoff({
         service: allAnswers.service_selection ?? "",
         onlineDoctorKind: allAnswers.online_doctor_kind,
+        continuityFocus: allAnswers.continuity_focus,
         level: outcome.level,
         prescriptionFee: prescriptionFee(allAnswers),
       });

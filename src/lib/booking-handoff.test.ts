@@ -21,6 +21,24 @@ describe("parseBookingHandoff", () => {
     expect(out?.level).toBe("green");
   });
 
+  it("keeps the continuity answer, which picks the chronic refs", () => {
+    const out = parseBookingHandoff(
+      JSON.stringify({
+        ...good,
+        service: "Continuity & Preventative Health",
+        continuityFocus: "Chronic Disease Management",
+      }),
+    );
+    expect(out?.continuityFocus).toBe("Chronic Disease Management");
+  });
+
+  it("drops a continuity answer that is not a string", () => {
+    const out = parseBookingHandoff(
+      JSON.stringify({ ...good, continuityFocus: 7 }),
+    );
+    expect(out?.continuityFocus).toBeUndefined();
+  });
+
   it("keeps the Online Doctor branch and the fee when present", () => {
     const out = parseBookingHandoff(
       JSON.stringify({

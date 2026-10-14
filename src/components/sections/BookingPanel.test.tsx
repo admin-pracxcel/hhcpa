@@ -63,10 +63,25 @@ describe("BookingPanel", () => {
   });
 
   it("offers the phone for a service with no connected calendar", () => {
-    write({ service: "Men's Health", level: "green" });
+    /* Health Optimisation and Holistic Care are the two left; Men's Health
+       got its calendar on 2026-10-14. */
+    write({ service: "Holistic Care / Alternative Medicine", level: "green" });
     render(<BookingPanel />);
     expect(links()).toHaveLength(0);
     expect(phoneShown()).toBe(true);
+  });
+
+  it("routes chronic disease management to its own refs", () => {
+    /* The handoff has to carry `continuityFocus` for this to work at all —
+       without it every continuity patient lands on the general refs. */
+    write({
+      service: "Continuity & Preventative Health",
+      level: "green",
+      continuityFocus: "Chronic Disease Management",
+    });
+    render(<BookingPanel />);
+    expect(links()).toHaveLength(3);
+    expect(links()[0]).toContain("chronic-disease-management-short");
   });
 
   it("sends a simple repeat script to the $29 product", () => {

@@ -34,6 +34,8 @@ const MAX_AGE_MS = 10 * 60 * 1000;
 export interface BookingHandoff {
   readonly service: string;
   readonly onlineDoctorKind?: string;
+  /** The `continuity_focus` answer, for the chronic-disease refs. */
+  readonly continuityFocus?: string;
   /** "green" or "amber". Red never reaches this page. */
   readonly level: string;
   readonly prescriptionFee?: number | null;
@@ -107,6 +109,7 @@ export function parseBookingHandoff(
   if (Date.now() - at > MAX_AGE_MS || at > Date.now() + 60_000) return null;
 
   const kind = record.onlineDoctorKind;
+  const focus = record.continuityFocus;
   const fee = record.prescriptionFee;
 
   return {
@@ -114,6 +117,8 @@ export function parseBookingHandoff(
     level,
     at,
     onlineDoctorKind: typeof kind === "string" && kind !== "" ? kind : undefined,
+    continuityFocus:
+      typeof focus === "string" && focus !== "" ? focus : undefined,
     prescriptionFee: typeof fee === "number" ? fee : null,
   };
 }

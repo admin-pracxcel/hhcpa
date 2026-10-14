@@ -321,6 +321,7 @@ export function BookingPanel({ className }: { className?: string }) {
       ? productsFor({
           service: handoff.service,
           onlineDoctorKind: handoff.onlineDoctorKind,
+          continuityFocus: handoff.continuityFocus,
           prescriptionFee: handoff.prescriptionFee,
         })
       : [];
