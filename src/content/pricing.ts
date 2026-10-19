@@ -48,9 +48,34 @@
  * It stays `provisional`. This resolves an internal contradiction; it is not her
  * written sign-off.
  *
- * Anything marked `provisional` is awaiting Ranjeeta's written confirmation per
- * onboarding items 21 and 25, and must not be presented as final until confirmed
- * — see the design spec, §10.2.
+ * ─── CONFIRMED IN WRITING, 2026-10-19 ─────────────────────────────────────
+ *
+ * Ranjeeta's email of that date gives four figures and they are set below
+ * with `provisional: false` — her email IS the written confirmation those
+ * four were waiting on:
+ *
+ *   GP                        from $59   (was $49)
+ *   Pathology and imaging     from $59   (was $49)
+ *   Mental health             from $79   (was $59)
+ *   Men's and women's health  from $69   (was $89)
+ *
+ * Three of the four close a gap against what her portal actually charges at
+ * checkout: general GP's cheapest is $59, mental health's is $79, men's and
+ * women's is $69. The mental health one mattered most — the site had been
+ * promising $59 against a cheapest button of $79 since 14 October.
+ *
+ * ⚠️ The fourth opens a new gap, in the harmless direction. Her portal
+ * charges $49 for both the pathology and the imaging referral; this now
+ * advertises $59. A patient pays less than the page quoted, which breaks
+ * nothing, but the two numbers disagree and she should know which she meant.
+ *
+ * Men's and women's health has now been $69, then $89, then $69 again. The
+ * $89 came from her correction of 2026-10-02; this reverses it and agrees
+ * with her portal, so $69 is the figure with checkout behind it.
+ *
+ * Anything still marked `provisional` is awaiting Ranjeeta's written
+ * confirmation per onboarding items 21 and 25, and must not be presented as
+ * final until confirmed — see the design spec, §10.2.
  *
  * Onboarding item 25 also asks whether *every* figure should read as a "from"
  * price. If that is confirmed, set `from: true` across the board here; no other
@@ -95,7 +120,7 @@ export const PRICES: Record<PriceKey, Price> = {
   firstConsult:       { label: "First medical consultation",       amount: 69,   from: false, provisional: true },
   followUpConsult:    { label: "Follow-up consultation",           amount: 59,   from: false, provisional: true },
   transferConsult:    { label: "Transfer consultation",            amount: 59,   from: false, provisional: true },
-  generalConsult:     { label: "General consult and referrals",    amount: 49,   from: true,  provisional: true },
+  generalConsult:     { label: "General consult and referrals",    amount: 59,   from: true,  provisional: false },
   /* Her four changes of 2026-09-22, from $69 / $98 / $19.90 / $19. */
   afterHoursConsult:  { label: "After-hours consult",              amount: 79,   from: true,  provisional: true },
   priorityConsult:    { label: "Priority consult",                 amount: 99,   from: true,  provisional: true },
@@ -121,8 +146,8 @@ export const PRICES: Record<PriceKey, Price> = {
    */
   prescriptionsComplex:
                       { label: "Prescriptions, multiple or new", amount: 49,   from: false, provisional: true },
-  pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 49,   from: true,  provisional: true },
-  mentalHealth:       { label: "Mental health support",            amount: 59,   from: true,  provisional: true },
+  pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 59,   from: true,  provisional: false },
+  mentalHealth:       { label: "Mental health support",            amount: 79,   from: true,  provisional: false },
   /*
    * Back to $89 — Ranjeeta, 2026-09-15, correcting the $69 in her own email
    * of the same day. It had been $89, went to $69 on that email, and is $89
@@ -143,7 +168,7 @@ export const PRICES: Record<PriceKey, Price> = {
    * `firstConsult` stays $69 and stays the general fee: the home FAQ, the
    * continuity page and the First consultation card on /pricing/.
    */
-  mensWomensHealth:   { label: "Men's and women's health",         amount: 89,   from: true,  provisional: true },
+  mensWomensHealth:   { label: "Men's and women's health",         amount: 69,   from: true,  provisional: false },
   /*
    * THE RULE: an advertised "from" price is the INITIAL consultation.
    *

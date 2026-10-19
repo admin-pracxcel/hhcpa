@@ -5,6 +5,18 @@
  * practitioners with their AHPRA numbers. The note below is kept because it
  * records who must NOT be listed, which is still live guidance.
  *
+ * ─── REMOVED ──────────────────────────────────────────────────────────────
+ *
+ * Dr Ghazal Panahi came off on 2026-10-19: she terminated her contract on
+ * health grounds and Ranjeeta asked for her card to go. Her headshot was
+ * deleted with the entry rather than left in public/images — a former
+ * contractor's photograph is not ours to keep serving, and a file nobody
+ * references is exactly the kind of thing that gets picked up again by
+ * mistake.
+ *
+ * Ranjeeta's email notes she had asked for this before. No earlier request
+ * reached this repository; if one was sent, it did not arrive here.
+ *
  * The content document records what Ranjeeta confirmed on 28 August 2026:
  *   - No additional practitioners are confirmed. Dr Bull, Dr James Lavett,
  *     Dr Lee and the historically listed nurse practitioners and incoming GPs
@@ -129,26 +141,6 @@ export const PRACTITIONERS: readonly Practitioner[] = [
       "Mental health support for sleep, stress and anxiety",
       "General consultations",
       "Weight and metabolic health",
-      "Prescriptions",
-      "Medical certificates",
-      "Pathology and imaging referrals",
-      "After-hours consultations",
-      "Priority consultations",
-    ],
-  },
-  {
-    name: "Dr Ghazal Panahi",
-    title: "Medical Practitioner",
-    ahpraNumber: "MED0001857124",
-    photo: "/images/dr-ghazal-panahi.webp",
-    focusAreas: [
-      "General consultations",
-      "Weight and metabolic health",
-      "Women's health",
-      "Men's health",
-      "Mental health",
-      "Chronic disease management",
-      "Continuity and preventative health",
       "Prescriptions",
       "Medical certificates",
       "Pathology and imaging referrals",

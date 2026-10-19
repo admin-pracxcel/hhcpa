@@ -41,7 +41,12 @@ describe("price tiles", () => {
 
   it("keeps the word 'from' on the fee, since no column header carries it now", () => {
     render10();
-    expect(screen.getByText("from $49")).toBeTruthy();
+    /* Read from the record, like the cents assertion below. The point is the
+       word "from", not the figure — hardcoding it meant Ranjeeta moving a
+       price broke a test that was never about that price. */
+    expect(
+      screen.getByText(`from $${PRICES.generalConsult.amount}`),
+    ).toBeTruthy();
     /* Cents survive the formatting. */
     render(
       <PriceTiles
