@@ -18,16 +18,17 @@ export const CLINIC = {
   legalName: "Horizon Health Care Partners Pty Ltd",
   abn: "92 689 872 811",
   /*
-   * ⚠️ TEMPORARY — 2026-10-21, Bilal's instruction. The permanent number is
-   * 1300 336 572 / tel:1300336572 and he has said he will ask for it back.
+   * One place, read by every phone number on the site: the header, the
+   * footer, the sticky call bar, the contact page, the booking page's
+   * fallback, the reCAPTCHA refusal and the JSON-LD `telephone`.
    *
-   * These two lines are the whole change: every phone number on the site,
-   * the JSON-LD `telephone`, the booking page's fallback, the reCAPTCHA
-   * refusal and the sticky call bar all read from here. Reverting is putting
-   * the two values above back.
+   * It was temporarily +61 7 4518 2007 between 2026-10-21 and 2026-10-23, at
+   * Bilal's instruction, and came back here. Changing it is these two lines
+   * and nothing else — the tests derive from them rather than pinning digits,
+   * which is what that diversion established.
    */
-  phone: "+61 7 4518 2007",
-  phoneHref: "tel:+61745182007",
+  phone: "1300 336 572",
+  phoneHref: "tel:1300336572",
   email: "hello@horizonhealthcarepartners.com.au",
   emailHref: "mailto:hello@horizonhealthcarepartners.com.au",
   addressRegion: "West End, Queensland",
