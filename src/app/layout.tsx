@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 
+import { AvaChat } from "@/components/AvaChat";
+
 import { SITE_INDEXABLE } from "@/lib/indexable";
 import { SITE_URL } from "@/lib/schema";
 import "./globals.css";
@@ -126,6 +128,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','${GTM_ID}');`}
         </Script>
         {children}
+        {/* Last in the body, as her vendor asked. Withheld on the three quiz
+            routes — see the component. */}
+        <AvaChat />
       </body>
     </html>
   );
