@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { CLINIC } from "@/content/clinic";
 import {
   buildMedicalClinic,
   buildMedicalWebPage,
@@ -13,7 +14,7 @@ describe("buildMedicalClinic", () => {
     const schema = buildMedicalClinic();
     expect(schema["@type"]).toBe("MedicalClinic");
     expect(schema.legalName).toBe("Horizon Health Care Partners Pty Ltd");
-    expect(schema.telephone).toBe("1300 336 572");
+    expect(schema.telephone).toBe(CLINIC.phone);
     expect(schema.areaServed).toEqual({ "@type": "Country", name: "Australia" });
   });
 });

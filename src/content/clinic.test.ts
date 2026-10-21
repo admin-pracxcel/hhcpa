@@ -8,8 +8,11 @@ describe("CLINIC", () => {
   });
 
   it("exposes a dialable tel: href alongside the display number", () => {
-    expect(CLINIC.phone).toBe("1300 336 572");
-    expect(CLINIC.phoneHref).toBe("tel:1300336572");
+    /* The relationship, not the digits: the href must dial exactly what the
+       page displays. Pinning the number here meant a temporary diversion
+       touched seven test files instead of one. */
+    expect(CLINIC.phone).toMatch(/\d/);
+    expect(CLINIC.phoneHref).toBe(`tel:${CLINIC.phone.replace(/\s/g, "")}`);
   });
 
   it("carries the confirmed business hours", () => {

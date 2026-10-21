@@ -17,8 +17,17 @@ export const CLINIC = {
   shortName: "HHCPA",
   legalName: "Horizon Health Care Partners Pty Ltd",
   abn: "92 689 872 811",
-  phone: "1300 336 572",
-  phoneHref: "tel:1300336572",
+  /*
+   * ⚠️ TEMPORARY — 2026-10-21, Bilal's instruction. The permanent number is
+   * 1300 336 572 / tel:1300336572 and he has said he will ask for it back.
+   *
+   * These two lines are the whole change: every phone number on the site,
+   * the JSON-LD `telephone`, the booking page's fallback, the reCAPTCHA
+   * refusal and the sticky call bar all read from here. Reverting is putting
+   * the two values above back.
+   */
+  phone: "+61 7 4518 2007",
+  phoneHref: "tel:+61745182007",
   email: "hello@horizonhealthcarepartners.com.au",
   emailHref: "mailto:hello@horizonhealthcarepartners.com.au",
   addressRegion: "West End, Queensland",

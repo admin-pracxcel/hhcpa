@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { PractitionerCards } from "./PractitionerCards";
 import { ContactBlock } from "./ContactBlock";
+import { CLINIC } from "@/content/clinic";
 
 const PRACTITIONER = {
   name: "Ranjeeta Roshan",
@@ -36,9 +37,13 @@ describe("PractitionerCards", () => {
 describe("ContactBlock", () => {
   it("renders a tap-to-call link and a mailto link", () => {
     render(<ContactBlock heading="Get in touch" />);
-    expect(screen.getByRole("link", { name: /1300 336 572/ })).toHaveAttribute(
+    expect(screen.getByRole("link", {
+      /* A contains match, not a RegExp built from data: the number
+         now starts with "+", which is a quantifier. */
+      name: (accessibleName: string) => accessibleName.includes(CLINIC.phone),
+    })).toHaveAttribute(
       "href",
-      "tel:1300336572",
+      CLINIC.phoneHref,
     );
     expect(
       screen.getByRole("link", { name: /hello@horizonhealthcarepartners\.com\.au/ }),

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { TrustBar } from "./TrustBar";
 import { PageHero } from "./PageHero";
 import { ClosingCta } from "./ClosingCta";
+import { CLINIC } from "@/content/clinic";
 
 describe("TrustBar", () => {
   it("renders the five default items when none are given", () => {
@@ -30,9 +31,13 @@ describe("PageHero", () => {
       "href",
       "/quiz/",
     );
-    expect(screen.getByRole("link", { name: /1300 336 572/ })).toHaveAttribute(
+    expect(screen.getByRole("link", {
+      /* A contains match, not a RegExp built from data: the number
+         now starts with "+", which is a quantifier. */
+      name: (accessibleName: string) => accessibleName.includes(CLINIC.phone),
+    })).toHaveAttribute(
       "href",
-      "tel:1300336572",
+      CLINIC.phoneHref,
     );
   });
 });
@@ -49,6 +54,10 @@ describe("ClosingCta", () => {
       "href",
       "/quiz/",
     );
-    expect(screen.getByRole("link", { name: /1300 336 572/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", {
+      /* A contains match, not a RegExp built from data: the number
+         now starts with "+", which is a quantifier. */
+      name: (accessibleName: string) => accessibleName.includes(CLINIC.phone),
+    })).toBeInTheDocument();
   });
 });
