@@ -80,6 +80,28 @@ const SOCIAL_LINKS: readonly SocialLink[] = [
   },
 ] as const;
 
+/**
+ * LegitScript certification seal.
+ *
+ * Served from their CDN on purpose — a seal programme has to be able to
+ * revoke a mark, which it cannot do if we copy the image into public/. Their
+ * dimensions verbatim: the file is 292x316, four times the 73x79 they ask
+ * for, so it is a retina asset and rendering it at their size is what keeps
+ * it sharp. They explicitly ask that it not be scaled in CSS.
+ *
+ * `alt` and `title` are theirs, word for word, including the "www." that our
+ * own canonical host does not use. It is their copy about their validation
+ * page, not a claim about our address.
+ */
+const LEGITSCRIPT = {
+  href: "https://www.legitscript.com/websites/?checker_keywords=horizonhealthcarepartners.com.au",
+  src: "https://static.legitscript.com/seals/52299275.png",
+  alt: "Verify Approval for www.horizonhealthcarepartners.com.au",
+  title: "Verify LegitScript Approval for www.horizonhealthcarepartners.com.au",
+  width: 73,
+  height: 79,
+} as const;
+
 const CREDIT = "©  2026 by Horizon Health Care Partners. All Rights Reserved.";
 
 /**
@@ -166,6 +188,37 @@ const STYLES = `
 
 .hhcp-ft-social a:hover {
   color: var(--hhcp-accent, #f5fff9);
+}
+
+/*
+ * The seal sits straight on the footer — no panel, no padding.
+ *
+ * It carries its own pure-white stroke around the hexagon, 4px in the 292x316
+ * asset and so about 1px at the rendered size, on every edge. That outline is
+ * what separates the navy artwork from whatever is behind it, which is why it
+ * reads on this dark ground without help.
+ *
+ * It had a light chip behind it for one commit. That came from comparing the
+ * fill colour (5, 29, 64) with the footer's #013126 and calling 1.17:1
+ * invisible — the wrong measurement, because the edge is the thing doing the
+ * work, not the fill. Bilal caught it.
+ *
+ * The image keeps its exact 73x79; they ask that it not be scaled.
+ */
+.hhcp-ft-seal {
+  display: inline-flex;
+  line-height: 0;
+  transition: opacity 0.3s linear;
+}
+
+.hhcp-ft-seal:hover {
+  opacity: 0.85;
+}
+
+.hhcp-ft-seal img {
+  display: block;
+  width: 73px;
+  height: 79px;
 }
 
 /* --- Hairline, used above and below the menu block --- */
@@ -560,6 +613,26 @@ export function SiteFooter({ className }: SiteFooterProps) {
                 </a>
               ))}
             </div>
+
+            {/*
+              LegitScript's seal, below the social row. Their markup, their
+              image, their dimensions — see the note on `.hhcp-ft-seal`.
+            */}
+            <a
+              className="hhcp-ft-seal"
+              href={LEGITSCRIPT.href}
+              title={LEGITSCRIPT.title}
+              {...externalLinkProps(LEGITSCRIPT.href)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={LEGITSCRIPT.src}
+                alt={LEGITSCRIPT.alt}
+                width={LEGITSCRIPT.width}
+                height={LEGITSCRIPT.height}
+                loading="lazy"
+              />
+            </a>
           </div>
 
         <div className="hhcp-ft-news">
