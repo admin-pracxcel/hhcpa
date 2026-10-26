@@ -426,6 +426,86 @@ describe("quiz form", () => {
     await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-book/"));
   });
 
+  /* ---------- conversion tracking ---------- */
+
+  /*
+   * These exist because the obvious Tag Manager setup — a tag on the
+   * thank-you page — is wrong twice over here. Both destinations arrive by
+   * `router.push`, so there is no page load to trigger on, and the two URLs
+   * split on the triage level, so `/quiz-thank-you/` sees only the
+   * submissions that were triaged out. The event is the trigger; if it stops
+   * firing, Google Ads stops counting leads and nothing else breaks loudly
+   * enough to notice.
+   */
+  describe("the quiz_submit event", () => {
+    let layer: unknown[];
+
+    beforeEach(() => {
+      layer = [];
+      (window as unknown as { dataLayer: unknown[] }).dataLayer = layer;
+    });
+
+    const green = () => {
+      render(<QuizForm onClose={close} />);
+      start("Health Optimisation & Complete Wellness");
+      choose("Mental Clarity & Focus");
+      for (let i = 0; i < 7; i += 1) choose("No");
+      fillContactAndSubmit();
+    };
+
+    it("fires once on a green run, which never sees the thank-you page", async () => {
+      green();
+      await waitFor(() => expect(push).toHaveBeenCalledWith("/quiz-book/"));
+      expect(layer).toHaveLength(1);
+      expect((layer[0] as Record<string, unknown>).event).toBe("quiz_submit");
+    });
+
+    it("fires on a red run too — a reviewed lead is still a lead", async () => {
+      render(<QuizForm onClose={close} />);
+      start("Health Optimisation & Complete Wellness");
+      choose("Healthy Ageing & Longevity");
+      choose("No");
+      choose("No");
+      choose("Yes"); // pregnant → red
+      choose("No");
+      choose("No");
+      choose("No");
+      choose("No");
+      fillContactAndSubmit();
+      await waitFor(() =>
+        expect(push).toHaveBeenCalledWith("/quiz-thank-you/"),
+      );
+      expect(layer).toHaveLength(1);
+    });
+
+    it("carries nothing clinical", async () => {
+      green();
+      await waitFor(() => expect(layer).toHaveLength(1));
+      /*
+       * Every tag in the container reads this — GA4, Meta and Clarity are
+       * all in there. The event name is the whole payload on purpose.
+       */
+      expect(Object.keys(layer[0] as object)).toEqual(["event"]);
+    });
+
+    it("does not fire when the submission was refused", async () => {
+      /* A conversion Google counts for a lead the clinic never received is
+         worse than no tracking at all — it teaches the bidding the wrong
+         thing. reCAPTCHA refusals land here. */
+      fetchMock.mockImplementation(
+        async () =>
+          new Response(JSON.stringify({ error: "We could not verify that." }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          }),
+      );
+      green();
+      await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+      expect(layer).toHaveLength(0);
+      expect(push).not.toHaveBeenCalled();
+    });
+  });
+
   it("offers amber a booking too, and leaves the review to n8n", async () => {
     render(<QuizForm onClose={close} />);
     start("Health Optimisation & Complete Wellness");
