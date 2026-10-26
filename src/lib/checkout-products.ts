@@ -1,7 +1,7 @@
 /**
  * The clinic's checkout catalogue — every ref and every price, in one file.
  *
- * Ranjeeta's product list has 45 consultations. Thirty-one have a
+ * Ranjeeta's product list has 45 consultations. Thirty-six have a
  * practitioner's calendar connected and can be paid for today; the rest exist
  * in her portal but cannot be booked.
  *
@@ -9,11 +9,19 @@
  * as "Dr Yulia's links" — the same refs, re-highlighted, which is a statement
  * about whose calendar is connected rather than a new set of URLs. The two
  * lists are unioned, not replaced: Priority / After Hours is live and absent
- * from hers, because she does not do after-hours.
+ * from hers, because she does not do after-hours. Five more on 2026-10-26 as
+ * "Jamie's links", same spreadsheet again: Health Optimisation & Complete
+ * Wellness and Holistic Care / Alternative Medicine.
  *
- * Still dark: Health Optimisation & Complete Wellness, Holistic Care /
- * Alternative Medicine, Smoking / Vaping Cessation, Menopause /
- * Perimenopause, and the hormone-therapy products.
+ * ⚠️ Every list so far has been the SAME 45 refs with a different highlight.
+ * A ref is not a practitioner — these URLs carry no practitioner at all — so
+ * "Dr X's links" means "Dr X's calendar is now connected behind these refs".
+ * Which practitioner a booking lands with is decided in her portal. Treat a
+ * new list as a change of availability, and check the refs against this file
+ * before believing any of them are new.
+ *
+ * Still dark: Smoking / Vaping Cessation, Menopause / Perimenopause, and the
+ * hormone-therapy products.
  *
  * ─── THE ONLY FILE TO EDIT WHEN A LINK ARRIVES ─────────────────────────────
  *
@@ -87,7 +95,7 @@ export function checkoutUrl(product: CheckoutProduct): string {
 }
 
 /* -------------------------------------------------------------------------
-   The thirteen live products
+   The live products
    ------------------------------------------------------------------------- */
 
 const WEIGHT: readonly CheckoutProduct[] = [
@@ -281,6 +289,54 @@ const REFERRALS: readonly CheckoutProduct[] = [
   },
 ];
 
+/*
+ * Lit on 2026-10-26, from Ranjeeta's email of the same day.
+ *
+ * These five refs were on the original 45-row spreadsheet from 2026-10-09 and
+ * were left out of Dr Yulia's highlighted subset on 2026-10-14, which is why
+ * both services have been falling through to the phone block. Her email
+ * describes them as "Jamie's consultation links"; the URLs name no
+ * practitioner, so what changed is that a calendar is now connected behind
+ * these refs, not that the refs are new. Prices are the spreadsheet's,
+ * unchanged.
+ *
+ * No notes on any of them: her catalogue gives a name, a price and a link,
+ * and the tiering here — what makes a review "extended" rather than a
+ * follow-up — is not something it states. See the note rule in the header.
+ */
+const HEALTH_OPTIMISATION: readonly CheckoutProduct[] = [
+  {
+    ref: "health-optimisation-complete-wellness-initial-consultation",
+    label: "Initial consultation",
+    price: 299,
+    note: "Your first appointment",
+  },
+  {
+    ref: "health-optimisation-complete-wellness-follow-up-consultation",
+    label: "Follow-up consultation",
+    price: 149,
+  },
+  {
+    ref: "health-optimisation-complete-wellness-extended-review",
+    label: "Extended review",
+    price: 199,
+  },
+];
+
+const HOLISTIC: readonly CheckoutProduct[] = [
+  {
+    ref: "holistic-alternative-care-initial",
+    label: "Initial consultation",
+    price: 69,
+    note: "Your first appointment",
+  },
+  {
+    ref: "holistic-alternative-care-follow-up",
+    label: "Follow-up consultation",
+    price: 59,
+  },
+];
+
 /* -------------------------------------------------------------------------
    Which products a finished quiz offers
    ------------------------------------------------------------------------- */
@@ -341,17 +397,24 @@ export function productsFor(
       return selection.continuityFocus === CP_CHRONIC
         ? CHRONIC_DISEASE
         : CONTINUITY;
+    case "Health Optimisation & Complete Wellness":
+      return HEALTH_OPTIMISATION;
+    /* The exact `service_selection` option string — "Holistic Care /
+       Alternative Medicine" on the question, "Holistic / Alternative Care"
+       on her spreadsheet. The quiz's wording is the one that has to match. */
+    case "Holistic Care / Alternative Medicine":
+      return HOLISTIC;
     default:
       break;
   }
 
   if (selection.service !== "Online Doctor") {
     /*
-     * Health Optimisation & Complete Wellness and Holistic Care /
-     * Alternative Medicine. Both are in her catalogue; neither is on Dr
-     * Yulia's list and neither had a calendar before it. They arrive here by
-     * having no branch rather than by being listed, so adding one is adding
-     * its products above and nothing else.
+     * Smoking / Vaping Cessation, Menopause / Perimenopause and the
+     * hormone-therapy products. All are in her catalogue; none has a
+     * connected calendar. They arrive here by having no branch rather than
+     * by being listed, so lighting one up is adding its products above and
+     * nothing else.
      */
     return [];
   }

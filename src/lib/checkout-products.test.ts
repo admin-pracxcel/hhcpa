@@ -16,21 +16,93 @@ import { QUIZ_STEPS } from "@/content/quiz";
 describe("checkout products", () => {
   const refs = (list: readonly CheckoutProduct[]) => list.map((p) => p.ref);
 
-  describe("the services still without a connected calendar", () => {
-    /* Health Optimisation and Holistic Care are the two left. Neither is on
-       Dr Yulia's list and neither had a calendar before it. */
-    for (const service of [
-      "Health Optimisation & Complete Wellness",
-      "Holistic Care / Alternative Medicine",
-    ]) {
-      it(`${service} offers nothing`, () => {
-        expect(productsFor({ service })).toEqual([]);
-      });
-    }
-
+  describe("the fall-through to the phone block", () => {
     it("offers nothing for a service the quiz does not have", () => {
       expect(productsFor({ service: "Dentistry" })).toEqual([]);
       expect(productsFor({ service: "" })).toEqual([]);
+    });
+
+    /*
+     * Smoking / Vaping Cessation, Menopause / Perimenopause and the
+     * hormone-therapy products are the catalogue entries still without a
+     * calendar. None of them is a `service_selection` option, so no quiz
+     * answer can reach them — they are dark in her portal, not here.
+     */
+    it("has no quiz service left without products", () => {
+      const step = QUIZ_STEPS.find((s) => s.id === "service");
+      expect(step, "service step").toBeDefined();
+      if (step === undefined || step.kind !== "choice") return;
+
+      for (const service of step.options) {
+        /*
+         * Every branch of every service, because two of them answer a second
+         * question before they have products. Undefined covers the services
+         * that take no sub-answer at all.
+         */
+        const best = [
+          undefined,
+          "Chronic Disease Management",
+          "A prescription or repeat script",
+          "A medical certificate",
+          "General or everyday care",
+          "A pathology, imaging or specialist referral",
+        ].reduce(
+          (most, answer) =>
+            Math.max(
+              most,
+              productsFor({
+                service,
+                continuityFocus: answer,
+                onlineDoctorKind: answer,
+                prescriptionFee: 29,
+              }).length,
+            ),
+          0,
+        );
+        expect(best, `${service} has no checkout`).toBeGreaterThan(0);
+      }
+    });
+  });
+
+  /*
+   * Lit on 2026-10-26. Ranjeeta called these "Jamie's links"; the refs were
+   * on the original spreadsheet and the URLs name no practitioner, so these
+   * assert the refs and prices from that spreadsheet, unchanged.
+   */
+  describe("the services Jamie's list turned on (2026-10-26)", () => {
+    it("offers three health optimisation tiers", () => {
+      const list = productsFor({
+        service: "Health Optimisation & Complete Wellness",
+      });
+      expect(refs(list)).toEqual([
+        "health-optimisation-complete-wellness-initial-consultation",
+        "health-optimisation-complete-wellness-follow-up-consultation",
+        "health-optimisation-complete-wellness-extended-review",
+      ]);
+      expect(list.map((p) => p.price)).toEqual([299, 149, 199]);
+    });
+
+    it("offers two holistic care tiers", () => {
+      const list = productsFor({
+        service: "Holistic Care / Alternative Medicine",
+      });
+      expect(refs(list)).toEqual([
+        "holistic-alternative-care-initial",
+        "holistic-alternative-care-follow-up",
+      ]);
+      expect(list.map((p) => p.price)).toEqual([69, 59]);
+    });
+
+    it("matches the service strings the quiz actually sends", () => {
+      /* "Holistic Care / Alternative Medicine" on the question against
+         "Holistic / Alternative Care" on her spreadsheet — the quiz's
+         wording is the one this file has to branch on. */
+      const step = QUIZ_STEPS.find((s) => s.id === "service");
+      if (step === undefined || step.kind !== "choice") return;
+      expect(step.options).toContain("Holistic Care / Alternative Medicine");
+      expect(step.options).toContain(
+        "Health Optimisation & Complete Wellness",
+      );
     });
   });
 

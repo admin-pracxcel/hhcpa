@@ -63,9 +63,15 @@ describe("BookingPanel", () => {
   });
 
   it("offers the phone for a service with no connected calendar", () => {
-    /* Health Optimisation and Holistic Care are the two left; Men's Health
-       got its calendar on 2026-10-14. */
-    write({ service: "Holistic Care / Alternative Medicine", level: "green" });
+    /*
+     * A service this file does not know about, rather than a named one.
+     * Holistic Care stood here until 2026-10-26, when its links arrived and
+     * this test started failing — every quiz service now has a checkout, so
+     * naming one dates the test. What is being asserted is the fall-through
+     * itself: whatever is added to the quiz next arrives here with no
+     * products, and a patient must get the phone rather than an empty panel.
+     */
+    write({ service: "A service added to the quiz tomorrow", level: "green" });
     render(<BookingPanel />);
     expect(links()).toHaveLength(0);
     expect(phoneShown()).toBe(true);
