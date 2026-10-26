@@ -23,17 +23,32 @@ describe("checkout products", () => {
     });
 
     /*
-     * Smoking / Vaping Cessation, Menopause / Perimenopause and the
-     * hormone-therapy products are the catalogue entries still without a
-     * calendar. None of them is a `service_selection` option, so no quiz
-     * answer can reach them — they are dark in her portal, not here.
+     * Health Optimisation is the one quiz service deliberately without a
+     * checkout. Its refs exist and its calendar may well answer — the hold
+     * is on Jamie's training, not on the link — so the phone block is doing
+     * real work here: it stops a patient buying a consultation nobody is
+     * trained to deliver yet.
      */
-    it("has no quiz service left without products", () => {
+    it("offers nothing for health optimisation while the hold is on", () => {
+      expect(
+        productsFor({ service: "Health Optimisation & Complete Wellness" }),
+      ).toEqual([]);
+    });
+
+    /*
+     * Everything else the quiz offers must reach a checkout. Smoking /
+     * Vaping Cessation, Menopause / Perimenopause and the hormone-therapy
+     * products are also dark, but none is a `service_selection` option, so
+     * no quiz answer can reach them.
+     */
+    it("leaves no other quiz service without products", () => {
       const step = QUIZ_STEPS.find((s) => s.id === "service");
       expect(step, "service step").toBeDefined();
       if (step === undefined || step.kind !== "choice") return;
 
-      for (const service of step.options) {
+      const held = "Health Optimisation & Complete Wellness";
+
+      for (const service of step.options.filter((s) => s !== held)) {
         /*
          * Every branch of every service, because two of them answer a second
          * question before they have products. Undefined covers the services
@@ -70,18 +85,6 @@ describe("checkout products", () => {
    * assert the refs and prices from that spreadsheet, unchanged.
    */
   describe("the services Jamie's list turned on (2026-10-26)", () => {
-    it("offers three health optimisation tiers", () => {
-      const list = productsFor({
-        service: "Health Optimisation & Complete Wellness",
-      });
-      expect(refs(list)).toEqual([
-        "health-optimisation-complete-wellness-initial-consultation",
-        "health-optimisation-complete-wellness-follow-up-consultation",
-        "health-optimisation-complete-wellness-extended-review",
-      ]);
-      expect(list.map((p) => p.price)).toEqual([299, 149, 199]);
-    });
-
     it("offers two holistic care tiers", () => {
       const list = productsFor({
         service: "Holistic Care / Alternative Medicine",
@@ -91,6 +94,19 @@ describe("checkout products", () => {
         "holistic-alternative-care-follow-up",
       ]);
       expect(list.map((p) => p.price)).toEqual([69, 59]);
+    });
+
+    /*
+     * Holistic Care is the medicinal cannabis pathway under a compliant
+     * name — see the block above its products. Nothing user-facing says so,
+     * which makes it the easiest service on the site to switch off by
+     * accident while "tidying up the ones nobody books". Ranjeeta asked for
+     * it live on 2026-10-26 because a patient could not book one.
+     */
+    it("keeps holistic care bookable", () => {
+      expect(
+        productsFor({ service: "Holistic Care / Alternative Medicine" }).length,
+      ).toBe(2);
     });
 
     it("matches the service strings the quiz actually sends", () => {

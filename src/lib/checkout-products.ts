@@ -1,7 +1,7 @@
 /**
  * The clinic's checkout catalogue — every ref and every price, in one file.
  *
- * Ranjeeta's product list has 45 consultations. Thirty-six have a
+ * Ranjeeta's product list has 45 consultations. Thirty-three have a
  * practitioner's calendar connected and can be paid for today; the rest exist
  * in her portal but cannot be booked.
  *
@@ -11,7 +11,9 @@
  * lists are unioned, not replaced: Priority / After Hours is live and absent
  * from hers, because she does not do after-hours. Five more on 2026-10-26 as
  * "Jamie's links", same spreadsheet again: Health Optimisation & Complete
- * Wellness and Holistic Care / Alternative Medicine.
+ * Wellness and Holistic Care / Alternative Medicine — of which Health
+ * Optimisation went dark again hours later, on her instruction, because
+ * Jamie has not finished the training for it. See `productsFor`.
  *
  * ⚠️ Every list so far has been the SAME 45 refs with a different highlight.
  * A ref is not a practitioner — these URLs carry no practitioner at all — so
@@ -290,39 +292,37 @@ const REFERRALS: readonly CheckoutProduct[] = [
 ];
 
 /*
- * Lit on 2026-10-26, from Ranjeeta's email of the same day.
+ * ─── HOLISTIC CARE IS THE MEDICINAL CANNABIS PATHWAY ───────────────────────
  *
- * These five refs were on the original 45-row spreadsheet from 2026-10-09 and
- * were left out of Dr Yulia's highlighted subset on 2026-10-14, which is why
- * both services have been falling through to the phone block. Her email
- * describes them as "Jamie's consultation links"; the URLs name no
- * practitioner, so what changed is that a calendar is now connected behind
- * these refs, not that the refs are new. Prices are the spreadsheet's,
- * unchanged.
+ * Worth stating plainly, because the name does not say it and the next person
+ * to touch this file will not guess. "Holistic Care / Alternative Medicine"
+ * is what this site calls medicinal cannabis. Ranjeeta calls it "MC" in
+ * email. The quiz branch behind it (`hl_*` in content/quiz.ts, her own
+ * wording from 2026-09-15) is the Australian eligibility screen for it,
+ * question for question: a diagnosed chronic condition over three months,
+ * conventional prescription medication tried, that medication unsuccessful
+ * or causing adverse effects, then a contraindication and psychiatric
+ * screen.
  *
- * No notes on any of them: her catalogue gives a name, a price and a link,
- * and the tiering here — what makes a review "extended" rather than a
- * follow-up — is not something it states. See the note rule in the header.
+ * It is renamed because "cannabis" names a restricted prescription class.
+ * The TGA Advertising Code bars it from public copy and
+ * restricted-terms.test.ts fails the build on it — this comment survives
+ * only because that test strips comments first.
+ *
+ * So: a request to "activate the MC link" means these two refs, and taking
+ * them dark again makes medicinal cannabis unbookable. She asked for it
+ * live on 2026-10-26 because a patient could not book one.
+ *
+ * Lit on 2026-10-26. Both refs were on the original 45-row spreadsheet of
+ * 2026-10-09 and were left out of Dr Yulia's highlighted subset on
+ * 2026-10-14, which is why this service had been falling through to the
+ * phone block since launch. Her email describes them as "Jamie's links"; the
+ * URLs name no practitioner, so what changed is that a calendar is now
+ * connected behind these refs. Prices are the spreadsheet's, unchanged.
+ *
+ * No notes on either: her catalogue gives a name, a price and a link, and
+ * the tiering is not something it states. See the note rule in the header.
  */
-const HEALTH_OPTIMISATION: readonly CheckoutProduct[] = [
-  {
-    ref: "health-optimisation-complete-wellness-initial-consultation",
-    label: "Initial consultation",
-    price: 299,
-    note: "Your first appointment",
-  },
-  {
-    ref: "health-optimisation-complete-wellness-follow-up-consultation",
-    label: "Follow-up consultation",
-    price: 149,
-  },
-  {
-    ref: "health-optimisation-complete-wellness-extended-review",
-    label: "Extended review",
-    price: 199,
-  },
-];
-
 const HOLISTIC: readonly CheckoutProduct[] = [
   {
     ref: "holistic-alternative-care-initial",
@@ -397,8 +397,6 @@ export function productsFor(
       return selection.continuityFocus === CP_CHRONIC
         ? CHRONIC_DISEASE
         : CONTINUITY;
-    case "Health Optimisation & Complete Wellness":
-      return HEALTH_OPTIMISATION;
     /* The exact `service_selection` option string — "Holistic Care /
        Alternative Medicine" on the question, "Holistic / Alternative Care"
        on her spreadsheet. The quiz's wording is the one that has to match. */
@@ -410,11 +408,27 @@ export function productsFor(
 
   if (selection.service !== "Online Doctor") {
     /*
-     * Smoking / Vaping Cessation, Menopause / Perimenopause and the
-     * hormone-therapy products. All are in her catalogue; none has a
-     * connected calendar. They arrive here by having no branch rather than
-     * by being listed, so lighting one up is adding its products above and
-     * nothing else.
+     * ⚠️ Health Optimisation & Complete Wellness is deliberately NOT here.
+     *
+     * Its three refs were lit on 2026-10-26 and taken dark again the same
+     * day. Ranjeeta: "Health optimization / peptides are currently on hold.
+     * Jamie is in the process of completing his course on this and will only
+     * begin offering consultations once the training is finished."
+     *
+     * So this is a practitioner-competence hold, not a missing link — the
+     * refs exist, the calendar may well answer, and a patient reaching a
+     * checkout for it could book a consultation nobody is yet trained to
+     * deliver. Do not re-add it because the link "works". It goes back when
+     * she says the training is done.
+     *
+     * The refs, for when that happens:
+     *   health-optimisation-complete-wellness-initial-consultation   $299
+     *   health-optimisation-complete-wellness-follow-up-consultation $149
+     *   health-optimisation-complete-wellness-extended-review        $199
+     *
+     * Also still dark: Smoking / Vaping Cessation, Menopause /
+     * Perimenopause and the hormone-therapy products — those for want of a
+     * connected calendar rather than a hold.
      */
     return [];
   }
