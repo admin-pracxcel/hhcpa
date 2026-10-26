@@ -875,33 +875,6 @@ function longestRemaining(
   );
 }
 
-/**
- * The conversion event, fired once the submission is accepted.
- *
- * This exists because neither destination can be used as a trigger. Both
- * `/quiz-book/` and `/quiz-thank-you/` are reached with `router.push`, so
- * there is no page load for Tag Manager's Page View trigger to see, and the
- * two URLs split on the triage level — a tag on `/quiz-thank-you/` would
- * count only the submissions that were triaged out for review. One event at
- * the one moment a lead actually exists is the honest trigger.
- *
- * ⚠️ The event name and nothing else. No service, no triage level, no
- * contact details. The dataLayer is read by every tag in the container —
- * GA4, Meta and Clarity are all in there — and what a patient came here for
- * must not be sitting in it. `BookingPanel`'s `checkout_start` carries the
- * service because by then they are buying a named consultation; answering
- * the quiz is not the same act. Adding a parameter here is Ranjeeta's call,
- * not a convenience.
- */
-function trackQuizSubmit(): void {
-  try {
-    const layer = (window as unknown as { dataLayer?: unknown[] }).dataLayer;
-    if (Array.isArray(layer)) layer.push({ event: "quiz_submit" });
-  } catch {
-    /* Never let a tracking failure stand between a patient and their care. */
-  }
-}
-
 /** Renders `text`, turning each named phrase into a link. */
 function renderWithLinks(
   text: string,
@@ -1229,10 +1202,6 @@ export function QuizForm({
         level: outcome.level,
         prescriptionFee: prescriptionFee(allAnswers),
       });
-
-      /* Before the navigation, not after: the tag has to fire while this
-         page is still the one that is open. */
-      trackQuizSubmit();
 
       /*
        * `status` stays "sending" through the navigation so the button stays
