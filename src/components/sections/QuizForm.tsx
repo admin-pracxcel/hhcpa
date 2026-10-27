@@ -1946,12 +1946,26 @@ function ContactStep({
         </p>
       )}
 
+      {/*
+        "Get my results" until 2026-10-27. Ranjeeta: it reads as confusing,
+        and her trainer's review asked for this wording.
+
+        The same label on all three outcomes, which is Bilal's decision after
+        the trade was put to him. Green and amber both book on the next
+        screen, so it is accurate for them. Red does not: it lands on
+        /quiz-thank-you/ and is told a clinician will review and be in touch,
+        having just pressed a button promising a booking.
+
+        `outcome` is in scope here, so making the label conditional is a
+        one-line change if that is ever reconsidered. It is deliberate, not
+        an oversight — leave it unless she asks.
+      */}
       <button
         className="hhcp-btn hhcp-qz-submit"
         type="submit"
         disabled={status === "sending"}
       >
-        {status === "sending" ? "Sending…" : "Get my results"}
+        {status === "sending" ? "Sending…" : "Continue to Book Consultation"}
       </button>
       <RecaptchaNotice />
     </form>

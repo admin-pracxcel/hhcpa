@@ -65,7 +65,7 @@ describe("quiz form", () => {
     type("Email", "jane@example.com");
     type(/Phone number/, "412345678");
     for (const box of screen.getAllByRole("checkbox")) fireEvent.click(box);
-    fireEvent.click(screen.getByRole("button", { name: /get my results/i }));
+    fireEvent.click(screen.getByRole("button", { name: /continue to book consultation/i }));
   };
 
   const sentBody = () => {
@@ -630,7 +630,7 @@ describe("quiz form", () => {
     type("Email", "jane@example.com");
     type(/Phone number/, "412345678");
 
-    fireEvent.submit(screen.getByRole("button", { name: /get my results/i }));
+    fireEvent.submit(screen.getByRole("button", { name: /continue to book consultation/i }));
 
     expect(fetchMock).not.toHaveBeenCalled();
   });
