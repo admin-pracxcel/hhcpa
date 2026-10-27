@@ -15,14 +15,20 @@
  *
  * ─── WHEN THE PHONE BLOCK SHOWS ────────────────────────────────────────────
  *
- *   - amber. The patient flagged conditions or current medications for a
- *     practitioner to look at, so a person decides what they book, not a
- *     checkout. (Red never arrives here; it goes to /quiz-thank-you/.)
- *   - a service with no connected calendar — six of the eight today
+ *   - a service with no connected calendar
  *   - a referral request: all three referral products exist in her catalogue
  *     and none is bookable yet
  *   - no handoff at all: arrived directly, reloaded late, private browsing,
  *     or a record this cannot vouch for
+ *
+ * Amber is NOT on that list, and was between 2026-10-09 and 2026-10-27.
+ * Checkout was gated to green when the real links arrived, which quietly
+ * overrode her spec — the v2.3 addendum and her own triage definitions both
+ * say amber books and a practitioner reviews. It went unnoticed because
+ * before those links nobody could book at all and green saw the same phone
+ * number. Restored on Bilal's instruction: the review happens on the answers
+ * already sent to n8n, between the booking and the consultation. Red never
+ * arrives here; it goes to /quiz-thank-you/.
  *
  * That list is the point rather than an afterthought. A patient who has just
  * been told they can book must not reach a dead end, and a checkout that
@@ -312,12 +318,17 @@ export function BookingPanel({ className }: { className?: string }) {
   const handoff = parseBookingHandoff(raw);
 
   /*
-   * Green only. Amber reaches this page — it is offered a booking — but the
-   * booking it is offered is a phone call, because something in the answers
-   * wants a practitioner's eye before a time is held.
+   * Green and amber both book. That is her spec — the v2.3 addendum table
+   * reads "Book consultation, practitioner reviews" for amber — and the
+   * review is an n8n branch on the `outcome` already in the payload, not
+   * something this page does.
+   *
+   * Listed rather than `!== "red"` on purpose: a level added later must not
+   * reach a checkout by default, it must be a decision someone makes here.
    */
   const products =
-    handoff !== null && handoff.level === "green"
+    handoff !== null &&
+    (handoff.level === "green" || handoff.level === "amber")
       ? productsFor({
           service: handoff.service,
           onlineDoctorKind: handoff.onlineDoctorKind,

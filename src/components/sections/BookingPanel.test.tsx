@@ -51,12 +51,30 @@ describe("BookingPanel", () => {
     expect(screen.getByText("$119")).toBeTruthy();
   });
 
-  it("offers the phone on amber, whatever the service", () => {
+  it("offers the same checkout on amber as on green", () => {
     /*
-     * Amber means the patient flagged conditions or current medications. A
-     * practitioner decides what they book, not a checkout.
+     * Her spec, and the v2.3 addendum table: amber books, a practitioner
+     * reviews. The review runs on the answers already in the n8n payload,
+     * between the booking and the consultation — it is not this page's job.
+     *
+     * Checkout was gated to green from 2026-10-09 to 2026-10-27, which
+     * overrode that silently. This test exists so it cannot happen again by
+     * someone reasoning from "amber flagged something" without reading the
+     * spec. Same products, same count, no phone block.
      */
     write({ service: "Weight Management", level: "amber" });
+    render(<BookingPanel />);
+    expect(links()).toHaveLength(4);
+    expect(phoneShown()).toBe(false);
+  });
+
+  it("still keeps red away from a checkout", () => {
+    /*
+     * Red never reaches this page — it is routed to /quiz-thank-you/ — but
+     * if a stale or hand-made handoff ever carried it here, the one thing
+     * that must not happen is a bookable link.
+     */
+    write({ service: "Weight Management", level: "red" });
     render(<BookingPanel />);
     expect(links()).toHaveLength(0);
     expect(phoneShown()).toBe(true);

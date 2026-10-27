@@ -1607,8 +1607,15 @@ export function triage(
  * variant chosen here cannot tell which. "You can book on the next screen" is
  * true of both; "choose your consultation below" would be false for six.
  *
- * The amber bodies still promise a callback, and should. Amber is exactly the
- * case where a person decides what gets booked.
+ * The amber bodies promised a callback until 2026-10-27, which stopped being
+ * true when amber regained its checkout. They now point at the next screen
+ * like the green ones, for the same reason: a promise nobody is going to keep
+ * is the fault the crisis exit had.
+ *
+ * What amber still says, and green does not, is that a practitioner will go
+ * over the answers. That is the whole difference between the two levels and
+ * it is worth the patient knowing — it is also the one part the site does not
+ * do, since the review is an n8n branch on the outcome in the payload.
  */
 export const TRIAGE_MESSAGES = {
   weightLoss: {
@@ -1618,7 +1625,7 @@ export const TRIAGE_MESSAGES = {
     },
     amber: {
       heading: "Thanks, your answers are with us",
-      body: "There are a few things in your answers a practitioner will want to look at before recommending anything. Leave your details and we will arrange a consultation.",
+      body: "There are a few things in your answers a practitioner will want to look at before recommending anything. Leave your details and you can book your consultation on the next screen.",
     },
     red: {
       heading: "We need to review your answers first",
@@ -1632,7 +1639,7 @@ export const TRIAGE_MESSAGES = {
     },
     amber: {
       heading: "Thanks, your answers are with us",
-      body: "There are a few things in your answers a practitioner will want to look at first. Leave your details and we will arrange a consultation.",
+      body: "There are a few things in your answers a practitioner will want to look at first. Leave your details and you can book your consultation on the next screen.",
     },
     red: {
       heading: "We need to review your answers first",
@@ -1652,7 +1659,7 @@ export const TRIAGE_MESSAGES = {
     },
     amber: {
       heading: "Let's get you booked in",
-      body: "Leave your details and we will be in touch to arrange a consultation with an AHPRA-registered practitioner.",
+      body: "Leave your details and you can book your consultation with an AHPRA-registered practitioner on the next screen.",
     },
     red: {
       heading: "We need to review your answers first",
