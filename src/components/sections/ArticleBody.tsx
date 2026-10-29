@@ -26,7 +26,8 @@ import { Fragment, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { ArticleBlock, ArticleLink } from "@/content/articles";
 import { externalLinkProps } from "@/lib/external-link";
-import { FaqAccordion, FAQ_ACCORDION_STYLES } from "./FaqAccordion";
+import { FaqAccordion } from "./FaqAccordion";
+import { FAQ_ACCORDION_STYLES } from "./faq-accordion-styles";
 import { FacebookIcon, LinkedInIcon, XIcon } from "./social-icons";
 
 const STYLES = `

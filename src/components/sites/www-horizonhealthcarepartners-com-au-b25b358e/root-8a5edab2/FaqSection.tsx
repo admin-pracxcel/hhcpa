@@ -26,10 +26,8 @@
 import { PRICES } from "@/content/pricing";
 
 import { cn } from "@/lib/utils";
-import {
-  FaqAccordion,
-  FAQ_ACCORDION_STYLES,
-} from "@/components/sections/FaqAccordion";
+import { FaqAccordion } from "@/components/sections/FaqAccordion";
+import { FAQ_ACCORDION_STYLES } from "@/components/sections/faq-accordion-styles";
 import { JsonLd } from "@/components/JsonLd";
 import { buildFaqPage } from "@/lib/schema";
 import { ArrowRightIcon } from "../shared/icons";
