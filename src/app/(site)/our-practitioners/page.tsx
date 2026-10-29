@@ -4,22 +4,27 @@
  * Published on 2026-09-03 at the client's instruction, for their review. The
  * route gate and the per-page noindex were lifted together.
  *
- * ⚠️ The roster is still empty, and the page says so in its own words rather
- * than pretending otherwise — no practitioner may be listed until their name,
- * public title and AHPRA registration number are confirmed. PractitionerCards
- * refuses to render anyone without a registration number, so publishing the
- * page cannot by itself put a non-compliant card in front of anyone.
+ * ⚠️ No practitioner may be listed until their name, public title and AHPRA
+ * registration number are confirmed. PractitionerCards refuses to render
+ * anyone without a registration number, so publishing the page cannot by
+ * itself put a non-compliant card in front of anyone.
  *
- * The BUILD BLOCK asks for Physician/Person schema per practitioner with the
- * AHPRA number as `identifier`. None is emitted, because there is nobody to
- * describe — structured data naming an unverifiable practitioner would be the
- * exact failure the gate exists to prevent. Add it alongside the first card.
+ * The roster was empty when this page shipped on 2026-09-03 and the schema
+ * the BUILD BLOCK asks for was deliberately withheld: structured data naming
+ * an unverifiable practitioner is the exact failure the gate exists to
+ * prevent. Eight are confirmed now, so it is emitted — `buildPractitionerList`
+ * derives each node's type from the AHPRA prefix, and refuses to call a nurse
+ * practitioner a Physician on the same grounds the page copy does.
  */
 
 import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/JsonLd";
-import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
+import {
+  buildBreadcrumbList,
+  buildMedicalWebPage,
+  buildPractitionerList,
+} from "@/lib/schema";
 import { CLINIC } from "@/content/clinic";
 import {
   PRACTITIONERS,
@@ -56,6 +61,16 @@ export default function Page() {
           { name: "Home", path: "/" },
           { name: PRACTITIONERS_PAGE.hero.eyebrow, path: PRACTITIONERS_META.path },
         ])}
+      />
+      {/*
+        One node per practitioner, each carrying their AHPRA registration as a
+        verifiable identifier, wrapped in an ItemList. The site-wide graph
+        references these same @ids from its `employee` array, so the
+        organisation and the people are one connected entity rather than two
+        unrelated descriptions.
+      */}
+      <JsonLd
+        data={buildPractitionerList(PRACTITIONERS, PRACTITIONERS_META.path)}
       />
 
       <ServiceHero

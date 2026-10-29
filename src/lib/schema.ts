@@ -10,7 +10,12 @@ import {
   GOOGLE_BUSINESS_PROFILE,
   SOCIAL_PROFILES,
 } from "@/content/clinic";
-import { PRACTITIONERS, practitionerSlug } from "@/content/practitioners";
+import {
+  PRACTITIONERS,
+  practitionerSchemaType,
+  practitionerSlug,
+} from "@/content/practitioners";
+import type { Practitioner } from "@/components/sections/PractitionerCards";
 
 /**
  * The canonical origin — apex, no `www`.
@@ -275,6 +280,170 @@ export function buildService(input: {
     provider: ref(ORGANISATION_ID),
     areaServed: AREA_SERVED,
   } as const;
+}
+
+/**
+ * The practitioner roster, as an ItemList of one node per person.
+ *
+ * ─── THE TYPE IS NOT A STYLE CHOICE ────────────────────────────────────────
+ *
+ * `practitionerSchemaType` reads it off the AHPRA prefix: MED is a medical
+ * practitioner and takes `IndividualPhysician`, NMW is a nurse or midwife and
+ * takes `Person`. Describing a nurse practitioner as a Physician here is the
+ * machine-readable form of the protected-title breach s113 of the National
+ * Law prohibits in page copy, and JSON-LD is no more exempt than a heading.
+ *
+ * The two shapes differ accordingly. A physician gets `occupationalCategory`
+ * and `memberOf`; `jobTitle` and `worksFor` are not valid on that type, so
+ * the Person branch is the only one that carries them. Focus areas become
+ * `availableService` procedures for a physician and `knowsAbout` for a
+ * Person, which is the difference between performing a procedure and having
+ * expertise in a subject.
+ *
+ * Every node carries the AHPRA number as a PropertyValue identifier. That is
+ * the point of the whole block: published, verifiable registration for all
+ * eight, which almost no competitor publishes and which was absent from the
+ * structured data entirely until 2026-10-29.
+ */
+export function buildPractitionerList(
+  practitioners: readonly Practitioner[],
+  path: string,
+) {
+  const url = absolute(path);
+
+  const node = (practitioner: Practitioner) => {
+    const identifier = {
+      "@type": "PropertyValue",
+      propertyID: "AHPRA",
+      name: "AHPRA registration number",
+      value: practitioner.ahpraNumber,
+    } as const;
+
+    const base = {
+      "@id": practitionerId(practitionerSlug(practitioner)),
+      name: practitioner.name,
+      url,
+      identifier,
+    } as const;
+
+    if (practitionerSchemaType(practitioner) === "IndividualPhysician") {
+      return {
+        ...base,
+        "@type": "IndividualPhysician",
+        occupationalCategory: practitioner.title,
+        practicesAt: ref(ORGANISATION_ID),
+        memberOf: ref(ORGANISATION_ID),
+        areaServed: AREA_SERVED,
+        availableService: (practitioner.focusAreas ?? []).map((area) => ({
+          "@type": "MedicalProcedure",
+          name: area,
+        })),
+      };
+    }
+
+    return {
+      ...base,
+      "@type": "Person",
+      jobTitle: practitioner.title,
+      worksFor: ref(ORGANISATION_ID),
+      knowsAbout: [...(practitioner.focusAreas ?? [])],
+    };
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${url}#practitioner-list`,
+    name: `AHPRA-registered practitioners at ${CLINIC.name}`,
+    numberOfItems: practitioners.length,
+    itemListOrder: "https://schema.org/ItemListUnordered",
+    itemListElement: practitioners.map((practitioner, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: node(practitioner),
+    })),
+  } as const;
+}
+
+/**
+ * The knowledge hub, as a Blog listing its posts.
+ *
+ * `/articles/` carried only MedicalWebPage and a breadcrumb, and the three
+ * article cards were the only internal links to the articles at all. A Blog
+ * node with `blogPost` references states the relationship the cards imply.
+ *
+ * References by `@id` rather than restating each article: the full Article
+ * node is published on the article's own page, and describing it twice with
+ * different detail is how the two drift.
+ */
+export function buildBlog(
+  posts: readonly { slug: string; title: string }[],
+  input: { name: string; description: string; path: string },
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${absolute(input.path)}#blog`,
+    name: input.name,
+    description: input.description,
+    url: absolute(input.path),
+    inLanguage: "en-AU",
+    publisher: ref(ORGANISATION_ID),
+    isPartOf: ref(WEBSITE_ID),
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      "@id": `${absolute(`/article/${post.slug}/`)}#article`,
+      headline: post.title,
+      url: absolute(`/article/${post.slug}/`),
+    })),
+  } as const;
+}
+
+/**
+ * The published fee table, as Service nodes with an Offer each.
+ *
+ * ⚠️ The consultation is priced. Never a medicine.
+ *
+ * That is not a style note. Advertising a price against a prescription-only
+ * medicine is prohibited under the Therapeutic Goods Advertising Code, and it
+ * is prohibited in structured data for the same reason it is prohibited in
+ * page copy — `restricted-terms.test.ts` already enforces the wording, and
+ * this is the same rule wearing JSON-LD. Every `name` here is a consultation.
+ *
+ * The fees are already published on the page in words. This makes them
+ * readable by a machine, which is the whole differentiator: a telehealth
+ * clinic that publishes its prices, in a market where most do not.
+ */
+export function buildPricedServices(
+  services: readonly {
+    name: string;
+    description: string;
+    price: number;
+  }[],
+  path: string,
+) {
+  return services.map(
+    (service) =>
+      ({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: service.name,
+        description: service.description,
+        url: absolute(path),
+        provider: ref(ORGANISATION_ID),
+        areaServed: AREA_SERVED,
+        offers: {
+          "@type": "Offer",
+          price: service.price.toFixed(2),
+          priceCurrency: "AUD",
+          url: absolute(path),
+          availability: "https://schema.org/InStock",
+          /* The fee buys a consultation. Anything dispensed afterwards is a
+             separate cost and is not described here. */
+          category: "Consultation",
+        },
+      }) as const,
+  );
 }
 
 export function buildFaqPage(faqs: readonly Faq[]) {

@@ -13,9 +13,13 @@
 import type { Metadata } from "next";
 
 import { JsonLd } from "@/components/JsonLd";
-import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
+import {
+  buildBlog,
+  buildBreadcrumbList,
+  buildMedicalWebPage,
+} from "@/lib/schema";
 import { CALL_CTA, CLINIC } from "@/content/clinic";
-import { articleCards } from "@/content/articles";
+import { ARTICLES, articleCards } from "@/content/articles";
 
 import { LeadParagraph } from "@/components/sections/LeadParagraph";
 import { ServiceHero } from "@/components/sections/ServiceHero";
@@ -51,6 +55,18 @@ export default function Page() {
           { name: "Home", path: "/" },
           { name: "Knowledge hub", path: META.path },
         ])}
+      />
+      {/*
+        The hub had no Blog or CollectionPage markup, and the three cards
+        below were the only internal links to the articles at all. This states
+        the relationship the cards imply.
+      */}
+      <JsonLd
+        data={buildBlog(ARTICLES, {
+          name: META.title,
+          description: META.description,
+          path: META.path,
+        })}
       />
 
       <ServiceHero

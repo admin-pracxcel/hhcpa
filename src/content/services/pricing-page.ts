@@ -21,10 +21,34 @@
  */
 
 import type { ServicePageData } from "@/components/sections/ServicePage";
-import { PRICES } from "../pricing";
+import { PRICES, type PriceKey } from "../pricing";
 import { CONSULTATION_PLANS } from "../consultation-plans";
 import { MEDICARE_ANSWER, STANDARD_CLOSING } from "./shared";
 import { CALL_CTA } from "../clinic";
+
+/**
+ * The twelve rows of the fee table, in the order they are shown.
+ *
+ * Exported because `/pricing/` also emits one Service and Offer per row as
+ * JSON-LD, and the markup must describe the table that is actually on the
+ * page. A second hand-written list would be a second thing to forget when a
+ * row is added.
+ */
+export const PRICE_ROWS = [
+  "generalConsult",
+  "afterHoursConsult",
+  "priorityConsult",
+  "medicalCertificate",
+  "prescriptions",
+  "pathologyReferral",
+  "mentalHealth",
+  "mensWomensHealth",
+  "weightManagement",
+  /* §5.1 adds these two and renames the third; twelve rows in total. */
+  "continuityPreventative",
+  "holisticCare",
+  "healthProgram",
+] as const satisfies readonly PriceKey[];
 
 export const PRICING_PAGE: ServicePageData = {
   meta: {
@@ -64,21 +88,7 @@ export const PRICING_PAGE: ServicePageData = {
       kind: "priceTiles",
       eyebrow: "All services and fees",
       heading: "All services and fees",
-      rows: [
-        "generalConsult",
-        "afterHoursConsult",
-        "priorityConsult",
-        "medicalCertificate",
-        "prescriptions",
-        "pathologyReferral",
-        "mentalHealth",
-        "mensWomensHealth",
-        "weightManagement",
-        /* §5.1 adds these two and renames the third; twelve rows in total. */
-        "continuityPreventative",
-        "holisticCare",
-        "healthProgram",
-      ],
+      rows: PRICE_ROWS,
       labels: { priorityConsult: "Priority consult (limited daily)" },
       /*
        * The prescriptions row reads "from $19", which is the floor of the

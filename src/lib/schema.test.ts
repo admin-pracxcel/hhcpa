@@ -4,6 +4,9 @@ import {
   buildSiteGraph,
   buildMedicalWebPage,
   buildService,
+  buildPractitionerList,
+  buildBlog,
+  buildPricedServices,
   buildFaqPage,
   buildBreadcrumbList,
   practitionerId,
@@ -116,6 +119,124 @@ describe("page builders reference the graph", () => {
     const json = JSON.stringify(page);
     expect(json).not.toContain('"@type":"MedicalClinic"');
     expect(json).not.toContain('"@type":"Organization"');
+  });
+});
+
+/*
+ * The protected-title rule, enforced rather than reviewed.
+ *
+ * Describing a nurse practitioner as a Physician in structured data is the
+ * machine-readable form of what s113 of the National Law prohibits in page
+ * copy. It is also the single easiest thing to get wrong here, because the
+ * eight records look alike and only the registration prefix separates them.
+ */
+describe("buildPractitionerList", () => {
+  const list = buildPractitionerList(PRACTITIONERS, "/our-practitioners/");
+  const nodes = list.itemListElement.map((entry) => entry.item);
+
+  it("never calls a nurse practitioner a physician", () => {
+    for (const node of nodes) {
+      const ahpra = node.identifier.value;
+      if (ahpra.startsWith("NMW")) {
+        expect(node["@type"], node.name).toBe("Person");
+      }
+      if (ahpra.startsWith("MED")) {
+        expect(node["@type"], node.name).toBe("IndividualPhysician");
+      }
+    }
+  });
+
+  it("publishes a verifiable registration number for every practitioner", () => {
+    expect(nodes).toHaveLength(PRACTITIONERS.length);
+    for (const node of nodes) {
+      expect(node.identifier.propertyID).toBe("AHPRA");
+      expect(node.identifier.value).toMatch(/^(MED|NMW)\d+$/);
+    }
+  });
+
+  it("gives every node the @id the site graph references", () => {
+    /* The join between the organisation and the people. A mismatch here does
+       not error — it produces eight dangling references and eight orphan
+       nodes, and nothing says so. */
+    for (const practitioner of PRACTITIONERS) {
+      const id = practitionerId(practitionerSlug(practitioner));
+      expect(nodes.map((node) => node["@id"])).toContain(id);
+    }
+  });
+
+  it("keeps jobTitle and worksFor off the physician type", () => {
+    /* Not valid on IndividualPhysician; it takes occupationalCategory and
+       memberOf instead. */
+    for (const node of nodes) {
+      if (node["@type"] !== "IndividualPhysician") continue;
+      const physician = node as Record<string, unknown>;
+      expect(physician).not.toHaveProperty("jobTitle");
+      expect(physician).not.toHaveProperty("worksFor");
+      expect(physician.memberOf).toEqual({ "@id": ORGANISATION_ID });
+    }
+  });
+});
+
+describe("buildBlog", () => {
+  const blog = buildBlog(
+    [
+      { slug: "a-post", title: "A post" },
+      { slug: "another-post", title: "Another post" },
+    ],
+    { name: "Knowledge Hub", description: "Guidance", path: "/articles/" },
+  );
+
+  it("lists each post by the @id its own page publishes", () => {
+    expect(blog["@type"]).toBe("Blog");
+    expect(blog.blogPost).toHaveLength(2);
+    expect(blog.blogPost[0]["@id"]).toBe(
+      `${SITE_URL}/article/a-post/#article`,
+    );
+    expect(blog.blogPost[0].url).toBe(`${SITE_URL}/article/a-post/`);
+  });
+
+  it("is published by the organisation in the graph", () => {
+    expect(blog.publisher).toEqual({ "@id": ORGANISATION_ID });
+    expect(blog.isPartOf).toEqual({ "@id": WEBSITE_ID });
+  });
+});
+
+/*
+ * The TGA line, enforced here as well as in page copy.
+ *
+ * Advertising a price against a prescription-only medicine is prohibited.
+ * restricted-terms.test.ts already stops the words reaching the site; this
+ * stops a price being attached to one in JSON-LD, which the term guard would
+ * not catch on its own because an Offer can name a medicine without using a
+ * restricted word — "the injection", "the treatment".
+ */
+describe("buildPricedServices", () => {
+  const services = buildPricedServices(
+    [
+      { name: "General consult and referrals", description: "x", price: 59 },
+      { name: "Medical certificates", description: "y", price: 24.9 },
+    ],
+    "/pricing/",
+  );
+
+  it("prices in AUD with the cents a patient is charged", () => {
+    expect(services[0].offers.price).toBe("59.00");
+    expect(services[1].offers.price).toBe("24.90");
+    expect(services[0].offers.priceCurrency).toBe("AUD");
+  });
+
+  it("prices a consultation, never a product", () => {
+    for (const service of services) {
+      expect(service.offers.category).toBe("Consultation");
+      expect(service["@type"]).toBe("Service");
+      /* An Offer on a Product type is how a medicine price gets published. */
+      expect(service["@type"]).not.toBe("Product");
+      expect(service["@type"]).not.toBe("Drug");
+    }
+  });
+
+  it("names the provider by reference", () => {
+    expect(services[0].provider).toEqual({ "@id": ORGANISATION_ID });
   });
 });
 
