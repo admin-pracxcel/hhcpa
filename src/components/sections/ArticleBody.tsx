@@ -26,6 +26,7 @@ import { Fragment, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { ArticleBlock, ArticleLink } from "@/content/articles";
 import { externalLinkProps } from "@/lib/external-link";
+import { FaqAccordion, FAQ_ACCORDION_STYLES } from "./FaqAccordion";
 import { FacebookIcon, LinkedInIcon, XIcon } from "./social-icons";
 
 const STYLES = `
@@ -211,6 +212,20 @@ const STYLES = `
   border-bottom: 0;
 }
 
+/* ---------- FAQ accordion ---------- */
+/*
+ * The rows come from the shared accordion, so they match /faqs/ and the
+ * service pages. Two things change in an article: it fills the prose column
+ * rather than the section's 662px, and it needs its own vertical space
+ * because there is no section padding around it here.
+ */
+${FAQ_ACCORDION_STYLES}
+
+.hhcp-ab-faq {
+  max-width: 100%;
+  margin: var(--hhcp-space-m, 30px) 0;
+}
+
 /* ---------- Closing disclaimer ---------- */
 /*
  * A rule, then the line in 13px italic. The rule is the live template's
@@ -330,7 +345,17 @@ p.hhcp-ab-note {
 interface ArticleBodyProps {
   className?: string;
   blocks: readonly ArticleBlock[];
-  moneyPage: { label: string; href: string };
+  /**
+   * The service page this article points readers at, rendered as a standing
+   * callout after the opening paragraphs.
+   *
+   * Optional since 2026-10-29. The first two articles were migrated under a
+   * content spec that required each one to link its money page inside the
+   * opening, and the callout is how that was met without editing approved
+   * sentences. Articles supplied since are published as written, so an
+   * article only gets this box when it is asked for.
+   */
+  moneyPage?: { label: string; href: string };
   /** Absolute, because the share endpoints resolve it on their own servers. */
   shareUrl: string;
   shareTitle: string;
@@ -383,7 +408,7 @@ export function ArticleBody({
           {blocks.map((block, index) => (
             <Fragment key={index}>
               <Block block={block} />
-              {index === insertAfter - 1 && (
+              {moneyPage && index === insertAfter - 1 && (
                 <p className="hhcp-ab-money">
                   Considering your options?{" "}
                   <a href={moneyPage.href}>Read about {moneyPage.label}</a>, or
@@ -534,6 +559,21 @@ function Block({ block }: { block: ArticleBlock }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={block.src} alt={block.alt} loading="lazy" />
         </figure>
+      );
+    case "faq":
+      return (
+        <FaqAccordion
+          className="hhcp-ab-faq"
+          idPrefix="hhcp-ab-faq"
+          items={block.items.map((item) => ({
+            id: item.q
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, ""),
+            question: item.q,
+            answer: item.a,
+          }))}
+        />
       );
     case "table":
       return (

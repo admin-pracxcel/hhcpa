@@ -7,10 +7,25 @@
  * at the relevant money page." The body copy is theirs, transcribed from the
  * live pages rather than rewritten.
  *
- * `moneyPage` is the link each article owes its money page. The document asks
- * for that link inside the first two paragraphs; it renders as a callout after
- * the opening, which is as close as the migrated copy allows without editing
- * sentences that have not been re-approved.
+ * ─── ADDING AN ARTICLE ─────────────────────────────────────────────────────
+ *
+ * Publish what the supplied document says and nothing else. The markdown
+ * carries its own slug, meta title, meta description, excerpt and image
+ * filenames in a block at the end; use those rather than writing new ones.
+ *
+ * ⚠️ `moneyPage` is OPTIONAL and should be left out unless it is asked for.
+ *
+ * It renders a standing callout after the opening — "Considering your
+ * options? Read about X, or start with the free pre-screening quiz" — in
+ * wording this file owns, not the article's. The two migrated articles have
+ * one because the content document required each article to link its money
+ * page inside the first two paragraphs, and a callout was the only way to
+ * meet that without editing sentences that had not been re-approved.
+ *
+ * Articles supplied since are published as written. Bilal's instruction,
+ * 2026-10-29: keep it on the two that had it, and do not add it to new
+ * articles unless he says so. Setting it silently puts copy nobody wrote
+ * into the top of someone's article.
  *
  * Publication dates were carried across from her previous site and confirmed
  * by Ranjeeta on 2026-10-29 as unchanged, which is why they are now published
@@ -84,6 +99,21 @@ export type ArticleBlock =
       readonly alt: string;
     }
   /**
+   * An FAQ block, rendered with the site's accordion.
+   *
+   * The questions were h3/p pairs when this article was first published,
+   * which read as a wall of text at the foot of a long page. The accordion is
+   * the same component the service pages and /faqs/ use, so a reader meets
+   * one FAQ pattern across the site.
+   */
+  | {
+      readonly kind: "faq";
+      readonly items: readonly {
+        readonly q: string;
+        readonly a: string;
+      }[];
+    }
+  /**
    * A simple data table with a header row.
    *
    * Rendered inside its own horizontally scrollable container, because a
@@ -133,7 +163,16 @@ export interface Article {
   readonly readTime: string;
   readonly image: string;
   readonly imageAlt: string;
-  readonly moneyPage: { readonly label: string; readonly href: string };
+  /**
+   * The service page this article points at, shown as a callout after the
+   * opening paragraphs.
+   *
+   * Optional. The two migrated articles carry one because the content
+   * document required each article to link its money page in the opening.
+   * Articles supplied since are published as written, so this is set only
+   * when it is asked for.
+   */
+  readonly moneyPage?: { readonly label: string; readonly href: string };
   readonly blocks: readonly ArticleBlock[];
 }
 
@@ -158,10 +197,6 @@ export const ARTICLES: readonly Article[] = [
     image: `${IMAGE_BASE}why-weight-comes-back-after-dieting-hero.webp`,
     imageAlt:
       "Open blank notebook, pen and cup of herbal tea beside eucalyptus on linen",
-    moneyPage: {
-      label: "Weight management",
-      href: "/weight-management/",
-    },
     blocks: [
       {
         kind: "p",
@@ -421,40 +456,38 @@ export const ARTICLES: readonly Article[] = [
         text: "In an emergency, call 000. For emotional support at any hour, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636. For eating or body image concerns, the Butterfly Foundation National Helpline is open 8am to midnight (AEST/AEDT), seven days a week, on 1800 33 4673. It is not a crisis line and is closed on national public holidays.",
       },
       { kind: "h2", text: "Frequently asked questions" },
-      { kind: "h3", text: "Is it normal to regain weight after dieting?" },
       {
-        kind: "p",
-        text: "Yes, regaining weight after a diet is common, and researchers describe a high rate of regain after diet-induced weight loss (Source: Sumithran et al., 2011). Hunger and energy changes help explain why weight comes back after dieting. Estimates of exactly how many people regain vary between sources. Results vary, and a registered health practitioner can talk through your situation.",
-      },
-      { kind: "h3", text: "Why do I regain weight after dieting?" },
-      {
-        kind: "p",
-        text: "After weight loss, hunger hormones such as leptin and ghrelin tend to shift towards stronger appetite, and your basal metabolic rate can fall. Habits, sleep, stress, medical conditions and the food environment can add to this. In an Australian study, hunger-related hormone changes were still present a year after weight loss (Source: Sumithran et al., 2011).",
-      },
-      { kind: "h3", text: "How much weight do people regain after dieting?" },
-      {
-        kind: "p",
-        text: "It varies. In one Melbourne study of adults with overweight or obesity, people lost about 13 kg on a very-low-energy diet and regained about 5 kg during the year of follow-up (Source: University of Melbourne, 2011). Estimates of how many people regain differ between sources. Your own experience depends on your health, history and circumstances, so speak with a registered health practitioner rather than relying on averages.",
-      },
-      { kind: "h3", text: "Does metabolism slow after weight loss?" },
-      {
-        kind: "p",
-        text: "It can. Your basal metabolic rate, the energy you use at rest, may fall by more than your smaller body size alone would explain, which researchers call metabolic adaptation. How much this happens varies between people, and research is still developing. Appetite, habits and medical factors also matter, so metabolism is rarely the whole story.",
-      },
-      { kind: "h3", text: "How long does metabolic adaptation last?" },
-      {
-        kind: "p",
-        text: "The timing is not settled. A key Australian finding is about appetite hormones, which were still altered a year after weight loss in the Melbourne study (Source: Sumithran et al., 2011). Researchers are still studying how long changes in energy use last, and it may vary between people. A registered health practitioner can explain what this may mean for you.",
-      },
-      { kind: "h3", text: "Is weight regain my fault?" },
-      {
-        kind: "p",
-        text: "Weight regain is not a sign of personal failure. It reflects a mix of biology, habits, health conditions and the environment around you. The National Obesity Strategy 2022-2032 names tackling weight stigma as a principle (Source: National Obesity Strategy 2022-2032). If you feel stuck in a cycle of blame, your GP, a dietitian or a psychologist can support you.",
-      },
-      { kind: "h3", text: "How do I stop gaining weight back after a diet?" },
-      {
-        kind: "p",
-        text: "No single approach works for everyone, and no one can promise a result. Planning for the period after a diet, considering check-ins with a registered practitioner, and looking at sleep, stress and medical factors may help. Speak with a registered health practitioner, such as your GP or an Accredited Practising Dietitian, about what suits your circumstances. Results vary.",
+        kind: "faq",
+        items: [
+          {
+            q: "Is it normal to regain weight after dieting?",
+            a: "Yes, regaining weight after a diet is common, and researchers describe a high rate of regain after diet-induced weight loss (Source: Sumithran et al., 2011). Hunger and energy changes help explain why weight comes back after dieting. Estimates of exactly how many people regain vary between sources. Results vary, and a registered health practitioner can talk through your situation.",
+          },
+          {
+            q: "Why do I regain weight after dieting?",
+            a: "After weight loss, hunger hormones such as leptin and ghrelin tend to shift towards stronger appetite, and your basal metabolic rate can fall. Habits, sleep, stress, medical conditions and the food environment can add to this. In an Australian study, hunger-related hormone changes were still present a year after weight loss (Source: Sumithran et al., 2011).",
+          },
+          {
+            q: "How much weight do people regain after dieting?",
+            a: "It varies. In one Melbourne study of adults with overweight or obesity, people lost about 13 kg on a very-low-energy diet and regained about 5 kg during the year of follow-up (Source: University of Melbourne, 2011). Estimates of how many people regain differ between sources. Your own experience depends on your health, history and circumstances, so speak with a registered health practitioner rather than relying on averages.",
+          },
+          {
+            q: "Does metabolism slow after weight loss?",
+            a: "It can. Your basal metabolic rate, the energy you use at rest, may fall by more than your smaller body size alone would explain, which researchers call metabolic adaptation. How much this happens varies between people, and research is still developing. Appetite, habits and medical factors also matter, so metabolism is rarely the whole story.",
+          },
+          {
+            q: "How long does metabolic adaptation last?",
+            a: "The timing is not settled. A key Australian finding is about appetite hormones, which were still altered a year after weight loss in the Melbourne study (Source: Sumithran et al., 2011). Researchers are still studying how long changes in energy use last, and it may vary between people. A registered health practitioner can explain what this may mean for you.",
+          },
+          {
+            q: "Is weight regain my fault?",
+            a: "Weight regain is not a sign of personal failure. It reflects a mix of biology, habits, health conditions and the environment around you. The National Obesity Strategy 2022-2032 names tackling weight stigma as a principle (Source: National Obesity Strategy 2022-2032). If you feel stuck in a cycle of blame, your GP, a dietitian or a psychologist can support you.",
+          },
+          {
+            q: "How do I stop gaining weight back after a diet?",
+            a: "No single approach works for everyone, and no one can promise a result. Planning for the period after a diet, considering check-ins with a registered practitioner, and looking at sleep, stress and medical factors may help. Speak with a registered health practitioner, such as your GP or an Accredited Practising Dietitian, about what suits your circumstances. Results vary.",
+          },
+        ],
       },
       {
         kind: "note",

@@ -23,13 +23,16 @@
 
 "use client";
 
-import { useState } from "react";
 import { PRICES } from "@/content/pricing";
 
 import { cn } from "@/lib/utils";
+import {
+  FaqAccordion,
+  FAQ_ACCORDION_STYLES,
+} from "@/components/sections/FaqAccordion";
 import { JsonLd } from "@/components/JsonLd";
 import { buildFaqPage } from "@/lib/schema";
-import { ArrowRightIcon, FaqTogglePlusIcon } from "../shared/icons";
+import { ArrowRightIcon } from "../shared/icons";
 
 const HEADING = "Your Questions Answered";
 
@@ -125,61 +128,7 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
-.hhcp-fq-accordion {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 662px;
-  border-bottom: 1px solid #ececec;
-}
-
-.hhcp-fq-question {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--hhcp-space-m, 30px);
-  cursor: pointer;
-  width: 100%;
-  padding: var(--hhcp-space-s, 20px) 0;
-  border-top: 1px solid #ececec;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
-  background-color: transparent;
-  text-align: left;
-}
-
-.hhcp-fq-question-label {
-  font-size: var(--hhcp-h4, 20px);
-  line-height: 24.16px;
-  font-weight: 500;
-  color: var(--hhcp-primary, #013126);
-  text-align: start;
-}
-
-.hhcp-fq-icon {
-  flex: none;
-  transition: all 0.2s ease;
-}
-
-/* The source rotates the whole plus glyph into a cross; it does not swap art. */
-.hhcp-fq-item.is-open .hhcp-fq-icon {
-  transform: rotate(45deg);
-}
-
-.hhcp-fq-panel {
-  display: none;
-  padding: 0 0 var(--hhcp-space-m, 30px);
-  font-size: var(--hhcp-text-s, 16px);
-  line-height: 24px;
-  color: rgba(1, 49, 38, 0.8);
-}
-
-.hhcp-fq-item.is-open .hhcp-fq-panel {
-  display: block;
-}
+${FAQ_ACCORDION_STYLES}
 
 /*
  * The FAQ footer is NOT a pill button — it is a centred prompt plus an icon
@@ -253,9 +202,6 @@ export function FaqSection({
   emitSchema = true,
   showCta = true,
 }: FaqSectionProps) {
-  /* Every row ships collapsed on the source page. */
-  const [openId, setOpenId] = useState<string | null>(null);
-
   return (
     <section className={cn("hhcp-fq-section", className)}>
       <style>{STYLES}</style>
@@ -271,42 +217,13 @@ export function FaqSection({
           <h2 className="hhcp-fq-title font-dm-sans">{heading}</h2>
         </div>
 
-        <div className="hhcp-fq-accordion">
-          {items.map((item) => {
-            const open = item.id === openId;
-            const panelId = "hhcp-fq-panel-" + item.id;
-            const buttonId = "hhcp-fq-question-" + item.id;
-
-            return (
-              <div
-                key={item.id}
-                className={cn("hhcp-fq-item", open && "is-open")}
-              >
-                <button
-                  type="button"
-                  id={buttonId}
-                  className="hhcp-fq-question"
-                  aria-expanded={open}
-                  aria-controls={panelId}
-                  onClick={() => setOpenId(open ? null : item.id)}
-                >
-                  <span className="hhcp-fq-question-label font-dm-sans">
-                    {item.question}
-                  </span>
-                  <FaqTogglePlusIcon className="hhcp-fq-icon" />
-                </button>
-                <div
-                  id={panelId}
-                  role="region"
-                  aria-labelledby={buttonId}
-                  className="hhcp-fq-panel font-dm-sans"
-                >
-                  {item.answer}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <FaqAccordion
+          items={items.map((item) => ({
+            id: item.id,
+            question: item.question,
+            answer: item.answer,
+          }))}
+        />
 
         {showCta && (
           <div className="hhcp-fq-cta-row font-dm-sans">

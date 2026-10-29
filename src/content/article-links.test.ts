@@ -143,3 +143,41 @@ describe("article links", () => {
     }
   });
 });
+
+/*
+ * The money-page callout is template copy, not the article's own words, and
+ * it is opt-in. Bilal's instruction on 2026-10-29: keep it on the two
+ * migrated articles, do not add it to new ones unless asked.
+ *
+ * Pinned by slug rather than by count so that adding an article cannot
+ * quietly acquire one, and removing it from a migrated article is a
+ * deliberate edit to this list rather than a silent change.
+ */
+describe("the money-page callout", () => {
+  const WITH_CALLOUT = [
+    "why-weight-loss-is-difficult-to-maintain-and-what-actually-works-long-term",
+    "why-sleep-is-essential-for-chronic-pain-weight-and-overall-health",
+  ];
+
+  it("appears only on the articles it was asked for", () => {
+    for (const article of ARTICLES) {
+      const expected = WITH_CALLOUT.includes(article.slug);
+      expect(
+        article.moneyPage !== undefined,
+        expected
+          ? `${article.slug} should carry a money-page callout`
+          : `${article.slug} must not carry one unless it was asked for`,
+      ).toBe(expected);
+    }
+  });
+
+  it("points at a page this site serves where it is set", () => {
+    const known = new Set<string>(ROUTES.map((route) => route.path));
+    for (const article of ARTICLES) {
+      if (!article.moneyPage) continue;
+      expect(known, `${article.slug} → ${article.moneyPage.href}`).toContain(
+        article.moneyPage.href,
+      );
+    }
+  });
+});
