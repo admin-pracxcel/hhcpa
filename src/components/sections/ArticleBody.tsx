@@ -21,10 +21,11 @@
  * grey rule. All three are what the reference does.
  */
 
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import type { ArticleBlock } from "@/content/articles";
+import type { ArticleBlock, ArticleLink } from "@/content/articles";
+import { externalLinkProps } from "@/lib/external-link";
 import { FacebookIcon, LinkedInIcon, XIcon } from "./social-icons";
 
 const STYLES = `
@@ -104,6 +105,110 @@ const STYLES = `
 
 .hhcp-ab-list li + li {
   margin-top: 8px;
+}
+
+.hhcp-ab-list--ordered {
+  list-style: decimal;
+}
+
+/*
+ * Links inside body copy.
+ *
+ * Underlined rather than colour-only: the body text is already a dark green
+ * and a link that differs from it only in hue is not reliably distinguishable
+ * for a reader with low vision or colour blindness.
+ */
+.hhcp-ab-body p a,
+.hhcp-ab-list li a,
+.hhcp-ab-callout a {
+  color: var(--hhcp-primary, #013126);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+}
+
+.hhcp-ab-body p a:hover,
+.hhcp-ab-list li a:hover,
+.hhcp-ab-callout a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Pull-out panel ---------- */
+
+.hhcp-ab-callout {
+  margin: var(--hhcp-space-m, 30px) 0;
+  padding: 20px 24px;
+  background: var(--hhcp-accent, #f5fff9);
+  border-left: 3px solid var(--hhcp-primary, #013126);
+  border-radius: 0 6px 6px 0;
+}
+
+.hhcp-ab-callout p {
+  margin: 0;
+  font-size: var(--hhcp-text-m, 16px);
+  line-height: var(--hhcp-text-lh, 1.5);
+}
+
+/* ---------- Body image ---------- */
+
+.hhcp-ab-figure {
+  margin: var(--hhcp-space-m, 30px) 0;
+}
+
+.hhcp-ab-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ---------- Table ---------- */
+/*
+ * The wrapper scrolls, not the page. Three columns do not fit a 360px phone,
+ * and a table that widens the document is a layout bug on every other section
+ * of the page at once.
+ */
+
+.hhcp-ab-tablewrap {
+  margin: var(--hhcp-space-m, 30px) 0;
+  overflow-x: auto;
+  border: 1px solid rgba(1, 49, 38, 0.15);
+  border-radius: 6px;
+}
+
+.hhcp-ab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--hhcp-text-s, 14px);
+  line-height: var(--hhcp-text-lh, 1.5);
+}
+
+.hhcp-ab-table th,
+.hhcp-ab-table td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(1, 49, 38, 0.12);
+}
+
+.hhcp-ab-table thead th {
+  background: var(--hhcp-accent, #f5fff9);
+  font-weight: 600;
+  color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-ab-table tbody th {
+  font-weight: 500;
+  color: var(--hhcp-primary, #013126);
+}
+
+.hhcp-ab-table td {
+  color: rgba(1, 49, 38, 0.8);
+}
+
+.hhcp-ab-table tbody tr:last-child th,
+.hhcp-ab-table tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 /* ---------- Closing disclaimer ---------- */
@@ -315,6 +420,78 @@ export function ArticleBody({
   );
 }
 
+/**
+ * Body copy with its links put back in.
+ *
+ * ─── WHY PHRASES RATHER THAN MARKUP ────────────────────────────────────────
+ *
+ * The copy stays a plain string and each link names the phrase it wraps. That
+ * keeps the content arrays readable as prose, and it means an edit that
+ * removes a phrase drops its link instead of leaving markup wrapped round the
+ * wrong words. `article-links.test.ts` fails when a phrase is missing.
+ *
+ * ─── REL, AND WHAT IT SHOULD AND SHOULD NOT SAY ────────────────────────────
+ *
+ * There is no such thing as `rel="dofollow"`. A link is followed unless it
+ * says otherwise, so the correct markup for a link we are happy to endorse is
+ * no `rel` at all beyond the security pair.
+ *
+ * These citations are exactly that kind of link: AIHW is a government agency
+ * and Dietitians Australia is the profession's peak body. Linking out to
+ * authoritative sources is what a well-sourced health article should do, and
+ * `nofollow` on them would withhold an endorsement we are actively making in
+ * the sentence around the link. `nofollow` belongs on links we do not vouch
+ * for — paid placements, user-submitted content, the share buttons above,
+ * which point at whatever a reader posts.
+ *
+ * `target` and the `noopener noreferrer` pair come from `externalLinkProps`,
+ * which decides from the host, so no author has to remember the rule.
+ *
+ * (QuizForm has a similar helper for its consent copy. It is not shared,
+ * because that one links only to our own policy pages and has no business
+ * growing a tab-and-rel policy it does not need.)
+ */
+function withLinks(
+  text: string,
+  links: readonly ArticleLink[] = [],
+): ReactNode {
+  if (links.length === 0) return text;
+
+  const parts: (string | ArticleLink)[] = [text];
+  for (const link of links) {
+    for (let i = 0; i < parts.length; i += 1) {
+      const part = parts[i];
+      if (typeof part !== "string") continue;
+      const at = part.indexOf(link.text);
+      if (at === -1) continue;
+      parts.splice(
+        i,
+        1,
+        part.slice(0, at),
+        link,
+        part.slice(at + link.text.length),
+      );
+      break;
+    }
+  }
+
+  return parts
+    .filter((part) => part !== "")
+    .map((part, index) =>
+      typeof part === "string" ? (
+        <Fragment key={index}>{part}</Fragment>
+      ) : (
+        <a
+          key={`${index}-${part.href}`}
+          href={part.href}
+          {...externalLinkProps(part.href)}
+        >
+          {part.text}
+        </a>
+      ),
+    );
+}
+
 function Block({ block }: { block: ArticleBlock }) {
   switch (block.kind) {
     case "h2":
@@ -322,14 +499,74 @@ function Block({ block }: { block: ArticleBlock }) {
     case "h3":
       return <h3>{block.text}</h3>;
     case "p":
-      return <p>{block.text}</p>;
+      return <p>{withLinks(block.text, block.links)}</p>;
     case "ul":
       return (
         <ul className="hhcp-ab-list">
           {block.items.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>{withLinks(item, block.links)}</li>
           ))}
         </ul>
+      );
+    case "ol":
+      return (
+        <ol className="hhcp-ab-list hhcp-ab-list--ordered">
+          {block.items.map((item) => (
+            <li key={item}>{withLinks(item, block.links)}</li>
+          ))}
+        </ol>
+      );
+    case "callout":
+      return (
+        <aside className="hhcp-ab-callout">
+          <p>
+            <strong>{block.title}</strong> {withLinks(block.text, block.links)}
+          </p>
+        </aside>
+      );
+    case "image":
+      return (
+        <figure className="hhcp-ab-figure">
+          {/* Plain img, as ArticleHeader does for the hero on this same page:
+              these are content images inside prose, sized by the column
+              rather than by a layout slot, and next/image would want a width
+              and height per article for no gain here. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={block.src} alt={block.alt} loading="lazy" />
+        </figure>
+      );
+    case "table":
+      return (
+        /* Its own scroll container. A three-column table does not fit a
+           360px phone, and the page body must never scroll sideways. */
+        <div className="hhcp-ab-tablewrap">
+          <table className="hhcp-ab-table">
+            <thead>
+              <tr>
+                {block.head.map((cell) => (
+                  <th key={cell} scope="col">
+                    {cell}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row) => (
+                <tr key={row.join("|")}>
+                  {row.map((cell, index) =>
+                    index === 0 ? (
+                      <th key={cell} scope="row">
+                        {cell}
+                      </th>
+                    ) : (
+                      <td key={cell}>{cell}</td>
+                    ),
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
     case "note":
       return (
