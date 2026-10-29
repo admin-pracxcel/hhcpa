@@ -85,26 +85,61 @@ describe("article links", () => {
   });
 
   /*
-   * Every body image must exist on disk. A missing one is a broken image in
-   * the middle of a published article, and nothing else in the build fails.
+   * Every image an article references must exist AND be committed.
+   *
+   * ⚠️ On disk is not enough, and this test learned that the hard way. The
+   * first version checked `existsSync` only. It passed on the machine that
+   * had just saved the files into public/images, the article shipped, and
+   * all three images 404'd in production because the commit staged `src/`
+   * and the images live under `public/`.
+   *
+   * A file that is present locally and untracked is invisible to the build,
+   * and nothing else in the pipeline notices: the markup is correct, the
+   * page renders, the alt text is right, and the images are simply gone.
    */
   it("ships every image the articles reference", async () => {
     const { existsSync } = await import("node:fs");
     const { join } = await import("node:path");
+    const { execFileSync } = await import("node:child_process");
 
-    for (const article of ARTICLES) {
-      const sources = [
+    const sources = ARTICLES.flatMap((article) =>
+      [
         article.image,
         ...article.blocks.flatMap((block) =>
           block.kind === "image" ? [block.src] : [],
         ),
-      ];
-      for (const src of sources) {
-        expect(
-          existsSync(join(process.cwd(), "public", src)),
-          `${article.slug} → ${src}`,
-        ).toBe(true);
-      }
+      ].map((src) => ({ slug: article.slug, src })),
+    );
+
+    for (const { slug, src } of sources) {
+      expect(
+        existsSync(join(process.cwd(), "public", src)),
+        `${slug} → ${src} is not on disk`,
+      ).toBe(true);
+    }
+
+    /*
+     * Tracked, not merely present. Skipped where git is unavailable rather
+     * than failing, so the suite still runs outside a checkout.
+     */
+    let tracked: Set<string>;
+    try {
+      tracked = new Set(
+        execFileSync("git", ["ls-files", "public/images"], {
+          encoding: "utf8",
+        })
+          .split("\n")
+          .filter(Boolean),
+      );
+    } catch {
+      return;
+    }
+
+    for (const { slug, src } of sources) {
+      expect(
+        tracked.has(`public${src}`),
+        `${slug} → ${src} exists but is not committed, so it will 404 in production`,
+      ).toBe(true);
     }
   });
 });
