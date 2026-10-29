@@ -135,7 +135,29 @@ export type ArticleBlock =
 
 export interface Article {
   readonly slug: string;
+  /**
+   * The headline, as the document's H1 writes it.
+   *
+   * This is what a reader sees at the top of the article, on the card and in
+   * the breadcrumb. It is NOT the meta title.
+   */
   readonly title: string;
+  /**
+   * The <title> tag, as the document's "Meta title" line writes it.
+   *
+   * ⚠️ A separate field because the two do different jobs and the supplied
+   * documents write them separately. The H1 is a headline for a reader; the
+   * meta title is written for a search result, usually shorter and carrying
+   * the query rather than the phrasing.
+   *
+   * Collapsed into one field when the first two articles were published on
+   * 2026-10-29, which put the meta title on the page as the H1 — so readers
+   * got "Why Weight Comes Back After Dieting: What Research Shows" where the
+   * document said "Why Weight Comes Back After a Diet, and What Changes the
+   * Pattern". Optional, and absent falls back to the headline, which is the
+   * right default for an article whose document gives only one.
+   */
+  readonly metaTitle?: string;
   readonly description: string;
   readonly topic: string;
   /**
@@ -185,7 +207,8 @@ export const ARTICLES: readonly Article[] = [
      * No `moneyPage`: this one was not asked for, per the rule in the header.
      */
     slug: "perimenopause-vs-menopause",
-    title: "Perimenopause vs Menopause: How to Tell",
+    title: "Perimenopause or Menopause? How to Tell Where You Are",
+    metaTitle: "Perimenopause vs Menopause: How to Tell",
     description:
       "Perimenopause vs menopause explained for Australians: the 12-month rule, overlapping symptoms and red flags. Work out where you might be and when to see a GP.",
     topic: "Women's health",
@@ -511,12 +534,14 @@ export const ARTICLES: readonly Article[] = [
      * gave the slug, meta title, meta description, excerpt and the three
      * image filenames, and those are used verbatim rather than rewritten.
      *
-     * The title here is the meta title, which is shorter than the document's
-     * H1 and is what belongs in <title> and the card. The H1 the page renders
-     * comes from this same field.
+     * `title` is the document's H1 and `metaTitle` its "Meta title" line.
+     * They were collapsed into one when this shipped, which put the meta
+     * title on the page as the headline.
      */
     slug: "why-weight-comes-back-after-a-diet",
-    title: "Why Weight Comes Back After Dieting: What Research Shows",
+    title:
+      "Why Weight Comes Back After a Diet, and What Changes the Pattern",
+    metaTitle: "Why Weight Comes Back After Dieting: What Research Shows",
     description:
       "Why weight comes back after dieting: hunger hormones, metabolism and daily habits all play a part. Explore the research and when to speak to a practitioner.",
     topic: "Weight management",

@@ -57,7 +57,10 @@ export async function generateMetadata({
   const article = findArticle(slug);
   if (article === undefined) return {};
   return {
-    title: `${article.title} | HHCPA`,
+    /* The meta title where the document gives one, the headline otherwise.
+       These are different strings for different places — see Article in
+       content/articles.ts. */
+    title: `${article.metaTitle ?? article.title} | HHCPA`,
     description: article.description,
     alternates: { canonical: `/article/${article.slug}/` },
   };

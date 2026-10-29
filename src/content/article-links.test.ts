@@ -181,3 +181,64 @@ describe("the money-page callout", () => {
     }
   });
 });
+
+/*
+ * The headline and the meta title are different strings for different places.
+ *
+ * `title` is the document's H1 and goes on the page, the card and the
+ * breadcrumb. `metaTitle` is its "Meta title" line and goes in <title> only.
+ *
+ * They were collapsed into one field when the first two articles shipped on
+ * 2026-10-29, so readers saw the search-optimised meta title as the headline:
+ * "Why Weight Comes Back After Dieting: What Research Shows" on a page whose
+ * document said "Why Weight Comes Back After a Diet, and What Changes the
+ * Pattern". Nothing failed — both are valid strings.
+ */
+describe("article titles", () => {
+  it("keeps the headline and the meta title apart where both exist", () => {
+    for (const article of ARTICLES) {
+      if (article.metaTitle === undefined) continue;
+      expect(
+        article.metaTitle,
+        `${article.slug}: metaTitle duplicates the headline, so one of them is wrong`,
+      ).not.toBe(article.title);
+    }
+  });
+
+  it("never uses a meta title as the headline", () => {
+    /*
+     * A heuristic, deliberately. A meta title is written for a search result
+     * and reads like one — it carries a colon and a promise ("X: What
+     * Research Shows"), and it is short. A headline is a sentence. Neither
+     * rule is absolute, so this only fires when BOTH hold and the document
+     * supplied a separate meta title to use instead.
+     */
+    for (const article of ARTICLES) {
+      if (article.metaTitle === undefined) continue;
+      const looksLikeMeta =
+        article.title.includes(":") && article.title.length < 50;
+      expect(
+        looksLikeMeta,
+        `${article.slug}: "${article.title}" reads like a meta title, not a headline`,
+      ).toBe(false);
+    }
+  });
+
+  it("stays inside what a search result will show", () => {
+    /*
+     * Google truncates around 60 characters.
+     *
+     * Only where a document supplied a meta title. The two migrated articles
+     * have one title doing both jobs — their headline is 75 characters and
+     * will truncate — but that is a content decision on copy carried over
+     * from the live site, not a field in the wrong place.
+     */
+    for (const article of ARTICLES) {
+      if (article.metaTitle === undefined) continue;
+      expect(
+        article.metaTitle.length,
+        `${article.slug}: meta title is ${article.metaTitle.length} chars`,
+      ).toBeLessThanOrEqual(60);
+    }
+  });
+});
