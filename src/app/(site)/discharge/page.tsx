@@ -5,7 +5,7 @@ import { DischargeLetterForm } from "@/components/sections/DischargeLetterForm";
 import { DischargeSwitch } from "@/components/sections/DischargeSwitch";
 import { FinalCtaSection } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/FinalCtaSection";
 import { DISCHARGE_META } from "@/content/services/discharge";
-import { buildMedicalWebPage } from "@/lib/schema";
+import { buildBreadcrumbList, buildMedicalWebPage } from "@/lib/schema";
 
 /* Same shape as `serviceMetadata`; noindex is applied site-wide in the layout. */
 export const metadata: Metadata = {
@@ -37,6 +37,21 @@ export default function Page() {
           description: DISCHARGE_META.description,
           path: DISCHARGE_META.path,
         })}
+      />
+      {/*
+        Added 2026-10-29, technical audit item 14. This was the only page on
+        the site without one apart from the homepage, which correctly has
+        none because it is the root.
+
+        "Discharge letter" rather than the page title, which is the longer
+        "Discharge Letter | Switch to Horizon Health Care Partners" — a
+        breadcrumb names the step, not the document.
+      */}
+      <JsonLd
+        data={buildBreadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Discharge letter", path: DISCHARGE_META.path },
+        ])}
       />
       <DischargeSwitch form={<DischargeLetterForm />} />
       <FinalCtaSection />

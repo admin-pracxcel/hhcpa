@@ -26,6 +26,24 @@ import { ROUTES } from "@/content/routes";
  * to see a default is to render the component the way a page that passes
  * nothing would.
  */
+/**
+ * Paths these sections link to that no longer have a page, but still resolve
+ * because `next.config.ts` redirects them permanently.
+ *
+ * One entry, added 2026-10-29: the sleep article consolidated under technical
+ * audit item 7. `BlogSection`'s default POSTS array still links to it, and it
+ * stays that way deliberately — those defaults are the frozen clone the
+ * pixel benchmark at /home-v2/ is measured against, and dropping a card would
+ * change the thing being measured. The link reaches the surviving article in
+ * one hop.
+ *
+ * Kept as a named list rather than loosening the assertion, so a link to a
+ * path that neither routes nor redirects still fails.
+ */
+const REDIRECTED: readonly string[] = [
+  "/article/why-sleep-matters-in-chronic-pain/",
+];
+
 const SECTIONS: readonly (readonly [string, ReactElement])[] = [
   ["ApproachSection", <ApproachSection key="a" />],
   ["BlogSection", <BlogSection key="b" />],
@@ -72,6 +90,7 @@ describe("cloned sections", () => {
     const known = new Set<string>([
       ...ROUTES.map((route) => route.path),
       ...ARTICLES.map((article) => `/article/${article.slug}/`),
+      ...REDIRECTED,
     ]);
 
     for (const [name, element] of SECTIONS) {

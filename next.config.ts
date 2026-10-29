@@ -149,6 +149,23 @@ const nextConfig: NextConfig = {
         destination: "/womens-health/menopause/",
         permanent: true,
       },
+      /*
+       * Consolidated 2026-10-29, technical audit item 7. Two articles were
+       * competing for one intent — both categorised "Sleep and recovery",
+       * both about sleep and chronic pain — which splits whatever authority
+       * either earns. The shorter and narrower one was removed from
+       * content/articles.ts; this keeps its address resolving.
+       *
+       * Not a `permanent: false`: the page is gone for good and the
+       * surviving article covers its subject, so the signal should
+       * consolidate rather than be held open.
+       */
+      {
+        source: "/article/why-sleep-matters-in-chronic-pain",
+        destination:
+          "/article/why-sleep-is-essential-for-chronic-pain-weight-and-overall-health/",
+        permanent: true,
+      },
     ];
   },
 };

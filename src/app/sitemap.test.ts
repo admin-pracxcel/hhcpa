@@ -59,4 +59,45 @@ describe("sitemap", () => {
     const home = (await sitemapWith(true)).find((entry) => entry.url === `${SITE_URL}/`);
     expect(home?.priority).toBe(1);
   });
+
+  /*
+   * The articles were absent entirely until 2026-10-29: only the /articles/
+   * hub was listed, so every published article was invisible to the sitemap.
+   * These pin the derivation rather than a count, because the blog programme
+   * adds 48 more and a hard-coded number would have to be edited 48 times —
+   * which is the same hand-maintenance that let them go missing.
+   */
+  it("lists every article, derived from ARTICLES", async () => {
+    const { ARTICLES } = await import("@/content/articles");
+    const urls = (await sitemapWith(true)).map((entry) => entry.url);
+    const articleUrls = urls.filter((url) =>
+      url.startsWith(`${SITE_URL}/article/`),
+    );
+
+    expect(articleUrls).toHaveLength(ARTICLES.length);
+    for (const article of ARTICLES) {
+      expect(urls).toContain(`${SITE_URL}/article/${article.slug}/`);
+    }
+  });
+
+  it("uses the singular /article/ path, not the plural", async () => {
+    /* The plural 404s. The blog programme specified it and every slug was
+       wrong; the audit's decision was to keep singular. A sitemap full of
+       404s is worse than one that omits them. */
+    const urls = (await sitemapWith(true)).map((entry) => entry.url);
+    for (const url of urls.filter((u) => u.includes("/article"))) {
+      expect(url.startsWith(`${SITE_URL}/articles/`)).toBe(
+        url === `${SITE_URL}/articles/`,
+      );
+    }
+  });
+
+  it("does not list the consolidated sleep article", async () => {
+    /* Removed 2026-10-29 and 308'd to the longer one. Listing a URL that
+       redirects invites indexing of the address we just retired. */
+    const urls = (await sitemapWith(true)).map((entry) => entry.url);
+    expect(urls).not.toContain(
+      `${SITE_URL}/article/why-sleep-matters-in-chronic-pain/`,
+    );
+  });
 });
