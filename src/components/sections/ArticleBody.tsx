@@ -481,9 +481,32 @@ function withLinks(
   text: string,
   links: readonly ArticleLink[] = [],
 ): ReactNode {
-  if (links.length === 0) return text;
-
-  const parts: (string | ArticleLink)[] = [text];
+  /*
+   * `**bold**` is handled first and separately.
+   *
+   * The source documents use it for lead-ins in lists — "**Track your
+   * periods.** Note the first day…" — which is what makes a long list
+   * scannable. The first article published through this template dropped
+   * them, because the renderer took the string as-is.
+   *
+   * Only bold, and only the exact `**…**` pair. This is not a markdown
+   * parser and should not become one: the day it needs to understand nested
+   * emphasis or code spans is the day the content should hold structure
+   * rather than syntax.
+   */
+  const parts: (string | ArticleLink | { bold: string })[] = [];
+  let rest = text;
+  for (;;) {
+    const open = rest.indexOf("**");
+    const close = open === -1 ? -1 : rest.indexOf("**", open + 2);
+    if (open === -1 || close === -1) {
+      parts.push(rest);
+      break;
+    }
+    parts.push(rest.slice(0, open));
+    parts.push({ bold: rest.slice(open + 2, close) });
+    rest = rest.slice(close + 2);
+  }
   for (const link of links) {
     for (let i = 0; i < parts.length; i += 1) {
       const part = parts[i];
@@ -503,10 +526,14 @@ function withLinks(
 
   return parts
     .filter((part) => part !== "")
-    .map((part, index) =>
-      typeof part === "string" ? (
-        <Fragment key={index}>{part}</Fragment>
-      ) : (
+    .map((part, index) => {
+      if (typeof part === "string") {
+        return <Fragment key={index}>{part}</Fragment>;
+      }
+      if ("bold" in part) {
+        return <strong key={index}>{part.bold}</strong>;
+      }
+      return (
         <a
           key={`${index}-${part.href}`}
           href={part.href}
@@ -514,8 +541,8 @@ function withLinks(
         >
           {part.text}
         </a>
-      ),
-    );
+      );
+    });
 }
 
 function Block({ block }: { block: ArticleBlock }) {

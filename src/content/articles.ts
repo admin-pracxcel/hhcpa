@@ -179,6 +179,334 @@ export interface Article {
 export const ARTICLES: readonly Article[] = [
   {
     /*
+     * Published 2026-10-29 from the supplied markdown. Slug, meta title, meta
+     * description, excerpt and the three image filenames are its own.
+     *
+     * No `moneyPage`: this one was not asked for, per the rule in the header.
+     */
+    slug: "perimenopause-vs-menopause",
+    title: "Perimenopause vs Menopause: How to Tell",
+    description:
+      "Perimenopause vs menopause explained for Australians: the 12-month rule, overlapping symptoms and red flags. Work out where you might be and when to see a GP.",
+    topic: "Women's health",
+    date: "2026-10-29",
+    readTime: "9 min read",
+    image: `${IMAGE_BASE}perimenopause-vs-menopause-hero.webp`,
+    imageAlt: "Blank open notebook and pen beside a cup of tea on linen",
+    blocks: [
+      {
+        kind: "p",
+        text: "Your periods have gone unpredictable, you're awake at 3am, and nobody has told you whether this is the start of something or the end of it. The perimenopause vs menopause question confuses many women, because the two stages share symptoms and the dividing line is only clear in hindsight. This article explains the difference between perimenopause and menopause, how to work out where you might be, and when to see a doctor.",
+      },
+      {
+        kind: "p",
+        text: "Everyone's experience differs, so treat this as general information and not a diagnosis.",
+      },
+      { kind: "h2", text: "Perimenopause vs menopause: the short answer" },
+      {
+        kind: "callout",
+        title: "Quick answer:",
+        text: "Perimenopause is the lead-up to menopause, when your hormone levels swing and symptoms often begin. Menopause is a single point in time, confirmed after 12 months in a row without a period. After that, you are in postmenopause for the rest of your life.",
+      },
+      {
+        kind: "p",
+        text: "Many people use these words as if they mean the same thing, but they don't. The stages of menopause run in order: perimenopause, then menopause, then postmenopause. For a plain-English overview, see Jean Hailes menopause information.",
+        links: [
+          {
+            text: "Jean Hailes menopause information",
+            href: "https://www.jeanhailes.org.au/health-topics/menopause/",
+          },
+        ],
+      },
+      {
+        kind: "table",
+        head: [
+          "Stage",
+          "What it is",
+          "Typical timing in Australia",
+          "Periods",
+          "Hormones",
+        ],
+        rows: [
+          [
+            "Perimenopause",
+            "The transition before menopause",
+            "Usually starts in the 40s, around age 47, and lasts 4 to 6 years on average",
+            "Irregular, and some months may be skipped",
+            "Levels fluctuate",
+          ],
+          [
+            "Menopause",
+            "The point after 12 months in a row with no period and no other medical reason",
+            "Average age is 51, and most women reach it between 45 and 55",
+            "None for 12 months",
+            "Oestrogen and progesterone are low",
+          ],
+          [
+            "Postmenopause",
+            "The rest of your life after menopause",
+            "From menopause onwards",
+            "None",
+            "Oestrogen and progesterone stay low",
+          ],
+        ],
+      },
+      {
+        kind: "p",
+        text: "(Sources: Department of Health, Disability and Ageing, 2026; Jean Hailes for Women's Health, 2024; healthdirect, 2025)",
+      },
+      {
+        kind: "p",
+        text: "Timing varies and individual circumstances differ, so a registered health practitioner can help you work out what applies to you. This article says “women”, but trans and gender-diverse people can go through these changes too.",
+      },
+      { kind: "h2", text: "Where one stage ends and the next begins" },
+      {
+        kind: "image",
+        src: `${IMAGE_BASE}perimenopause-vs-menopause-bushland-path.webp`,
+        alt: "Narrow path winding through eucalyptus bushland in soft morning mist",
+      },
+      {
+        kind: "p",
+        text: "Perimenopause ends 12 months after your final period, and that is the point you have reached menopause. For perimenopause vs menopause, the 12-month rule is the dividing line: 12 months in a row with no period and no other medical reason (Source: Department of Health, Disability and Ageing, 2026). The Department of Health perimenopause guide covers this in more detail.",
+        links: [
+          {
+            text: "Department of Health perimenopause guide",
+            href: "https://www.health.gov.au/perimenopause/perimenopause?language=en",
+          },
+        ],
+      },
+      {
+        kind: "p",
+        text: "This is why you can only know you've reached menopause by looking back. Jean Hailes suggests tracking your periods once they start changing, so you know when 12 months have passed (Source: Jean Hailes for Women's Health, 2024).",
+      },
+      {
+        kind: "p",
+        text: "How long does perimenopause last? Jean Hailes says it usually starts around age 47 and lasts 4 to 6 years on average, while healthdirect gives about 4 to 8 years (Sources: Jean Hailes for Women's Health, 2024; healthdirect, 2025).",
+      },
+      {
+        kind: "p",
+        text: "The Australasian Menopause Society also gives an average of 4 to 8 years (Source: Australasian Menopause Society, 2016). Results vary and individual circumstances differ, so a registered health practitioner can talk through what this may look like for you.",
+      },
+      { kind: "h2", text: "What changes in your periods first" },
+      {
+        kind: "p",
+        text: "Changes in your periods are usually the first of the early signs of perimenopause. They may come more or less often, last longer or shorter, and be lighter or heavier, and some months you may have none (Source: healthdirect, 2025).",
+      },
+      {
+        kind: "p",
+        text: "A simple diary helps. Note the date each period starts, how heavy it is, and any symptoms such as night sweats. After a few months, patterns are easier to see.",
+      },
+      {
+        kind: "p",
+        text: "You can still become pregnant until menopause is confirmed. If you are sexually active and your period stops, healthdirect advises taking a pregnancy test (Source: healthdirect, 2025). If pregnancy matters to you, or you want to avoid it, talk with a registered health practitioner about contraception.",
+      },
+      { kind: "h2", text: "Symptoms that overlap between stages" },
+      {
+        kind: "p",
+        text: "Menopausal symptoms usually start in perimenopause, so perimenopause vs menopause symptoms overlap a lot (Source: Jean Hailes for Women's Health, 2024). Hormone levels rise and fall during perimenopause, which can bring physical and emotional changes (Source: healthdirect, 2025).",
+      },
+      { kind: "p", text: "Symptoms people commonly report include:" },
+      {
+        kind: "ul",
+        items: [
+          "Hot flushes and night sweats",
+          "Trouble sleeping and tiredness",
+          "Mood swings, low mood or anxiety",
+          "Brain fog",
+          "Headaches, muscle aches and joint pain",
+          "Vaginal dryness and itchy skin",
+          "Changes in sexual desire",
+          "Weight gain and wee (urinary) problems",
+        ],
+      },
+      {
+        kind: "p",
+        text: "(Sources: healthdirect, 2025; Jean Hailes for Women's Health, 2024)",
+      },
+      {
+        kind: "p",
+        text: "Experiences differ a great deal from person to person. If poor sleep is part of your picture, read about how sleep affects your health.",
+        links: [
+          {
+            text: "how sleep affects your health",
+            href: "/article/why-sleep-is-essential-for-chronic-pain-weight-and-overall-health/",
+          },
+        ],
+      },
+      {
+        kind: "p",
+        text: "If low mood or anxiety is weighing on you, tell a practitioner. If you are in crisis, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636.",
+      },
+      { kind: "h2", text: "Do you need a blood test to tell?" },
+      {
+        kind: "p",
+        text: "Usually not. Healthdirect says tests are usually not needed to confirm perimenopause, which is diagnosed from your age, symptoms and period changes (Source: healthdirect, 2025). In the typical 45 to 55 range, doctors don't usually measure hormone levels (Source: Department of Health, Disability and Ageing, 2026).",
+      },
+      {
+        kind: "p",
+        text: "The Australasian Menopause Society advises against measuring FSH, LH, AMH, oestradiol or testosterone in symptomatic women over 45. Results are unlikely to change management, and levels can change from day to day, so one result can mislead (Source: Australasian Menopause Society, 2016). Their guidance on diagnosing menopause sets this out.",
+        links: [
+          {
+            text: "guidance on diagnosing menopause",
+            href: "https://hub.menopause.org.au/channel/resourcesforhealthprofessionals",
+          },
+        ],
+      },
+      {
+        kind: "p",
+        text: "Tests may still be considered if you are under 45, because an FSH test may help diagnose menopause in that age group (Source: healthdirect, 2025).",
+      },
+      {
+        kind: "p",
+        text: "A practitioner may also arrange pathology, such as a full blood count, iron studies or a thyroid test, to look for other causes (Source: Australasian Menopause Society, 2016). Whether you need any test is a decision for you and your practitioner.",
+      },
+      { kind: "h2", text: "When the 12-month rule does not work" },
+      {
+        kind: "p",
+        text: "The 12-month rule is the simplest way to tell perimenopause vs menopause, but it depends on your periods. It is harder to use if you don't have periods, or if something else affects your bleeding. These situations need extra care:",
+      },
+      {
+        kind: "ul",
+        items: [
+          "**Hormonal contraception.** If it changes or stops your bleeding, your periods may not be a reliable guide, and hormone blood tests are not helpful while you are using it (Source: Australasian Menopause Society, 2016). Ask your practitioner what that means for you.",
+          "**Hysterectomy.** It is more difficult to know if you have reached menopause when you do not have periods (Source: Jean Hailes for Women's Health, 2024).",
+          "**Premature or early menopause.** Menopause before 40 is called premature, and between 40 and 45 is called early (Source: healthdirect, 2025). About 1 in 15 women in Australia experience early menopause or premature ovarian insufficiency (POI) (Source: AIHW, citing Department of Health, Disability and Ageing, 2026).",
+          "**Surgery or cancer treatment.** These can cause sudden menopause (Source: healthdirect, 2025).",
+        ],
+      },
+      {
+        kind: "p",
+        text: "Other conditions can look like menopausal symptoms, including thyroid problems, low iron and depression (Source: Australasian Menopause Society, 2016). Pregnancy and PCOS can also change your periods. If you are under 45 and notice changes, speak to a practitioner rather than waiting. This can be an emotional time, especially if you hoped to have children.",
+        links: [{ text: "PCOS", href: "/womens-health/pcos-management/" }],
+      },
+      { kind: "h2", text: "Red flags: when to see a doctor sooner" },
+      {
+        kind: "p",
+        text: "Changes in your periods are normal in perimenopause, but some changes need checking. Healthdirect advises seeing a doctor for the first three signs below, or if symptoms affect your daily life (Source: healthdirect, 2025). The others are also worth raising.",
+      },
+      { kind: "p", text: "See a doctor soon if you notice:" },
+      {
+        kind: "ul",
+        items: [
+          "Bleeding that is very heavy or lasts longer than usual",
+          "Bleeding between periods",
+          "Bleeding after sex",
+          "Any bleeding after 12 months without a period",
+          "Menopausal symptoms before age 45",
+          "Worries about your emotional or mental health",
+        ],
+      },
+      {
+        kind: "callout",
+        title: "Urgent:",
+        text: "If you have chest pain, trouble breathing or severe bleeding, call 000. If you are in crisis, call Lifeline on 13 11 14 or Beyond Blue on 1300 22 4636.",
+      },
+      {
+        kind: "h2",
+        text: "How to work out where you are, and getting support",
+      },
+      {
+        kind: "image",
+        src: `${IMAGE_BASE}perimenopause-vs-menopause-four-step-path.webp`,
+        alt: "Four illustrated icons: calendar, notebook, magnifying glass and speech bubble",
+      },
+      {
+        kind: "p",
+        text: "Telling perimenopause vs menopause on your own is hard, but you can gather the right clues. If you are wondering how to know if you're in perimenopause, this four-step path is a good start:",
+      },
+      {
+        kind: "ol",
+        items: [
+          "**Track your periods.** Note the first day of each period and how heavy it is. Count the months since your last one.",
+          "**Note your symptoms.** Write down sleep, hot flushes, mood and anything else, and how much they affect your day.",
+          "**Consider other explanations.** Pregnancy, thyroid problems, low iron, hormonal contraception or a hysterectomy can all change the picture.",
+          "**Talk to a registered practitioner, such as your GP.** Take your notes along. They can review your history, discuss whether any tests make sense, and talk through your options. Individual circumstances differ.",
+        ],
+      },
+      {
+        kind: "p",
+        text: "Telehealth suits many people, but some need an in-person exam or tests. See how a telehealth consultation works, or try the short online pre-screening quiz to see whether booking makes sense. It is not a diagnosis.",
+        links: [
+          {
+            text: "how a telehealth consultation works",
+            href: "/how-it-works/",
+          },
+          { text: "short online pre-screening quiz", href: "/quiz/" },
+        ],
+      },
+      {
+        kind: "p",
+        text: "Reliable Australian information is easy to find. Jean Hailes, the Australasian Menopause Society, RANZCOG and the RACGP all publish information on menopause. Healthdirect's nurse line (1800 022 222) is open 24 hours a day (Source: healthdirect, 2025). Jean Hailes and the Department of Health also offer information for First Nations women and in other languages.",
+      },
+      {
+        kind: "p",
+        text: "Support is growing too. Medicare has covered menopause health assessments since 1 July 2025, for an initial two-year period, and nearly 105,000 women had one by May 2026 (Source: Minister for Health and Ageing media release, 2026).",
+      },
+      {
+        kind: "p",
+        text: "These assessments are billed by GPs and prescribed medical practitioners in general practice (Source: MBS Online, 2025), so check eligibility with your provider.",
+      },
+      {
+        kind: "p",
+        text: "Australia's first national clinical guidelines for perimenopause and menopause are being developed by Monash University's Australian Living Evidence Collaboration, with the Australasian Menopause Society, the Endocrine Society of Australia, Jean Hailes and the Australian Academy of Health and Medical Sciences. They will be updated as new evidence appears (Source: Australian Government media release, 2026).",
+      },
+      {
+        kind: "p",
+        text: "A 2024 Senate inquiry found gaps in clinician training and consistency of care (Source: Medical Forum, reporting on the 2024 Senate inquiry), and the AIHW has identified eight data gaps on perimenopause and menopause (Source: AIHW, 2026).",
+      },
+      {
+        kind: "p",
+        text: "If you would like to talk through your situation with a registered doctor or nurse practitioner in Australia, the team at Horizon Health Care Partners is happy to help with menopause and perimenopause care.",
+        links: [
+          { text: "Horizon Health Care Partners", href: "/" },
+          {
+            text: "menopause and perimenopause care",
+            href: "/womens-health/menopause/",
+          },
+        ],
+      },
+      { kind: "h2", text: "Frequently asked questions" },
+      {
+        kind: "faq",
+        items: [
+          {
+            q: "Can I be in perimenopause if I'm still having periods?",
+            a: "Yes. Perimenopause is the lead-up to menopause, so you can still have periods during it, although they often become irregular. Menopause is only confirmed after 12 months in a row without a period and no other medical reason (Source: Department of Health, Disability and Ageing, 2026). If your periods are changing, a registered health practitioner can talk through your situation.",
+          },
+          {
+            q: "At what age does perimenopause usually start in Australia?",
+            a: "It usually starts around age 47, and often begins in the 40s, though for some it starts earlier (Source: Jean Hailes for Women's Health, 2024). The average age of menopause in Australia is 51, and most women reach it between 45 and 55 (Source: Department of Health, Disability and Ageing, 2026). Timing varies, so a registered health practitioner can help with your situation.",
+          },
+          {
+            q: "How long does perimenopause last?",
+            a: "Jean Hailes says perimenopause lasts 4 to 6 years on average in Australia, while healthdirect gives about 4 to 8 years (Sources: Jean Hailes for Women's Health, 2024; healthdirect, 2025). It ends 12 months after your final period. Results vary and individual circumstances differ, so speak with a registered health practitioner about what to expect for you.",
+          },
+          {
+            q: "Can I still get pregnant during perimenopause?",
+            a: "Yes. You can still become pregnant until menopause is confirmed, even when your periods are irregular (Source: healthdirect, 2025). If you want to avoid pregnancy, or you are hoping for one, a registered health practitioner can talk through your options with you and explain what suits your situation.",
+          },
+          {
+            q: "Do I need a blood test to confirm perimenopause or menopause?",
+            a: "Usually not. Healthdirect says tests are usually not needed to confirm perimenopause (Source: healthdirect, 2025), and the Australasian Menopause Society advises against hormone tests in symptomatic women over 45 (Source: Australasian Menopause Society, 2016). Tests may be considered if you are under 45. A registered health practitioner can advise on your situation.",
+          },
+          {
+            q: "How can I tell where I am if I use hormonal contraception or have had a hysterectomy?",
+            a: "Without a natural period pattern, the 12-month rule is harder to use, so it is more difficult to know where you are (Source: Jean Hailes for Women's Health, 2024). Your symptoms, age and health history become more important. A registered health practitioner can look at the whole picture and decide whether any tests make sense for you.",
+          },
+          {
+            q: "When should I see a doctor about my symptoms?",
+            a: "See a doctor if symptoms affect your daily life, or if you have very heavy bleeding, bleeding between periods or bleeding after sex (Source: healthdirect, 2025). Also seek advice for any bleeding after menopause, symptoms before age 45, or worries about your mental health. In an emergency, call 000.",
+          },
+        ],
+      },
+      {
+        kind: "note",
+        text: "This article offers general information only and is not medical advice or a diagnosis. Individual circumstances vary, so speak with a registered health practitioner about your own situation.",
+      },
+    ],
+  },
+  {
+    /*
      * Published 2026-10-29 from the supplied markdown. Its own metadata block
      * gave the slug, meta title, meta description, excerpt and the three
      * image filenames, and those are used verbatim rather than rewritten.
@@ -378,12 +706,12 @@ export const ARTICLES: readonly Article[] = [
       {
         kind: "ol",
         items: [
-          "Expect hunger and energy changes. A slip afterwards is information, not failure.",
-          "Define “after” before you finish. Decide which meal, movement and sleep routines you can keep.",
-          "Consider check-ins. If it suits you, arrange periodic reviews with your GP, an Accredited Practising Dietitian or another registered practitioner.",
-          "Plan for triggers. Think ahead about stress, travel, celebrations and low mood.",
-          "Notice regain early. If weight starts returning, consider talking with your practitioner before reacting with a stricter diet.",
-          "Revisit your goals. Ask your practitioner what a realistic, health-focused target looks like for you.",
+          "**Expect hunger and energy changes.** A slip afterwards is information, not failure.",
+          "**Define “after” before you finish.** Decide which meal, movement and sleep routines you can keep.",
+          "**Consider check-ins.** If it suits you, arrange periodic reviews with your GP, an Accredited Practising Dietitian or another registered practitioner.",
+          "**Plan for triggers.** Think ahead about stress, travel, celebrations and low mood.",
+          "**Notice regain early.** If weight starts returning, consider talking with your practitioner before reacting with a stricter diet.",
+          "**Revisit your goals.** Ask your practitioner what a realistic, health-focused target looks like for you.",
         ],
       },
       {
