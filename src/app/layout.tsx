@@ -52,6 +52,35 @@ export const metadata: Metadata = {
     siteName: "Horizon Health Care Partners",
     locale: "en_AU",
     type: "website",
+    /*
+     * No og:image existed on any page until 2026-10-29, so every share to
+     * Facebook, LinkedIn, WhatsApp or Slack rendered as a bare text link —
+     * on a site whose Business Profile programme drives social sharing.
+     *
+     * ⚠️ PNG, not the WebP the source file is. LinkedIn does not reliably
+     * render a WebP og:image and LinkedIn is one of this clinic's own
+     * channels — it is in the `sameAs` array. Shipping WebP here would
+     * reproduce the exact blank-share this property exists to fix. The WebP
+     * stays in public/images as the source; the PNG is generated from it.
+     *
+     * Dimensions are declared because several scrapers will not fetch an
+     * image to measure it and skip anything unmeasured.
+     */
+    images: [
+      {
+        url: `${SITE_URL}/images/hhcpa-og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Horizon Health Care Partners — online telehealth across Australia",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Telehealth Australia | AHPRA-Registered Practitioners",
+    description:
+      "Access AHPRA-registered practitioners online. Book telehealth consultations. Professional healthcare from home across Australia.",
+    images: [`${SITE_URL}/images/hhcpa-og-image.png`],
   },
   icons: {
     icon: [

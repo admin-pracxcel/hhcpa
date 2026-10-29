@@ -250,6 +250,7 @@ export function buildArticle(input: {
   description: string;
   path: string;
   datePublished: string;
+  dateModified: string;
   image: string;
 }) {
   return {
@@ -260,6 +261,7 @@ export function buildArticle(input: {
     url: absolute(input.path),
     image: absolute(input.image),
     datePublished: input.datePublished,
+    dateModified: input.dateModified,
     author: ref(ORGANISATION_ID),
     publisher: ref(ORGANISATION_ID),
     isPartOf: ref(WEBSITE_ID),

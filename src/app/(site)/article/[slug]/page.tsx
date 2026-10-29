@@ -30,7 +30,12 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
 import { buildArticle, buildBreadcrumbList } from "@/lib/schema";
 import { CLINIC } from "@/content/clinic";
-import { ARTICLES, articleCards, findArticle } from "@/content/articles";
+import {
+  ARTICLES,
+  articleCards,
+  findArticle,
+  formatArticleDate,
+} from "@/content/articles";
 import { SITE_URL } from "@/lib/schema";
 
 import { ArticleBody } from "@/components/sections/ArticleBody";
@@ -78,6 +83,7 @@ export default async function Page({
           description: article.description,
           path,
           datePublished: article.date,
+          dateModified: article.dateModified ?? article.date,
           image: article.image,
         })}
       />
@@ -93,7 +99,7 @@ export default async function Page({
       <ArticleHeader
         title={article.title}
         author={CLINIC.name + " Team"}
-        date={article.date}
+        date={formatArticleDate(article.date)}
         image={article.image}
         imageAlt={article.imageAlt}
       />

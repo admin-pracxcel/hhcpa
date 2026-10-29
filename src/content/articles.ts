@@ -12,10 +12,12 @@
  * the opening, which is as close as the migrated copy allows without editing
  * sentences that have not been re-approved.
  *
- * ⚠️ Two things are placeholders and need confirming before publication:
- *   - Publication dates. The live pages did not expose one, so all three carry
- *     the same date. Wrong dates on health content are worse than none.
- *   - Read times, which are estimates from the word count.
+ * Publication dates were carried across from her previous site and confirmed
+ * by Ranjeeta on 2026-10-29 as unchanged, which is why they are now published
+ * as machine-readable ISO rather than held back. They are identical because
+ * the articles were migrated together.
+ *
+ * ⚠️ Read times are still estimates from the word count, not measured.
  *
  * The document also flags a decision for Ranjeeta: which existing articles to
  * migrate and which to retire, and any topics she wants covered. The launch
@@ -46,7 +48,28 @@ export interface Article {
   readonly title: string;
   readonly description: string;
   readonly topic: string;
+  /**
+   * ISO 8601, date only.
+   *
+   * Stored in the form schema.org takes and formatted for display, rather
+   * than stored for display and parsed for schema. It was "26 Jan 2026"
+   * until 2026-10-29, which schema.org cannot read — Google silently ignored
+   * every publication date on the site.
+   *
+   * Date, not date-time. Ranjeeta confirmed the day these were published on
+   * her previous site; she did not give a time, and inventing one would make
+   * a precise claim nobody made.
+   */
   readonly date: string;
+  /**
+   * ISO 8601, date only. Set when an article's content is substantively
+   * revised, not when a typo is fixed.
+   *
+   * Optional, and absent means unrevised — the Article node then reports
+   * `dateModified` equal to `datePublished`, which is true and is what
+   * Google expects rather than a missing property.
+   */
+  readonly dateModified?: string;
   readonly readTime: string;
   readonly image: string;
   readonly imageAlt: string;
@@ -62,7 +85,7 @@ export const ARTICLES: readonly Article[] = [
     description:
       "Achieving weight loss is often possible, but maintaining that weight loss long-term is where most people struggle. This is not due to a lack of willpower. Re",
     topic: "Weight management",
-    date: "26 Jan 2026",
+    date: "2026-01-26",
     readTime: "6 min read",
     image: `${IMAGE_BASE}blog-weight-loss.jpeg`,
     imageAlt: "A person preparing a fresh meal at home.",
@@ -265,7 +288,7 @@ export const ARTICLES: readonly Article[] = [
     description:
       "Sleep is a fundamental component of health and plays an active role in multiple physiological processes. It is one of the most critical pillars of health. Em",
     topic: "Sleep and recovery",
-    date: "26 Jan 2026",
+    date: "2026-01-26",
     readTime: "6 min read",
     image: `${IMAGE_BASE}blog-sleep-health.jpg`,
     imageAlt: "A person resting comfortably in bed.",
@@ -483,11 +506,31 @@ export function findArticle(slug: string): Article | undefined {
  *
  * `limit` is for the teaser, which shows the newest few rather than all of them.
  */
+/**
+ * The ISO date, rendered the way the cards and the article header show it.
+ *
+ * "2026-01-26" becomes "26 Jan 2026". Formatted here rather than stored that
+ * way so one value feeds both the display and the `datePublished` in the
+ * schema, and they cannot disagree.
+ *
+ * Fixed en-AU and UTC: the output is part of the page, so it must not change
+ * with the machine that renders it. A build in another timezone shifting a
+ * publication date by a day is the kind of fault nobody looks for.
+ */
+export function formatArticleDate(iso: string): string {
+  return new Intl.DateTimeFormat("en-AU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${iso}T00:00:00Z`));
+}
+
 export function articleCards(limit?: number): readonly BlogPost[] {
   return ARTICLES.slice(0, limit).map((article) => ({
     topic: article.topic,
     readTime: article.readTime,
-    date: article.date,
+    date: formatArticleDate(article.date),
     title: article.title,
     href: `/article/${article.slug}/`,
     image: article.image,

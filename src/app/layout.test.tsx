@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildSiteGraph, ORGANISATION_ID } from "@/lib/schema";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -63,5 +63,43 @@ describe("the graph it emits", () => {
       const logo = id.endsWith("#logo");
       expect(defined || practitioner || logo, `dangling @id: ${id}`).toBe(true);
     }
+  });
+});
+
+/*
+ * No og:image existed on any page until 2026-10-29. Every share rendered as
+ * a bare text link.
+ */
+describe("social share metadata", () => {
+  it("declares an og:image with its dimensions", () => {
+    expect(SOURCE).toContain("hhcpa-og-image.png");
+    expect(SOURCE).toContain("width: 1200");
+    expect(SOURCE).toContain("height: 630");
+  });
+
+  it("uses PNG rather than WebP", () => {
+    /* LinkedIn does not reliably render a WebP og:image, and LinkedIn is one
+       of this clinic's own channels. Shipping WebP would reproduce the blank
+       share this property exists to fix. */
+    const og = SOURCE.slice(SOURCE.indexOf("openGraph"));
+    expect(og).not.toContain("hhcpa-og-image.webp");
+  });
+
+  it("asks for the large summary card", () => {
+    expect(SOURCE).toContain('card: "summary_large_image"');
+  });
+
+  it("ships every icon the metadata points at", () => {
+    for (const icon of [
+      "icons/favicon-32x32.png",
+      "icons/favicon-192x192.png",
+      "icons/apple-touch-icon.png",
+    ]) {
+      expect(SOURCE).toContain(icon);
+      expect(existsSync(join(process.cwd(), "public", icon)), icon).toBe(true);
+    }
+    expect(
+      existsSync(join(process.cwd(), "public/images/hhcpa-og-image.png")),
+    ).toBe(true);
   });
 });

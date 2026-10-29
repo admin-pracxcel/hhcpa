@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ARTICLES, articleCards } from "./articles";
+import { ARTICLES, articleCards, formatArticleDate } from "./articles";
 
 /**
  * The homepage teases these articles and `/articles/` lists them, in the same
@@ -23,7 +23,9 @@ describe("article cards", () => {
       expect(card.title).toBe(article.title);
       expect(card.topic).toBe(article.topic);
       expect(card.readTime).toBe(article.readTime);
-      expect(card.date).toBe(article.date);
+      /* The one field that is transformed rather than passed through: stored
+         as ISO for the schema, rendered for the card. */
+      expect(card.date).toBe(formatArticleDate(article.date));
       expect(card.image).toBe(article.image);
       expect(card.alt).toBe(article.imageAlt);
     }
@@ -47,6 +49,48 @@ describe("article cards", () => {
     const index = articleCards();
     for (const [position, card] of teaser.entries()) {
       expect(card).toEqual(index[position]);
+    }
+  });
+});
+
+/*
+ * Dates were stored as "26 Jan 2026" until 2026-10-29 and passed straight
+ * into `datePublished`, which schema.org cannot parse — Google ignored the
+ * publication date on every article on the site. One ISO value now feeds both
+ * the schema and the display, so they cannot disagree.
+ */
+describe("article dates", () => {
+  it("stores every date as ISO 8601", () => {
+    for (const article of ARTICLES) {
+      expect(article.date, article.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(Number.isNaN(Date.parse(article.date)), article.slug).toBe(false);
+    }
+  });
+
+  it("renders the display form the cards actually show", () => {
+    expect(formatArticleDate("2026-01-26")).toBe("26 Jan 2026");
+  });
+
+  it("does not shift the date with the machine's timezone", () => {
+    /* A build in another timezone moving a publication date by a day is the
+       kind of fault nobody thinks to look for. */
+    const previous = process.env.TZ;
+    try {
+      process.env.TZ = "Pacific/Kiritimati";
+      expect(formatArticleDate("2026-01-26")).toBe("26 Jan 2026");
+      process.env.TZ = "Pacific/Midway";
+      expect(formatArticleDate("2026-01-26")).toBe("26 Jan 2026");
+    } finally {
+      process.env.TZ = previous;
+    }
+  });
+
+  it("treats an unrevised article as modified when published", () => {
+    for (const article of ARTICLES) {
+      const modified = article.dateModified ?? article.date;
+      expect(Date.parse(modified)).toBeGreaterThanOrEqual(
+        Date.parse(article.date),
+      );
     }
   });
 });
