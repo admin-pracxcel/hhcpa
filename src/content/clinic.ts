@@ -53,7 +53,56 @@ export const CLINIC = {
    */
   hoursDisplay: "Monday – Sunday · 8:00am – 10:00pm AEST",
   hoursProvisional: false,
+  /*
+   * The same hours again, in the 24-hour form `openingHoursSpecification`
+   * takes. A third rendering of one fact is a thing to be suspicious of, so
+   * clinic.test.ts asserts all three agree — the prose, the footer line and
+   * these. Changing the hours means changing all three, and the test says so
+   * rather than letting the structured data quietly keep the old times.
+   */
+  opensAt: "08:00",
+  closesAt: "22:00",
 } as const;
+
+/**
+ * Where this clinic is the same organisation somewhere else.
+ *
+ * Read by two things that must not disagree: the footer's social icons and
+ * the `sameAs` array in the JSON-LD graph. They were separate until
+ * 2026-10-29 — the footer had the three social URLs and the schema had none,
+ * which is the shape that lets a profile get renamed in one place and go
+ * stale in the other.
+ *
+ * `sameAs` is how a search engine is told that this website, that Business
+ * Profile and those social accounts are one entity rather than several with
+ * similar names. That is the whole fix for the "Horizon Health Clinic"
+ * confusion Ranjeeta raised: not a disclaimer on the page, a statement that
+ * these identifiers belong together.
+ *
+ * The Business Profile URL is the CID form. It is the stable identifier for
+ * the listing — a /maps/place/ URL carries coordinates and a session token
+ * and is not durable.
+ */
+export const SOCIAL_PROFILES = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/horizon-health-care-partners-australia/",
+  },
+  {
+    /* Canonical profile URL. The footer's old value carried `&sk=about`,
+       which names a tab rather than the profile. */
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61583057797612",
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/horizonhealthcarepartnersaus/",
+  },
+] as const;
+
+/** The Google Business Profile listing, by CID. */
+export const GOOGLE_BUSINESS_PROFILE =
+  "https://maps.google.com/?cid=15133496855973582523";
 
 /**
  * The secondary CTA every page hero carries, beside the quiz.

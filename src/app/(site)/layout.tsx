@@ -15,13 +15,18 @@ import { AttributionCapture } from "@/components/AttributionCapture";
 import { SiteHeader } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteHeader";
 import { SiteFooter } from "@/components/sites/www-horizonhealthcarepartners-com-au-b25b358e/root-8a5edab2/SiteFooter";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
-import { JsonLd } from "@/components/JsonLd";
-import { buildMedicalClinic } from "@/lib/schema";
 
+/*
+ * The organisation's JSON-LD used to be emitted here, as a standalone
+ * `MedicalClinic` with no `@id`. It moved to the root layout on 2026-10-29 as
+ * part of the site-wide `@graph` — see `buildSiteGraph` in lib/schema.ts.
+ *
+ * Moving it up one level also covers `/quiz/`, which sits outside this route
+ * group and was the only page on the site carrying no organisation markup.
+ */
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <JsonLd data={buildMedicalClinic()} />
       {/* useSearchParams needs a Suspense boundary so the rest of the page
           can still be statically rendered around it. */}
       <Suspense fallback={null}>

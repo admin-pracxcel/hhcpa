@@ -3,7 +3,8 @@ import localFont from "next/font/local";
 import Script from "next/script";
 
 import { SITE_INDEXABLE } from "@/lib/indexable";
-import { SITE_URL } from "@/lib/schema";
+import { SITE_URL, buildSiteGraph } from "@/lib/schema";
+import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
 
 // The exact woff2 files the target serves — DM Sans 400/500, Roboto Mono 500.
@@ -125,6 +126,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','${GTM_ID}');`}
         </Script>
+        {/*
+          The site-wide entity graph, emitted once here so every page carries
+          it — including /quiz/, which is outside the (site) group and had no
+          organisation markup at all until 2026-10-29.
+
+          Per-page nodes reference these by @id rather than repeating them.
+        */}
+        <JsonLd data={buildSiteGraph()} />
         {children}
       </body>
     </html>

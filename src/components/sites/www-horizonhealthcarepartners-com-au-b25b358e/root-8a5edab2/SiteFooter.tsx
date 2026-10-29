@@ -38,7 +38,7 @@ import {
   ClockIcon,
 } from "../shared/icons";
 import { visibleFooterColumns, FOOTER_CREDIT } from "@/content/footer";
-import { CLINIC, SITE_DISCLAIMER } from "@/content/clinic";
+import { CLINIC, SITE_DISCLAIMER, SOCIAL_PROFILES } from "@/content/clinic";
 import { externalLinkProps } from "@/lib/external-link";
 import { linkEmergencyNumbers } from "@/components/DisclaimerText";
 import { useNewsletterSignup } from "@/components/useNewsletterSignup";
@@ -62,23 +62,26 @@ interface SocialLink {
   readonly Icon: typeof LinkedInIcon;
 }
 
-const SOCIAL_LINKS: readonly SocialLink[] = [
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/company/horizon-health-care-partners-australia/",
-    Icon: LinkedInIcon,
-  },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/profile.php?id=61583057797612&sk=about",
-    Icon: FacebookSquareIcon,
-  },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/horizonhealthcarepartnersaus/",
-    Icon: InstagramIcon,
-  },
-] as const;
+/*
+ * The URLs come from `SOCIAL_PROFILES` in content/clinic.ts, which the
+ * JSON-LD `sameAs` array also reads. They were two separate lists until
+ * 2026-10-29 — these three here and nothing in the schema — which is the
+ * shape that lets a profile be renamed in one place and go stale in the
+ * other.
+ *
+ * Only the icon stays local, because an icon component is not content.
+ */
+const ICONS: Record<string, typeof LinkedInIcon> = {
+  LinkedIn: LinkedInIcon,
+  Facebook: FacebookSquareIcon,
+  Instagram: InstagramIcon,
+};
+
+const SOCIAL_LINKS: readonly SocialLink[] = SOCIAL_PROFILES.map((profile) => ({
+  label: profile.label,
+  href: profile.href,
+  Icon: ICONS[profile.label] ?? LinkedInIcon,
+}));
 
 /**
  * LegitScript certification seal.

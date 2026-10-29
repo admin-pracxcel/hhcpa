@@ -98,6 +98,51 @@ export const PRACTITIONERS_META = {
  * ("Managment", "Womens", "Mens") and the wording was matched to the service
  * names used everywhere else on the site. No list gained or lost an item.
  */
+/**
+ * The anchor a practitioner's JSON-LD node is published at, derived from the
+ * name rather than stored.
+ *
+ * Derived because a stored slug is a second field that can disagree with the
+ * first. The names here are stable — they are AHPRA register entries, not
+ * display copy — so deriving is safe, and a renamed practitioner moving their
+ * `@id` is correct rather than a bug.
+ *
+ * Titles are stripped: "Dr Ines Fernandes" and "Miss Nattallee Jane Allan"
+ * become `ines-fernandes` and `nattallee-jane-allan`. A title is a form of
+ * address, not part of the identifier.
+ */
+export function practitionerSlug(practitioner: Practitioner): string {
+  return practitioner.name
+    .replace(/^(Dr|Mr|Mrs|Ms|Miss|Prof)\.?\s+/i, "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/**
+ * Which schema.org type describes this person.
+ *
+ * ⚠️ Derived from the AHPRA registration prefix, never assigned by hand.
+ *
+ * `MED` is a medical practitioner and takes `IndividualPhysician`. `NMW` is a
+ * nurse or midwife and takes `Person`. Calling a nurse practitioner a
+ * Physician in structured data is the machine-readable form of the protected
+ * title breach that s113 of the National Law prohibits in page copy, and it
+ * would be no more defensible for being in JSON-LD.
+ *
+ * Deriving it means a practitioner added later cannot be mistyped by whoever
+ * adds them; they would have to falsify the registration number to do it.
+ */
+export function practitionerSchemaType(
+  practitioner: Practitioner,
+): "IndividualPhysician" | "Person" {
+  return practitioner.ahpraNumber.startsWith("MED")
+    ? "IndividualPhysician"
+    : "Person";
+}
+
 export const PRACTITIONERS: readonly Practitioner[] = [
   {
     name: "Dr Ines Fernandes",
