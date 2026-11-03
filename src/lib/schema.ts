@@ -16,6 +16,13 @@ import {
   practitionerSlug,
 } from "@/content/practitioners";
 import type { Practitioner } from "@/components/sections/PractitionerCards";
+import {
+  CONTENT_REVIEWED_AT,
+  CONTENT_REVIEWER,
+  CONTENT_REVIEWER_ID,
+  PAGE_CONDITIONS,
+  isReviewed,
+} from "@/content/content-review";
 
 /**
  * The canonical origin — apex, no `www`.
@@ -47,6 +54,8 @@ function absolute(path: string): string {
    ------------------------------------------------------------------------- */
 
 export const ORGANISATION_ID = `${SITE_URL}/#organization`;
+/** The content reviewer, defined once in the graph. */
+export const REVIEWER_ID = `${SITE_URL}/${CONTENT_REVIEWER_ID}`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 export const LOGO_ID = `${SITE_URL}/#logo`;
 
@@ -177,6 +186,24 @@ export function buildSiteGraph() {
         inLanguage: "en-AU",
         publisher: ref(ORGANISATION_ID),
       },
+      /*
+       * The content reviewer, defined once here and referenced by @id from
+       * every page that carries the claim. One node, so the site describes
+       * one person rather than twenty-two copies of her.
+       *
+       * ⚠️ `Person` with a jobTitle and nothing else. No identifier, because
+       * she holds no AHPRA registration and inventing one would fabricate a
+       * credential; no medical type, because her review was of content and
+       * the organisation, not of clinical accuracy. See content-review.ts.
+       */
+      {
+        "@type": "Person",
+        "@id": REVIEWER_ID,
+        name: CONTENT_REVIEWER.name,
+        jobTitle: CONTENT_REVIEWER.jobTitle,
+        worksFor: ref(ORGANISATION_ID),
+        url: absolute("/about-us/"),
+      },
     ],
   } as const;
 }
@@ -191,11 +218,24 @@ export interface Crumb {
   path: string;
 }
 
+/**
+ * A page of health information.
+ *
+ * `reviewedBy` and `lastReviewed` are added for the paths listed in
+ * content-review.ts and for no others. Driven by the path rather than by a
+ * flag at each call site, so the scope of a governance claim is readable in
+ * one place and a page added later cannot acquire it silently.
+ *
+ * `mainEntity` names the condition where the page genuinely is about one.
+ * A page that treats a condition is not a page about it, so service and
+ * program pages carry none.
+ */
 export function buildMedicalWebPage(input: {
   name: string;
   description: string;
   path: string;
 }) {
+  const condition = PAGE_CONDITIONS[input.path];
   return {
     "@context": "https://schema.org",
     "@type": "MedicalWebPage",
@@ -203,6 +243,20 @@ export function buildMedicalWebPage(input: {
     description: input.description,
     url: absolute(input.path),
     isPartOf: ref(WEBSITE_ID),
+    ...(isReviewed(input.path)
+      ? {
+          reviewedBy: ref(REVIEWER_ID),
+          lastReviewed: CONTENT_REVIEWED_AT,
+        }
+      : {}),
+    ...(condition === undefined
+      ? {}
+      : {
+          mainEntity: {
+            "@type": "MedicalCondition",
+            name: condition,
+          },
+        }),
   } as const;
 }
 
