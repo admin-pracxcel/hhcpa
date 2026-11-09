@@ -61,6 +61,115 @@ function writeCookie(name: string, value: string): void {
 }
 
 /**
+ * The label a visit from a search engine is recorded under.
+ *
+ * Deliberately a weak value: it is the only source a later paid visit is
+ * allowed to overwrite. See `captureLeadSource`.
+ */
+const ORGANIC = "organic";
+
+/**
+ * Sources that outrank `organic` on first touch.
+ *
+ * A paid click that brings back someone who first found the site through
+ * search is what actually won that lead, so it replaces the placeholder.
+ * Nothing replaces a source that is already one of these — first touch among
+ * real campaigns still wins.
+ */
+const PAID_SOURCES: ReadonlySet<string> = new Set([
+  "google_ads",
+  "meta_ads",
+  "microsoft_ads",
+  "bing_ads",
+  "linkedin_ads",
+  "tiktok_ads",
+]);
+
+/**
+ * Marks this visit as already classified. A session cookie, with no max-age,
+ * so it dies with the tab.
+ *
+ * ⚠️ Without it, referrer-derived attribution corrupts paid visits.
+ *
+ * `document.referrer` is set when the document loads and does not change on a
+ * client-side navigation, and this runs on every route change. So a visitor
+ * who arrives from a Google ad on page one still has a google.com referrer on
+ * page two — where the URL no longer carries the click id — and would be
+ * reclassified as organic, overwriting the paid source that brought them.
+ *
+ * With it, the referrer is read once per visit and ignored thereafter. A
+ * campaign parameter in the URL is still honoured whenever one appears,
+ * because that is an explicit signal rather than an inference.
+ */
+const VISIT = "hhcp_visit";
+
+/** Hosts whose referrals are search results rather than campaigns. */
+const SEARCH_HOSTS: readonly RegExp[] = [
+  /(^|\.)google\./,
+  /(^|\.)bing\./,
+  /(^|\.)duckduckgo\./,
+  /(^|\.)yahoo\./,
+  /(^|\.)ecosia\./,
+  /(^|\.)brave\.com$/,
+  /(^|\.)search\.brave\.com$/,
+  /(^|\.)startpage\./,
+  /(^|\.)qwant\./,
+  /(^|\.)baidu\./,
+  /(^|\.)yandex\./,
+];
+
+/** Our own site, in every spelling it answers to. */
+const OWN_HOSTS: readonly string[] = [
+  "horizonhealthcarepartners.com.au",
+  "www.horizonhealthcarepartners.com.au",
+];
+
+function isSearchReferrer(referrer: string): boolean {
+  if (referrer === "") return false;
+  let host: string;
+  try {
+    host = new URL(referrer).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  /* An internal link is not a referral. */
+  if (OWN_HOSTS.includes(host)) return false;
+  return SEARCH_HOSTS.some((pattern) => pattern.test(host));
+}
+
+/**
+ * What brought this page view, in order of how much the signal can be trusted.
+ *
+ * 1. `utm_source`, which is someone stating it outright.
+ * 2. A Google Ads click id. `gclid`, `wbraid` and `gbraid` are only ever set
+ *    by Google Ads, so a visit carrying one is paid even though its referrer
+ *    is google.com — which is exactly the case that would otherwise be
+ *    mislabelled organic, and the reason this order is not alphabetical.
+ * 3. A search engine referrer, inferred, and only on the first page of a
+ *    visit.
+ *
+ * `fbclid` is deliberately NOT treated as paid. Facebook and Instagram add it
+ * to any outbound link, including organic posts, so it cannot tell a paid
+ * click from someone sharing a page. Meta campaigns need `utm_source=meta_ads`
+ * on the destination URL to be recorded as paid.
+ */
+function sourceForThisView(params: URLSearchParams): string {
+  const utm = (params.get("utm_source") ?? "").trim();
+  if (utm !== "") return utm.slice(0, 120);
+
+  for (const id of ["gclid", "wbraid", "gbraid"]) {
+    if ((params.get(id) ?? "").trim() !== "") return "google_ads";
+  }
+
+  /* Inferred, so only once per visit — see VISIT. */
+  if (readCookie(VISIT) !== "") return "";
+  if (typeof document !== "undefined" && isSearchReferrer(document.referrer)) {
+    return ORGANIC;
+  }
+  return "";
+}
+
+/**
  * Reads `utm_source` from the current URL and records it. Safe to call on every
  * page: the first-touch value is only written once, and a page with no
  * `utm_source` leaves both values untouched.
@@ -68,17 +177,39 @@ function writeCookie(name: string, value: string): void {
 export function captureLeadSource(): void {
   if (typeof window === "undefined") return;
 
-  let source = "";
+  let params: URLSearchParams;
   try {
-    source = new URL(window.location.href).searchParams.get("utm_source") ?? "";
+    params = new URL(window.location.href).searchParams;
   } catch {
     return;
   }
 
-  source = source.trim().slice(0, 120);
+  const source = sourceForThisView(params);
+
+  /* Mark the visit classified either way, so the referrer is read once. */
+  if (typeof document !== "undefined" && readCookie(VISIT) === "") {
+    document.cookie = `${VISIT}=1; path=/; SameSite=Lax`;
+  }
+
   if (source === "") return;
 
-  if (readCookie(FIRST_TOUCH) === "") writeCookie(FIRST_TOUCH, source);
+  /*
+   * ─── FIRST TOUCH ────────────────────────────────────────────────────────
+   *
+   * Written once and then left alone, with one exception: `organic` is a
+   * placeholder for "found us through search", and a paid click that brings
+   * that person back is what actually won the lead, so it replaces it.
+   *
+   * Nothing else is ever overwritten. A second organic visit does not
+   * displace the first, and one paid campaign does not displace another —
+   * among real campaigns, first touch still wins.
+   */
+  const existing = readCookie(FIRST_TOUCH);
+  if (existing === "" || (existing === ORGANIC && PAID_SOURCES.has(source))) {
+    writeCookie(FIRST_TOUCH, source);
+  }
+
+  /* Last touch is the visit that converted, so it always moves. */
   writeCookie(LAST_TOUCH, source);
 }
 
