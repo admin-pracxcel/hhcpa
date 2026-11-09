@@ -79,6 +79,11 @@ const ORGANIC = "organic";
 const PAID_SOURCES: ReadonlySet<string> = new Set([
   "google_ads",
   "meta_ads",
+  /* The tag HHCPA's Meta campaigns actually carry, added 2026-11-09.
+     Both spellings are live, so both are listed rather than one being
+     rewritten into the other — the stored value stays whatever the URL
+     said, which is what n8n and the reports already key on. */
+  "metaads",
   "microsoft_ads",
   "bing_ads",
   "linkedin_ads",

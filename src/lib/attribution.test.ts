@@ -96,6 +96,14 @@ describe("lead source", () => {
     expect(getLeadSource().leadSource).toBe("meta_ads");
   });
 
+  it("accepts metaads as well as meta_ads", () => {
+    /* Both spellings are in use. The stored value is whatever the URL said. */
+    visit(`${SITE}/`, "https://www.google.com/");
+    endSession();
+    visit(`${SITE}/?utm_source=metaads`);
+    expect(getLeadSource().leadSource).toBe("metaads");
+  });
+
   it("does not let one paid campaign replace another", () => {
     visit(`${SITE}/?utm_source=google_ads`);
     endSession();
