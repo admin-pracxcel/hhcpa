@@ -35,7 +35,7 @@
  * the retie and the terms are built and both need her approval.
  */
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -186,6 +186,138 @@ const STYLES = `
   .hhcp-dl-card { padding: var(--hhcp-space-s, 20px); }
   .hhcp-dl-pair { grid-template-columns: 1fr; }
 }
+
+/* ---------- Confirmation dialog ---------- */
+/*
+ * Fixed to the viewport and centred, with the page dimmed behind it.
+ *
+ * position:fixed and a flex centre rather than a transform: the panel's
+ * height depends on how the two labels wrap, and the first of them is a long
+ * sentence that runs to three lines on a narrow phone. Centring by transform
+ * would need a height this does not have.
+ */
+.hhcp-dlc-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(1, 49, 38, 0.55);
+  overflow-y: auto;
+}
+
+.hhcp-dlc-panel {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+  padding: 32px 24px 24px;
+  border-radius: 10px;
+  background: var(--hhcp-white, #ffffff);
+  box-shadow: 0 18px 50px rgba(1, 49, 38, 0.25);
+}
+
+/*
+ * 44px, which is the smallest target a thumb reliably hits. The icon inside
+ * is 16px; the rest is the tap area, which is why the button is bigger than
+ * it looks.
+ */
+.hhcp-dlc-close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--hhcp-primary, #013126);
+  cursor: pointer;
+  transition: background-color 0.2s linear;
+}
+
+.hhcp-dlc-close:hover {
+  background: var(--hhcp-accent, #f5fff9);
+}
+
+.hhcp-dlc-question {
+  margin: 0 0 20px;
+  padding-right: 32px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--hhcp-primary, #013126);
+}
+
+/* Stacked, always. Side by side would halve the width of a label that needs
+   all of it. */
+.hhcp-dlc-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/*
+ * Full width, left-aligned, and tall enough to tap. min-height rather than
+ * a fixed height because the first label wraps to three lines on a narrow
+ * screen and a fixed height would clip it.
+ */
+.hhcp-dlc-choice {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 14px 18px;
+  border: 1px solid var(--hhcp-base-20, #d6e8e1);
+  border-radius: 8px;
+  background: var(--hhcp-white, #ffffff);
+  color: var(--hhcp-primary, #013126);
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+
+.hhcp-dlc-choice:hover {
+  border-color: var(--hhcp-primary, #013126);
+  background: var(--hhcp-accent, #f5fff9);
+}
+
+.hhcp-dlc-choice--primary {
+  border-color: var(--hhcp-primary, #013126);
+  background: var(--hhcp-primary, #013126);
+  color: var(--hhcp-white, #ffffff);
+}
+
+.hhcp-dlc-choice--primary:hover {
+  background: #01241c;
+  color: var(--hhcp-white, #ffffff);
+}
+
+.hhcp-dlc-close:focus-visible,
+.hhcp-dlc-choice:focus-visible {
+  outline: 2px solid var(--hhcp-primary, #013126);
+  outline-offset: 2px;
+}
+
+@media (max-width: 478px) {
+  .hhcp-dlc-panel {
+    padding: 30px 18px 20px;
+  }
+
+  .hhcp-dlc-question {
+    font-size: 17px;
+  }
+}
+
 `;
 
 const readAsBase64 = (file: File) =>
@@ -200,17 +332,105 @@ const readAsBase64 = (file: File) =>
     reader.readAsDataURL(file);
   });
 
+/**
+ * The confirmation shown before a discharge letter is sent.
+ *
+ * ⚠️ The practice name in `discharge` is required verbatim, full and
+ * unabbreviated. It is written out rather than built from `CLINIC.name`
+ * because the two are not the same string — CLINIC.name is "Horizon Health
+ * Care Partners" and this must end "Australia" — and because this is
+ * specified copy rather than a label that should follow a rename.
+ * `DischargeLetterForm.test.tsx` pins it character for character.
+ */
+const CONFIRM = {
+  question: "Before we submit this, could you confirm what you are here for?",
+  discharge:
+    "I am submitting a discharge letter for Horizon Health Care Partners Australia",
+  newPatient: "I am a new patient looking to book a consultation",
+  close: "Close",
+} as const;
+
+/** Recorded on every submission that reaches n8n. */
+const CONFIRMATION_CHOICE = "discharge_letter";
+
 export function DischargeLetterForm() {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "sending">("idle");
   const [problem, setProblem] = useState("");
   const [fileName, setFileName] = useState("");
+  const [confirming, setConfirming] = useState(false);
 
-  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const completeRef = useRef<HTMLButtonElement>(null);
+  const firstChoiceRef = useRef<HTMLButtonElement>(null);
+
+  function closeConfirm() {
+    setConfirming(false);
+    /* Back to the button they pressed, with everything they typed intact —
+       the form is never unmounted, so nothing is cleared. */
+    completeRef.current?.focus();
+  }
+
+  /*
+   * Escape closes the confirmation, same as the quiz overlay. A keydown
+   * listener, not a scroll listener — AGENTS.md rules those out and there are
+   * still none.
+   */
+  useEffect(() => {
+    if (!confirming) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeConfirm();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [confirming]);
+
+  /* Focus the first choice when the dialog opens, so a keyboard or screen
+     reader user lands inside it rather than back at the top of the form. */
+  useEffect(() => {
+    if (confirming) firstChoiceRef.current?.focus();
+  }, [confirming]);
+
+  /**
+   * Pressing Complete no longer sends anything.
+   *
+   * The browser has already run its own validation by the time this fires, so
+   * required fields are filled; the checks below are the ones it cannot do.
+   * Only once those pass does the confirmation open — asking someone to
+   * confirm and then failing them on a missing field would be the wrong order.
+   */
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (status === "sending") return;
 
     const data = new FormData(event.currentTarget);
+    const value = (name: string) => String(data.get(name) ?? "").trim();
+
+    const missing = (["firstName", "lastName", "mobile", "email"] as const).filter(
+      (name) => value(name) === "",
+    );
+    if (missing.length > 0) {
+      setProblem("Please give us your name, mobile and email so we can reach you.");
+      return;
+    }
+
+    const chosen = data.get("letter");
+    if (chosen instanceof File && chosen.size > MAX_BYTES) {
+      setProblem(
+        "That file is larger than 4MB. Please send a smaller scan, or leave it out and tell us below.",
+      );
+      return;
+    }
+
+    setProblem("");
+    setConfirming(true);
+  };
+
+  /** What Complete used to do, now reached only by confirming. */
+  const send = async (form: HTMLFormElement) => {
+    if (status === "sending") return;
+
+    const data = new FormData(form);
     const value = (name: string) => String(data.get(name) ?? "").trim();
 
     const mobileCountry = findCountry(value("mobileCountry"));
@@ -277,6 +497,14 @@ export function DischargeLetterForm() {
               previousClinic: value("previousClinic"),
               previousDoctor: value("previousDoctor"),
               help: value("help"),
+              /*
+               * Which of the two things they confirmed they were here for.
+               * Only one of them submits — a new patient is sent to the quiz
+               * and nothing is posted — so this is always "discharge_letter"
+               * today. It is sent anyway, so n8n can tell a confirmed
+               * discharge submission from one made before this gate existed.
+               */
+              confirmation_choice: CONFIRMATION_CHOICE,
             },
             /*
              * The same answers with their on-screen labels, for the email n8n
@@ -344,6 +572,7 @@ export function DischargeLetterForm() {
         name here, nothing added to the page.
       */}
       <form
+        ref={formRef}
         onSubmit={submit}
         onFocus={primeRecaptcha}
         aria-label="Discharge Letter Form"
@@ -418,7 +647,14 @@ export function DischargeLetterForm() {
           </p>
         )}
 
+        {/*
+          Still type="submit", so the browser runs its own validation first
+          and `submit` only opens the confirmation once the form is fillable.
+          A type="button" here would skip that and let someone confirm an
+          empty form.
+        */}
         <button
+          ref={completeRef}
           type="submit"
           className="hhcp-btn hhcp-dl-submit"
           disabled={status === "sending"}
@@ -429,6 +665,77 @@ export function DischargeLetterForm() {
         <p className="hhcp-dl-offer font-dm-sans">{DISCHARGE_FORM.offer}</p>
         <RecaptchaNotice />
       </form>
+
+      {confirming && (
+        <div
+          className="hhcp-dlc-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="hhcp-dlc-question"
+          /*
+            Clicking the dimmed area closes, like the close icon. Guarded on
+            the target so a click that starts inside the panel and drifts out
+            does not dismiss it.
+          */
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeConfirm();
+          }}
+        >
+          <div className="hhcp-dlc-panel">
+            <button
+              type="button"
+              className="hhcp-dlc-close"
+              onClick={closeConfirm}
+              aria-label={CONFIRM.close}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M3 3l10 10M13 3L3 13" />
+              </svg>
+            </button>
+
+            <p id="hhcp-dlc-question" className="hhcp-dlc-question font-dm-sans">
+              {CONFIRM.question}
+            </p>
+
+            <div className="hhcp-dlc-choices">
+              <button
+                ref={firstChoiceRef}
+                type="button"
+                className="hhcp-dlc-choice hhcp-dlc-choice--primary font-dm-sans"
+                onClick={() => {
+                  setConfirming(false);
+                  const form = formRef.current;
+                  if (form !== null) void send(form);
+                }}
+              >
+                {CONFIRM.discharge}
+              </button>
+
+              {/* Nothing is submitted and nothing is posted — they are simply
+                  sent to the quiz, which is where a new patient belongs. */}
+              <button
+                type="button"
+                className="hhcp-dlc-choice font-dm-sans"
+                onClick={() => {
+                  setConfirming(false);
+                  router.push("/quiz/");
+                }}
+              >
+                {CONFIRM.newPatient}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
