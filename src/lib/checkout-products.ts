@@ -1,7 +1,7 @@
 /**
  * The clinic's checkout catalogue — every ref and every price, in one file.
  *
- * Ranjeeta's product list has 45 consultations. Thirty-three have a
+ * Ranjeeta's product list has 45 consultations. Thirty-six have a
  * practitioner's calendar connected and can be paid for today; the rest exist
  * in her portal but cannot be booked.
  *
@@ -11,9 +11,9 @@
  * lists are unioned, not replaced: Priority / After Hours is live and absent
  * from hers, because she does not do after-hours. Five more on 2026-10-26 as
  * "Jamie's links", same spreadsheet again: Health Optimisation & Complete
- * Wellness and Holistic Care / Alternative Medicine — of which Health
- * Optimisation went dark again hours later, on her instruction, because
- * Jamie has not finished the training for it. See `productsFor`.
+ * Wellness and Holistic Care / Alternative Medicine. Health Optimisation
+ * went dark again hours later, because Jamie had not finished the training
+ * for it, and came back on 2026-11-11 when she confirmed he had.
  *
  * ⚠️ Every list so far has been the SAME 45 refs with a different highlight.
  * A ref is not a practitioner — these URLs carry no practitioner at all — so
@@ -23,7 +23,7 @@
  * before believing any of them are new.
  *
  * Still dark: Smoking / Vaping Cessation, Menopause / Perimenopause, and the
- * hormone-therapy products.
+ * hormone-therapy products — all for want of a connected calendar.
  *
  * ─── THE ONLY FILE TO EDIT WHEN A LINK ARRIVES ─────────────────────────────
  *
@@ -337,6 +337,41 @@ const HOLISTIC: readonly CheckoutProduct[] = [
   },
 ];
 
+/*
+ * Lit 2026-10-26, dark the same day, live again 2026-11-11.
+ *
+ * The hold was never about the links — they have answered in her portal
+ * throughout. It was a practitioner-competence hold: "Jamie is in the process
+ * of completing his course on this and will only begin offering consultations
+ * once the training is finished." Ranjeeta confirmed on 2026-11-11 that it
+ * is, so the checkout goes back.
+ *
+ * Prices are the 2026-10-09 spreadsheet's, unchanged through both switches.
+ *
+ * Notes only where the catalogue supports one. "Your first appointment" is a
+ * fact about the initial consultation; what separates an extended review from
+ * a follow-up is not something her catalogue states, so neither carries a
+ * note rather than one being invented. See the note rule in the header.
+ */
+const HEALTH_OPTIMISATION: readonly CheckoutProduct[] = [
+  {
+    ref: "health-optimisation-complete-wellness-initial-consultation",
+    label: "Initial consultation",
+    price: 299,
+    note: "Your first appointment",
+  },
+  {
+    ref: "health-optimisation-complete-wellness-follow-up-consultation",
+    label: "Follow-up consultation",
+    price: 149,
+  },
+  {
+    ref: "health-optimisation-complete-wellness-extended-review",
+    label: "Extended review",
+    price: 199,
+  },
+];
+
 /* -------------------------------------------------------------------------
    Which products a finished quiz offers
    ------------------------------------------------------------------------- */
@@ -397,6 +432,8 @@ export function productsFor(
       return selection.continuityFocus === CP_CHRONIC
         ? CHRONIC_DISEASE
         : CONTINUITY;
+    case "Health Optimisation & Complete Wellness":
+      return HEALTH_OPTIMISATION;
     /* The exact `service_selection` option string — "Holistic Care /
        Alternative Medicine" on the question, "Holistic / Alternative Care"
        on her spreadsheet. The quiz's wording is the one that has to match. */
@@ -408,27 +445,11 @@ export function productsFor(
 
   if (selection.service !== "Online Doctor") {
     /*
-     * ⚠️ Health Optimisation & Complete Wellness is deliberately NOT here.
-     *
-     * Its three refs were lit on 2026-10-26 and taken dark again the same
-     * day. Ranjeeta: "Health optimization / peptides are currently on hold.
-     * Jamie is in the process of completing his course on this and will only
-     * begin offering consultations once the training is finished."
-     *
-     * So this is a practitioner-competence hold, not a missing link — the
-     * refs exist, the calendar may well answer, and a patient reaching a
-     * checkout for it could book a consultation nobody is yet trained to
-     * deliver. Do not re-add it because the link "works". It goes back when
-     * she says the training is done.
-     *
-     * The refs, for when that happens:
-     *   health-optimisation-complete-wellness-initial-consultation   $299
-     *   health-optimisation-complete-wellness-follow-up-consultation $149
-     *   health-optimisation-complete-wellness-extended-review        $199
-     *
-     * Also still dark: Smoking / Vaping Cessation, Menopause /
-     * Perimenopause and the hormone-therapy products — those for want of a
-     * connected calendar rather than a hold.
+     * Smoking / Vaping Cessation, Menopause / Perimenopause and the
+     * hormone-therapy products. All are in her catalogue; none has a
+     * connected calendar. They arrive here by having no branch rather than
+     * by being listed, so lighting one up is adding its products above and
+     * nothing else.
      */
     return [];
   }

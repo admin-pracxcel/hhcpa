@@ -23,32 +23,20 @@ describe("checkout products", () => {
     });
 
     /*
-     * Health Optimisation is the one quiz service deliberately without a
-     * checkout. Its refs exist and its calendar may well answer — the hold
-     * is on Jamie's training, not on the link — so the phone block is doing
-     * real work here: it stops a patient buying a consultation nobody is
-     * trained to deliver yet.
+     * Smoking / Vaping Cessation, Menopause / Perimenopause and the
+     * hormone-therapy products are the catalogue entries still without a
+     * calendar. None of them is a `service_selection` option, so no quiz
+     * answer can reach them — they are dark in her portal, not here.
+     *
+     * Health Optimisation was the one exception between 2026-10-26 and
+     * 2026-11-11, held while Jamie finished his training. It is live again.
      */
-    it("offers nothing for health optimisation while the hold is on", () => {
-      expect(
-        productsFor({ service: "Health Optimisation & Complete Wellness" }),
-      ).toEqual([]);
-    });
-
-    /*
-     * Everything else the quiz offers must reach a checkout. Smoking /
-     * Vaping Cessation, Menopause / Perimenopause and the hormone-therapy
-     * products are also dark, but none is a `service_selection` option, so
-     * no quiz answer can reach them.
-     */
-    it("leaves no other quiz service without products", () => {
+    it("leaves no quiz service without products", () => {
       const step = QUIZ_STEPS.find((s) => s.id === "service");
       expect(step, "service step").toBeDefined();
       if (step === undefined || step.kind !== "choice") return;
 
-      const held = "Health Optimisation & Complete Wellness";
-
-      for (const service of step.options.filter((s) => s !== held)) {
+      for (const service of step.options) {
         /*
          * Every branch of every service, because two of them answer a second
          * question before they have products. Undefined covers the services
@@ -85,6 +73,23 @@ describe("checkout products", () => {
    * assert the refs and prices from that spreadsheet, unchanged.
    */
   describe("the services Jamie's list turned on (2026-10-26)", () => {
+    /*
+     * Lit 2026-10-26, dark the same day while Jamie finished his training,
+     * live again 2026-11-11 when Ranjeeta confirmed he had. The links never
+     * changed — only whether anyone was trained to deliver what they book.
+     */
+    it("offers three health optimisation tiers", () => {
+      const list = productsFor({
+        service: "Health Optimisation & Complete Wellness",
+      });
+      expect(refs(list)).toEqual([
+        "health-optimisation-complete-wellness-initial-consultation",
+        "health-optimisation-complete-wellness-follow-up-consultation",
+        "health-optimisation-complete-wellness-extended-review",
+      ]);
+      expect(list.map((p) => p.price)).toEqual([299, 149, 199]);
+    });
+
     it("offers two holistic care tiers", () => {
       const list = productsFor({
         service: "Holistic Care / Alternative Medicine",
