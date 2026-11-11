@@ -39,6 +39,25 @@
  *
  * The transfer consultation fee is read from pricing.ts, like every other
  * price on the site, so it cannot drift from /pricing/.
+ *
+ * ─── WHY "START YOUR TRANSFER" GOES TO /discharge/ ─────────────────────────
+ *
+ * All five pointed at /quiz/ until 2026-11-11, and the quiz has no transfer
+ * in it — not a service option, not a branch, not a checkout ref. Someone
+ * pressing the button landed on "What service are you interested in?" with
+ * eight options, none of them a transfer, and whatever they chose there was
+ * no transfer consultation to book at the end. `transferConsult` exists as a
+ * price on /pricing/ and nothing can buy it.
+ *
+ * /discharge/ is where a transfer actually starts. Its form takes the name,
+ * contact, previous clinic and previous doctor, which is step one of this
+ * page's own "How transferring works" — "share your details and current
+ * treatment so we can prepare" — and the letter upload on it is optional, so
+ * it fits someone who has not got one yet. The card further down already
+ * called the two pages "the same journey".
+ *
+ * This page declares no `quizService`, so the href rewrite in ServicePage was
+ * a no-op here either way. Nothing else changes.
  */
 
 import { PRICES } from "../pricing";
@@ -55,13 +74,13 @@ export const TRANSFER_CARE: ServicePageData = {
   hero: {
     eyebrow: "Transfer your care",
     heading: "Transfer your care to Horizon Health Care Partners",
-    primary: { label: "Start your transfer", href: "/quiz/" },
+    primary: { label: "Start your transfer", href: "/discharge/" },
     secondary: CALL_CTA,
   },
   crumbs: [{ label: "Home", href: "/" }],
   trust: null,
   intro: `Changing where you receive care should be smooth, not stressful. A transfer consultation lets a Horizon practitioner review your current treatment and records so your care continues without disruption. Transfer consultations are $${PRICES.transferConsult.amount}.`,
-  introCta: { label: "Start your transfer", href: "/quiz/" },
+  introCta: { label: "Start your transfer", href: "/discharge/" },
   modules: [
     {
       kind: "steps",
@@ -93,7 +112,7 @@ export const TRANSFER_CARE: ServicePageData = {
             "From there your care runs as it would for any Horizon patient, with reviews and eligible prescriptions handled as needed.",
         },
       ],
-      cta: { label: "Start your transfer", href: "/quiz/" },
+      cta: { label: "Start your transfer", href: "/discharge/" },
     },
     {
       kind: "split",
@@ -103,7 +122,7 @@ export const TRANSFER_CARE: ServicePageData = {
       paragraphs: [
         "Any current medication details, recent test results if you have them, and a short summary of your treatment so far. If you do not have everything, that is fine. Your practitioner will guide you.",
       ],
-      cta: { label: "Start your transfer", href: "/quiz/" },
+      cta: { label: "Start your transfer", href: "/discharge/" },
       image: sectionImage("discharge-what-to-bring"),
       imageAlt:
         "A woman gathers a few pages into a folder at a kitchen table.",
@@ -167,6 +186,6 @@ export const TRANSFER_CARE: ServicePageData = {
   closing: {
     ...STANDARD_CLOSING,
     /* The source's own button for this page, in place of the standard label. */
-    primary: { label: "Start your transfer", href: "/quiz/" },
+    primary: { label: "Start your transfer", href: "/discharge/" },
   },
 };
