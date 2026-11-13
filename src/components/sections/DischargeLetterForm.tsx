@@ -37,13 +37,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { cn } from "@/lib/utils";
+
 import { useRouter } from "next/navigation";
 
 import { findCountry } from "@/content/countries";
 import { getAttribution } from "@/lib/attribution";
 import { getLeadFields } from "@/lib/lead-fields";
 import { toReadable } from "@/lib/readable";
-import { DISCHARGE_FORM } from "@/content/services/discharge";
+import { DISCHARGE_FORM, DISCHARGE_PAGE } from "@/content/services/discharge";
 import { PhoneField } from "./PhoneField";
 import { primeRecaptcha, recaptchaToken } from "@/lib/recaptcha";
 import { RecaptchaNotice } from "@/components/RecaptchaNotice";
@@ -291,6 +293,22 @@ const STYLES = `
   background: var(--hhcp-accent, #f5fff9);
 }
 
+/*
+ * The dead end. Ranjeeta's notice again, set as the whole content of the
+ * panel, with no choices under it — the only way out is the close icon.
+ */
+.hhcp-dlc-stop {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid #e6cf9d;
+  border-left: 4px solid #c98a00;
+  border-radius: 6px;
+  background: #fdf7e8;
+  color: #4a3a10;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
 .hhcp-dlc-choice--primary {
   border-color: var(--hhcp-primary, #013126);
   background: var(--hhcp-primary, #013126);
@@ -335,23 +353,68 @@ const readAsBase64 = (file: File) =>
 /**
  * The confirmation shown before a discharge letter is sent.
  *
- * ⚠️ The practice name in `discharge` is required verbatim, full and
- * unabbreviated. It is written out rather than built from `CLINIC.name`
- * because the two are not the same string — CLINIC.name is "Horizon Health
- * Care Partners" and this must end "Australia" — and because this is
- * specified copy rather than a label that should follow a rename.
- * `DischargeLetterForm.test.tsx` pins it character for character.
+ * ⚠️ All four labels and the notice are Ranjeeta's wording, verbatim,
+ * approved in her email of 2026-11-13. Do not edit them. They name another
+ * business and distinguish two healthcare providers, so the words are hers
+ * and the approval is on record.
+ *
+ * Two options became four because two was not enough to sort the traffic.
+ * Patients were still reaching this form looking for Horizon Health Clinic —
+ * a separate, unaffiliated Australian telehealth service working in the same
+ * territory — and uploading medical records to the wrong provider. Naming
+ * HHCPA in full was not catching them, because the two businesses read as
+ * related to someone who does not know they are not.
+ *
+ * The fourth option is the point of the change. It submits nothing and
+ * offers no way to; it is a stop, not a branch.
  */
 const CONFIRM = {
   question: "Before we submit this, could you confirm what you are here for?",
-  discharge:
-    "I am submitting a discharge letter for Horizon Health Care Partners Australia",
-  newPatient: "I am a new patient looking to book a consultation",
   close: "Close",
+  /* The dead end. Her notice, reused rather than rewritten: it already says
+     exactly what someone who picked the fourth option needs to be told, and
+     it carries her approval. */
+  wrongClinicHeading: "You may be looking for a different clinic",
 } as const;
 
-/** Recorded on every submission that reaches n8n. */
-const CONFIRMATION_CHOICE = "discharge_letter";
+/**
+ * What each choice does.
+ *
+ * `submits` is the whole safety property: only the two HHCPA options post
+ * anything, so a wrong-clinic enquiry never becomes a record. That is a
+ * stronger separation than tagging it after the fact, which is what
+ * Ranjeeta asked for in her point about reporting — the enquiry cannot
+ * reach the reporting because it cannot reach the inbox.
+ *
+ * `value` is what rides with the submission as `confirmation_choice`. Only
+ * the first two are ever sent, for the reason above; the other two are
+ * written out so the set is readable as a whole.
+ */
+const CHOICES = [
+  {
+    value: "transferring_from_another_clinic",
+    label:
+      "I am transferring from another clinic and would like to become a patient of HHCPA.",
+    action: "submit",
+  },
+  {
+    value: "existing_hhcpa_patient",
+    label: "I am an existing HHCPA patient submitting a document.",
+    action: "submit",
+  },
+  {
+    value: "new_patient_booking",
+    label: "I am a new patient wanting to book a consultation.",
+    action: "quiz",
+  },
+  {
+    value: "looking_for_horizon_health_clinic",
+    label: "I am looking for Horizon Health Clinic (a different business).",
+    action: "stop",
+  },
+] as const;
+
+type Choice = (typeof CHOICES)[number];
 
 export function DischargeLetterForm() {
   const router = useRouter();
@@ -359,6 +422,8 @@ export function DischargeLetterForm() {
   const [problem, setProblem] = useState("");
   const [fileName, setFileName] = useState("");
   const [confirming, setConfirming] = useState(false);
+  /* Set when they pick the fourth option: the dialog becomes a dead end. */
+  const [wrongClinic, setWrongClinic] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
   const completeRef = useRef<HTMLButtonElement>(null);
@@ -366,6 +431,7 @@ export function DischargeLetterForm() {
 
   function closeConfirm() {
     setConfirming(false);
+    setWrongClinic(false);
     /* Back to the button they pressed, with everything they typed intact —
        the form is never unmounted, so nothing is cleared. */
     completeRef.current?.focus();
@@ -423,11 +489,12 @@ export function DischargeLetterForm() {
     }
 
     setProblem("");
+    setWrongClinic(false);
     setConfirming(true);
   };
 
   /** What Complete used to do, now reached only by confirming. */
-  const send = async (form: HTMLFormElement) => {
+  const send = async (form: HTMLFormElement, choice: Choice["value"]) => {
     if (status === "sending") return;
 
     const data = new FormData(form);
@@ -504,7 +571,7 @@ export function DischargeLetterForm() {
                * today. It is sent anyway, so n8n can tell a confirmed
                * discharge submission from one made before this gate existed.
                */
-              confirmation_choice: CONFIRMATION_CHOICE,
+              confirmation_choice: choice,
             },
             /*
              * The same answers with their on-screen labels, for the email n8n
@@ -702,37 +769,63 @@ export function DischargeLetterForm() {
               </svg>
             </button>
 
-            <p id="hhcp-dlc-question" className="hhcp-dlc-question font-dm-sans">
-              {CONFIRM.question}
-            </p>
+            {wrongClinic ? (
+              /*
+               * A stop, not a step. There is no submit from here and no
+               * onward link: the point is that nothing of theirs reaches
+               * HHCPA, and sending them somewhere else is not ours to do.
+               */
+              <>
+                <p
+                  id="hhcp-dlc-question"
+                  className="hhcp-dlc-question font-dm-sans"
+                >
+                  {CONFIRM.wrongClinicHeading}
+                </p>
+                <p className="hhcp-dlc-stop font-dm-sans">
+                  {DISCHARGE_PAGE.notice}
+                </p>
+              </>
+            ) : (
+              <>
+                <p
+                  id="hhcp-dlc-question"
+                  className="hhcp-dlc-question font-dm-sans"
+                >
+                  {CONFIRM.question}
+                </p>
 
-            <div className="hhcp-dlc-choices">
-              <button
-                ref={firstChoiceRef}
-                type="button"
-                className="hhcp-dlc-choice hhcp-dlc-choice--primary font-dm-sans"
-                onClick={() => {
-                  setConfirming(false);
-                  const form = formRef.current;
-                  if (form !== null) void send(form);
-                }}
-              >
-                {CONFIRM.discharge}
-              </button>
-
-              {/* Nothing is submitted and nothing is posted — they are simply
-                  sent to the quiz, which is where a new patient belongs. */}
-              <button
-                type="button"
-                className="hhcp-dlc-choice font-dm-sans"
-                onClick={() => {
-                  setConfirming(false);
-                  router.push("/quiz/");
-                }}
-              >
-                {CONFIRM.newPatient}
-              </button>
-            </div>
+                <div className="hhcp-dlc-choices">
+                  {CHOICES.map((choice, index) => (
+                    <button
+                      key={choice.value}
+                      ref={index === 0 ? firstChoiceRef : undefined}
+                      type="button"
+                      className={cn(
+                        "hhcp-dlc-choice font-dm-sans",
+                        choice.action === "submit" &&
+                          "hhcp-dlc-choice--primary",
+                      )}
+                      onClick={() => {
+                        if (choice.action === "stop") {
+                          setWrongClinic(true);
+                          return;
+                        }
+                        setConfirming(false);
+                        if (choice.action === "quiz") {
+                          router.push("/quiz/");
+                          return;
+                        }
+                        const form = formRef.current;
+                        if (form !== null) void send(form, choice.value);
+                      }}
+                    >
+                      {choice.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

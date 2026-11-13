@@ -11,9 +11,14 @@ import { DischargeLetterForm } from "./DischargeLetterForm";
  * visitor is, because the form was collecting new patients who had no
  * discharge letter to send.
  */
-const DISCHARGE_CHOICE =
-  "I am submitting a discharge letter for Horizon Health Care Partners Australia";
-const NEW_PATIENT_CHOICE = "I am a new patient looking to book a consultation";
+/* Ranjeeta's four, verbatim. Pinned here character for character, because
+   they name another business and distinguish two healthcare providers. */
+const TRANSFERRING =
+  "I am transferring from another clinic and would like to become a patient of HHCPA.";
+const EXISTING_PATIENT = "I am an existing HHCPA patient submitting a document.";
+const NEW_PATIENT_CHOICE = "I am a new patient wanting to book a consultation.";
+const WRONG_CLINIC =
+  "I am looking for Horizon Health Clinic (a different business).";
 
 function fill() {
   const set = (label: RegExp, value: string) =>
@@ -65,23 +70,30 @@ describe("discharge letter form", () => {
     ).toBeTruthy();
   });
 
-  /* The practice name is required in full and unabbreviated. */
-  it("names the practice exactly, on the first button", async () => {
+  it("offers her four options, in her words", async () => {
     render(<DischargeLetterForm />);
     fill();
     complete();
-    const button = await screen.findByRole("button", {
-      name: DISCHARGE_CHOICE,
-    });
-    expect(button.textContent).toBe(DISCHARGE_CHOICE);
+    await screen.findByRole("dialog");
+    for (const label of [
+      TRANSFERRING,
+      EXISTING_PATIENT,
+      NEW_PATIENT_CHOICE,
+      WRONG_CLINIC,
+    ]) {
+      expect(
+        screen.getByRole("button", { name: label }).textContent,
+        label,
+      ).toBe(label);
+    }
   });
 
-  it("submits when they confirm the discharge letter", async () => {
+  it("submits for someone transferring from another clinic", async () => {
     render(<DischargeLetterForm />);
     fill();
     complete();
     fireEvent.click(
-      await screen.findByRole("button", { name: DISCHARGE_CHOICE }),
+      await screen.findByRole("button", { name: TRANSFERRING }),
     );
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     await waitFor(() =>
@@ -89,18 +101,42 @@ describe("discharge letter form", () => {
     );
   });
 
-  it("carries confirmation_choice with the rest of the form data", async () => {
+  it("records which option they chose, per option", async () => {
+    for (const [label, expected] of [
+      [TRANSFERRING, "transferring_from_another_clinic"],
+      [EXISTING_PATIENT, "existing_hhcpa_patient"],
+    ] as const) {
+      fetchMock.mockClear();
+      const view = render(<DischargeLetterForm />);
+      fill();
+      complete();
+      fireEvent.click(await screen.findByRole("button", { name: label }));
+      await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+      const [, call] = fetchMock.mock.calls[0] as unknown as [
+        string,
+        RequestInit,
+      ];
+      expect(JSON.parse(String(call.body)).intake.answers.confirmation_choice).toBe(
+        expected,
+      );
+      view.unmount();
+    }
+  });
+
+  it("carries confirmation_choice alongside the real answers", async () => {
     render(<DischargeLetterForm />);
     fill();
     complete();
     fireEvent.click(
-      await screen.findByRole("button", { name: DISCHARGE_CHOICE }),
+      await screen.findByRole("button", { name: TRANSFERRING }),
     );
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
 
     const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     const body = JSON.parse(String(init.body));
-    expect(body.intake.answers.confirmation_choice).toBe("discharge_letter");
+    expect(body.intake.answers.confirmation_choice).toBe(
+      "transferring_from_another_clinic",
+    );
     /* Alongside the real answers, not instead of them. */
     expect(body.intake.answers.firstName).toBe("Test");
     expect(body.intake.answers.email).toBe("test@example.com");
@@ -150,6 +186,70 @@ describe("discharge letter form", () => {
     complete();
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  /*
+   * ⚠️ The assertion the whole change exists for.
+   *
+   * Someone looking for Horizon Health Clinic must not be able to send
+   * medical records to HHCPA. Not tagged afterwards and filtered — unable
+   * to send at all, because an enquiry that never posts cannot reach an
+   * inbox or a report.
+   */
+  describe("someone looking for the other clinic", () => {
+    async function pickWrongClinic() {
+      render(<DischargeLetterForm />);
+      fill();
+      complete();
+      fireEvent.click(
+        await screen.findByRole("button", { name: WRONG_CLINIC }),
+      );
+    }
+
+    it("cannot submit anything", async () => {
+      await pickWrongClinic();
+      await waitFor(() =>
+        expect(screen.queryByRole("button", { name: TRANSFERRING })).toBeNull(),
+      );
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(push).not.toHaveBeenCalled();
+    });
+
+    it("is left with no way forward but closing", async () => {
+      await pickWrongClinic();
+      await waitFor(() =>
+        expect(screen.queryByRole("button", { name: TRANSFERRING })).toBeNull(),
+      );
+      /* Every other choice is gone too — it is a stop, not a branch. */
+      for (const label of [EXISTING_PATIENT, NEW_PATIENT_CHOICE, WRONG_CLINIC]) {
+        expect(screen.queryByRole("button", { name: label }), label).toBeNull();
+      }
+      const buttons = screen.getAllByRole("button", { hidden: false });
+      const inDialog = buttons.filter((b) =>
+        b.closest('[role="dialog"]') !== null,
+      );
+      expect(inDialog).toHaveLength(1);
+      expect(inDialog[0].getAttribute("aria-label")).toMatch(/close/i);
+    });
+
+    it("is told the two businesses are unaffiliated, in her words", async () => {
+      await pickWrongClinic();
+      expect(
+        await screen.findByText(
+          /is an independent telehealth provider and is not affiliated with Horizon Health Clinic/,
+        ),
+      ).toBeTruthy();
+    });
+
+    it("can go back to the form with everything still typed", async () => {
+      await pickWrongClinic();
+      fireEvent.click(screen.getByRole("button", { name: /close/i }));
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      expect(
+        (screen.getByLabelText(/first name/i) as HTMLInputElement).value,
+      ).toBe("Test");
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
   });
 
   it("is a modal dialog, labelled by its question", async () => {

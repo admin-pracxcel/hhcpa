@@ -22,8 +22,20 @@
  */
 
 export const DISCHARGE_META = {
-  /* Her own title, verbatim. */
-  title: "Discharge Letter | Switch to Horizon Health Care Partners",
+  /*
+   * Reordered 2026-11-13, at Ranjeeta's request.
+   *
+   * It read "Discharge Letter | Switch to Horizon Health Care Partners",
+   * which is the line Google shows, and it led with the two words that were
+   * bringing the wrong clinic's patients here. The practice name goes first
+   * now, with "Australia" in it, because that word is the thing that
+   * separates HHCPA from Horizon Health Clinic in a results list.
+   *
+   * "Transfer Your Care to HHCPA" is deliberately not used: the page at
+   * /transfer-your-care/ already carries that heading, and giving both the
+   * same title puts two of her own pages in competition for one query.
+   */
+  title: "Horizon Health Care Partners Australia | Discharge Letter",
   description:
     "Switch to Horizon Health Care Partners and save 15% on your first consultation. Complete the discharge letter form and we will handle the secure transfer of your medical records.",
   path: "/discharge/",
@@ -35,9 +47,29 @@ export const DISCHARGE_META = {
  * the kind of silent copy-editing that makes a replica stop being one.
  */
 export const DISCHARGE_PAGE = {
+  /*
+   * ─── THE CLINIC IDENTIFICATION NOTICE ──────────────────────────────────
+   *
+   * Ranjeeta's wording, verbatim, approved in her email of 2026-11-13.
+   *
+   * ⚠️ Do not edit it. It names another business and makes a statement about
+   * affiliation between two healthcare providers, so the words are hers and
+   * the approval is on record. A tidy-up here is a change to a legal claim.
+   *
+   * It sits above everything, including the heading, because its job is to
+   * stop someone before they start typing. Patients were reaching this form
+   * looking for Horizon Health Clinic — a separate, unaffiliated Australian
+   * telehealth service — and uploading medical records to the wrong
+   * provider.
+   */
+  notice:
+    "Important: Horizon Health Care Partners Australia (HHCPA) is an independent telehealth provider and is not affiliated with Horizon Health Clinic. If you are trying to contact Horizon Health Clinic regarding your existing appointments, prescriptions or discharge arrangements, please contact that clinic directly.",
   eyebrow: "Make the switch",
   heading:
     "Switch to Horizon Health Care Partners & Save 15% on Your First Consultation!",
+  /* Her secondary description, under the heading. The page already led with
+     the switch; this names what the form itself is for. */
+  subheading: "Discharge Letter Upload",
   intro:
     "Making the switch is simple. Fill out our quick online form, book a telehealth appointment that suits you, and we'll handle the secure transfer of your medical records - so your care continues seamlessly.",
   whyHeading: "Why patients choose Horizon Health Care Partners",

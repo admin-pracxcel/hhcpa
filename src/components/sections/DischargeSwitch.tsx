@@ -92,6 +92,39 @@ const STYLES = `
   color: var(--hhcp-primary, #013126);
 }
 
+/*
+ * The clinic identification notice.
+ *
+ * Amber rather than the site green: it is a warning, and on a page that is
+ * otherwise entirely green it has to read as different in kind rather than
+ * as another panel. Full width above the grid, so it is the first thing
+ * under the header on a phone as well as on a desktop.
+ */
+.hhcp-ds-notice {
+  margin: 0 0 var(--hhcp-space-m, 30px);
+  padding: 16px 18px;
+  border: 1px solid #e6cf9d;
+  border-left: 4px solid #c98a00;
+  border-radius: 6px;
+  background: #fdf7e8;
+  color: #4a3a10;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/*
+ * What the form is, under what the page offers. Smaller than the heading
+ * and heavier than the intro, so it reads as a label for the form rather
+ * than as the next sentence of the copy.
+ */
+.hhcp-ds-subheading {
+  margin: 0 0 var(--hhcp-space-xs, 13.5px);
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--hhcp-primary, #013126);
+}
+
 .hhcp-ds-intro {
   margin-top: var(--hhcp-space-m, 30px);
   font-size: 16px;
@@ -169,6 +202,15 @@ export function DischargeSwitch({ form }: { form: ReactNode }) {
     <section className="hhcp-ds-section">
       <style>{STYLES}</style>
       <div className="hhcp-container hhcp-ds-container">
+        {/*
+          Above the grid, so it is above the heading and both columns rather
+          than beside the form. Someone who reads nothing else on the page
+          should still meet this before a single field.
+        */}
+        <p className="hhcp-ds-notice font-dm-sans" role="note">
+          {DISCHARGE_PAGE.notice}
+        </p>
+
         <div className="hhcp-ds-grid">
           <div className="hhcp-ds-copy">
             <div className="hhcp-ds-eyebrow">
@@ -179,6 +221,10 @@ export function DischargeSwitch({ form }: { form: ReactNode }) {
             <h1 className="hhcp-ds-title font-dm-sans">
               {DISCHARGE_PAGE.heading}
             </h1>
+
+            <p className="hhcp-ds-subheading font-dm-sans">
+              {DISCHARGE_PAGE.subheading}
+            </p>
 
             <p className="hhcp-ds-intro font-dm-sans">{DISCHARGE_PAGE.intro}</p>
 
