@@ -1704,8 +1704,32 @@ export function triageMessagesFor(
    ------------------------------------------------------------------------- */
 
 export const QUIZ_CONTACT = {
-  heading: "Get Your Results",
-  body: "Please provide your contact details below so we can send you your results and connect you with the appropriate service.",
+  /*
+   * "Get Your Results" until 2026-11-16. Ranjeeta, confirming in writing that
+   * day: match the submit button.
+   *
+   * Her request of 2026-10-27 named the button, and the button was changed
+   * the same day in b4aba66. This heading was not in that change and went on
+   * promising results for three more weeks, directly beneath the "Let's get
+   * you booked in" callout that tells the patient they book on the next
+   * screen. One screen, two opposite promises. She chased it, was asked
+   * whether she meant the heading, and confirmed.
+   *
+   * ⚠️ The label now promises a booking on all three outcomes, and red does
+   * not book — it lands on /quiz-thank-you/ and is told a clinician will be
+   * in touch. That trade was accepted for the button (see QuizForm.tsx) and
+   * is accepted again here; `outcome` is in scope in that component, so
+   * making either conditional stays a one-line change.
+   *
+   * The body lost "send you your results" at the same time. It was not named
+   * in her reply, but it is the sentence directly under this heading and
+   * would otherwise have contradicted it in the same breath.
+   *
+   * /quiz-thank-you/ still speaks of results and next steps. That is the red
+   * path, where it is true, and it is deliberately left alone.
+   */
+  heading: "Continue to Book Consultation",
+  body: "Please provide your contact details below so we can connect you with the appropriate service.",
   important: {
     heading: "Important information",
     body: "Health Optimisation programs may include prescription-only treatments where clinically appropriate. All patients require assessment by a registered healthcare practitioner. Additional pathology testing may be required before treatment recommendations can be made.",
