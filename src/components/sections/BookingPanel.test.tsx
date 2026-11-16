@@ -129,8 +129,11 @@ describe("BookingPanel", () => {
       onlineDoctorKind: "A medical certificate",
     });
     render(<BookingPanel />);
+    /* Cents only where there are cents: the single-day certificate is the
+       one price on the site that is not a whole number. The multi-day tier
+       moved to $59 on 2026-11-16. */
     expect(screen.getByText("$24.90")).toBeTruthy();
-    expect(screen.getByText("$49")).toBeTruthy();
+    expect(screen.getByText("$59")).toBeTruthy();
   });
 
   it("keeps the checkout in the same tab", () => {

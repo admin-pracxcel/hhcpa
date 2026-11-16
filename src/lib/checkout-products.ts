@@ -139,7 +139,8 @@ const PRESCRIPTION_SIMPLE: CheckoutProduct = {
 const PRESCRIPTION_REVIEW: CheckoutProduct = {
   ref: "prescriptions-referrals-prescription-medication-review",
   label: "Prescription or medication review",
-  price: 49,
+  /* $49 -> $59, Ranjeeta 2026-11-16. */
+  price: 59,
   /* The mirror of the note above: this is what the ladder sends here. */
   note: "More than one medication, repeats, or a new request",
 };
@@ -154,7 +155,8 @@ const CERTIFICATES: readonly CheckoutProduct[] = [
   {
     ref: "medical-certificates-multi-day-certificate-consultation",
     label: "Multi-day certificate",
-    price: 49,
+    /* $49 -> $59, Ranjeeta 2026-11-16. */
+    price: 59,
     note: "Two or more days",
   },
 ];

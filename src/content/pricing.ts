@@ -135,17 +135,27 @@ export const PRICES: Record<PriceKey, Price> = {
    * prescription tiers are ladders and she has specified the bottom rung of
    * each; whether the $49s move is still open with her.
    */
+  /*
+   * $49 -> $59, Ranjeeta 2026-11-16, in writing and itemised. Her reasoning:
+   * a certificate of two or more days needs a consultation, and that is the
+   * GP consult rate. `provisional` clears because this email IS the written
+   * sign-off that flag was waiting on.
+   */
   medicalCertificateMultiDay:
-                      { label: "Medical certificate, 2+ days",     amount: 49,   from: false, provisional: true },
+                      { label: "Medical certificate, 2+ days",     amount: 59,   from: false, provisional: false },
   prescriptions:      { label: "Prescriptions and repeat scripts", amount: 29,   from: true,  provisional: true },
   /*
-   * The upper tier of the same service, not a separate one. §4.8's ladder
-   * charges $19 for the simple case and $49 for anything else; the pricing
-   * table advertises "from $19", which is that ladder's floor, so this key is
+   * The upper tier of the same service, not a separate one. The pricing
+   * table advertises "from $29", which is that ladder's floor, so this key is
    * deliberately absent from the Other services rows.
+   *
+   * $49 -> $59, Ranjeeta 2026-11-16, in writing and itemised. Same reasoning
+   * as the multi-day certificate above: more than one medication, a repeat or
+   * something new needs a consultation, and that is the GP consult rate.
+   * `provisional` clears for the same reason.
    */
   prescriptionsComplex:
-                      { label: "Prescriptions, multiple or new", amount: 49,   from: false, provisional: true },
+                      { label: "Prescriptions, multiple or new", amount: 59,   from: false, provisional: false },
   pathologyReferral:  { label: "Pathology and imaging referrals",  amount: 59,   from: true,  provisional: false },
   mentalHealth:       { label: "Mental health support",            amount: 79,   from: true,  provisional: false },
   /*
