@@ -692,12 +692,28 @@ export function SiteFooter({ className }: SiteFooterProps) {
               {news.status === "error" && news.problem}
             </p>
 
-            <p className="hhcp-ft-terms">
+            {/*
+              A <div>, not a <p>.
+
+              `RecaptchaNotice` renders a <p> of its own, and a <p> inside a
+              <p> is invalid HTML. The browser silently closes the outer one
+              and hoists the notice out, so the DOM it builds does not match
+              the one the server sent — which threw a hydration error on every
+              page of the site, this being the footer. React then discarded and
+              re-rendered the whole tree on each load.
+
+              The notice is a <p> in its own right in the five other places it
+              appears, all of them siblings of a <form>, so the component is
+              correct and the nesting here was the bug. `.hhcp-ft-terms` is
+              styled by class and carries margin: 0 either way, so this changes
+              nothing visually.
+            */}
+            <div className="hhcp-ft-terms">
               {"By clicking Register, you acknowledge that you have read and accepted our "}
               <a href="/terms-and-conditions/">Terms and Conditions</a>.
               {" "}
               <RecaptchaNotice className="hhcp-ft-recaptcha" />
-            </p>
+            </div>
           </div>
 
         </div>
