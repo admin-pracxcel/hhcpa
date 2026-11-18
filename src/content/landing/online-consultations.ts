@@ -17,10 +17,9 @@
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import {
   ASSESSMENT_CTA,
-  PLACEHOLDER_ALT,
   SECONDARY_CTA,
-  landingImage,
 } from "./shared";
+import { sectionImage } from "../services/shared";
 
 export const LANDING_ONLINE: ServicePageData = {
   meta: {
@@ -32,6 +31,11 @@ export const LANDING_ONLINE: ServicePageData = {
   hero: {
     eyebrow: "Horizon Health Care Partners",
     heading: "A simpler way to access healthcare online.",
+    media: {
+      src: "/videos/lp-online-hero.webm",
+      poster: "/images/lp-online-hero-poster.webp",
+      alt: "Seen over her shoulder, a woman speaks to a practitioner on a laptop by a sunlit window.",
+    },
     subheading:
       "Professional consultations, with a more straightforward starting point.",
     primary: ASSESSMENT_CTA,
@@ -53,8 +57,23 @@ export const LANDING_ONLINE: ServicePageData = {
         "Horizon provides an online starting point for people exploring available consultation services.",
         "Our process is designed to help you understand the next steps before deciding whether to proceed.",
       ],
-      image: landingImage("lp-online-expect"),
-      imageAlt: PLACEHOLDER_ALT,
+      /*
+       * ⚠️ Not this page's own photograph. Pages A and B were given bespoke
+       * artwork on 2026-11-18; page C was not, so its two section slots reuse
+       * photographs that already sit on the site — hence `sectionImage`, not
+       * `landingImage`. This one is `/online-doctor/`'s "how it works" image,
+       * and it is the closest thing the library has to this section's subject.
+       *
+       * It is the first image on the site used in two places. That is fine
+       * while this page is noindex and entered from an advertisement: nobody
+       * meets both in one visit unless they walk the nav. If page C is ever
+       * indexed, or if the two pages are ever linked to each other, give it
+       * artwork of its own instead. The alt text is carried across verbatim so
+       * the two descriptions cannot drift apart.
+       */
+      image: sectionImage("online-doctor-how-it-works"),
+      imageAlt:
+        "A person stands at a kitchen bench speaking with a practitioner on a propped tablet.",
       imageSide: "right",
     },
     {
@@ -126,8 +145,10 @@ export const LANDING_ONLINE: ServicePageData = {
        * entry point rather than a repeat of the same button.
        */
       cta: { label: "Get started with Horizon", href: "/quiz/" },
-      image: landingImage("lp-online-time"),
-      imageAlt: PLACEHOLDER_ALT,
+      /* Borrowed from `/womens-health/`. See the note on the module above. */
+      image: sectionImage("womens-health-how-it-works"),
+      imageAlt:
+        "A woman sits in a sunlit armchair on a phone consultation, a notebook on her knee.",
       imageSide: "left",
     },
   ],

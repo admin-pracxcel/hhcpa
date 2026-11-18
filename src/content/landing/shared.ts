@@ -27,17 +27,21 @@
  * they are ready when it does; nothing here should be advertised against until
  * it is.
  *
- * ─── IMAGES ARE PLACEHOLDERS ───────────────────────────────────────────────
+ * ─── ARTWORK ───────────────────────────────────────────────────────────────
  *
- * `public/images/lp-*.webp` are generated hatched boxes reading "PLACEHOLDER".
- * The source document supplied no artwork — its 19 image links are
+ * Supplied by Bilal on 2026-11-18 and installed over the generated
+ * placeholders that stood here from 2026-11-17. Each page now carries a hero
+ * loop with a poster still and two 4:5 section photographs.
+ *
+ * Pages A and B have bespoke photographs (`lp-journey-*`, `lp-review-*`).
+ * Page C has none of its own: its two section slots reuse photographs already
+ * on the site, which is why `online-consultations.ts` imports `sectionImage`
+ * rather than `landingImage`. See the note at those two modules.
+ *
+ * The source document supplied no artwork of its own. Its 19 image links are
  * `images.openai.com` thumbnails of other companies' websites, including a
- * physiotherapy clinic and a competing telehealth brand. None is licensed and
- * none may ship.
- *
- * The heroes have no `media` at all, which is why they render as the standard
- * dark band. The specification asks for a lifestyle photograph there. That is
- * a gap, not a design choice.
+ * physiotherapy clinic and a competing telehealth brand. None was licensed and
+ * none shipped.
  */
 
 import { CALL_CTA } from "../clinic";
@@ -60,10 +64,8 @@ export const SECONDARY_CTA = CALL_CTA;
 export const LANDING_FOOTNOTE =
   "The pre-screening assessment is not a diagnosis or substitute for a medical consultation. Clinical suitability and any treatment decisions are determined independently by an appropriately qualified practitioner. No prescription or treatment outcome is guaranteed.";
 
-/** `sectionImage()` for the landing-page placeholders. */
+/** `sectionImage()` for the artwork that belongs to these pages alone. */
 export function landingImage(name: string): string {
   return `/images/${name}.webp`;
 }
 
-export const PLACEHOLDER_ALT =
-  "Placeholder graphic. Final photography has not been supplied.";

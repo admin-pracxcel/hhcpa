@@ -181,6 +181,7 @@ export interface ServicePageData {
       readonly src: string;
       readonly poster: string;
       readonly alt: string;
+      readonly scrim?: "strong";
     };
     readonly primary: LinkRef;
     readonly secondary: LinkRef;

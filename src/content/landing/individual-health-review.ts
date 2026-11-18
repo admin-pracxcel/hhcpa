@@ -34,7 +34,6 @@
 import type { ServicePageData } from "@/components/sections/ServicePage";
 import {
   ASSESSMENT_CTA,
-  PLACEHOLDER_ALT,
   SECONDARY_CTA,
   landingImage,
 } from "./shared";
@@ -50,6 +49,13 @@ export const LANDING_REVIEW: ServicePageData = {
     eyebrow: "Horizon Health Care Partners",
     heading: "Your health deserves an individual approach.",
     subheading: "Start with understanding your circumstances.",
+    media: {
+      src: "/videos/lp-review-hero.webm",
+      poster: "/images/lp-review-hero-poster.webp",
+      /* White room, bright at the top of the frame. See `hhcp-sv-scrim-strong`. */
+      scrim: "strong" as const,
+      alt: "A woman at a laptop in a soft pink room, mid-conversation with someone off screen.",
+    },
     primary: ASSESSMENT_CTA,
     secondary: SECONDARY_CTA,
   },
@@ -71,7 +77,8 @@ export const LANDING_REVIEW: ServicePageData = {
         "Rather than making assumptions, the focus is on understanding your circumstances and identifying appropriate next steps.",
       ],
       image: landingImage("lp-review-approach"),
-      imageAlt: PLACEHOLDER_ALT,
+      imageAlt:
+        "A man in headphones listens, chin resting on his hand, at a laptop in a bright room.",
       imageSide: "right",
     },
     {
@@ -140,7 +147,8 @@ export const LANDING_REVIEW: ServicePageData = {
       ],
       cta: ASSESSMENT_CTA,
       image: landingImage("lp-review-considered"),
-      imageAlt: PLACEHOLDER_ALT,
+      imageAlt:
+        "A close view of a hand writing notes in a spiral notebook on a wooden table.",
       imageSide: "left",
     },
   ],

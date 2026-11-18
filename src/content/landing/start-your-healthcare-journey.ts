@@ -13,7 +13,6 @@ import type { ServicePageData } from "@/components/sections/ServicePage";
 import {
   ASSESSMENT_CTA,
   LANDING_FOOTNOTE,
-  PLACEHOLDER_ALT,
   SECONDARY_CTA,
   landingImage,
 } from "./shared";
@@ -29,6 +28,13 @@ export const LANDING_JOURNEY: ServicePageData = {
     eyebrow: "Horizon Health Care Partners",
     heading: "A more personal approach to healthcare starts here.",
     subheading: "Healthcare that begins with understanding you.",
+    media: {
+      src: "/videos/lp-journey-hero.webm",
+      poster: "/images/lp-journey-hero-poster.webp",
+      /* White room, bright at the top of the frame. See `hhcp-sv-scrim-strong`. */
+      scrim: "strong" as const,
+      alt: "A woman propped against pillows works at a laptop in a bright, white room.",
+    },
     primary: ASSESSMENT_CTA,
     secondary: SECONDARY_CTA,
   },
@@ -54,7 +60,8 @@ export const LANDING_JOURNEY: ServicePageData = {
         "Our approach starts with understanding your individual circumstances.",
       ],
       image: landingImage("lp-journey-approach"),
-      imageAlt: PLACEHOLDER_ALT,
+      imageAlt:
+        "A woman in headphones smiles at her laptop at a desk, a notebook and mug beside her.",
       imageSide: "right",
     },
     {
@@ -144,7 +151,7 @@ export const LANDING_JOURNEY: ServicePageData = {
       ],
       cta: ASSESSMENT_CTA,
       image: landingImage("lp-journey-why"),
-      imageAlt: PLACEHOLDER_ALT,
+      imageAlt: "A close view of a person holding a smartphone in both hands.",
       imageSide: "left",
     },
   ],

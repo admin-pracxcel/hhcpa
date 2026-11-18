@@ -56,6 +56,26 @@ const STYLES = `
   background: linear-gradient(transparent 0%, #000 100%);
 }
 
+/*
+ * The same scrim with a floor under it, for footage that is bright at the top
+ * of the frame.
+ *
+ * The gradient above starts fully transparent, so the first rows of the band
+ * are whatever the video is. That is fine for her footage — an aerial of dark
+ * sea — and fine for the service heroes, which are interiors shot against a
+ * window. It is not fine for the two landing-page loops, both of which open on
+ * a white room: measured across ten frames of each loop, the 12px eyebrow over
+ * them came out at 2.58:1 and 3.46:1, under the 4.5:1 small text needs, and
+ * the H1 only just cleared its 3:1.
+ *
+ * 0.35 is the lowest stop that clears both thresholds on the worse of the two
+ * with margin (0.25 still failed). Opt-in via "media.scrim", so the twenty
+ * pages that already have a hero video are untouched.
+ */
+.hhcp-sv-scrim-strong {
+  background: linear-gradient(rgba(0, 0, 0, 0.35) 0%, #000 100%);
+}
+
 /* The header is absolute over this band, so the top padding clears it. */
 @media (max-width: 991px) {
   .hhcp-sv-section {
@@ -182,7 +202,13 @@ interface ServiceHeroProps {
    * Optional muted, looping background video with a poster still. About Us is
    * the only page that has one.
    */
-  media?: { readonly src: string; readonly poster: string; readonly alt: string };
+  media?: {
+    readonly src: string;
+    readonly poster: string;
+    readonly alt: string;
+    /** Darken the top of the scrim for footage that is bright there. */
+    readonly scrim?: "strong";
+  };
   /**
    * Optional line under the H1, smaller than it.
    *
@@ -229,7 +255,12 @@ export function ServiceHero({
             playsInline
             aria-hidden="true"
           />
-          <div className="hhcp-sv-scrim" />
+          <div
+            className={cn(
+              "hhcp-sv-scrim",
+              media.scrim === "strong" && "hhcp-sv-scrim-strong",
+            )}
+          />
         </>
       )}
       <div className="hhcp-container hhcp-sv-container">
