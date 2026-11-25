@@ -40,10 +40,12 @@
  *      the clinic is described throughout as based in West End, Queensland.
  *      This also bears on the Complaints page, where the state health
  *      complaints body to name first is still unconfirmed.
- *   3. The two documents carry different "last updated" dates, and the Terms
- *      are dated later than the Privacy Policy they incorporate. The Privacy
- *      Policy still reads "Last updated, Oct 2025" despite the 2026-11-25
- *      addition, which is now wrong on its face.
+ *   3. The two documents carry different "last updated" dates: the Privacy
+ *      Policy Nov 2026, the Terms Jul 2026. That ordering is now the right
+ *      way round — the Policy was moved to Nov 2026 at Bilal's instruction on
+ *      2026-11-25 to match the addition above, where it had read Oct 2025 and
+ *      been wrong on its face. The Terms have not been reviewed since Jul
+ *      2026 and still incorporate this Policy by reference.
  *   4. There are two security sections. "Security and Retention" was added
  *      above, and "Security of Personal Information" was already below it.
  *      They do not contradict each other — one is about enquiry records, the
@@ -83,7 +85,7 @@ export const PRIVACY_POLICY: LegalDocument = {
     path: "/privacy/",
   },
   heading: "Privacy Policy",
-  lastUpdated: "Last updated, Oct 2025",
+  lastUpdated: "Last updated, Nov 2026",
   blocks: [
     {
       kind: "p",
