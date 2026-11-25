@@ -443,7 +443,11 @@ export function ContactSection({
             />
           </div>
 
-          <PhoneField name="phone" label="Phone number" />
+          <PhoneField
+            name="phone"
+            label="Phone number"
+            hint="We may text you about your enquiry."
+          />
 
           <div className="hhcp-form-field">
             <label className="hhcp-form-label" htmlFor="contact-message">

@@ -1893,7 +1893,12 @@ function ContactStep({
       </div>
 
       <div style={{ marginTop: 20 }}>
-        <PhoneField name="phone" label="Phone number" required />
+        <PhoneField
+          name="phone"
+          label="Phone number"
+          required
+          hint="We may text you about your enquiry."
+        />
       </div>
 
       <div className="hhcp-qz-important">

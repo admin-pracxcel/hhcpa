@@ -121,6 +121,13 @@ const STYLES = `
   color: var(--hhcp-base-60, rgba(1, 49, 38, 0.6));
 }
 
+.hhcp-ph-hint {
+  margin-top: 6px;
+  font-size: var(--hhcp-text-xs, 12px);
+  line-height: 1.5;
+  color: var(--hhcp-base-80, #34524a);
+}
+
 .hhcp-ph-popup {
   position: absolute;
   top: calc(100% + 6px);
@@ -213,6 +220,12 @@ interface PhoneFieldProps {
   name: string;
   label: string;
   required?: boolean;
+  /**
+   * A quiet line under the input, tied to it by aria-describedby so a screen
+   * reader reads it as part of the field rather than as loose text after it.
+   * Not an error and not a warning — see `.hhcp-ph-hint`.
+   */
+  hint?: string;
 }
 
 export function PhoneField({
@@ -220,6 +233,7 @@ export function PhoneField({
   name,
   label,
   required,
+  hint,
 }: PhoneFieldProps) {
   /*
    * The guess is a read of an external system — the browser's timezone and
@@ -246,6 +260,7 @@ export function PhoneField({
   const listRef = useRef<HTMLUListElement>(null);
 
   const inputId = useId();
+  const hintId = useId();
   const listId = useId();
   const optionId = useId();
 
@@ -395,6 +410,7 @@ export function PhoneField({
           autoComplete="tel-national"
           placeholder={selected.example}
           required={required}
+          aria-describedby={hint === undefined ? undefined : hintId}
         />
 
         {/* The ISO code travels with the number, so the recipient does not have
@@ -455,6 +471,12 @@ export function PhoneField({
           </div>
         )}
       </div>
+
+      {hint !== undefined && (
+        <p className="hhcp-ph-hint" id={hintId}>
+          {hint}
+        </p>
+      )}
     </div>
   );
 }

@@ -658,7 +658,12 @@ export function DischargeLetterForm() {
             the site rather than two that behave differently — and it defaults
             to Australia, where hers defaults to India.
           */}
-          <PhoneField name="mobile" label="Mobile Contact" required />
+          <PhoneField
+            name="mobile"
+            label="Mobile Contact"
+            required
+            hint="We may text you about your enquiry."
+          />
           <Field name="email" label="Your Email" type="email" required />
         </div>
 
