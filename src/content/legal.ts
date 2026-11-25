@@ -18,9 +18,19 @@
  * colon a heading does not need. No sentence has been changed, added or
  * dropped.
  *
- * ⚠️ Three inconsistencies came out of the migration and need the client's
- * decision. They are faithful to the source, which is the point — they were
- * already live:
+ * ─── THE ONE ADDITION ──────────────────────────────────────────────────────
+ *
+ * Four sections were added to the Privacy Policy on 2026-11-25, after
+ * "Sensitive Information": Enquiries and AI-Assisted Communications, How We
+ * Use and Share Enquiry Information, Where Your Information Is Stored and
+ * Processed, and Security and Retention. Supplied by Bilal as finished copy
+ * and inserted verbatim. They are the only text in either document that did
+ * not come from the live site, and they are still a legal instrument — do not
+ * reword them here.
+ *
+ * ⚠️ Five inconsistencies need the client's decision. The first three are
+ * faithful to the source, which is the point — they were already live. The
+ * last two arrived with the addition above:
  *
  *   1. The Privacy Policy names Google Ads, Google Analytics, Google Tag
  *      Manager and Meta Pixel cookies. This rebuild sets none of them. Either
@@ -31,7 +41,21 @@
  *      This also bears on the Complaints page, where the state health
  *      complaints body to name first is still unconfirmed.
  *   3. The two documents carry different "last updated" dates, and the Terms
- *      are dated later than the Privacy Policy they incorporate.
+ *      are dated later than the Privacy Policy they incorporate. The Privacy
+ *      Policy still reads "Last updated, Oct 2025" despite the 2026-11-25
+ *      addition, which is now wrong on its face.
+ *   4. There are two security sections. "Security and Retention" was added
+ *      above, and "Security of Personal Information" was already below it.
+ *      They do not contradict each other — one is about enquiry records, the
+ *      other about client files — but they sit twenty lines apart and each
+ *      quotes a different "7": seven days to clear deleted enquiries from
+ *      backups, seven years to keep client files. A patient reading straight
+ *      through will not see which is which.
+ *   5. The addition describes "website chat". There is no chat on this site:
+ *      no widget in this repository and nothing but GTM and LegitScript
+ *      loading on the live pages. If the chat is planned rather than running,
+ *      the policy is describing a collection that does not happen — the same
+ *      class of false statement as item 1, in the other direction.
  */
 
 export type LegalBlock =
@@ -106,6 +130,75 @@ export const PRIVACY_POLICY: LegalDocument = {
         "For a secondary purpose that is directly related to the primary purpose",
         "With your consent; or where required or authorised by law.",
       ],
+    },
+    { kind: "h2", text: "Enquiries and AI-Assisted Communications" },
+    {
+      kind: "p",
+      text:
+        "We may use automated and AI-assisted tools to help manage enquiries received by phone, text message, website chat and online forms, including responding to enquiries and sending follow-up messages.",
+    },
+    {
+      kind: "p",
+      text:
+        "These tools are used for administrative purposes, such as responding to enquiries and assisting with booking arrangements. They do not provide medical advice, diagnoses or treatment recommendations.",
+    },
+    {
+      kind: "p",
+      text:
+        "Information collected may include your name, contact details, the service you are enquiring about, a brief description of your enquiry and relevant communication details. Depending on what you share, this information may include sensitive health information.",
+    },
+    {
+      kind: "p",
+      text:
+        "If you provide your mobile number, you can ask us to stop sending follow-up messages at any time by replying to any message, or by contacting us using the details on our website.",
+    },
+    { kind: "h2", text: "How We Use and Share Enquiry Information" },
+    {
+      kind: "p",
+      text:
+        "We use enquiry information to respond to you, manage bookings, provide follow-up communications, improve our services and understand how people find our practice.",
+    },
+    {
+      kind: "p",
+      text:
+        "We may share relevant information with service providers who assist us with communications, reception, booking administration, information storage, website services and marketing or reporting activities.",
+    },
+    {
+      kind: "p",
+      text:
+        "For marketing and reporting purposes, limited administrative information may be shared, such as your contact details, the service you enquired about, the date and time of your enquiry, and the website page or marketing channel through which you contacted us. Detailed quiz answers, clinical notes, medical histories, consultation details and prescriptions are not shared for these marketing and reporting purposes.",
+    },
+    { kind: "h2", text: "Where Your Information Is Stored and Processed" },
+    {
+      kind: "p",
+      text:
+        "We use secure systems and service providers to store and process personal information. Enquiry records are stored in Australia and protected using encryption when stored and transmitted.",
+    },
+    {
+      kind: "p",
+      text:
+        "Some services process information outside Australia. If you telephone us, the audio of the call and a written transcript of it are processed in the United States.",
+    },
+    {
+      kind: "p",
+      text:
+        "Because a call to a telehealth practice may include information about your health, this means health information about you may be processed outside Australia. Text messages and the numbers they are sent to are carried through international communications networks, and email notifications sent to our practice are processed in the United States.",
+    },
+    {
+      kind: "p",
+      text:
+        "Where AI-assisted tools are used to process website chat and text enquiries, that processing takes place in Australia. Those chat and text contents are not used to train AI models.",
+    },
+    { kind: "h2", text: "Security and Retention" },
+    {
+      kind: "p",
+      text:
+        "We take reasonable steps to protect personal information against loss, misuse, unauthorised access, modification or disclosure.",
+    },
+    {
+      kind: "p",
+      text:
+        "You may request deletion of enquiry information, subject to any legal obligations requiring us to retain it. Where we delete information at your request, it is removed from system backups within 7 days. Clinical records are retained in accordance with applicable legal and professional requirements.",
     },
     { kind: "h2", text: "Third Parties" },
     {
